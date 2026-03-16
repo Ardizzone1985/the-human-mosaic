@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Human Mosaic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8f8f6;
+      color: #1f1f1f;
+      line-height: 1.6;
+    }
+    header {
+      border-bottom: 1px solid #ddd;
+      background: rgba(255,255,255,0.95);
+      position: sticky;
+      top: 0;
+    }
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+    }
+    .brand {
+      font-size: 14px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .hero {
+      padding: 90px 0 70px;
+    }
+    .hero h1 {
+      font-size: clamp(2.3rem, 6vw, 4.8rem);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .tagline {
+      font-size: 1.15rem;
+      color: #555;
+      margin-bottom: 24px;
+    }
+    .intro {
+      max-width: 760px;
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 32px;
+    }
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .btn-primary {
+      background: #111;
+      color: white;
+    }
+    .btn-secondary {
+      border: 1px solid #111;
+      color: #111;
+      background: white;
+    }
+    section {
+      padding: 70px 0;
+      border-top: 1px solid #e3e3e3;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 18px;
+    }
+    p.section-text {
+      max-width: 800px;
+      color: #555;
+      margin-bottom: 28px;
+    }
+    .stats, .rooms, .steps {
+      display: grid;
+      gap: 20px;
+    }
+    .stats {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    .rooms {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .steps {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 22px;
+      padding: 24px;
+    }
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.35rem;
+    }
+    .muted {
+      color: #666;
+      font-size: 0.96rem;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #111;
+    }
+    .final {
+      background: #111;
+      color: white;
+      border-radius: 28px;
+      padding: 50px 30px;
+      margin-top: 20px;
+    }
+    .final p {
+      color: rgba(255,255,255,0.8);
+      max-width: 750px;
+      margin: 16px 0 24px;
+    }
+    footer {
+      padding: 30px 0 60px;
+      color: #777;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div>
+        <div class="brand">The Human Mosaic</div>
+        <div class="muted">One humanity. Millions of faces. One mosaic.</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>3 million faces.<br>3 rooms.<br>One human mosaic.</h1>
+        <div class="tagline">One humanity. Millions of faces. One mosaic.</div>
+        <p class="intro">
+          Claim your place in <span class="highlight">The Human Mosaic</span>, a collective artwork created by people from around the world.
+          Each participant becomes part of a permanent museum installation composed of three immersive rooms:
+          <span class="highlight">Identity, Love, and Creativity</span>.
+        </p>
+        <div class="buttons">
+          <a href="#project" class="btn btn-primary">Explore the Project</a>
+          <a href="#rooms" class="btn btn-secondary">Discover the Rooms</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="stats">
+          <div class="card">
+            <div class="muted">Participants</div>
+            <h3>3,000,000</h3>
+          </div>
+          <div class="card">
+            <div class="muted">Rooms</div>
+            <h3>3</h3>
+          </div>
+          <div class="card">
+            <div class="muted">Museum</div>
+            <h3>Permanent in Italy</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="project">
+      <div class="container">
+        <h2>A collective artwork built one face at a time.</h2>
+        <p class="section-text">
+          The Human Mosaic invites people from around the world to become part of a monumental artwork.
+          Each participant will choose a room, claim a position, and contribute to an immersive installation
+          designed to become a permanent museum experience in Italy.
+        </p>
+      </div>
+    </section>
+
+    <section id="rooms">
+      <div class="container">
+        <h2>The Three Rooms</h2>
+        <p class="section-text">
+          Three themes. Three immersive environments. Three million participants.
+        </p>
+
+        <div class="rooms">
+          <div class="card">
+            <h3>Identity</h3>
+            <p class="muted">Who we are and where we come from.</p>
+            <p>Selfies, cultural symbols, monuments, traditional clothing, and images reflecting personal or local identity.</p>
+          </div>
+
+          <div class="card">
+            <h3>Love</h3>
+            <p class="muted">What we love defines us.</p>
+            <p>Family, partners, friends, pets, passions, and meaningful moments that represent love in all its forms.</p>
+          </div>
+
+          <div class="card">
+            <h3>Creativity</h3>
+            <p class="muted">Human imagination without limits.</p>
+            <p>Art, photography, drawings, concepts, and creative expression. Artistic nudity allowed. Explicit sexual content prohibited.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2>How It Works</h2>
+        <div class="steps">
+          <div class="card"><h3>1. Choose your room</h3></div>
+          <div class="card"><h3>2. Select your wall and spot</h3></div>
+          <div class="card"><h3>3. Complete payment</h3></div>
+          <div class="card"><h3>4. Upload your photo</h3></div>
+          <div class="card"><h3>5. Wait for approval within 48 hours</h3></div>
+          <div class="card"><h3>6. Receive your signed digital certificate</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="final">
+          <h2>Claim your place in what will become the largest collective artwork ever created.</h2>
+          <p>
+            The Human Mosaic is the foundation of a permanent museum installation built from identity, love, and creativity.
+          </p>
+          <a href="#" class="btn btn-secondary" style="background:white; color:#111; border:none;">Coming Soon</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      The Human Mosaic — Official project preview
+    </div>
+  </footer>
+</body>
+</html>
