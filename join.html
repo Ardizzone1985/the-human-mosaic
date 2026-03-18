@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join – The Human Mosaic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8f8f6;
+      color: #1f1f1f;
+      line-height: 1.6;
+    }
+
+    header {
+      border-bottom: 1px solid #ddd;
+      background: rgba(255,255,255,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 120px 0 80px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    .hero p {
+      max-width: 760px;
+      font-size: 1.08rem;
+      color: #555;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    section {
+      padding: 70px 0;
+      border-top: 1px solid #e3e3e3;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 18px;
+    }
+
+    .section-text {
+      max-width: 760px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .rooms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 24px;
+      padding: 28px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      font-size: 1.55rem;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 0.98rem;
+      margin-bottom: 14px;
+    }
+
+    .price {
+      margin-top: 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 15px 24px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #111;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .step {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .step-number {
+      font-size: 0.8rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+    }
+
+    .legal-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 24px;
+      padding: 28px;
+    }
+
+    .legal-box ul {
+      margin-top: 14px;
+      padding-left: 18px;
+      color: #444;
+    }
+
+    .legal-box li {
+      margin-bottom: 10px;
+    }
+
+    .links {
+      margin-top: 18px;
+      font-size: 0.96rem;
+    }
+
+    .links a {
+      color: #111;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      padding: 30px 0 60px;
+      color: #777;
+      font-size: 0.95rem;
+      text-align: center;
+      border-top: 1px solid #e3e3e3;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; padding:20px 0;">
+      <a href="index.html">
+        <img src="logo-cropped.png" alt="The Human Mosaic Logo" style="height:95px;">
+      </a>
+
+      <div style="font-size:13px; color:#666; letter-spacing:0.15em;">
+        ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Choose your room.<br>Claim your place.</h1>
+        <p>
+          Every participant becomes part of a permanent global artwork.
+          Begin by selecting one of the three immersive rooms: Identity, Love, or Creativity.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2>Select Your Room</h2>
+        <p class="section-text">
+          Each room represents a different dimension of humanity. Choose the one that best matches the image you want to submit.
+        </p>
+
+        <div class="rooms">
+          <div class="card">
+            <h3>Identity</h3>
+            <div class="muted">Who we are and where we come from.</div>
+            <p>
+              Selfies, monuments, traditions, cultural symbols, local roots, and personal identity.
+            </p>
+            <div class="price">Up to €15</div>
+            <a href="#" class="btn btn-primary">Enter Identity</a>
+          </div>
+
+          <div class="card">
+            <h3>Love</h3>
+            <div class="muted">What we love defines us.</div>
+            <p>
+              Family, partners, friendships, pets, passions, and meaningful emotional moments.
+            </p>
+            <div class="price">Up to €15</div>
+            <a href="#" class="btn btn-primary">Enter Love</a>
+          </div>
+
+          <div class="card">
+            <h3>Creativity</h3>
+            <div class="muted">Human imagination without limits.</div>
+            <p>
+              Art, photography, drawings, concepts, ideas, and visual expression. Artistic nudity allowed.
+            </p>
+            <div class="price">Up to €20</div>
+            <a href="#" class="btn btn-primary">Enter Creativity</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2>How Participation Works</h2>
+        <p class="section-text">
+          The process is simple and designed to give every participant a clear and official place inside the project.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">Step 1</div>
+            <h3>Choose your room</h3>
+          </div>
+
+          <div class="step">
+            <div class="step-number">Step 2</div>
+            <h3>Select your wall and spot</h3>
+          </div>
+
+          <div class="step">
+            <div class="step-number">Step 3</div>
+            <h3>Complete payment</h3>
+          </div>
+
+          <div class="step">
+            <div class="step-number">Step 4</div>
+            <h3>Upload your image</h3>
+          </div>
+
+          <div class="step">
+            <div class="step-number">Step 5</div>
+            <h3>Wait for approval</h3>
+          </div>
+
+          <div class="step">
+            <div class="step-number">Step 6</div>
+            <h3>Receive your certificate</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="legal-box">
+          <h2>Before You Join</h2>
+          <p class="section-text" style="margin-bottom: 14px;">
+            By participating, you will be asked to confirm that:
+          </p>
+
+          <ul>
+            <li>You have read and accepted the Privacy Policy and Terms & Conditions.</li>
+            <li>You own the submitted image or have all rights and permissions to use it.</li>
+            <li>If other people appear in the image, you have their permission where required.</li>
+            <li>Your submission complies with the project guidelines.</li>
+          </ul>
+
+          <div class="links">
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="terms.html">Terms & Conditions</a> |
+            <a href="license.html">Content License</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="margin-bottom:10px;">The Human Mosaic — Official participation page</div>
+      <div style="font-size:14px;">
+        <a href="index.html">Home</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="terms.html">Terms</a> |
+        <a href="license.html">Content License</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
