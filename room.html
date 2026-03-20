@@ -452,7 +452,7 @@
             document.querySelectorAll(".spot.selected").forEach(el => el.classList.remove("selected"));
             spot.classList.add("selected");
             selectedSpot = code;
-            summarySpot.textContent = code;
+            summarySpot.textContent = code + " (Reserved)";
             continueBtn.disabled = false;
           });
         }
