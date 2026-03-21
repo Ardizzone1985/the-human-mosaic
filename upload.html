@@ -437,21 +437,22 @@
     });
 
     uploadForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  e.preventDefault();
 
-      const file = imageUpload.files[0];
-      if (!file) return;
+  const file = imageUpload.files[0];
+  if (!file) return;
 
-      successBox.style.display = "block";
-      uploadForm.reset();
-      previewBox.style.display = "none";
-      previewImage.src = "";
-      fileName.textContent = "";
+  const params = new URLSearchParams(window.location.search);
 
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-      });
+  window.location.href =
+    `success.html?room=${encodeURIComponent(params.get("room") || "Identity")}` +
+    `&wall=${encodeURIComponent(params.get("wall") || "Front Wall")}` +
+    `&spot=${encodeURIComponent(params.get("spot") || "Not selected")}` +
+    `&price=${encodeURIComponent(params.get("price") || "Up to €15")}` +
+    `&fullName=${encodeURIComponent(params.get("fullName") || "")}` +
+    `&email=${encodeURIComponent(params.get("email") || "")}` +
+    `&country=${encodeURIComponent(params.get("country") || "")}`;
+});
     });
   </script>
 </body>
