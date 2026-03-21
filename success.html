@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Select Your Spot – The Human Mosaic</title>
+  <title>Submission Complete – The Human Mosaic</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,12 +23,13 @@
     }
 
     .container {
-      width: min(1100px, 92%);
+      width: min(1000px, 92%);
       margin: 0 auto;
     }
 
     .hero {
-      padding: 90px 0 50px;
+      padding: 100px 0 60px;
+      text-align: center;
     }
 
     .hero h1 {
@@ -39,6 +40,7 @@
 
     .hero p {
       max-width: 760px;
+      margin: 0 auto;
       color: #555;
       font-size: 1.05rem;
     }
@@ -48,202 +50,48 @@
       border-top: 1px solid #e3e3e3;
     }
 
-    .top-panel {
+    .success-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 30px;
+      padding: 36px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+
+    .success-badge {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #f3f8f3;
+      border: 1px solid #cfe4cf;
+      color: #244224;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .grid {
       display: grid;
       grid-template-columns: 1fr 340px;
       gap: 28px;
       align-items: start;
+      margin-top: 24px;
     }
 
-    .wall-tabs {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 22px 0 28px;
-    }
-
-    .wall-btn {
-      border: 1px solid #111;
-      background: white;
-      color: #111;
-      padding: 12px 18px;
-      border-radius: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .wall-btn:hover {
-      background: #111;
-      color: white;
-    }
-
-    .wall-btn.active {
-      background: #111;
-      color: white;
-    }
-
-    .mosaic-card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 28px;
-      padding: 26px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
-    }
-
-    .mosaic-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .mosaic-head h2 {
-      font-size: 1.5rem;
-    }
-
-    .status-pill {
-      border: 1px solid #ddd;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 0.9rem;
-      color: #555;
-      background: #fafafa;
-      white-space: nowrap;
-    }
-
-    .identity-note {
-      margin-bottom: 18px;
-      padding: 16px 18px;
+    .summary-box {
       background: #fcfcfb;
       border: 1px solid #ececec;
-      border-radius: 18px;
-      color: #555;
-      font-size: 0.97rem;
-    }
-
-    .grid-wrap {
-      background: linear-gradient(180deg, #fcfcfb 0%, #f4f4f1 100%);
-      border: 1px solid #ececec;
       border-radius: 24px;
-      padding: 18px;
+      padding: 24px;
     }
 
-    .spot-grid {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 8px;
-    }
-
-    .spot {
-      aspect-ratio: 1 / 1;
-      border-radius: 10px;
-      border: 1px solid #d9d9d9;
-      background: white;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .spot:hover {
-      transform: translateY(-2px);
-      border-color: #111;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-    }
-
-    .spot.taken {
-      background: #161616;
-      border-color: #161616;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    .spot.selected {
-      background: linear-gradient(135deg, #ff7a18, #ff5f6d 55%, #8f3fff);
-      border-color: transparent;
-      box-shadow: 0 8px 18px rgba(255,95,109,0.28);
-      transform: scale(1.15);
-    }
-
-    .spot::after {
-      content: attr(data-code);
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: transparent;
-      transition: color 0.2s ease;
-    }
-
-    .spot:hover::after,
-    .spot.selected::after {
-      color: rgba(255,255,255,0.95);
-    }
-
-    .spot:not(.taken):hover::after {
-      color: #111;
-    }
-
-    .spot.selected:hover::after {
-      color: white;
-    }
-
-    .legend {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .legend-box {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
-      border: 1px solid #d9d9d9;
-      background: white;
-    }
-
-    .legend-box.taken {
-      background: #161616;
-      border-color: #161616;
-    }
-
-    .legend-box.selected {
-      background: linear-gradient(135deg, #ff7a18, #ff5f6d 55%, #8f3fff);
-      border: none;
-    }
-
-    .summary-card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 28px;
-      padding: 26px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
-      position: sticky;
-      top: 110px;
-    }
-
-    .summary-card h3 {
-      font-size: 1.35rem;
+    .summary-box h2 {
+      font-size: 1.5rem;
       margin-bottom: 16px;
     }
 
     .summary-line {
       padding: 12px 0;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #e8e8e8;
     }
 
     .summary-label {
@@ -255,40 +103,93 @@
     }
 
     .summary-value {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 600;
     }
 
-    .continue-btn {
-      width: 100%;
-      margin-top: 22px;
-      border: none;
-      background: #111;
-      color: white;
-      padding: 16px 20px;
-      border-radius: 16px;
+    .steps-box h2 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .steps-box p {
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .next-steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .step {
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
       font-size: 1rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 15px 24px;
+      border-radius: 14px;
+      text-decoration: none;
       font-weight: 700;
-      cursor: pointer;
+      font-size: 1rem;
       transition: all 0.2s ease;
     }
 
-    .continue-btn:hover {
+    .btn-primary {
+      background: #111;
+      color: white;
+    }
+
+    .btn-primary:hover {
       background: #333;
       transform: translateY(-2px);
     }
 
-    .continue-btn:disabled {
-      background: #cfcfcf;
-      color: #777;
-      cursor: not-allowed;
-      transform: none;
+    .btn-secondary {
+      border: 1px solid #111;
+      color: #111;
+      background: white;
     }
 
-    .note {
-      margin-top: 14px;
-      font-size: 0.92rem;
-      color: #666;
+    .btn-secondary:hover {
+      background: #111;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .contact-note {
+      margin-top: 26px;
+      color: #555;
+    }
+
+    .contact-note a,
+    footer a {
+      color: #111;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .contact-note a:hover,
+    footer a:hover {
+      text-decoration: underline;
     }
 
     footer {
@@ -300,33 +201,9 @@
       margin-top: 20px;
     }
 
-    footer a {
-      color: #111;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
     @media (max-width: 900px) {
-      .top-panel {
+      .grid {
         grid-template-columns: 1fr;
-      }
-
-      .summary-card {
-        position: static;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .spot-grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
-
-      .hero {
-        padding: 70px 0 40px;
       }
     }
   </style>
@@ -347,90 +224,92 @@
   <main>
     <section class="hero">
       <div class="container">
-        <h1>Select your wall.<br>Choose your spot.</h1>
+        <h1>Your submission is complete.</h1>
         <p>
-          You are currently reserving your place in the <strong>Identity Room</strong>.
-          Every selected position becomes part of a permanent global artwork.
-          Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.
+          Thank you for becoming part of The Human Mosaic.
+          Your participation request has been received and will be reviewed before final confirmation.
         </p>
-
-        <div class="wall-tabs">
-          <button class="wall-btn active" data-wall="Front Wall">Front Wall</button>
-          <button class="wall-btn" data-wall="Left Wall">Left Wall</button>
-          <button class="wall-btn" data-wall="Right Wall">Right Wall</button>
-        </div>
       </div>
     </section>
 
     <section>
-      <div class="container top-panel">
-        <div class="mosaic-card">
-          <div class="mosaic-head">
-            <h2 id="gridTitle">Identity Room — Front Wall</h2>
-            <div class="status-pill">134,382 / 1,000,000 claimed</div>
-          </div>
+      <div class="container">
+        <div class="success-card">
+          <div class="success-badge">Submission received</div>
 
-          <div class="identity-note">
-            <strong>Identity Room guideline:</strong> submissions for this room must be
-            <strong>selfies</strong> that reflect who we are and where we come from, including
-            monuments, traditions, cultural symbols, local roots, and elements of personal identity.
-          </div>
+          <div class="grid">
+            <div class="steps-box">
+              <h2>What happens next</h2>
+              <p>
+                Your selected position and submitted image are now part of the participation review process.
+              </p>
 
-          <p style="margin-bottom:15px; color:#666;">
-            Each square represents a real participant.
-          </p>
+              <div class="next-steps">
+                <div class="step">
+                  <strong>1. Review</strong>
+                  We verify that your submission matches the project guidelines and selected room.
+                </div>
 
-          <div class="grid-wrap">
-            <div class="spot-grid" id="spotGrid"></div>
-          </div>
+                <div class="step">
+                  <strong>2. Confirmation</strong>
+                  Your position and participation request are confirmed after review.
+                </div>
 
-          <div class="legend">
-            <div class="legend-item">
-              <span class="legend-box"></span>
-              <span>Available</span>
+                <div class="step">
+                  <strong>3. Certificate</strong>
+                  You will receive your official digital certificate once your participation is validated.
+                </div>
+              </div>
+
+              <div class="buttons">
+                <a href="index.html" class="btn btn-primary">Return Home</a>
+                <a href="join.html" class="btn btn-secondary">Join Another Room</a>
+              </div>
+
+              <div class="contact-note">
+                For questions, support, or participation inquiries, contact
+                <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+              </div>
             </div>
-            <div class="legend-item">
-              <span class="legend-box taken"></span>
-              <span>Taken</span>
+
+            <div class="summary-box">
+              <h2>Your Submission</h2>
+
+              <div class="summary-line">
+                <div class="summary-label">Full Name</div>
+                <div class="summary-value" id="summaryName">—</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Email</div>
+                <div class="summary-value" id="summaryEmail">—</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Country</div>
+                <div class="summary-value" id="summaryCountry">—</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Room</div>
+                <div class="summary-value" id="summaryRoom">Identity</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Wall</div>
+                <div class="summary-value" id="summaryWall">Front Wall</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Spot</div>
+                <div class="summary-value" id="summarySpot">A-01</div>
+              </div>
+
+              <div class="summary-line">
+                <div class="summary-label">Price</div>
+                <div class="summary-value" id="summaryPrice">Up to €15</div>
+              </div>
             </div>
-            <div class="legend-item">
-              <span class="legend-box selected"></span>
-              <span>Selected</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="summary-card">
-          <h3>Your Selection</h3>
-
-          <div class="summary-line">
-            <div class="summary-label">Room</div>
-            <div class="summary-value" id="summaryRoom">Identity</div>
-          </div>
-
-          <div class="summary-line">
-            <div class="summary-label">Wall</div>
-            <div class="summary-value" id="summaryWall">Front Wall</div>
-          </div>
-
-          <div class="summary-line">
-            <div class="summary-label">Spot</div>
-            <div class="summary-value" id="summarySpot">Not selected yet</div>
-          </div>
-
-          <div class="summary-line">
-            <div class="summary-label">Price</div>
-            <div class="summary-value">Up to €15</div>
-          </div>
-
-          <button class="continue-btn" id="continueBtn" disabled>
-            Continue
-          </button>
-
-          <div class="note">
-            Your final room, wall, and selected position will be confirmed before payment.
-            <br><br>
-            You are reserving a permanent position in the mosaic.
           </div>
         </div>
       </div>
@@ -439,82 +318,30 @@
 
   <footer>
     <div class="container">
-      <div style="margin-bottom:10px;">The Human Mosaic — Spot selection preview</div>
-      <div>
+      <div style="margin-bottom:10px;">The Human Mosaic — Submission complete</div>
+      <div style="margin-bottom:10px;">
         Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
+      <div style="font-size:14px;">
+        <a href="index.html">Home</a> |
+        <a href="join.html">Join</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="terms.html">Terms</a> |
+        <a href="license.html">Content License</a>
       </div>
     </div>
   </footer>
 
   <script>
-    const spotGrid = document.getElementById("spotGrid");
-    const summaryWall = document.getElementById("summaryWall");
-    const summarySpot = document.getElementById("summarySpot");
-    const continueBtn = document.getElementById("continueBtn");
-    const gridTitle = document.getElementById("gridTitle");
-    const wallButtons = document.querySelectorAll(".wall-btn");
+    const params = new URLSearchParams(window.location.search);
 
-    let selectedWall = "Front Wall";
-    let selectedSpot = null;
-
-    function generateGrid() {
-      spotGrid.innerHTML = "";
-      selectedSpot = null;
-      summarySpot.textContent = "Not selected yet";
-      continueBtn.disabled = true;
-
-      for (let i = 1; i <= 60; i++) {
-        const spot = document.createElement("button");
-        spot.className = "spot";
-        spot.type = "button";
-
-        const row = String.fromCharCode(64 + Math.ceil(i / 10));
-        const col = ((i - 1) % 10) + 1;
-        const code = `${row}-${col.toString().padStart(2, "0")}`;
-
-        spot.setAttribute("data-code", code);
-
-        const taken = i % 7 === 0 || i % 11 === 0 || i % 13 === 0;
-        if (taken) {
-          spot.classList.add("taken");
-          spot.disabled = true;
-        } else {
-          spot.addEventListener("click", () => {
-            document.querySelectorAll(".spot.selected").forEach(el => el.classList.remove("selected"));
-            spot.classList.add("selected");
-            selectedSpot = code;
-            summarySpot.textContent = code + " (Reserved)";
-            continueBtn.disabled = false;
-          });
-        }
-
-        spotGrid.appendChild(spot);
-      }
-    }
-
-    wallButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        wallButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedWall = btn.dataset.wall;
-        summaryWall.textContent = selectedWall;
-        gridTitle.textContent = `Identity Room — ${selectedWall}`;
-        generateGrid();
-      });
-    });
-
-    continueBtn.addEventListener("click", () => {
-      if (!selectedSpot) return;
-
-      const room = "Identity";
-      const wall = encodeURIComponent(selectedWall);
-      const spot = encodeURIComponent(selectedSpot);
-      const price = encodeURIComponent("Up to €15");
-
-      window.location.href = `checkout.html?room=${room}&wall=${wall}&spot=${spot}&price=${price}`;
-    });
-
-    generateGrid();
+    document.getElementById("summaryName").textContent = params.get("fullName") || "—";
+    document.getElementById("summaryEmail").textContent = params.get("email") || "—";
+    document.getElementById("summaryCountry").textContent = params.get("country") || "—";
+    document.getElementById("summaryRoom").textContent = params.get("room") || "Identity";
+    document.getElementById("summaryWall").textContent = params.get("wall") || "Front Wall";
+    document.getElementById("summarySpot").textContent = params.get("spot") || "Not selected";
+    document.getElementById("summaryPrice").textContent = params.get("price") || "Up to €15";
   </script>
 </body>
 </html>
