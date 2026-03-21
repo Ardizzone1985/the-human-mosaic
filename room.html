@@ -950,9 +950,15 @@
     });
 
     continueBtn.addEventListener("click", () => {
-      if (!selectedSpot) return;
-      alert(`Selected:\\nRoom: Identity\\nWall: ${selectedWall}\\nSpot: ${selectedSpot}`);
-    });
+  if (!selectedSpot) return;
+
+  const room = "Identity";
+  const wall = encodeURIComponent(selectedWall);
+  const spot = encodeURIComponent(selectedSpot);
+  const price = encodeURIComponent("Up to €15");
+
+  window.location.href = `checkout.html?room=${room}&wall=${wall}&spot=${spot}&price=${price}`;
+});
 
     generateGrid();
   </script>
