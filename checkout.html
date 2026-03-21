@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – The Human Mosaic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8f8f6;
+      color: #1f1f1f;
+      line-height: 1.6;
+    }
+
+    header {
+      border-bottom: 1px solid #ddd;
+      background: rgba(255,255,255,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 90px 0 50px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: #555;
+      font-size: 1.05rem;
+    }
+
+    section {
+      padding: 40px 0 70px;
+      border-top: 1px solid #e3e3e3;
+    }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+
+    .box h2 {
+      font-size: 1.7rem;
+      margin-bottom: 14px;
+    }
+
+    .section-text {
+      color: #555;
+      margin-bottom: 24px;
+      max-width: 760px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-row label {
+      font-weight: 600;
+      font-size: 0.96rem;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #d7d7d7;
+      border-radius: 14px;
+      font-size: 15px;
+      background: #fff;
+      color: #1f1f1f;
+    }
+
+    .form-row textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .summary-card {
+      position: sticky;
+      top: 110px;
+    }
+
+    .summary-line {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-label {
+      font-size: 0.78rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    .summary-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .highlight-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 18px;
+      color: #555;
+      font-size: 0.96rem;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: #444;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .checkbox-wrap input {
+      margin-top: 4px;
+      transform: scale(1.1);
+    }
+
+    .checkbox-wrap a,
+    .contact-link,
+    footer a {
+      color: #111;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .checkbox-wrap a:hover,
+    .contact-link:hover,
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .checkout-btn,
+    .back-btn {
+      display: inline-block;
+      padding: 16px 24px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .checkout-btn {
+      background: #111;
+      color: white;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .checkout-btn:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+      margin-top: 12px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .back-btn:hover {
+      background: #111;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .small-note {
+      margin-top: 14px;
+      font-size: 0.92rem;
+      color: #666;
+    }
+
+    .contact-block {
+      margin-top: 22px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    footer {
+      padding: 30px 0 60px;
+      color: #777;
+      font-size: 0.95rem;
+      text-align: center;
+      border-top: 1px solid #e3e3e3;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; padding:20px 0;">
+      <a href="index.html">
+        <img src="logo-cropped.png" alt="The Human Mosaic Logo" style="height:95px;">
+      </a>
+
+      <div style="font-size:13px; color:#666; letter-spacing:0.15em;">
+        ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Complete your reservation.</h1>
+        <p>
+          You are one step closer to claiming your permanent place in The Human Mosaic.
+          Review your selection, enter your details, and continue to the upload stage.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container checkout-layout">
+        <div class="box">
+          <h2>Participant Details</h2>
+          <p class="section-text">
+            This information allows us to connect your selected spot to your participation request and continue the process correctly.
+          </p>
+
+          <form id="checkoutForm" class="form-grid">
+            <div class="form-row">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+
+            <div class="form-row">
+              <label for="country">Country</label>
+              <input type="text" id="country" name="country" placeholder="Enter your country" required>
+            </div>
+
+            <div class="form-row">
+              <label for="instagram">Instagram or Social Profile (optional)</label>
+              <input type="text" id="instagram" name="instagram" placeholder="@yourprofile or link">
+            </div>
+
+            <div class="form-row">
+              <label for="notes">Optional Note</label>
+              <textarea id="notes" name="notes" placeholder="Write a short note if you want to introduce your future submission"></textarea>
+            </div>
+
+            <label class="checkbox-wrap">
+              <input type="checkbox" required>
+              <span>
+                I confirm that I have read and accepted the
+                <a href="privacy.html" target="_blank">Privacy Policy</a>,
+                <a href="terms.html" target="_blank">Terms &amp; Conditions</a>,
+                and
+                <a href="license.html" target="_blank">Content License</a>.
+              </span>
+            </label>
+
+            <label class="checkbox-wrap">
+              <input type="checkbox" required>
+              <span>
+                I understand that my selected room, wall, and spot are part of a permanent global artwork and will be reviewed before final confirmation.
+              </span>
+            </label>
+
+            <button type="submit" class="checkout-btn">Continue to Upload</button>
+            <a href="room.html" class="back-btn">Back to Spot Selection</a>
+
+            <div class="small-note">
+              This page does not process payment yet. In the current version, it prepares your participation data and moves you to the next step.
+            </div>
+          </form>
+
+          <div class="contact-block">
+            For questions, support, or participation inquiries, contact
+            <a class="contact-link" href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+          </div>
+        </div>
+
+        <div class="box summary-card">
+          <h2>Your Reservation</h2>
+
+          <div class="summary-line">
+            <div class="summary-label">Room</div>
+            <div class="summary-value" id="summaryRoom">Identity</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Wall</div>
+            <div class="summary-value" id="summaryWall">Front Wall</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Spot</div>
+            <div class="summary-value" id="summarySpot">A-01</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Price</div>
+            <div class="summary-value" id="summaryPrice">Up to €15</div>
+          </div>
+
+          <div class="highlight-note">
+            <strong>Identity Room guideline:</strong> submissions for this room must be
+            <strong>selfies</strong> that reflect who we are and where we come from, including monuments,
+            traditions, cultural symbols, local roots, and elements of personal identity.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="margin-bottom:10px;">The Human Mosaic — Checkout preview</div>
+      <div style="margin-bottom:10px;">
+        Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
+      <div style="font-size:14px;">
+        <a href="index.html">Home</a> |
+        <a href="join.html">Join</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="terms.html">Terms</a> |
+        <a href="license.html">Content License</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const room = params.get("room") || "Identity";
+    const wall = params.get("wall") || "Front Wall";
+    const spot = params.get("spot") || "Not selected";
+    const price = params.get("price") || "Up to €15";
+
+    document.getElementById("summaryRoom").textContent = room;
+    document.getElementById("summaryWall").textContent = wall;
+    document.getElementById("summarySpot").textContent = spot;
+    document.getElementById("summaryPrice").textContent = price;
+
+    const checkoutForm = document.getElementById("checkoutForm");
+
+    checkoutForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const fullName = encodeURIComponent(document.getElementById("fullName").value);
+      const email = encodeURIComponent(document.getElementById("email").value);
+      const country = encodeURIComponent(document.getElementById("country").value);
+      const instagram = encodeURIComponent(document.getElementById("instagram").value);
+      const notes = encodeURIComponent(document.getElementById("notes").value);
+
+      window.location.href =
+        `upload.html?room=${encodeURIComponent(room)}&wall=${encodeURIComponent(wall)}&spot=${encodeURIComponent(spot)}&price=${encodeURIComponent(price)}&fullName=${fullName}&email=${email}&country=${country}&instagram=${instagram}&notes=${notes}`;
+    });
+  </script>
+</body>
+</html>
