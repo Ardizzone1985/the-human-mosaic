@@ -395,65 +395,61 @@
   <script>
     const params = new URLSearchParams(window.location.search);
 
-    const room = params.get("room") || "Identity";
-    const wall = params.get("wall") || "Front Wall";
-    const spot = params.get("spot") || "Not selected";
-    const price = params.get("price") || "Up to €15";
-    const fullName = params.get("fullName") || "—";
-    const email = params.get("email") || "—";
-    const country = params.get("country") || "—";
+  const room = params.get("room") || "Identity";
+  const wall = params.get("wall") || "Front Wall";
+  const spot = params.get("spot") || "Not selected";
+  const price = params.get("price") || "Up to €15";
+  const fullName = params.get("fullName") || "—";
+  const email = params.get("email") || "—";
+  const country = params.get("country") || "—";
 
-    document.getElementById("summaryRoom").textContent = room;
-    document.getElementById("summaryWall").textContent = wall;
-    document.getElementById("summarySpot").textContent = spot;
-    document.getElementById("summaryPrice").textContent = price;
-    document.getElementById("summaryName").textContent = fullName;
-    document.getElementById("summaryEmail").textContent = email;
-    document.getElementById("summaryCountry").textContent = country;
+  document.getElementById("summaryRoom").textContent = room;
+  document.getElementById("summaryWall").textContent = wall;
+  document.getElementById("summarySpot").textContent = spot;
+  document.getElementById("summaryPrice").textContent = price;
+  document.getElementById("summaryName").textContent = fullName;
+  document.getElementById("summaryEmail").textContent = email;
+  document.getElementById("summaryCountry").textContent = country;
 
-    const imageUpload = document.getElementById("imageUpload");
-    const previewBox = document.getElementById("previewBox");
-    const previewImage = document.getElementById("previewImage");
-    const fileName = document.getElementById("fileName");
-    const uploadForm = document.getElementById("uploadForm");
-    const successBox = document.getElementById("successBox");
+  const imageUpload = document.getElementById("imageUpload");
+  const previewBox = document.getElementById("previewBox");
+  const previewImage = document.getElementById("previewImage");
+  const fileName = document.getElementById("fileName");
+  const uploadForm = document.getElementById("uploadForm");
 
-    imageUpload.addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) {
-        previewBox.style.display = "none";
-        previewImage.src = "";
-        fileName.textContent = "";
-        return;
-      }
+  imageUpload.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) {
+      previewBox.style.display = "none";
+      previewImage.src = "";
+      fileName.textContent = "";
+      return;
+    }
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        previewImage.src = e.target.result;
-        fileName.textContent = file.name;
-        previewBox.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    });
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImage.src = e.target.result;
+      fileName.textContent = file.name;
+      previewBox.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  });
 
-    uploadForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+  uploadForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  const file = imageUpload.files[0];
-  if (!file) return;
+    const file = imageUpload.files[0];
+    if (!file) return;
 
-  const params = new URLSearchParams(window.location.search);
-
-  window.location.href =
-    `success.html?room=${encodeURIComponent(params.get("room") || "Identity")}` +
-    `&wall=${encodeURIComponent(params.get("wall") || "Front Wall")}` +
-    `&spot=${encodeURIComponent(params.get("spot") || "Not selected")}` +
-    `&price=${encodeURIComponent(params.get("price") || "Up to €15")}` +
-    `&fullName=${encodeURIComponent(params.get("fullName") || "")}` +
-    `&email=${encodeURIComponent(params.get("email") || "")}` +
-    `&country=${encodeURIComponent(params.get("country") || "")}`;
-});
-    });
-  </script>
+    window.location.href =
+      `success.html?room=${encodeURIComponent(room)}` +
+      `&wall=${encodeURIComponent(wall)}` +
+      `&spot=${encodeURIComponent(spot)}` +
+      `&price=${encodeURIComponent(price)}` +
+      `&fullName=${encodeURIComponent(fullName)}` +
+      `&email=${encodeURIComponent(email)}` +
+      `&country=${encodeURIComponent(country)}`;
+  });
+</script>
 </body>
 </html>
