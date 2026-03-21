@@ -69,6 +69,10 @@
       margin-bottom: 18px;
     }
 
+    h3 {
+      font-size: 1.2rem;
+    }
+
     .section-text {
       max-width: 760px;
       color: #555;
@@ -121,6 +125,8 @@
       font-weight: 600;
       font-size: 15px;
       transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
     }
 
     .btn-primary {
@@ -155,7 +161,9 @@
       margin-bottom: 10px;
     }
 
-    .legal-box {
+    .legal-box,
+    .contact-box,
+    .form-box {
       background: white;
       border: 1px solid #ddd;
       border-radius: 24px;
@@ -177,14 +185,92 @@
       font-size: 0.96rem;
     }
 
-    .links a {
+    .links a,
+    .contact-email,
+    footer a {
       color: #111;
       text-decoration: none;
       font-weight: 600;
     }
 
-    .links a:hover {
+    .links a:hover,
+    .contact-email:hover,
+    footer a:hover {
       text-decoration: underline;
+    }
+
+    .contact-box p {
+      color: #555;
+      max-width: 760px;
+    }
+
+    .contact-box .contact-email {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 1.02rem;
+    }
+
+    .join-form {
+      display: grid;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-row label {
+      font-weight: 600;
+      font-size: 0.96rem;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #d7d7d7;
+      border-radius: 14px;
+      font-size: 15px;
+      background: #fff;
+      color: #1f1f1f;
+    }
+
+    .form-row textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 4px;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-wrap input {
+      margin-top: 4px;
+      transform: scale(1.1);
+    }
+
+    .checkbox-wrap a {
+      color: #111;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .checkbox-wrap a:hover {
+      text-decoration: underline;
+    }
+
+    .form-note {
+      color: #666;
+      font-size: 0.94rem;
+      margin-top: -4px;
     }
 
     footer {
@@ -319,10 +405,77 @@
           </ul>
 
           <div class="links">
-            <a href="privacy.html">Privacy Policy</a> |
-            <a href="terms.html">Terms & Conditions</a> |
-            <a href="license.html">Content License</a>
+            <a href="privacy.html" target="_blank">Privacy Policy</a> |
+            <a href="terms.html" target="_blank">Terms & Conditions</a> |
+            <a href="license.html" target="_blank">Content License</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="contact-box">
+          <h2>Official Contact</h2>
+          <p>
+            For questions, support, partnerships, or participation inquiries, you can contact the project directly through our official email address.
+          </p>
+          <a class="contact-email" href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="form-box">
+          <h2>Participation Request</h2>
+          <p class="section-text">
+            This form represents the official first step into The Human Mosaic. Complete it carefully before submitting your participation.
+          </p>
+
+          <form class="join-form">
+            <div class="form-row">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+
+            <div class="form-row">
+              <label for="selectedRoom">Selected Room</label>
+              <select id="selectedRoom" name="selectedRoom" required>
+                <option value="">Select a room</option>
+                <option value="identity">Identity</option>
+                <option value="love">Love</option>
+                <option value="creativity">Creativity</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="message">Optional Message</label>
+              <textarea id="message" name="message" placeholder="Write a short message if you want to introduce your submission"></textarea>
+            </div>
+
+            <label class="checkbox-wrap">
+              <input type="checkbox" required>
+              <span>
+                I confirm that I have read and accepted the
+                <a href="privacy.html" target="_blank">Privacy Policy</a>,
+                <a href="terms.html" target="_blank">Terms &amp; Conditions</a>
+                and
+                <a href="license.html" target="_blank">Content License</a>.
+              </span>
+            </label>
+
+            <p class="form-note">
+              After submission, the next steps will include room placement, payment, image upload, and review.
+            </p>
+
+            <button type="submit" class="btn btn-primary">Submit Participation Request</button>
+          </form>
         </div>
       </div>
     </section>
@@ -331,6 +484,9 @@
   <footer>
     <div class="container">
       <div style="margin-bottom:10px;">The Human Mosaic — Official participation page</div>
+      <div style="margin-bottom:10px;">
+        Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
       <div style="font-size:14px;">
         <a href="index.html">Home</a> |
         <a href="privacy.html">Privacy Policy</a> |
