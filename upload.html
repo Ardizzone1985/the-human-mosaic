@@ -441,7 +441,14 @@
     const file = imageUpload.files[0];
     if (!file) return;
 
-    alert("Submit works");
+    window.location.href =
+  `success.html?room=${encodeURIComponent(room)}` +
+  `&wall=${encodeURIComponent(wall)}` +
+  `&spot=${encodeURIComponent(spot)}` +
+  `&price=${encodeURIComponent(price)}` +
+  `&fullName=${encodeURIComponent(fullName)}` +
+  `&email=${encodeURIComponent(email)}` +
+  `&country=${encodeURIComponent(country)}`;
   });
 </script>
 </body>
