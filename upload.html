@@ -462,19 +462,25 @@
     });
 
     uploadForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  e.preventDefault();
 
-      const file = imageUpload.files[0];
-      if (!file) return;
+  const file = imageUpload.files[0];
+  if (!file) return;
 
-      window.location.href =
-        `success.html?room=${encodeURIComponent(currentRoom)}` +
-        `&wall=${encodeURIComponent(wall)}` +
-        `&spot=${encodeURIComponent(spot)}` +
-        `&price=${encodeURIComponent(price)}` +
-        `&fullName=${encodeURIComponent(fullName)}` +
-        `&email=${encodeURIComponent(email)}` +
-        `&country=${encodeURIComponent(country)}`;
+  const confirmed = confirm(
+    "Are you sure you want to submit this image?\n\nAfter submission, it will no longer be possible to modify it in this preview flow."
+  );
+
+  if (!confirmed) return;
+
+  window.location.href =
+    `success.html?room=${encodeURIComponent(currentRoom)}` +
+    `&wall=${encodeURIComponent(wall)}` +
+    `&spot=${encodeURIComponent(spot)}` +
+    `&price=${encodeURIComponent(price)}` +
+    `&fullName=${encodeURIComponent(fullName)}` +
+    `&email=${encodeURIComponent(email)}` +
+    `&country=${encodeURIComponent(country)}`;
     });
   </script>
 </body>
