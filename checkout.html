@@ -316,7 +316,7 @@
             </label>
 
             <button type="submit" class="checkout-btn">Continue to Upload</button>
-            <a href="room.html" class="back-btn">Back to Spot Selection</a>
+            <a id="backToRoom" href="room.html?room=Identity" class="back-btn">Back to Spot Selection</a>
 
             <div class="small-note">
               This page does not process payment yet. In the current version, it prepares your participation data and moves you to the next step.
@@ -352,7 +352,7 @@
             <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
           </div>
 
-          <div class="highlight-note">
+          <div class="highlight-note" id="roomGuideline">
             <strong>Identity Room guideline:</strong> submissions for this room must be
             <strong>selfies</strong> that reflect who we are and where we come from, including monuments,
             traditions, cultural symbols, local roots, and elements of personal identity.
@@ -384,12 +384,31 @@
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
     const spot = params.get("spot") || "Not selected";
-    const price = params.get("price") || "Up to €15";
+    const price = params.get("price") || "€15 — fixed participation fee";
 
-    document.getElementById("summaryRoom").textContent = room;
+    const roomConfig = {
+      Identity: {
+        guideline:
+          '<strong>Identity Room guideline:</strong> submissions for this room must be <strong>selfies</strong> that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and elements of personal identity.'
+      },
+      Love: {
+        guideline:
+          '<strong>Love Room guideline:</strong> submissions for this room should represent love in its many forms, including family, partners, friendships, pets, passions, and meaningful emotional moments.'
+      },
+      Creativity: {
+        guideline:
+          '<strong>Creativity Room guideline:</strong> submissions for this room should express human imagination through art, photography, drawings, concepts, ideas, and visual experimentation. Artistic nudity is allowed. Explicit sexual content is prohibited.'
+      }
+    };
+
+    const currentRoom = roomConfig[room] ? room : "Identity";
+
+    document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = wall;
     document.getElementById("summarySpot").textContent = spot;
     document.getElementById("summaryPrice").textContent = price;
+    document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
+    document.getElementById("backToRoom").href = `room.html?room=${encodeURIComponent(currentRoom)}`;
 
     const checkoutForm = document.getElementById("checkoutForm");
 
@@ -403,7 +422,15 @@
       const notes = encodeURIComponent(document.getElementById("notes").value);
 
       window.location.href =
-        `upload.html?room=${encodeURIComponent(room)}&wall=${encodeURIComponent(wall)}&spot=${encodeURIComponent(spot)}&price=${encodeURIComponent(price)}&fullName=${fullName}&email=${email}&country=${country}&instagram=${instagram}&notes=${notes}`;
+        `upload.html?room=${encodeURIComponent(currentRoom)}` +
+        `&wall=${encodeURIComponent(wall)}` +
+        `&spot=${encodeURIComponent(spot)}` +
+        `&price=${encodeURIComponent(price)}` +
+        `&fullName=${fullName}` +
+        `&email=${email}` +
+        `&country=${country}` +
+        `&instagram=${instagram}` +
+        `&notes=${notes}`;
     });
   </script>
 </body>
