@@ -136,6 +136,16 @@
       font-size: 1rem;
     }
 
+    .room-note {
+      margin-top: 20px;
+      padding: 16px 18px;
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 18px;
+      color: #555;
+      font-size: 0.96rem;
+    }
+
     .buttons {
       display: flex;
       gap: 14px;
@@ -225,7 +235,7 @@
     <section class="hero">
       <div class="container">
         <h1>Your submission is complete.</h1>
-        <p>
+        <p id="heroText">
           Thank you for becoming part of The Human Mosaic.
           Your participation request has been received and will be reviewed before final confirmation.
         </p>
@@ -240,7 +250,7 @@
           <div class="grid">
             <div class="steps-box">
               <h2>What happens next</h2>
-              <p>
+              <p id="stepsIntro">
                 Your selected position and submitted image are now part of the participation review process.
               </p>
 
@@ -259,6 +269,12 @@
                   <strong>3. Certificate</strong>
                   You will receive your official digital certificate once your participation is validated.
                 </div>
+              </div>
+
+              <div class="room-note" id="roomGuideline">
+                <strong>Identity Room guideline:</strong> submissions for this room must be
+                <strong>selfies</strong> that reflect who we are and where we come from, including monuments,
+                traditions, cultural symbols, local roots, and elements of personal identity.
               </div>
 
               <div class="buttons">
@@ -307,7 +323,7 @@
 
               <div class="summary-line">
                 <div class="summary-label">Price</div>
-                <div class="summary-value" id="summaryPrice">Up to €15</div>
+                <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
               </div>
             </div>
           </div>
@@ -335,13 +351,33 @@
   <script>
     const params = new URLSearchParams(window.location.search);
 
+    const room = params.get("room") || "Identity";
+
+    const roomConfig = {
+      Identity: {
+        guideline:
+          '<strong>Identity Room guideline:</strong> submissions for this room must be <strong>selfies</strong> that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and elements of personal identity.'
+      },
+      Love: {
+        guideline:
+          '<strong>Love Room guideline:</strong> submissions for this room should represent love in its many forms, including family, partners, friendships, pets, passions, and meaningful emotional moments.'
+      },
+      Creativity: {
+        guideline:
+          '<strong>Creativity Room guideline:</strong> submissions for this room should express human imagination through art, photography, drawings, concepts, ideas, and visual experimentation. Artistic nudity is allowed. Explicit sexual content is prohibited.'
+      }
+    };
+
+    const currentRoom = roomConfig[room] ? room : "Identity";
+
     document.getElementById("summaryName").textContent = params.get("fullName") || "—";
     document.getElementById("summaryEmail").textContent = params.get("email") || "—";
     document.getElementById("summaryCountry").textContent = params.get("country") || "—";
-    document.getElementById("summaryRoom").textContent = params.get("room") || "Identity";
+    document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = params.get("wall") || "Front Wall";
     document.getElementById("summarySpot").textContent = params.get("spot") || "Not selected";
     document.getElementById("summaryPrice").textContent = params.get("price") || "€15 — fixed participation fee";
+    document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
   </script>
 </body>
 </html>
