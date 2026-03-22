@@ -45,6 +45,14 @@
       font-size: 1.05rem;
     }
 
+    .hero-impact {
+      margin-top: 18px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 0.01em;
+    }
+
     section {
       padding: 40px 0 70px;
       border-top: 1px solid #e3e3e3;
@@ -185,6 +193,14 @@
       transform: translateY(-2px);
     }
 
+    .btn-disabled {
+      border: 1px solid #d7d7d7;
+      color: #999;
+      background: #f4f4f4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     .contact-note {
       margin-top: 26px;
       color: #555;
@@ -239,23 +255,24 @@
           Thank you for becoming part of The Human Mosaic.
           Your participation request has been successfully received and is now entering the official review process.
         </p>
+        <div class="hero-impact">You are now part of something that will live forever.</div>
       </div>
     </section>
 
     <section>
       <div class="container">
         <div class="success-card">
-          <div class="success-badge">Participation request received</div>
+          <div class="success-badge">Submission successfully received</div>
 
           <div class="grid">
             <div class="steps-box">
-              <h2>What happens next</h2>
+              <h2>What happens next?</h2>
               <p id="stepsIntro">
                 Your selected position and submitted image are now part of the participation review process.
               </p>
 
               <div class="room-note" style="margin-bottom: 18px;">
-                <strong>Your place has been reserved.</strong>
+                <strong>Your spot has been officially reserved.</strong>
                 You have completed the participation flow and your selected position is now associated with your submission request.
               </div>
 
@@ -285,6 +302,7 @@
               <div class="buttons">
                 <a href="index.html" class="btn btn-primary">Return Home</a>
                 <a href="join.html" class="btn btn-secondary">Join Another Room</a>
+                <a href="#" class="btn btn-disabled">Track Your Submission — Coming Soon</a>
               </div>
 
               <div class="contact-note">
@@ -295,6 +313,11 @@
 
             <div class="summary-box">
               <h2>Your Submission</h2>
+
+              <div class="summary-line">
+                <div class="summary-label">Submission ID</div>
+                <div class="summary-value" id="summaryId">HM-000001</div>
+              </div>
 
               <div class="summary-line">
                 <div class="summary-label">Full Name</div>
@@ -328,7 +351,7 @@
 
               <div class="summary-line">
                 <div class="summary-label">Price</div>
-                <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
+                <div class="summary-value" id="summaryPrice">€15 — one-time participation fee</div>
               </div>
             </div>
           </div>
@@ -375,13 +398,34 @@
 
     const currentRoom = roomConfig[room] ? room : "Identity";
 
+    function generateSubmissionId() {
+      const roomCodeMap = {
+        Identity: "ID",
+        Love: "LV",
+        Creativity: "CR"
+      };
+
+      const roomCode = roomCodeMap[currentRoom] || "HM";
+      const spot = (params.get("spot") || "000").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      const name = (params.get("fullName") || "Guest").trim();
+      const initials = name
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part[0].toUpperCase())
+        .join("") || "GU";
+
+      return `HM-${roomCode}-${spot}-${initials}`;
+    }
+
+    document.getElementById("summaryId").textContent = generateSubmissionId();
     document.getElementById("summaryName").textContent = params.get("fullName") || "—";
     document.getElementById("summaryEmail").textContent = params.get("email") || "—";
     document.getElementById("summaryCountry").textContent = params.get("country") || "—";
     document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = params.get("wall") || "Front Wall";
     document.getElementById("summarySpot").textContent = params.get("spot") || "Not selected";
-    document.getElementById("summaryPrice").textContent = params.get("price") || "€15 — fixed participation fee";
+    document.getElementById("summaryPrice").textContent = params.get("price") || "€15 — one-time participation fee";
     document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
   </script>
 </body>
