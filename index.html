@@ -28,32 +28,83 @@
     }
 
     .hero {
-      padding: 160px 0 100px;
-      text-align: left;
+      position: relative;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      padding: 140px 0 100px;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.58) 38%, rgba(0,0,0,0.30) 100%),
+        url('hero-background.jpg') center/cover no-repeat;
+      color: white;
+      border-top: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.18), rgba(0,0,0,0.04));
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      margin-bottom: 22px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.92);
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
     }
 
     .hero h1 {
-      font-size: clamp(3rem, 7vw, 6rem);
-      line-height: 1.05;
-      margin-bottom: 40px;
+      font-size: clamp(3.2rem, 7vw, 6.4rem);
+      line-height: 0.98;
+      margin-bottom: 26px;
+      color: white;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.15s;
     }
 
     .tagline {
-      font-size: 1.2rem;
-      color: #555;
-      margin-bottom: 30px;
+      font-size: 1.22rem;
+      color: rgba(255,255,255,0.86);
+      margin-bottom: 22px;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
-      animation-delay: 0.4s;
+      animation-delay: 0.35s;
+    }
+
+    .hero-highlight {
+      margin-top: 10px;
+      font-size: 1.18rem;
+      color: white;
+      max-width: 680px;
+      font-weight: 600;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.5s;
     }
 
     .intro {
-      max-width: 650px;
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 32px;
+      max-width: 700px;
+      font-size: 1.02rem;
+      color: rgba(255,255,255,0.82);
+      margin-top: 22px;
+      margin-bottom: 34px;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
       animation-delay: 0.7s;
@@ -74,7 +125,10 @@
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
-      margin-top: 36px;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.9s;
     }
 
     .btn {
@@ -107,6 +161,28 @@
       background: #111;
       color: white;
       transform: translateY(-2px);
+    }
+
+    .hero .btn-primary {
+      background: white;
+      color: #111;
+    }
+
+    .hero .btn-primary:hover {
+      background: #f0f0f0;
+    }
+
+    .hero .btn-secondary {
+      border: 1px solid rgba(255,255,255,0.45);
+      color: white;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(4px);
+    }
+
+    .hero .btn-secondary:hover {
+      background: white;
+      color: #111;
+      border-color: white;
     }
 
     section {
@@ -194,6 +270,24 @@
     footer a:hover {
       text-decoration: underline;
     }
+
+    @media (max-width: 768px) {
+      .hero {
+        min-height: auto;
+        padding: 120px 0 80px;
+        background:
+          linear-gradient(180deg, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.48) 100%),
+          url('hero-background.jpg') center/cover no-repeat;
+      }
+
+      .hero h1 {
+        line-height: 1.02;
+      }
+
+      .hero-badge {
+        font-size: 0.82rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -210,29 +304,35 @@
   <main>
     <section class="hero">
       <div class="container">
-        <h1>
-          3 million faces.<br>
-          3 rooms.<br>
-          One <span style="color:#ff5f6d;">human</span> mosaic.
-        </h1>
+        <div class="hero-content">
+          <div class="hero-badge">
+            A permanent global artwork in the making
+          </div>
 
-        <div class="tagline">
-          One humanity. Millions of faces. One mosaic.
-        </div>
+          <h1>
+            3 million faces.<br>
+            3 rooms.<br>
+            One human mosaic.
+          </h1>
 
-        <div style="margin-top:18px; font-size:1.25rem; color:#111; max-width:650px; font-weight:600;">
-          Potentially the largest collective artwork ever created.
-        </div>
+          <div class="tagline">
+            One humanity. Millions of faces. One mosaic.
+          </div>
 
-        <p class="intro">
-          Claim your place in <span class="highlight">The Human Mosaic</span>, a collective artwork created by people from around the world.
-          Each participant becomes part of a permanent museum installation composed of three immersive rooms:
-          <span class="highlight">Identity, Love, and Creativity</span>.
-        </p>
+          <div class="hero-highlight">
+            Potentially the largest collective artwork ever created.
+          </div>
 
-        <div class="buttons">
-          <a href="join.html" class="btn btn-primary">Claim Your Spot</a>
-          <a href="#project" class="btn btn-secondary">Explore the Project</a>
+          <p class="intro">
+            Claim your place in <span class="highlight" style="color:white;">The Human Mosaic</span>, a collective artwork created by people from around the world.
+            Each participant becomes part of a permanent museum installation composed of three immersive rooms:
+            <span class="highlight" style="color:white;">Identity, Love, and Creativity</span>.
+          </p>
+
+          <div class="buttons">
+            <a href="join.html" class="btn btn-primary">Claim Your Spot</a>
+            <a href="#project" class="btn btn-secondary">Explore the Project</a>
+          </div>
         </div>
       </div>
     </section>
