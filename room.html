@@ -113,7 +113,7 @@
       white-space: nowrap;
     }
 
-    .identity-note {
+    .room-note {
       margin-bottom: 18px;
       padding: 16px 18px;
       background: #fcfcfb;
@@ -348,7 +348,7 @@
     <section class="hero">
       <div class="container">
         <h1>Select your wall.<br>Choose your spot.</h1>
-        <p>
+        <p id="heroText">
           You are currently reserving your place in the <strong>Identity Room</strong>.
           Every selected position becomes part of a permanent global artwork.
           Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.
@@ -370,7 +370,7 @@
             <div class="status-pill">134,382 / 1,000,000 claimed</div>
           </div>
 
-          <div class="identity-note">
+          <div class="room-note" id="roomNote">
             <strong>Identity Room guideline:</strong> submissions for this room must be
             <strong>selfies</strong> that reflect who we are and where we come from, including
             monuments, traditions, cultural symbols, local roots, and elements of personal identity.
@@ -420,7 +420,7 @@
 
           <div class="summary-line">
             <div class="summary-label">Price</div>
-            <div class="summary-value">€15 — fixed participation fee</div>
+            <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
           </div>
 
           <button class="continue-btn" id="continueBtn" disabled>
@@ -453,9 +453,49 @@
     const continueBtn = document.getElementById("continueBtn");
     const gridTitle = document.getElementById("gridTitle");
     const wallButtons = document.querySelectorAll(".wall-btn");
+    const summaryRoom = document.getElementById("summaryRoom");
+    const summaryPrice = document.getElementById("summaryPrice");
+    const roomNote = document.getElementById("roomNote");
+    const heroText = document.getElementById("heroText");
+
+    const params = new URLSearchParams(window.location.search);
+    const selectedRoomName = params.get("room") || "Identity";
+
+    const roomConfig = {
+      Identity: {
+        price: "€15 — fixed participation fee",
+        hero:
+          'You are currently reserving your place in the <strong>Identity Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
+        note:
+          '<strong>Identity Room guideline:</strong> submissions for this room must be <strong>selfies</strong> that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and elements of personal identity.'
+      },
+      Love: {
+        price: "€15 — fixed participation fee",
+        hero:
+          'You are currently reserving your place in the <strong>Love Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
+        note:
+          '<strong>Love Room guideline:</strong> submissions for this room should represent love in its many forms, including family, partners, friendships, pets, passions, and meaningful emotional moments.'
+      },
+      Creativity: {
+        price: "€20 — fixed participation fee",
+        hero:
+          'You are currently reserving your place in the <strong>Creativity Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
+        note:
+          '<strong>Creativity Room guideline:</strong> submissions for this room should express human imagination through art, photography, drawings, concepts, ideas, and visual experimentation. Artistic nudity is allowed. Explicit sexual content is prohibited.'
+      }
+    };
+
+    const currentRoom = roomConfig[selectedRoomName] ? selectedRoomName : "Identity";
+    const currentPrice = roomConfig[currentRoom].price;
 
     let selectedWall = "Front Wall";
     let selectedSpot = null;
+
+    summaryRoom.textContent = currentRoom;
+    summaryPrice.textContent = currentPrice;
+    gridTitle.textContent = `${currentRoom} Room — Front Wall`;
+    roomNote.innerHTML = roomConfig[currentRoom].note;
+    heroText.innerHTML = roomConfig[currentRoom].hero;
 
     function generateGrid() {
       spotGrid.innerHTML = "";
@@ -498,7 +538,7 @@
         btn.classList.add("active");
         selectedWall = btn.dataset.wall;
         summaryWall.textContent = selectedWall;
-        gridTitle.textContent = `Identity Room — ${selectedWall}`;
+        gridTitle.textContent = `${currentRoom} Room — ${selectedWall}`;
         generateGrid();
       });
     });
@@ -506,10 +546,10 @@
     continueBtn.addEventListener("click", () => {
       if (!selectedSpot) return;
 
-      const room = "Identity";
+      const room = encodeURIComponent(currentRoom);
       const wall = encodeURIComponent(selectedWall);
       const spot = encodeURIComponent(selectedSpot);
-      const price = encodeURIComponent("€15 — fixed participation fee");
+      const price = encodeURIComponent(currentPrice);
 
       window.location.href = `checkout.html?room=${room}&wall=${wall}&spot=${spot}&price=${price}`;
     });
