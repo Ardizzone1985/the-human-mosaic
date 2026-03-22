@@ -113,6 +113,7 @@
     .summary-value {
       font-size: 1.02rem;
       font-weight: 600;
+      word-break: break-word;
     }
 
     .steps-box h2 {
@@ -379,8 +380,6 @@
   <script>
     const params = new URLSearchParams(window.location.search);
 
-    const room = params.get("room") || "Identity";
-
     const roomConfig = {
       Identity: {
         guideline:
@@ -396,37 +395,72 @@
       }
     };
 
-    const currentRoom = roomConfig[room] ? room : "Identity";
-
-    function generateSubmissionId() {
+    function generateSubmissionId(room, spot, fullName) {
       const roomCodeMap = {
         Identity: "ID",
         Love: "LV",
         Creativity: "CR"
       };
 
-      const roomCode = roomCodeMap[currentRoom] || "HM";
-      const spot = (params.get("spot") || "000").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-      const name = (params.get("fullName") || "Guest").trim();
-      const initials = name
+      const roomCode = roomCodeMap[room] || "HM";
+      const cleanSpot = (spot || "000").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      const safeName = (fullName || "Guest").trim();
+
+      const initials = safeName
         .split(" ")
         .filter(Boolean)
         .slice(0, 2)
-        .map(part => part[0].toUpperCase())
+        .map(part => part.charAt(0).toUpperCase())
         .join("") || "GU";
 
-      return `HM-${roomCode}-${spot}-${initials}`;
+      return `HM-${roomCode}-${cleanSpot}-${initials}`;
     }
 
-    document.getElementById("summaryId").textContent = generateSubmissionId();
-    document.getElementById("summaryName").textContent = params.get("fullName") || "—";
-    document.getElementById("summaryEmail").textContent = params.get("email") || "—";
-    document.getElementById("summaryCountry").textContent = params.get("country") || "—";
-    document.getElementById("summaryRoom").textContent = currentRoom;
-    document.getElementById("summaryWall").textContent = params.get("wall") || "Front Wall";
-    document.getElementById("summarySpot").textContent = params.get("spot") || "Not selected";
-    document.getElementById("summaryPrice").textContent = params.get("price") || "€15 — one-time participation fee";
-    document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
+    function getSubmissionData() {
+      let savedData = {};
+      try {
+        savedData = JSON.parse(localStorage.getItem("thm_submission") || "{}");
+      } catch (error) {
+        savedData = {};
+      }
+
+      const fallbackRoom = params.get("room") || "Identity";
+      const finalRoom = savedData.room || fallbackRoom;
+      const finalFullName = savedData.fullName || params.get("fullName") || "—";
+      const finalEmail = savedData.email || params.get("email") || "—";
+      const finalCountry = savedData.country || params.get("country") || "—";
+      const finalWall = savedData.wall || params.get("wall") || "Front Wall";
+      const finalSpot = savedData.spot || params.get("spot") || "Not selected";
+      const finalPrice = savedData.price || params.get("price") || "€15 — one-time participation fee";
+
+      const finalSubmissionId =
+        savedData.submissionId ||
+        params.get("submissionId") ||
+        generateSubmissionId(finalRoom, finalSpot, finalFullName);
+
+      return {
+        room: roomConfig[finalRoom] ? finalRoom : "Identity",
+        fullName: finalFullName,
+        email: finalEmail,
+        country: finalCountry,
+        wall: finalWall,
+        spot: finalSpot,
+        price: finalPrice,
+        submissionId: finalSubmissionId
+      };
+    }
+
+    const submission = getSubmissionData();
+
+    document.getElementById("summaryId").textContent = submission.submissionId;
+    document.getElementById("summaryName").textContent = submission.fullName;
+    document.getElementById("summaryEmail").textContent = submission.email;
+    document.getElementById("summaryCountry").textContent = submission.country;
+    document.getElementById("summaryRoom").textContent = submission.room;
+    document.getElementById("summaryWall").textContent = submission.wall;
+    document.getElementById("summarySpot").textContent = submission.spot;
+    document.getElementById("summaryPrice").textContent = submission.price;
+    document.getElementById("roomGuideline").innerHTML = roomConfig[submission.room].guideline;
   </script>
 </body>
 </html>
