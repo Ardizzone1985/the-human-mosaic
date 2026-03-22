@@ -347,7 +347,7 @@
 
           <div class="summary-line">
             <div class="summary-label">Price</div>
-            <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
+            <div class="summary-value" id="summaryPrice">€15 — one-time participation fee</div>
           </div>
 
           <div class="highlight-note" id="roomGuideline">
@@ -383,7 +383,7 @@
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
     const spot = params.get("spot") || "Not selected";
-    const price = params.get("price") || "€15 — fixed participation fee";
+    const price = params.get("price") || "€15 — one-time participation fee";
     const fullName = params.get("fullName") || "—";
     const email = params.get("email") || "—";
     const country = params.get("country") || "—";
@@ -416,6 +416,27 @@
     };
 
     const currentRoom = roomConfig[room] ? room : "Identity";
+
+    function generateSubmissionId() {
+      const roomCodeMap = {
+        Identity: "ID",
+        Love: "LV",
+        Creativity: "CR"
+      };
+
+      const roomCode = roomCodeMap[currentRoom] || "HM";
+      const cleanSpot = (spot || "000").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      const safeName = (fullName || "Guest").trim();
+
+      const initials = safeName
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("") || "GU";
+
+      return `HM-${roomCode}-${cleanSpot}-${initials}`;
+    }
 
     document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = wall;
@@ -462,25 +483,43 @@
     });
 
     uploadForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+      e.preventDefault();
 
-  const file = imageUpload.files[0];
-  if (!file) return;
+      const file = imageUpload.files[0];
+      if (!file) return;
 
-  const confirmed = confirm(
-    "Are you sure you want to submit this image?\n\nAfter submission, it will no longer be possible to modify it in this preview flow."
-  );
+      const confirmed = confirm(
+        "Are you sure you want to submit this image?\n\nAfter submission, it will no longer be possible to modify it in this preview flow."
+      );
 
-  if (!confirmed) return;
+      if (!confirmed) return;
 
-  window.location.href =
-    `success.html?room=${encodeURIComponent(currentRoom)}` +
-    `&wall=${encodeURIComponent(wall)}` +
-    `&spot=${encodeURIComponent(spot)}` +
-    `&price=${encodeURIComponent(price)}` +
-    `&fullName=${encodeURIComponent(fullName)}` +
-    `&email=${encodeURIComponent(email)}` +
-    `&country=${encodeURIComponent(country)}`;
+      const submissionId = generateSubmissionId();
+
+      const submissionData = {
+        submissionId: submissionId,
+        fullName: fullName,
+        email: email,
+        country: country,
+        room: currentRoom,
+        wall: wall,
+        spot: spot,
+        price: price,
+        imageFileName: file.name,
+        submittedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("thm_submission", JSON.stringify(submissionData));
+
+      window.location.href =
+        `success.html?submissionId=${encodeURIComponent(submissionId)}` +
+        `&room=${encodeURIComponent(currentRoom)}` +
+        `&wall=${encodeURIComponent(wall)}` +
+        `&spot=${encodeURIComponent(spot)}` +
+        `&price=${encodeURIComponent(price)}` +
+        `&fullName=${encodeURIComponent(fullName)}` +
+        `&email=${encodeURIComponent(email)}` +
+        `&country=${encodeURIComponent(country)}`;
     });
   </script>
 </body>
