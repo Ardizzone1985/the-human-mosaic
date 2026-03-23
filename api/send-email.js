@@ -78,7 +78,7 @@ export default async function handler(req, res) {
     const { data, error } = await resend.emails.send({
       from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
       to: [email],
-      subject: 'Your Submission Has Been Received — The Human Mosaic',
+      subject: 'Welcome to The Human Mosaic — Your place is reserved',
       html: `
         <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 680px; margin: 0 auto; padding: 24px;">
           <div style="background: #ffffff; border: 1px solid #e8e8e8; border-radius: 20px; padding: 32px;">
