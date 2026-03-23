@@ -579,7 +579,7 @@
         .insert([dbSubmission]);
 
       if (dbError) {
-        alert("Error saving submission. Check console.");
+        alert("Supabase error: " + (dbError.message || "Unknown error"));
         console.error("Supabase insert error:", dbError);
         return;
       }
