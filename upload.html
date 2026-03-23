@@ -188,6 +188,7 @@
     .summary-value {
       font-size: 1.05rem;
       font-weight: 600;
+      word-break: break-word;
     }
 
     .highlight-note {
@@ -438,6 +439,43 @@
       return `HM-${roomCode}-${cleanSpot}-${initials}`;
     }
 
+    async function sendConfirmationEmail(submissionData) {
+      const alreadySent = sessionStorage.getItem("thm_email_sent");
+      if (alreadySent === submissionData.submissionId) {
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fullName: submissionData.fullName,
+            email: submissionData.email,
+            country: submissionData.country,
+            room: submissionData.room,
+            wall: submissionData.wall,
+            spot: submissionData.spot,
+            price: submissionData.price,
+            submissionId: submissionData.submissionId
+          })
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          console.error("Email send failed:", result || response.statusText);
+          return;
+        }
+
+        sessionStorage.setItem("thm_email_sent", submissionData.submissionId);
+      } catch (error) {
+        console.error("Email request error:", error);
+      }
+    }
+
     document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = wall;
     document.getElementById("summarySpot").textContent = spot;
@@ -482,7 +520,7 @@
       reader.readAsDataURL(file);
     });
 
-    uploadForm.addEventListener("submit", function (e) {
+    uploadForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const file = imageUpload.files[0];
@@ -497,19 +535,21 @@
       const submissionId = generateSubmissionId();
 
       const submissionData = {
-        submissionId: submissionId,
-        fullName: fullName,
-        email: email,
-        country: country,
+        submissionId,
+        fullName,
+        email,
+        country,
         room: currentRoom,
-        wall: wall,
-        spot: spot,
-        price: price,
+        wall,
+        spot,
+        price,
         imageFileName: file.name,
         submittedAt: new Date().toISOString()
       };
 
       localStorage.setItem("thm_submission", JSON.stringify(submissionData));
+
+      await sendConfirmationEmail(submissionData);
 
       window.location.href =
         `success.html?submissionId=${encodeURIComponent(submissionId)}` +
