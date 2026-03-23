@@ -80,39 +80,59 @@ export default async function handler(req, res) {
       to: [email],
       subject: 'Your Submission Has Been Received — The Human Mosaic',
       html: `
-        <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f1f1f;">
-          <h2>Welcome to The Human Mosaic</h2>
+        <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 680px; margin: 0 auto; padding: 24px;">
+          <div style="background: #ffffff; border: 1px solid #e8e8e8; border-radius: 20px; padding: 32px;">
+            <p style="font-size: 12px; letter-spacing: 0.14em; color: #777; margin: 0 0 18px;">
+              ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+            </p>
 
-          <p>Hello ${safeFullName},</p>
+            <h2 style="margin: 0 0 18px; font-size: 28px; line-height: 1.2;">
+              Welcome to The Human Mosaic
+            </h2>
 
-          <p>Thank you for becoming part of <strong>The Human Mosaic</strong>.</p>
+            <p>Hello ${safeFullName},</p>
 
-          <p><strong>You are now part of something that will live forever.</strong></p>
+            <p>Thank you for becoming part of <strong>The Human Mosaic</strong>.</p>
 
-          <p>Your participation request has been successfully received and is now entering the official review process.</p>
+            <p><strong>You are now part of something that will live forever.</strong></p>
 
-          <hr style="border:none; border-top:1px solid #e3e3e3; margin:24px 0;">
+            <p>Your participation request has been successfully received and is now entering the official review process.</p>
 
-          <p><strong>Submission ID:</strong> ${safeSubmissionId}</p>
-          <p><strong>Room:</strong> ${safeRoom}</p>
-          <p><strong>Wall:</strong> ${safeWall}</p>
-          <p><strong>Spot:</strong> ${safeSpot}</p>
-          <p><strong>Country:</strong> ${safeCountry}</p>
-          <p><strong>Participation Fee:</strong> ${safePrice}</p>
+            <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
-          <hr style="border:none; border-top:1px solid #e3e3e3; margin:24px 0;">
+            <p><strong>Submission ID:</strong> ${safeSubmissionId}</p>
+            <p><strong>Room:</strong> ${safeRoom}</p>
+            <p><strong>Wall:</strong> ${safeWall}</p>
+            <p><strong>Spot:</strong> ${safeSpot}</p>
+            <p><strong>Country:</strong> ${safeCountry}</p>
+            <p><strong>Participation Fee:</strong> ${safePrice}</p>
 
-          <p><strong>What happens next?</strong></p>
-          <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
-          <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
-          <p>3. Certificate — You will receive your official digital certificate once your participation is validated.</p>
+            <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
-          <p style="margin-top: 24px;">For questions or support: info@thehumanmosaic.art</p>
+            <p><strong>What happens next?</strong></p>
+            <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
+            <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
+            <p>3. Certificate — You will receive your official digital certificate once your participation is validated.</p>
 
-          <p style="margin-top: 24px;">— The Human Mosaic</p>
-          <p style="font-size:12px;color:#777;margin-top:16px;">
-          You are receiving this email because you participated in The Human Mosaic.
-          </p>
+            <p style="margin-top: 24px;">
+              For questions or support:
+              <a href="mailto:info@thehumanmosaic.art" style="color: #111; text-decoration: none; font-weight: 700;">
+                info@thehumanmosaic.art
+              </a>
+            </p>
+
+            <p style="margin-top: 24px; font-weight: 700;">— The Human Mosaic</p>
+
+            <hr style="border: none; border-top: 1px solid #efefef; margin: 24px 0 16px;">
+
+            <p style="font-size: 12px; color: #777; margin: 0 0 8px;">
+              You are receiving this email because you participated in The Human Mosaic.
+            </p>
+
+            <p style="font-size: 12px; color: #777; margin: 0;">
+              If you did not submit this request, please ignore this email.
+            </p>
+          </div>
         </div>
       `,
       text: `
@@ -134,11 +154,14 @@ Country: ${country || '—'}
 Participation Fee: ${price || '€15 — one-time participation fee'}
 
 What happens next?
-1. Review
-2. Confirmation
-3. Certificate
+1. Review — We verify that your submission matches the project guidelines and the selected room.
+2. Confirmation — Your position and participation request are confirmed after review.
+3. Certificate — You will receive your official digital certificate once your participation is validated.
 
 Support: info@thehumanmosaic.art
+
+You are receiving this email because you participated in The Human Mosaic.
+If you did not submit this request, please ignore this email.
 
 — The Human Mosaic
       `.trim()
