@@ -92,6 +92,10 @@ export default async function handler(req, res) {
 
             <p>Hello ${safeFullName},</p>
 
+            <p style="color:#555;">
+            We’re glad to have you in this global artwork.
+            </p>
+
             <p>Thank you for becoming part of <strong>The Human Mosaic</strong>.</p>
 
             <p><strong>You are now part of something that will live forever.</strong></p>
