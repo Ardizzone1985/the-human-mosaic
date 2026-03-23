@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     } = req.body;
 
     const response = await resend.emails.send({
-      from: 'The Human Mosaic <info@thehumanmosaic.art>',
+      from: 'The Human Mosaic <noreply@mail.thehumanmosaic.art>',
       to: email,
       subject: 'Welcome to The Human Mosaic',
       html: `
