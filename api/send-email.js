@@ -110,6 +110,9 @@ export default async function handler(req, res) {
           <p style="margin-top: 24px;">For questions or support: info@thehumanmosaic.art</p>
 
           <p style="margin-top: 24px;">— The Human Mosaic</p>
+          <p style="font-size:12px;color:#777;margin-top:16px;">
+          You are receiving this email because you participated in The Human Mosaic.
+          </p>
         </div>
       `,
       text: `
