@@ -76,7 +76,7 @@ export default async function handler(req, res) {
     const safeSubmissionId = escapeHtml(submissionId);
 
     const { data, error } = await resend.emails.send({
-      from: 'The Human Mosaic <noreply@mail.thehumanmosaic.art>',
+      from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
       to: [email],
       subject: 'Your Submission Has Been Received — The Human Mosaic',
       html: `
