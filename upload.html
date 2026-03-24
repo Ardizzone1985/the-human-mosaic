@@ -342,6 +342,11 @@
           </div>
 
           <div class="summary-line">
+            <div class="summary-label">Section</div>
+            <div class="summary-value" id="summarySection">F1</div>
+          </div>
+
+          <div class="summary-line">
             <div class="summary-label">Spot</div>
             <div class="summary-value" id="summarySpot">A-01</div>
           </div>
@@ -391,6 +396,7 @@
 
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
+    const section = params.get("section") || "F1";
     const spot = params.get("spot") || "Not selected";
     const price = params.get("price") || "€15 — one-time participation fee";
     const fullName = params.get("fullName") || "—";
@@ -466,6 +472,7 @@
             country: submissionData.country,
             room: submissionData.room,
             wall: submissionData.wall,
+            section: submissionData.section,
             spot: submissionData.spot,
             price: submissionData.price,
             submissionId: submissionData.submissionId
@@ -489,6 +496,7 @@
 
     document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = wall;
+    document.getElementById("summarySection").textContent = section;
     document.getElementById("summarySpot").textContent = spot;
     document.getElementById("summaryPrice").textContent = price;
     document.getElementById("summaryName").textContent = fullName;
@@ -501,6 +509,7 @@
     document.getElementById("backToCheckout").href =
       `checkout.html?room=${encodeURIComponent(currentRoom)}` +
       `&wall=${encodeURIComponent(wall)}` +
+      `&section=${encodeURIComponent(section)}` +
       `&spot=${encodeURIComponent(spot)}` +
       `&price=${encodeURIComponent(price)}` +
       `&fullName=${encodeURIComponent(fullName)}` +
@@ -553,6 +562,7 @@
         country,
         room: currentRoom,
         wall,
+        section,
         spot,
         price,
         note,
@@ -567,6 +577,7 @@
         country: country,
         room: currentRoom,
         wall: wall,
+        section: section,
         spot: spot,
         price: price,
         note: note,
@@ -592,6 +603,7 @@
         `success.html?submissionId=${encodeURIComponent(submissionId)}` +
         `&room=${encodeURIComponent(currentRoom)}` +
         `&wall=${encodeURIComponent(wall)}` +
+        `&section=${encodeURIComponent(section)}` +
         `&spot=${encodeURIComponent(spot)}` +
         `&price=${encodeURIComponent(price)}` +
         `&fullName=${encodeURIComponent(fullName)}` +
