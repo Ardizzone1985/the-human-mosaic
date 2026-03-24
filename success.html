@@ -346,6 +346,11 @@
               </div>
 
               <div class="summary-line">
+                <div class="summary-label">Section</div>
+                <div class="summary-value" id="summarySection">F1</div>
+              </div>
+
+              <div class="summary-line">
                 <div class="summary-label">Spot</div>
                 <div class="summary-value" id="summarySpot">A-01</div>
               </div>
@@ -430,6 +435,7 @@
       const finalEmail = savedData.email || params.get("email") || "—";
       const finalCountry = savedData.country || params.get("country") || "—";
       const finalWall = savedData.wall || params.get("wall") || "Front Wall";
+      const finalSection = savedData.section || params.get("section") || "F1";
       const finalSpot = savedData.spot || params.get("spot") || "Not selected";
       const finalPrice = savedData.price || params.get("price") || "€15 — one-time participation fee";
 
@@ -444,6 +450,7 @@
         email: finalEmail,
         country: finalCountry,
         wall: finalWall,
+        section: finalSection,
         spot: finalSpot,
         price: finalPrice,
         submissionId: finalSubmissionId
@@ -458,6 +465,7 @@
     document.getElementById("summaryCountry").textContent = submission.country;
     document.getElementById("summaryRoom").textContent = submission.room;
     document.getElementById("summaryWall").textContent = submission.wall;
+    document.getElementById("summarySection").textContent = submission.section;
     document.getElementById("summarySpot").textContent = submission.spot;
     document.getElementById("summaryPrice").textContent = submission.price;
     document.getElementById("roomGuideline").innerHTML = roomConfig[submission.room].guideline;
