@@ -55,14 +55,23 @@
       align-items: start;
     }
 
-    .wall-tabs {
+    .wall-tabs,
+    .section-tabs {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin: 22px 0 28px;
     }
 
-    .wall-btn {
+    .wall-tabs {
+      margin: 22px 0 18px;
+    }
+
+    .section-tabs {
+      margin: 0 0 28px;
+    }
+
+    .wall-btn,
+    .section-btn {
       border: 1px solid #111;
       background: white;
       color: #111;
@@ -73,12 +82,14 @@
       transition: all 0.2s ease;
     }
 
-    .wall-btn:hover {
+    .wall-btn:hover,
+    .section-btn:hover {
       background: #111;
       color: white;
     }
 
-    .wall-btn.active {
+    .wall-btn.active,
+    .section-btn.active {
       background: #111;
       color: white;
     }
@@ -164,7 +175,7 @@
       background: linear-gradient(135deg, #ff7a18, #ff5f6d 55%, #8f3fff);
       border-color: transparent;
       box-shadow: 0 8px 18px rgba(255,95,109,0.28);
-      transform: scale(1.15);
+      transform: scale(1.08);
     }
 
     .spot::after {
@@ -174,10 +185,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       font-weight: 700;
       color: transparent;
       transition: color 0.2s ease;
+      padding: 4px;
+      text-align: center;
     }
 
     .spot:hover::after,
@@ -257,6 +270,7 @@
     .summary-value {
       font-size: 1.05rem;
       font-weight: 600;
+      word-break: break-word;
     }
 
     .continue-btn {
@@ -288,6 +302,11 @@
     .note {
       margin-top: 14px;
       font-size: 0.92rem;
+      color: #666;
+    }
+
+    .helper {
+      margin-bottom: 15px;
       color: #666;
     }
 
@@ -359,6 +378,8 @@
           <button class="wall-btn" data-wall="Left Wall">Left Wall</button>
           <button class="wall-btn" data-wall="Right Wall">Right Wall</button>
         </div>
+
+        <div class="section-tabs" id="sectionTabs"></div>
       </div>
     </section>
 
@@ -366,8 +387,8 @@
       <div class="container top-panel">
         <div class="mosaic-card">
           <div class="mosaic-head">
-            <h2 id="gridTitle">Identity Room — Front Wall</h2>
-            <div class="status-pill">134,382 / 1,000,000 claimed</div>
+            <h2 id="gridTitle">Identity Room — Front Wall — F1</h2>
+            <div class="status-pill" id="statusPill">Loading slots...</div>
           </div>
 
           <div class="room-note" id="roomNote">
@@ -376,8 +397,8 @@
             monuments, traditions, cultural symbols, local roots, and elements of personal identity.
           </div>
 
-          <p style="margin-bottom:15px; color:#666;">
-            Each square represents a real participant.
+          <p class="helper">
+            Each square represents a real position in the mosaic. Dark spots are unavailable.
           </p>
 
           <div class="grid-wrap">
@@ -391,7 +412,7 @@
             </div>
             <div class="legend-item">
               <span class="legend-box taken"></span>
-              <span>Taken</span>
+              <span>Unavailable</span>
             </div>
             <div class="legend-item">
               <span class="legend-box selected"></span>
@@ -414,6 +435,11 @@
           </div>
 
           <div class="summary-line">
+            <div class="summary-label">Section</div>
+            <div class="summary-value" id="summarySection">F1</div>
+          </div>
+
+          <div class="summary-line">
             <div class="summary-label">Spot</div>
             <div class="summary-value" id="summarySpot">Not selected yet</div>
           </div>
@@ -428,7 +454,7 @@
           </button>
 
           <div class="note">
-            Your final room, wall, and selected position will be confirmed before payment.
+            Your final room, wall, section, and selected position will be confirmed before payment.
             <br><br>
             You are reserving a permanent position in the mosaic.
           </div>
@@ -439,45 +465,56 @@
 
   <footer>
     <div class="container">
-      <div style="margin-bottom:10px;">The Human Mosaic — Spot selection preview</div>
+      <div style="margin-bottom:10px;">The Human Mosaic — Spot selection</div>
       <div>
         Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
       </div>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
+    );
+
     const spotGrid = document.getElementById("spotGrid");
     const summaryWall = document.getElementById("summaryWall");
+    const summarySection = document.getElementById("summarySection");
     const summarySpot = document.getElementById("summarySpot");
     const continueBtn = document.getElementById("continueBtn");
     const gridTitle = document.getElementById("gridTitle");
     const wallButtons = document.querySelectorAll(".wall-btn");
+    const sectionTabs = document.getElementById("sectionTabs");
     const summaryRoom = document.getElementById("summaryRoom");
     const summaryPrice = document.getElementById("summaryPrice");
     const roomNote = document.getElementById("roomNote");
     const heroText = document.getElementById("heroText");
+    const statusPill = document.getElementById("statusPill");
 
     const params = new URLSearchParams(window.location.search);
     const selectedRoomName = params.get("room") || "Identity";
 
     const roomConfig = {
       Identity: {
-        price: "€15 — fixed participation fee",
+        price: "€15 — one-time participation fee",
         hero:
           'You are currently reserving your place in the <strong>Identity Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
         note:
           '<strong>Identity Room guideline:</strong> submissions for this room must be <strong>selfies</strong> that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and elements of personal identity.'
       },
       Love: {
-        price: "€15 — fixed participation fee",
+        price: "€15 — one-time participation fee",
         hero:
           'You are currently reserving your place in the <strong>Love Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
         note:
           '<strong>Love Room guideline:</strong> submissions for this room should represent love in its many forms, including family, partners, friendships, pets, passions, and meaningful emotional moments.'
       },
       Creativity: {
-        price: "€20 — fixed participation fee",
+        price: "€20 — one-time participation fee",
         hero:
           'You are currently reserving your place in the <strong>Creativity Room</strong>. Every selected position becomes part of a permanent global artwork. Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.',
         note:
@@ -485,51 +522,105 @@
       }
     };
 
+    const wallSections = {
+      "Front Wall": ["F1","F2","F3","F4","F5","F6","F7","F8","F9","F10"],
+      "Left Wall": ["L1","L2","L3","L4","L5","L6"],
+      "Right Wall": ["R1","R2","R3","R4","R5","R6"]
+    };
+
     const currentRoom = roomConfig[selectedRoomName] ? selectedRoomName : "Identity";
     const currentPrice = roomConfig[currentRoom].price;
 
     let selectedWall = "Front Wall";
+    let selectedSection = "F1";
     let selectedSpot = null;
 
     summaryRoom.textContent = currentRoom;
     summaryPrice.textContent = currentPrice;
-    gridTitle.textContent = `${currentRoom} Room — Front Wall`;
     roomNote.innerHTML = roomConfig[currentRoom].note;
     heroText.innerHTML = roomConfig[currentRoom].hero;
 
-    function generateGrid() {
-      spotGrid.innerHTML = "";
-      selectedSpot = null;
-      summarySpot.textContent = "Not selected yet";
-      continueBtn.disabled = true;
+    function updateTitles() {
+      summaryWall.textContent = selectedWall;
+      summarySection.textContent = selectedSection;
+      gridTitle.textContent = `${currentRoom} Room — ${selectedWall} — ${selectedSection}`;
+    }
 
-      for (let i = 1; i <= 60; i++) {
+    function renderSectionButtons() {
+      sectionTabs.innerHTML = "";
+      const sections = wallSections[selectedWall];
+
+      sections.forEach(section => {
+        const btn = document.createElement("button");
+        btn.className = "section-btn";
+        if (section === selectedSection) btn.classList.add("active");
+        btn.textContent = section;
+        btn.type = "button";
+
+        btn.addEventListener("click", () => {
+          selectedSection = section;
+          selectedSpot = null;
+          summarySpot.textContent = "Not selected yet";
+          continueBtn.disabled = true;
+          updateTitles();
+          renderSectionButtons();
+          loadSlots();
+        });
+
+        sectionTabs.appendChild(btn);
+      });
+    }
+
+    async function loadSlots() {
+      spotGrid.innerHTML = "";
+      statusPill.textContent = "Loading slots...";
+
+      const { data: slots, error } = await supabaseClient
+        .from("slots")
+        .select("*")
+        .eq("room", currentRoom)
+        .eq("wall", selectedWall)
+        .eq("section", selectedSection)
+        .order("row_number", { ascending: true })
+        .order("col_number", { ascending: true })
+        .limit(200);
+
+      if (error) {
+        console.error("Supabase slots error:", error);
+        statusPill.textContent = "Failed to load slots";
+        return;
+      }
+
+      let availableCount = 0;
+      let unavailableCount = 0;
+
+      slots.forEach(slot => {
         const spot = document.createElement("button");
         spot.className = "spot";
         spot.type = "button";
+        spot.setAttribute("data-code", `R${slot.row_number}-C${slot.col_number}`);
 
-        const row = String.fromCharCode(64 + Math.ceil(i / 10));
-        const col = ((i - 1) % 10) + 1;
-        const code = `${row}-${col.toString().padStart(2, "0")}`;
+        const isAvailable = slot.status === "available";
 
-        spot.setAttribute("data-code", code);
-
-        const taken = i % 7 === 0 || i % 11 === 0 || i % 13 === 0;
-        if (taken) {
+        if (!isAvailable) {
           spot.classList.add("taken");
           spot.disabled = true;
+          unavailableCount++;
         } else {
+          availableCount++;
           spot.addEventListener("click", () => {
             document.querySelectorAll(".spot.selected").forEach(el => el.classList.remove("selected"));
             spot.classList.add("selected");
-            selectedSpot = code;
-            summarySpot.textContent = code + " (Reserved)";
+            selectedSpot = slot.slot_code;
+            summarySpot.textContent = slot.slot_code;
             continueBtn.disabled = false;
           });
         }
 
         spotGrid.appendChild(spot);
-      }
+      });
+
+      statusPill.textContent = `${availableCount} available / ${unavailableCount} unavailable`;
     }
 
     wallButtons.forEach(btn => {
@@ -537,9 +628,13 @@
         wallButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedWall = btn.dataset.wall;
-        summaryWall.textContent = selectedWall;
-        gridTitle.textContent = `${currentRoom} Room — ${selectedWall}`;
-        generateGrid();
+        selectedSection = wallSections[selectedWall][0];
+        selectedSpot = null;
+        summarySpot.textContent = "Not selected yet";
+        continueBtn.disabled = true;
+        updateTitles();
+        renderSectionButtons();
+        loadSlots();
       });
     });
 
@@ -548,13 +643,16 @@
 
       const room = encodeURIComponent(currentRoom);
       const wall = encodeURIComponent(selectedWall);
+      const section = encodeURIComponent(selectedSection);
       const spot = encodeURIComponent(selectedSpot);
       const price = encodeURIComponent(currentPrice);
 
-      window.location.href = `checkout.html?room=${room}&wall=${wall}&spot=${spot}&price=${price}`;
+      window.location.href = `checkout.html?room=${room}&wall=${wall}&section=${section}&spot=${spot}&price=${price}`;
     });
 
-    generateGrid();
+    updateTitles();
+    renderSectionButtons();
+    loadSlots();
   </script>
 </body>
 </html>
