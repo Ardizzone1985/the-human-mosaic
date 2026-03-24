@@ -127,6 +127,7 @@
     .summary-value {
       font-size: 1.05rem;
       font-weight: 600;
+      word-break: break-word;
     }
 
     .highlight-note {
@@ -484,7 +485,7 @@
 
             <div class="form-row">
               <label for="notes">Optional Note</label>
-              <textarea id="notes" name="notes" placeholder="Write a short note if you want to introduce your future submission"></textarea>
+              <textarea id="notes" name="notes" placeholder="Write a short description of the photo that will be published."></textarea>
             </div>
 
             <label class="checkbox-wrap">
@@ -501,7 +502,7 @@
             <label class="checkbox-wrap">
               <input type="checkbox" required>
               <span>
-                I understand that my selected room, wall, and spot are part of a permanent global artwork and will be reviewed before final confirmation.
+                I understand that my selected room, wall, section, and spot are part of a permanent global artwork and will be reviewed before final confirmation.
               </span>
             </label>
 
@@ -540,13 +541,18 @@
           </div>
 
           <div class="summary-line">
+            <div class="summary-label">Section</div>
+            <div class="summary-value" id="summarySection">F1</div>
+          </div>
+
+          <div class="summary-line">
             <div class="summary-label">Spot</div>
             <div class="summary-value" id="summarySpot">A-01</div>
           </div>
 
           <div class="summary-line">
             <div class="summary-label">Price</div>
-            <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
+            <div class="summary-value" id="summaryPrice">€15 — one-time participation fee</div>
           </div>
 
           <div class="value-note">
@@ -584,8 +590,9 @@
 
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
+    const section = params.get("section") || "F1";
     const spot = params.get("spot") || "Not selected";
-    const price = params.get("price") || "€15 — fixed participation fee";
+    const price = params.get("price") || "€15 — one-time participation fee";
 
     const roomConfig = {
       Identity: {
@@ -606,10 +613,13 @@
 
     document.getElementById("summaryRoom").textContent = currentRoom;
     document.getElementById("summaryWall").textContent = wall;
+    document.getElementById("summarySection").textContent = section;
     document.getElementById("summarySpot").textContent = spot;
     document.getElementById("summaryPrice").textContent = price;
     document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
-    document.getElementById("backToRoom").href = `room.html?room=${encodeURIComponent(currentRoom)}`;
+
+    document.getElementById("backToRoom").href =
+      `room.html?room=${encodeURIComponent(currentRoom)}`;
 
     const checkoutForm = document.getElementById("checkoutForm");
 
@@ -620,18 +630,19 @@
       const email = encodeURIComponent(document.getElementById("email").value);
       const country = encodeURIComponent(document.getElementById("country").value);
       const instagram = encodeURIComponent(document.getElementById("instagram").value);
-      const notes = encodeURIComponent(document.getElementById("notes").value);
+      const note = encodeURIComponent(document.getElementById("notes").value);
 
       window.location.href =
         `upload.html?room=${encodeURIComponent(currentRoom)}` +
         `&wall=${encodeURIComponent(wall)}` +
+        `&section=${encodeURIComponent(section)}` +
         `&spot=${encodeURIComponent(spot)}` +
         `&price=${encodeURIComponent(price)}` +
         `&fullName=${fullName}` +
         `&email=${email}` +
         `&country=${country}` +
         `&instagram=${instagram}` +
-        `&notes=${notes}`;
+        `&note=${note}`;
     });
   </script>
 </body>
