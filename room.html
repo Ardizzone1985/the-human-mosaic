@@ -534,6 +534,7 @@
     let selectedWall = "Front Wall";
     let selectedSection = "F1";
     let selectedSpot = null;
+    let selectedSlotCode = null;
 
     summaryRoom.textContent = currentRoom;
     summaryPrice.textContent = currentPrice;
@@ -560,6 +561,7 @@
         btn.addEventListener("click", () => {
           selectedSection = section;
           selectedSpot = null;
+          selectedSlotCode = null;
           summarySpot.textContent = "Not selected yet";
           continueBtn.disabled = true;
           updateTitles();
@@ -595,10 +597,12 @@
       let unavailableCount = 0;
 
       slots.forEach(slot => {
+        const visibleSpotCode = `R${slot.row_number}-C${slot.col_number}`;
+
         const spot = document.createElement("button");
         spot.className = "spot";
         spot.type = "button";
-        spot.setAttribute("data-code", `R${slot.row_number}-C${slot.col_number}`);
+        spot.setAttribute("data-code", visibleSpotCode);
 
         const isAvailable = slot.status === "available";
 
@@ -611,8 +615,9 @@
           spot.addEventListener("click", () => {
             document.querySelectorAll(".spot.selected").forEach(el => el.classList.remove("selected"));
             spot.classList.add("selected");
-            selectedSpot = slot.slot_code;
-            summarySpot.textContent = slot.slot_code;
+            selectedSpot = visibleSpotCode;
+            selectedSlotCode = slot.slot_code;
+            summarySpot.textContent = visibleSpotCode;
             continueBtn.disabled = false;
           });
         }
@@ -630,6 +635,7 @@
         selectedWall = btn.dataset.wall;
         selectedSection = wallSections[selectedWall][0];
         selectedSpot = null;
+        selectedSlotCode = null;
         summarySpot.textContent = "Not selected yet";
         continueBtn.disabled = true;
         updateTitles();
@@ -639,15 +645,22 @@
     });
 
     continueBtn.addEventListener("click", () => {
-      if (!selectedSpot) return;
+      if (!selectedSpot || !selectedSlotCode) return;
 
       const room = encodeURIComponent(currentRoom);
       const wall = encodeURIComponent(selectedWall);
       const section = encodeURIComponent(selectedSection);
       const spot = encodeURIComponent(selectedSpot);
+      const slotCode = encodeURIComponent(selectedSlotCode);
       const price = encodeURIComponent(currentPrice);
 
-      window.location.href = `checkout.html?room=${room}&wall=${wall}&section=${section}&spot=${spot}&price=${price}`;
+      window.location.href =
+        `checkout.html?room=${room}` +
+        `&wall=${wall}` +
+        `&section=${section}` +
+        `&spot=${spot}` +
+        `&slotCode=${slotCode}` +
+        `&price=${price}`;
     });
 
     updateTitles();
