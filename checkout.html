@@ -200,6 +200,13 @@
       transform: translateY(-2px);
     }
 
+    .checkout-btn:disabled {
+      background: #cfcfcf;
+      color: #777;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .back-btn {
       background: white;
       color: #111;
@@ -585,13 +592,22 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
+    );
+
     const params = new URLSearchParams(window.location.search);
 
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
     const section = params.get("section") || "F1";
     const spot = params.get("spot") || "Not selected";
+    const slotCode = params.get("slotCode") || "";
     const price = params.get("price") || "€15 — one-time participation fee";
 
     const roomConfig = {
@@ -619,30 +635,97 @@
     document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
 
     document.getElementById("backToRoom").href =
-      `room.html?room=${encodeURIComponent(currentRoom)}`;
+      `room.html?room=${encodeURIComponent(currentRoom)}` +
+      `&wall=${encodeURIComponent(wall)}` +
+      `&section=${encodeURIComponent(section)}`;
 
     const checkoutForm = document.getElementById("checkoutForm");
+    const checkoutBtn = document.querySelector(".checkout-btn");
 
-    checkoutForm.addEventListener("submit", function(e) {
+    async function reserveSelectedSlot() {
+      if (!slotCode) {
+        throw new Error("Missing slot code.");
+      }
+
+      const { data: slot, error: fetchError } = await supabaseClient
+        .from("slots")
+        .select("id, status, submission_id")
+        .eq("slot_code", slotCode)
+        .single();
+
+      if (fetchError) {
+        throw new Error(fetchError.message || "Unable to load slot.");
+      }
+
+      if (!slot) {
+        throw new Error("Selected slot not found.");
+      }
+
+      if (slot.status !== "available") {
+        throw new Error("This slot is no longer available.");
+      }
+
+      const { error: updateError } = await supabaseClient
+        .from("slots")
+        .update({
+          status: "reserved",
+          reserved_at: new Date().toISOString()
+        })
+        .eq("slot_code", slotCode)
+        .eq("status", "available");
+
+      if (updateError) {
+        throw new Error(updateError.message || "Unable to reserve slot.");
+      }
+
+      const { data: verifySlot, error: verifyError } = await supabaseClient
+        .from("slots")
+        .select("status")
+        .eq("slot_code", slotCode)
+        .single();
+
+      if (verifyError) {
+        throw new Error(verifyError.message || "Unable to verify slot.");
+      }
+
+      if (!verifySlot || verifySlot.status !== "reserved") {
+        throw new Error("This slot could not be reserved.");
+      }
+    }
+
+    checkoutForm.addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const fullName = encodeURIComponent(document.getElementById("fullName").value);
-      const email = encodeURIComponent(document.getElementById("email").value);
-      const country = encodeURIComponent(document.getElementById("country").value);
-      const instagram = encodeURIComponent(document.getElementById("instagram").value);
-      const note = encodeURIComponent(document.getElementById("notes").value);
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = "Reserving slot...";
 
-      window.location.href =
-        `upload.html?room=${encodeURIComponent(currentRoom)}` +
-        `&wall=${encodeURIComponent(wall)}` +
-        `&section=${encodeURIComponent(section)}` +
-        `&spot=${encodeURIComponent(spot)}` +
-        `&price=${encodeURIComponent(price)}` +
-        `&fullName=${fullName}` +
-        `&email=${email}` +
-        `&country=${country}` +
-        `&instagram=${instagram}` +
-        `&note=${note}`;
+      try {
+        await reserveSelectedSlot();
+
+        const fullName = encodeURIComponent(document.getElementById("fullName").value);
+        const email = encodeURIComponent(document.getElementById("email").value);
+        const country = encodeURIComponent(document.getElementById("country").value);
+        const instagram = encodeURIComponent(document.getElementById("instagram").value);
+        const note = encodeURIComponent(document.getElementById("notes").value);
+
+        window.location.href =
+          `upload.html?room=${encodeURIComponent(currentRoom)}` +
+          `&wall=${encodeURIComponent(wall)}` +
+          `&section=${encodeURIComponent(section)}` +
+          `&spot=${encodeURIComponent(spot)}` +
+          `&slotCode=${encodeURIComponent(slotCode)}` +
+          `&price=${encodeURIComponent(price)}` +
+          `&fullName=${fullName}` +
+          `&email=${email}` +
+          `&country=${country}` +
+          `&instagram=${instagram}` +
+          `&note=${note}`;
+      } catch (error) {
+        alert(error.message || "Unable to reserve this slot.");
+        console.error("Slot reservation error:", error);
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = "Submit Your Participation";
+      }
     });
   </script>
 </body>
