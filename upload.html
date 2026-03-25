@@ -600,6 +600,20 @@
         return;
       }
 
+      const { error: slotUpdateError } = await supabaseClient
+        .from("slots")
+        .update({
+          status: "submitted",
+          submission_id: submissionId
+        })
+        .eq("slot_code", slotCode);
+
+      if (slotUpdateError) {
+        alert("Slot update error: " + (slotUpdateError.message || "Unknown error"));
+        console.error("Slot update error:", slotUpdateError);
+        return;
+      }
+
       localStorage.setItem("thm_submission", JSON.stringify(submissionData));
 
       await sendConfirmationEmail(submissionData);
