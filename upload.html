@@ -398,6 +398,7 @@
     const wall = params.get("wall") || "Front Wall";
     const section = params.get("section") || "F1";
     const spot = params.get("spot") || "Not selected";
+    const slotCode = params.get("slotCode") || "";
     const price = params.get("price") || "€15 — one-time participation fee";
     const fullName = params.get("fullName") || "—";
     const email = params.get("email") || "—";
@@ -474,6 +475,7 @@
             wall: submissionData.wall,
             section: submissionData.section,
             spot: submissionData.spot,
+            slotCode: submissionData.slotCode,
             price: submissionData.price,
             submissionId: submissionData.submissionId
           })
@@ -511,6 +513,7 @@
       `&wall=${encodeURIComponent(wall)}` +
       `&section=${encodeURIComponent(section)}` +
       `&spot=${encodeURIComponent(spot)}` +
+      `&slotCode=${encodeURIComponent(slotCode)}` +
       `&price=${encodeURIComponent(price)}` +
       `&fullName=${encodeURIComponent(fullName)}` +
       `&email=${encodeURIComponent(email)}` +
@@ -564,6 +567,7 @@
         wall,
         section,
         spot,
+        slotCode,
         price,
         note,
         imageFileName: file.name,
@@ -579,6 +583,7 @@
         wall: wall,
         section: section,
         spot: spot,
+        slot_code: slotCode,
         price: price,
         note: note,
         image_file_name: file.name,
@@ -605,6 +610,7 @@
         `&wall=${encodeURIComponent(wall)}` +
         `&section=${encodeURIComponent(section)}` +
         `&spot=${encodeURIComponent(spot)}` +
+        `&slotCode=${encodeURIComponent(slotCode)}` +
         `&price=${encodeURIComponent(price)}` +
         `&fullName=${encodeURIComponent(fullName)}` +
         `&email=${encodeURIComponent(email)}` +
