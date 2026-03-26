@@ -443,14 +443,20 @@ export default async function handler(req, res) {
     const safePrice = escapeHtml(price || '€15 — one-time participation fee');
     const safeSubmissionId = escapeHtml(submissionId);
 
-    const certificatePdf = await generateCertificatePdf({
-      fullName,
-      room,
-      wall,
-      section,
-      spot,
-      submissionId
-    });
+    let certificatePdf = null;
+
+    try {
+      certificatePdf = await generateCertificatePdf({
+        fullName,
+        room,
+        wall,
+        section,
+        spot,
+        submissionId
+      });
+    } catch (pdfError) {
+      console.error('Certificate PDF generation failed:', pdfError);
+    }
 
     const { data, error } = await resend.emails.send({
       from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
@@ -494,7 +500,7 @@ export default async function handler(req, res) {
             <p><strong>What happens next?</strong></p>
             <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
             <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
-            <p>3. Certificate — Your certificate PDF is attached to this email as your official prototype record.</p>
+            <p>3. Certificate — Your certificate PDF is attached to this email as your official prototype record when available.</p>
 
             <p style="margin-top: 24px;">
               For questions or support:
@@ -539,7 +545,7 @@ Participation Fee: ${price || '€15 — one-time participation fee'}
 What happens next?
 1. Review — We verify that your submission matches the project guidelines and the selected room.
 2. Confirmation — Your position and participation request are confirmed after review.
-3. Certificate — Your certificate PDF is attached to this email as your official prototype record.
+3. Certificate — Your certificate PDF is attached to this email as your official prototype record when available.
 
 Support: info@thehumanmosaic.art
 
@@ -548,12 +554,14 @@ If you did not submit this request, please ignore this email.
 
 — The Human Mosaic
       `.trim(),
-      attachments: [
-        {
-          filename: `THM-Certificate-${submissionId}.pdf`,
-          content: Buffer.from(certificatePdf).toString('base64')
-        }
-      ]
+      attachments: certificatePdf
+        ? [
+            {
+              filename: `THM-Certificate-${submissionId}.pdf`,
+              content: Buffer.from(certificatePdf).toString('base64')
+            }
+          ]
+        : []
     });
 
     if (error) {
