@@ -43,6 +43,12 @@
       font-size: 1.05rem;
     }
 
+    .hero-trust-line {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
     section {
       padding: 40px 0 70px;
       border-top: 1px solid #e3e3e3;
@@ -111,6 +117,12 @@
       top: 110px;
     }
 
+    .summary-intro {
+      margin-bottom: 16px;
+      font-size: 0.94rem;
+      color: #555;
+    }
+
     .summary-line {
       padding: 12px 0;
       border-bottom: 1px solid #eee;
@@ -128,6 +140,12 @@
       font-size: 1.05rem;
       font-weight: 600;
       word-break: break-word;
+    }
+
+    .reservation-urgency {
+      margin-top: 12px;
+      font-size: 0.92rem;
+      color: #444;
     }
 
     .highlight-note {
@@ -289,9 +307,12 @@
       <div class="container">
         <h1>Complete your reservation.</h1>
         <p>
-          You are one step closer to officially submitting your participation request for The Human Mosaic.
-          Review your selection, enter your details, and continue to the final submission stage.
+          You are about to secure your official position in The Human Mosaic.
+          Review your selection, complete your details, and proceed to confirm your participation.
         </p>
+        <div class="hero-trust-line">
+          Secure reservation • Human review process • Official certificate included
+        </div>
       </div>
     </section>
 
@@ -513,7 +534,7 @@
               </span>
             </label>
 
-            <button type="submit" class="checkout-btn">Submit Your Participation</button>
+            <button type="submit" class="checkout-btn">Secure Your Spot & Continue</button>
             <a id="backToRoom" href="room.html?room=Identity" class="back-btn">Back to Spot Selection</a>
 
             <div class="next-steps-box">
@@ -524,7 +545,7 @@
             </div>
 
             <div class="small-note">
-              This page does not process payment yet. In the current version, it prepares your participation data and moves you to the final submission step.
+              This step secures your selected position and prepares your participation before final confirmation.
             </div>
           </form>
 
@@ -536,6 +557,10 @@
 
         <div class="box summary-card">
           <h2>Your Reservation</h2>
+
+          <div class="summary-intro">
+            Your selection is uniquely assigned and linked to your participation request.
+          </div>
 
           <div class="summary-line">
             <div class="summary-label">Room</div>
@@ -560,6 +585,10 @@
           <div class="summary-line">
             <div class="summary-label">Price</div>
             <div class="summary-value" id="summaryPrice">€15 — one-time participation fee</div>
+          </div>
+
+          <div class="reservation-urgency">
+            This position is temporarily reserved during this session.
           </div>
 
           <div class="value-note">
@@ -597,6 +626,14 @@
   <script>
     const { createClient } = supabase;
     const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+    );
+  </script>
+
+  <script>
+    const { createClient: createSupabaseClient } = supabase;
+    const supabaseClientFixed = createSupabaseClient(
       "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
     );
@@ -647,7 +684,7 @@
         throw new Error("Missing slot code.");
       }
 
-      const { data: slot, error: fetchError } = await supabaseClient
+      const { data: slot, error: fetchError } = await supabaseClientFixed
         .from("slots")
         .select("id, status, submission_id")
         .eq("slot_code", slotCode)
@@ -665,7 +702,7 @@
         throw new Error("This slot is no longer available.");
       }
 
-      const { error: updateError } = await supabaseClient
+      const { error: updateError } = await supabaseClientFixed
         .from("slots")
         .update({
           status: "reserved",
@@ -678,7 +715,7 @@
         throw new Error(updateError.message || "Unable to reserve slot.");
       }
 
-      const { data: verifySlot, error: verifyError } = await supabaseClient
+      const { data: verifySlot, error: verifyError } = await supabaseClientFixed
         .from("slots")
         .select("status")
         .eq("slot_code", slotCode)
@@ -724,7 +761,7 @@
         alert(error.message || "Unable to reserve this slot.");
         console.error("Slot reservation error:", error);
         checkoutBtn.disabled = false;
-        checkoutBtn.textContent = "Submit Your Participation";
+        checkoutBtn.textContent = "Secure Your Spot & Continue";
       }
     });
   </script>
