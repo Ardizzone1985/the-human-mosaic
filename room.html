@@ -43,6 +43,12 @@
       font-size: 1.05rem;
     }
 
+    .hero-trust-line {
+      margin-top: 18px;
+      font-size: 0.96rem;
+      color: #444;
+    }
+
     section {
       padding: 40px 0 70px;
       border-top: 1px solid #e3e3e3;
@@ -273,6 +279,39 @@
       word-break: break-word;
     }
 
+    .selection-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #fafaf8;
+      border: 1px solid #ececec;
+      border-radius: 16px;
+      color: #555;
+      font-size: 0.94rem;
+    }
+
+    .next-box {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+    }
+
+    .next-box h4 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .next-box ul {
+      padding-left: 18px;
+      color: #555;
+      font-size: 0.94rem;
+    }
+
+    .next-box li {
+      margin-bottom: 8px;
+    }
+
     .continue-btn {
       width: 100%;
       margin-top: 22px;
@@ -373,6 +412,10 @@
           Start by choosing a wall, then reserve the spot that will represent your place in the mosaic.
         </p>
 
+        <div class="hero-trust-line">
+          Official room selection • Real position reservation • Final confirmation before payment
+        </div>
+
         <div class="wall-tabs">
           <button class="wall-btn active" data-wall="Front Wall">Front Wall</button>
           <button class="wall-btn" data-wall="Left Wall">Left Wall</button>
@@ -449,14 +492,25 @@
             <div class="summary-value" id="summaryPrice">€15 — fixed participation fee</div>
           </div>
 
+          <div class="selection-note">
+            Your chosen position will be confirmed on the next step before payment is completed.
+          </div>
+
           <button class="continue-btn" id="continueBtn" disabled>
-            Continue
+            Proceed to Secure Your Spot
           </button>
 
+          <div class="next-box">
+            <h4>What happens next</h4>
+            <ul>
+              <li>Your room, wall, section, and spot will be confirmed.</li>
+              <li>You will continue to the official checkout step.</li>
+              <li>After payment, you will upload your image for review.</li>
+            </ul>
+          </div>
+
           <div class="note">
-            Your final room, wall, section, and selected position will be confirmed before payment.
-            <br><br>
-            You are reserving a permanent position in the mosaic.
+            You are reserving a real permanent position inside The Human Mosaic.
           </div>
         </div>
       </div>
@@ -465,9 +519,12 @@
 
   <footer>
     <div class="container">
-      <div style="margin-bottom:10px;">The Human Mosaic — Spot selection</div>
-      <div>
+      <div style="margin-bottom:10px;">The Human Mosaic — Official spot selection</div>
+      <div style="margin-bottom:10px;">
         Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
+      <div style="font-size:14px;">
+        <a href="index.html">Home</a>
       </div>
     </div>
   </footer>
