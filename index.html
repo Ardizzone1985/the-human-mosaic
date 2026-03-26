@@ -115,10 +115,28 @@
       font-size: 1.02rem;
       color: rgba(255,255,255,0.9);
       margin-top: 22px;
-      margin-bottom: 34px;
+      margin-bottom: 22px;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
       animation-delay: 0.7s;
+    }
+
+    .hero-trust-line {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.78);
+      margin-bottom: 14px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.82s;
+    }
+
+    .hero-limited {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.88s;
     }
 
     @keyframes fadeUp {
@@ -139,7 +157,7 @@
       margin-top: 10px;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
-      animation-delay: 0.9s;
+      animation-delay: 0.95s;
     }
 
     .btn {
@@ -300,7 +318,7 @@
       color: white;
     }
 
-    .stats, .rooms, .steps {
+    .stats, .rooms, .steps, .live-grid {
       display: grid;
       gap: 20px;
     }
@@ -315,6 +333,10 @@
 
     .steps {
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .live-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
     .card {
@@ -337,6 +359,37 @@
     .highlight {
       font-weight: bold;
       color: #111;
+    }
+
+    .live-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 22px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .live-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.35rem;
+    }
+
+    .live-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111;
+      margin: 10px 0 4px;
+    }
+
+    .live-capacity {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .live-note {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #444;
     }
 
     .final {
@@ -396,6 +449,11 @@
       .hero-badge {
         font-size: 0.82rem;
       }
+
+      .hero-trust-line,
+      .hero-limited {
+        font-size: 0.88rem;
+      }
     }
   </style>
 </head>
@@ -438,12 +496,49 @@
             <span class="highlight" style="color:white;">Identity, Love, and Creativity</span>.
           </p>
 
-          <div style="font-size:0.9rem; color:rgba(255,255,255,0.75); margin-bottom:10px;">
-          Limited positions available per room
-         </div>
+          <div class="hero-trust-line">
+            Secure participation process • Image review within 48 hours • Official digital certificate
+          </div>
+
+          <div class="hero-limited">
+            Each room offers a limited number of participant spots
+          </div>
+
           <div class="buttons">
             <a href="join.html" class="btn btn-primary">Secure Your Spot</a>
             <a href="#project" class="btn btn-secondary">Explore the Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 style="text-align:center;">Live Participation</h2>
+        <p class="section-text" style="text-align:center; margin-left:auto; margin-right:auto;">
+          Early participation is already shaping the future of The Human Mosaic.
+        </p>
+
+        <div class="live-grid">
+          <div class="live-card">
+            <h3>Identity</h3>
+            <div class="live-number">12,458</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="live-note">A room dedicated to personal roots, place, and identity.</div>
+          </div>
+
+          <div class="live-card">
+            <h3>Love</h3>
+            <div class="live-number">8,932</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="live-note">A room built from human bonds, affection, and meaning.</div>
+          </div>
+
+          <div class="live-card">
+            <h3>Creativity</h3>
+            <div class="live-number">5,211</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="live-note">A room for imagination, art, and fearless expression.</div>
           </div>
         </div>
       </div>
@@ -606,13 +701,17 @@
   <footer>
     <div class="container" style="text-align:center;">
       <div style="margin-bottom:10px;">
-        The Human Mosaic — Official project preview
+        The Human Mosaic — Official Website
       </div>
 
       <div style="font-size:14px;">
         <a href="privacy.html">Privacy Policy</a> |
         <a href="terms.html">Terms</a> |
         <a href="license.html">Content License</a>
+      </div>
+
+      <div style="margin-top:10px; font-size:14px;">
+        Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
       </div>
     </div>
   </footer>
