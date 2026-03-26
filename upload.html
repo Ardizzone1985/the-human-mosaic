@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Upload Your Image – The Human Mosaic</title>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -42,6 +41,12 @@
       max-width: 760px;
       color: #555;
       font-size: 1.05rem;
+    }
+
+    .hero-trust-line {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: #444;
     }
 
     section {
@@ -83,6 +88,12 @@
       text-align: center;
     }
 
+    .upload-card input[type="file"] {
+      display: block;
+      margin: 18px auto 0;
+      max-width: 100%;
+    }
+
     .preview-box {
       margin-top: 24px;
       display: none;
@@ -100,27 +111,42 @@
       margin-top: 12px;
       color: #555;
       font-size: 0.95rem;
+      word-break: break-word;
+    }
+
+    .finalization-note {
+      margin-top: 18px;
+      font-size: 0.93rem;
+      color: #444;
     }
 
     .checkbox-wrap {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      margin-top: 22px;
       color: #444;
       font-size: 0.95rem;
+      margin-top: 22px;
     }
 
-    .submit-btn, .back-btn {
+    .checkbox-wrap input {
+      margin-top: 4px;
+      transform: scale(1.1);
+    }
+
+    .submit-btn,
+    .back-btn {
       display: inline-block;
-      padding: 16px;
+      padding: 16px 24px;
       border-radius: 16px;
+      text-decoration: none;
       font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
       width: 100%;
       text-align: center;
-      cursor: pointer;
-      border: none;
-      transition: 0.2s;
     }
 
     .submit-btn {
@@ -144,6 +170,7 @@
     .back-btn:hover {
       background: #111;
       color: white;
+      transform: translateY(-2px);
     }
 
     .small-note {
@@ -157,6 +184,12 @@
       top: 110px;
     }
 
+    .summary-intro {
+      margin-bottom: 16px;
+      font-size: 0.94rem;
+      color: #555;
+    }
+
     .summary-line {
       padding: 12px 0;
       border-bottom: 1px solid #eee;
@@ -167,100 +200,485 @@
       color: #777;
       text-transform: uppercase;
       letter-spacing: 0.12em;
+      margin-bottom: 4px;
     }
 
     .summary-value {
       font-size: 1.05rem;
       font-weight: 600;
+      word-break: break-word;
+    }
+
+    .submission-status {
+      margin-top: 12px;
+      font-size: 0.92rem;
+      color: #444;
+    }
+
+    .highlight-note {
+      margin-top: 18px;
+      padding: 16px 18px;
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 18px;
+      color: #555;
+      font-size: 0.96rem;
+    }
+
+    .contact-block {
+      margin-top: 22px;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .contact-link,
+    footer a {
+      color: #111;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .contact-link:hover,
+    footer a:hover {
+      text-decoration: underline;
     }
 
     footer {
       padding: 30px 0 60px;
+      color: #777;
+      font-size: 0.95rem;
       text-align: center;
       border-top: 1px solid #e3e3e3;
       margin-top: 20px;
     }
+
+    @media (max-width: 900px) {
+      .upload-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        position: static;
+      }
+    }
   </style>
 </head>
-
 <body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; padding:20px 0;">
+      <a href="index.html">
+        <img src="logo-cropped.png" alt="The Human Mosaic Logo" style="height:95px;">
+      </a>
 
-<header>
-  <div class="container" style="display:flex; justify-content:space-between; padding:20px 0;">
-    <a href="index.html">
-      <img src="logo-cropped.png" style="height:95px;">
-    </a>
-    <div style="font-size:13px; color:#666;">ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.</div>
-  </div>
-</header>
-
-<main>
-
-<section class="hero">
-  <div class="container">
-    <h1>Upload your image.</h1>
-
-    <p id="heroText">
-      You are about to finalize your participation in The Human Mosaic.
-      Upload the image that will officially represent your position in this global artwork.
-    </p>
-
-    <div style="margin-top:14px; font-size:0.95rem; color:#444;">
-      Permanent position • Human review within 48h • Official certificate included
+      <div style="font-size:13px; color:#666; letter-spacing:0.15em;">
+        ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+      </div>
     </div>
-  </div>
-</section>
+  </header>
 
-<section>
-  <div class="container upload-layout">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Upload your image.</h1>
+        <p id="heroText">
+          You are about to finalize your participation in The Human Mosaic.
+          Upload the image that will officially represent your position in this global artwork.
+        </p>
+        <div class="hero-trust-line">
+          Permanent position • Human review within 48 hours • Official certificate included
+        </div>
+      </div>
+    </section>
 
-    <div class="box">
+    <section>
+      <div class="container upload-layout">
+        <div class="box">
+          <h2>Image Upload</h2>
+          <p class="section-text" id="uploadIntro">
+            Please upload the image connected to your reserved position. For the Identity Room, the submission must be a selfie aligned with the project guideline.
+          </p>
 
-      <h2>Image Upload</h2>
+          <form id="uploadForm">
+            <div class="upload-card">
+              <strong>Select your image file</strong>
+              <p style="margin-top:10px; color:#666;">
+                Accepted formats: JPG, JPEG, PNG, WEBP
+              </p>
+              <input type="file" id="imageUpload" name="imageUpload" accept=".jpg,.jpeg,.png,.webp,image/*" required>
+            </div>
 
-      <p class="section-text" id="uploadIntro">
-        Please upload the image connected to your reserved position.
-      </p>
+            <div class="preview-box" id="previewBox">
+              <img id="previewImage" src="" alt="Preview">
+              <div class="file-name" id="fileName"></div>
+            </div>
 
-      <form id="uploadForm">
+            <label class="checkbox-wrap">
+              <input type="checkbox" required>
+              <span>
+                I confirm that this image belongs to me or that I have all necessary rights and permissions to submit it.
+              </span>
+            </label>
 
-        <div class="upload-card">
-          <strong>Select your image file</strong>
-          <input type="file" id="imageUpload" required>
+            <label class="checkbox-wrap">
+              <input type="checkbox" required>
+              <span id="guidelineCheckboxText">
+                I confirm that this submission follows the Identity Room guideline and the project rules.
+              </span>
+            </label>
+
+            <div class="finalization-note">
+              Your position is now being finalized and linked to your submission.
+            </div>
+
+            <button type="submit" class="submit-btn">Finalize Submission</button>
+            <a id="backToCheckout" href="checkout.html?room=Identity" class="back-btn">Back to Checkout</a>
+
+            <div class="small-note">
+              Your submission will be reviewed within 48 hours. Once approved, your position will be permanently assigned and your official certificate will be issued.
+            </div>
+          </form>
+
+          <div class="contact-block">
+            For questions, support, or participation inquiries, contact
+            <a class="contact-link" href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+          </div>
         </div>
 
-        <div class="preview-box" id="previewBox">
-          <img id="previewImage">
-          <div class="file-name" id="fileName"></div>
+        <div class="box summary-card">
+          <h2>Your Submission</h2>
+
+          <div class="summary-intro">
+            Your image will be connected to your selected position and reviewed as part of the official project flow.
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Full Name</div>
+            <div class="summary-value" id="summaryName">—</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Email</div>
+            <div class="summary-value" id="summaryEmail">—</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Country</div>
+            <div class="summary-value" id="summaryCountry">—</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Room</div>
+            <div class="summary-value" id="summaryRoom">Identity</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Wall</div>
+            <div class="summary-value" id="summaryWall">Front Wall</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Section</div>
+            <div class="summary-value" id="summarySection">F1</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Spot</div>
+            <div class="summary-value" id="summarySpot">A-01</div>
+          </div>
+
+          <div class="summary-line">
+            <div class="summary-label">Price</div>
+            <div class="summary-value" id="summaryPrice">€15 — one-time participation fee</div>
+          </div>
+
+          <div class="submission-status">
+            This submission is being finalized for your reserved position.
+          </div>
+
+          <div class="highlight-note" id="roomGuideline">
+            <strong>Identity Room guideline:</strong> submissions for this room must be
+            <strong>selfies</strong> that reflect who we are and where we come from, including monuments,
+            traditions, cultural symbols, local roots, and elements of personal identity.
+          </div>
         </div>
+      </div>
+    </section>
+  </main>
 
-        <label class="checkbox-wrap">
-          <input type="checkbox" required>
-          <span>I confirm I have rights to this image</span>
-        </label>
-
-        <label class="checkbox-wrap">
-          <input type="checkbox" required>
-          <span>I confirm the image follows the room guideline</span>
-        </label>
-
-        <div style="margin-top:18px; font-size:0.93rem; color:#444;">
-          Your position is now being finalized and linked to your submission.
-        </div>
-
-        <button type="submit" class="submit-btn">Finalize Submission</button>
-
-        <div class="small-note">
-          Your submission will be reviewed within 48 hours. Once approved, your position will be permanently assigned and your official certificate will be issued.
-        </div>
-
-      </form>
+  <footer>
+    <div class="container">
+      <div style="margin-bottom:10px;">The Human Mosaic — Upload preview</div>
+      <div style="margin-bottom:10px;">
+        Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
+      <div style="font-size:14px;">
+        <a href="index.html">Home</a> |
+        <a href="join.html">Join</a> |
+        <a href="checkout.html">Checkout</a> |
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="terms.html">Terms</a> |
+        <a href="license.html">Content License</a>
+      </div>
     </div>
+  </footer>
 
-  </div>
-</section>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-</main>
+  <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
+    );
 
+    const params = new URLSearchParams(window.location.search);
+
+    const room = params.get("room") || "Identity";
+    const wall = params.get("wall") || "Front Wall";
+    const section = params.get("section") || "F1";
+    const spot = params.get("spot") || "Not selected";
+    const slotCode = params.get("slotCode") || "";
+    const price = params.get("price") || "€15 — one-time participation fee";
+    const fullName = params.get("fullName") || "—";
+    const email = params.get("email") || "—";
+    const country = params.get("country") || "—";
+    const note = params.get("note") || "";
+
+    const roomConfig = {
+      Identity: {
+        intro:
+          "Please upload the image connected to your reserved position. For the Identity Room, the submission must be a selfie aligned with the project guideline.",
+        checkbox:
+          "I confirm that this submission follows the Identity Room guideline and the project rules.",
+        guideline:
+          '<strong>Identity Room guideline:</strong> submissions for this room must be <strong>selfies</strong> that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and elements of personal identity.'
+      },
+      Love: {
+        intro:
+          "Please upload the image connected to your reserved position. For the Love Room, the submission should represent love in one of its many forms and follow the project guideline.",
+        checkbox:
+          "I confirm that this submission follows the Love Room guideline and the project rules.",
+        guideline:
+          '<strong>Love Room guideline:</strong> submissions for this room should represent love in its many forms, including family, partners, friendships, pets, passions, and meaningful emotional moments.'
+      },
+      Creativity: {
+        intro:
+          "Please upload the image connected to your reserved position. For the Creativity Room, the submission should express imagination and follow the project guideline.",
+        checkbox:
+          "I confirm that this submission follows the Creativity Room guideline and the project rules.",
+        guideline:
+          '<strong>Creativity Room guideline:</strong> submissions for this room should express human imagination through art, photography, drawings, concepts, ideas, and visual experimentation. Artistic nudity is allowed. Explicit sexual content is prohibited.'
+      }
+    };
+
+    const currentRoom = roomConfig[room] ? room : "Identity";
+
+    function generateSubmissionId() {
+      const roomCodeMap = {
+        Identity: "ID",
+        Love: "LV",
+        Creativity: "CR"
+      };
+
+      const roomCode = roomCodeMap[currentRoom] || "HM";
+      const cleanSpot = (spot || "000").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      const safeName = (fullName || "Guest").trim();
+
+      const initials = safeName
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("") || "GU";
+
+      return `HM-${roomCode}-${cleanSpot}-${initials}`;
+    }
+
+    async function sendConfirmationEmail(submissionData) {
+      const alreadySent = sessionStorage.getItem("thm_email_sent");
+      if (alreadySent === submissionData.submissionId) {
+        return true;
+      }
+
+      try {
+        const response = await fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fullName: submissionData.fullName,
+            email: submissionData.email,
+            country: submissionData.country,
+            room: submissionData.room,
+            wall: submissionData.wall,
+            section: submissionData.section,
+            spot: submissionData.spot,
+            slotCode: submissionData.slotCode,
+            price: submissionData.price,
+            submissionId: submissionData.submissionId
+          })
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          console.error("Email send failed:", result || response.statusText);
+          return false;
+        }
+
+        sessionStorage.setItem("thm_email_sent", submissionData.submissionId);
+        return true;
+      } catch (error) {
+        console.error("Email request error:", error);
+        return false;
+      }
+    }
+
+    document.getElementById("summaryRoom").textContent = currentRoom;
+    document.getElementById("summaryWall").textContent = wall;
+    document.getElementById("summarySection").textContent = section;
+    document.getElementById("summarySpot").textContent = spot;
+    document.getElementById("summaryPrice").textContent = price;
+    document.getElementById("summaryName").textContent = fullName;
+    document.getElementById("summaryEmail").textContent = email;
+    document.getElementById("summaryCountry").textContent = country;
+    document.getElementById("uploadIntro").textContent = roomConfig[currentRoom].intro;
+    document.getElementById("guidelineCheckboxText").textContent = roomConfig[currentRoom].checkbox;
+    document.getElementById("roomGuideline").innerHTML = roomConfig[currentRoom].guideline;
+    document.getElementById("heroText").innerHTML =
+      `You are about to finalize your participation in <strong>The Human Mosaic</strong>. Upload the image that will officially represent your position in the <strong>${currentRoom} Room</strong>.`;
+
+    document.getElementById("backToCheckout").href =
+      `checkout.html?room=${encodeURIComponent(currentRoom)}` +
+      `&wall=${encodeURIComponent(wall)}` +
+      `&section=${encodeURIComponent(section)}` +
+      `&spot=${encodeURIComponent(spot)}` +
+      `&slotCode=${encodeURIComponent(slotCode)}` +
+      `&price=${encodeURIComponent(price)}` +
+      `&fullName=${encodeURIComponent(fullName)}` +
+      `&email=${encodeURIComponent(email)}` +
+      `&country=${encodeURIComponent(country)}` +
+      `&note=${encodeURIComponent(note)}`;
+
+    const imageUpload = document.getElementById("imageUpload");
+    const previewBox = document.getElementById("previewBox");
+    const previewImage = document.getElementById("previewImage");
+    const fileName = document.getElementById("fileName");
+    const uploadForm = document.getElementById("uploadForm");
+    const submitBtn = document.querySelector(".submit-btn");
+
+    imageUpload.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) {
+        previewBox.style.display = "none";
+        previewImage.src = "";
+        fileName.textContent = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        previewBox.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    });
+
+    uploadForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const file = imageUpload.files[0];
+      if (!file) return;
+
+      const confirmed = confirm(
+        "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
+      );
+
+      if (!confirmed) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Finalizing submission...";
+
+      const submissionId = generateSubmissionId();
+
+      const submissionData = {
+        submissionId,
+        fullName,
+        email,
+        country,
+        room: currentRoom,
+        wall,
+        section,
+        spot,
+        slotCode,
+        price,
+        note,
+        imageFileName: file.name,
+        submittedAt: new Date().toISOString()
+      };
+
+      const dbSubmission = {
+        submission_id: submissionId,
+        full_name: fullName,
+        email: email,
+        country: country,
+        room: currentRoom,
+        wall: wall,
+        section: section,
+        spot: spot,
+        slot_code: slotCode,
+        price: price,
+        note: note,
+        image_file_name: file.name,
+        status: "pending"
+      };
+
+      const { error: dbError } = await supabaseClient
+        .from("submissions")
+        .insert([dbSubmission]);
+
+      if (dbError) {
+        alert("Supabase error: " + (dbError.message || "Unknown error"));
+        console.error("Supabase insert error:", dbError);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Finalize Submission";
+        return;
+      }
+
+      const { error: slotUpdateError } = await supabaseClient
+        .from("slots")
+        .update({
+          status: "submitted",
+          submission_id: submissionId
+        })
+        .eq("slot_code", slotCode);
+
+      if (slotUpdateError) {
+        alert("Slot update error: " + (slotUpdateError.message || "Unknown error"));
+        console.error("Slot update error:", slotUpdateError);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Finalize Submission";
+        return;
+      }
+
+      localStorage.setItem("thm_submission", JSON.stringify(submissionData));
+
+      await sendConfirmationEmail(submissionData);
+
+      window.location.href =
+        `success.html?submissionId=${encodeURIComponent(submissionId)}` +
+        `&room=${encodeURIComponent(currentRoom)}` +
+        `&wall=${encodeURIComponent(wall)}` +
+        `&section=${encodeURIComponent(section)}` +
+        `&spot=${encodeURIComponent(spot)}` +
+        `&slotCode=${encodeURIComponent(slotCode)}` +
+        `&price=${encodeURIComponent(price)}` +
+        `&fullName=${encodeURIComponent(fullName)}` +
+        `&email=${encodeURIComponent(email)}` +
+        `&country=${encodeURIComponent(country)}`;
+    });
+  </script>
 </body>
 </html>
