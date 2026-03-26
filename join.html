@@ -45,7 +45,16 @@
       color: #555;
       opacity: 0;
       animation: fadeUp 1s ease-out forwards;
-      animation-delay: 0.3s;
+      animation-delay: 0.25s;
+    }
+
+    .hero-trust-line {
+      margin-top: 18px;
+      font-size: 0.96rem;
+      color: #444;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 0.45s;
     }
 
     @keyframes fadeUp {
@@ -110,6 +119,24 @@
       margin-bottom: 14px;
     }
 
+    .room-topline {
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #7a7a7a;
+      margin-bottom: 12px;
+    }
+
+    .room-availability {
+      margin-top: 18px;
+      padding: 12px 14px;
+      background: #fafaf8;
+      border: 1px solid #ececec;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      color: #444;
+    }
+
     .price {
       margin-top: 20px;
       font-weight: 700;
@@ -163,7 +190,7 @@
 
     .legal-box,
     .contact-box,
-    .form-box {
+    .confidence-box {
       background: white;
       border: 1px solid #ddd;
       border-radius: 24px;
@@ -199,7 +226,8 @@
       text-decoration: underline;
     }
 
-    .contact-box p {
+    .contact-box p,
+    .confidence-box p {
       color: #555;
       max-width: 760px;
     }
@@ -210,67 +238,51 @@
       font-size: 1.02rem;
     }
 
-    .join-form {
+    .confidence-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 18px;
-      margin-top: 16px;
+      margin-top: 24px;
     }
 
-    .form-row {
-      display: grid;
-      gap: 8px;
+    .confidence-item {
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 18px;
+      padding: 20px;
     }
 
-    .form-row label {
-      font-weight: 600;
+    .confidence-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .confidence-item span {
+      color: #555;
       font-size: 0.96rem;
     }
 
-    .form-row input,
-    .form-row select,
-    .form-row textarea {
-      width: 100%;
-      padding: 14px 15px;
-      border: 1px solid #d7d7d7;
-      border-radius: 14px;
-      font-size: 15px;
-      background: #fff;
-      color: #1f1f1f;
+    .final-cta {
+      background: #111;
+      color: white;
+      border-radius: 28px;
+      padding: 50px 30px;
     }
 
-    .form-row textarea {
-      min-height: 120px;
-      resize: vertical;
+    .final-cta p {
+      color: rgba(255,255,255,0.82);
+      max-width: 760px;
+      margin: 16px 0 24px;
     }
 
-    .checkbox-wrap {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-top: 4px;
-      color: #444;
-      font-size: 0.95rem;
-    }
-
-    .checkbox-wrap input {
-      margin-top: 4px;
-      transform: scale(1.1);
-    }
-
-    .checkbox-wrap a {
+    .final-cta .btn-primary {
+      background: white;
       color: #111;
-      font-weight: 600;
-      text-decoration: none;
     }
 
-    .checkbox-wrap a:hover {
-      text-decoration: underline;
-    }
-
-    .form-note {
-      color: #666;
-      font-size: 0.94rem;
-      margin-top: -4px;
+    .final-cta .btn-primary:hover {
+      background: #f2f2f2;
     }
 
     footer {
@@ -280,6 +292,16 @@
       text-align: center;
       border-top: 1px solid #e3e3e3;
       margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 100px 0 70px;
+      }
+
+      .hero-trust-line {
+        font-size: 0.92rem;
+      }
     }
   </style>
 </head>
@@ -304,6 +326,9 @@
           Every participant becomes part of a permanent global artwork.
           Begin by selecting one of the three immersive rooms: Identity, Love, or Creativity.
         </p>
+        <div class="hero-trust-line">
+          Official participation flow • Secure room selection • Image review within 48 hours • Digital certificate included
+        </div>
       </div>
     </section>
 
@@ -316,37 +341,72 @@
 
         <div class="rooms">
           <div class="card">
-  <h3>Identity</h3>
-  <div class="muted">Who we are and where we come from.</div>
+            <div class="room-topline">Room 1</div>
+            <h3>Identity</h3>
+            <div class="muted">Who we are and where we come from.</div>
             <p class="muted">Join people expressing who they are and where they come from.</p>
-  <p>
-    Selfies that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and personal identity.
-  </p>
-  <div class="price">€15 — fixed participation fee</div>
-  <a href="room.html?room=Identity&price=%E2%82%AC15" class="btn btn-primary">Select Identity</a>
-</div>
+            <p>
+              Selfies that reflect who we are and where we come from, including monuments, traditions, cultural symbols, local roots, and personal identity.
+            </p>
+            <div class="room-availability">Limited participant positions available</div>
+            <div class="price">€15 — fixed participation fee</div>
+            <a href="room.html?room=Identity&price=%E2%82%AC15" class="btn btn-primary">Select Identity</a>
+          </div>
 
-<div class="card">
-  <h3>Love</h3>
-  <div class="muted">What we love defines us.</div>
-  <p class="muted">Be part of the moments and connections that define us.</p>
-  <p>
-    Family, partners, friendships, pets, passions, and meaningful emotional moments.
-  </p>
-  <div class="price">€15 — fixed participation fee</div>
-  <a href="room.html?room=Love&price=%E2%82%AC15" class="btn btn-primary">Select Love</a>
-</div>
+          <div class="card">
+            <div class="room-topline">Room 2</div>
+            <h3>Love</h3>
+            <div class="muted">What we love defines us.</div>
+            <p class="muted">Be part of the moments and connections that define us.</p>
+            <p>
+              Family, partners, friendships, pets, passions, and meaningful emotional moments.
+            </p>
+            <div class="room-availability">Limited participant positions available</div>
+            <div class="price">€15 — fixed participation fee</div>
+            <a href="room.html?room=Love&price=%E2%82%AC15" class="btn btn-primary">Select Love</a>
+          </div>
 
-<div class="card">
-  <h3>Creativity</h3>
-  <div class="muted">Human imagination without limits.</div
-  <p class="muted">Contribute to a space driven by imagination and artistic expression.</p>                                                      
-  <p>
-    Art, photography, drawings, concepts, ideas, and visual expression. Artistic nudity allowed.
-  </p>
-  <div class="price">€20 — fixed participation fee</div>
-  <a href="room.html?room=Creativity&price=%E2%82%AC20" class="btn btn-primary">Select Creativity</a>
-</div>
+          <div class="card">
+            <div class="room-topline">Room 3</div>
+            <h3>Creativity</h3>
+            <div class="muted">Human imagination without limits.</div>
+            <p class="muted">Contribute to a space driven by imagination and artistic expression.</p>
+            <p>
+              Art, photography, drawings, concepts, ideas, and visual expression. Artistic nudity allowed. Explicit sexual content prohibited.
+            </p>
+            <div class="room-availability">Limited participant positions available</div>
+            <div class="price">€20 — fixed participation fee</div>
+            <a href="room.html?room=Creativity&price=%E2%82%AC20" class="btn btn-primary">Select Creativity</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="confidence-box">
+          <h2>Why Join With Confidence</h2>
+          <p>
+            The Human Mosaic is designed as a structured participation experience, not an informal upload page.
+            Every participant follows a clear process and receives official project recognition after approval.
+          </p>
+
+          <div class="confidence-grid">
+            <div class="confidence-item">
+              <strong>Clear participation flow</strong>
+              <span>Choose a room, reserve a spot, complete the process, and submit your image through the official journey.</span>
+            </div>
+
+            <div class="confidence-item">
+              <strong>Human review process</strong>
+              <span>Every image is reviewed to protect the quality and integrity of the final artwork.</span>
+            </div>
+
+            <div class="confidence-item">
+              <strong>Official certificate</strong>
+              <span>Approved participants receive a digital certificate confirming their place inside the project.</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -409,7 +469,7 @@
 
           <div class="links">
             <a href="privacy.html" target="_blank">Privacy Policy</a> |
-            <a href="terms.html" target="_blank">Terms & Conditions</a> |
+            <a href="terms.html" target="_blank">Terms &amp; Conditions</a> |
             <a href="license.html" target="_blank">Content License</a>
           </div>
         </div>
@@ -430,55 +490,12 @@
 
     <section>
       <div class="container">
-        <div class="form-box">
-          <h2>Participation Request</h2>
-          <p class="section-text">
-            This form represents the official first step into The Human Mosaic. Complete it carefully before submitting your participation.
+        <div class="final-cta">
+          <h2>Choose the room that best represents your image and enter the project officially.</h2>
+          <p>
+            Participation begins with room selection. From there, you will be guided through the official path of placement, payment, upload, and review.
           </p>
-
-          <form class="join-form">
-            <div class="form-row">
-              <label for="fullName">Full Name</label>
-              <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
-            </div>
-
-            <div class="form-row">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="Enter your email address" required>
-            </div>
-
-            <div class="form-row">
-              <label for="selectedRoom">Selected Room</label>
-              <select id="selectedRoom" name="selectedRoom" required>
-                <option value="">Select a room</option>
-                <option value="identity">Identity</option>
-                <option value="love">Love</option>
-                <option value="creativity">Creativity</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <label for="message">Optional Message</label>
-              <textarea id="message" name="message" placeholder="Write a short message if you want to introduce your submission"></textarea>
-            </div>
-
-            <label class="checkbox-wrap">
-              <input type="checkbox" required>
-              <span>
-                I confirm that I have read and accepted the
-                <a href="privacy.html" target="_blank">Privacy Policy</a>,
-                <a href="terms.html" target="_blank">Terms &amp; Conditions</a>
-                and
-                <a href="license.html" target="_blank">Content License</a>.
-              </span>
-            </label>
-
-            <p class="form-note">
-              After submission, the next steps will include room placement, payment, image upload, and review.
-            </p>
-
-            <button type="submit" class="btn btn-primary">Submit Participation Request</button>
-          </form>
+          <a href="#top" class="btn btn-primary" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;">Choose Your Room</a>
         </div>
       </div>
     </section>
