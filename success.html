@@ -97,6 +97,12 @@
       margin-bottom: 16px;
     }
 
+    .summary-intro {
+      margin-bottom: 16px;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
     .summary-line {
       padding: 12px 0;
       border-bottom: 1px solid #e8e8e8;
@@ -251,12 +257,12 @@
   <main>
     <section class="hero">
       <div class="container">
-        <h1>Welcome to The Human Mosaic.</h1>
+        <h1>Submission completed successfully.</h1>
         <p id="heroText">
           Thank you for becoming part of The Human Mosaic.
-          Your participation request has been successfully received and is now entering the official review process.
+          Your participation has been successfully received and is now entering the official review process.
         </p>
-        <div class="hero-impact">You are now part of something that will live forever.</div>
+        <div class="hero-impact">Your place in the mosaic has now been officially recorded.</div>
       </div>
     </section>
 
@@ -269,28 +275,28 @@
             <div class="steps-box">
               <h2>What happens next?</h2>
               <p id="stepsIntro">
-                Your selected position and submitted image are now part of the participation review process.
+                Your selected position and submitted image are now part of the official participation review process.
               </p>
 
               <div class="room-note" style="margin-bottom: 18px;">
                 <strong>Your spot has been officially reserved.</strong>
-                You have completed the participation flow and your selected position is now associated with your submission request.
+                You have completed the participation flow and your selected position is now linked to your submission.
               </div>
 
               <div class="next-steps">
                 <div class="step">
                   <strong>1. Review</strong>
-                  We verify that your submission matches the project guidelines and selected room.
+                  We verify that your submission matches the project guidelines and the room you selected.
                 </div>
 
                 <div class="step">
                   <strong>2. Confirmation</strong>
-                  Your position and participation request are confirmed after review.
+                  Your position and participation are confirmed once the review is completed.
                 </div>
 
                 <div class="step">
                   <strong>3. Certificate</strong>
-                  You will receive your official digital certificate once your participation is validated.
+                  You will receive your official digital certificate after your participation is validated.
                 </div>
               </div>
 
@@ -314,6 +320,10 @@
 
             <div class="summary-box">
               <h2>Your Submission</h2>
+
+              <div class="summary-intro">
+                This summary confirms the participant details and position associated with your submission.
+              </div>
 
               <div class="summary-line">
                 <div class="summary-label">Submission ID</div>
@@ -469,6 +479,8 @@
     document.getElementById("summarySpot").textContent = submission.spot;
     document.getElementById("summaryPrice").textContent = submission.price;
     document.getElementById("roomGuideline").innerHTML = roomConfig[submission.room].guideline;
+    document.getElementById("heroText").innerHTML =
+      `Thank you for becoming part of <strong>The Human Mosaic</strong>. Your participation in the <strong>${submission.room} Room</strong> has been successfully received and is now entering the official review process.`;
   </script>
 </body>
 </html>
