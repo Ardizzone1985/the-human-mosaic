@@ -80,11 +80,11 @@ async function generateCertificatePdf({
   const page = pdfDoc.addPage([842, 595]); // A4 landscape
   const { width, height } = page.getSize();
 
-  const timesRoman = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-  const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-  const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesItalic);
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+const timesRoman = helvetica;
+const timesBold = helveticaBold;
+const timesItalic = helvetica;
 
   const bg = rgb(0.973, 0.965, 0.93);
   const gold = rgb(0.78, 0.67, 0.42);
