@@ -312,36 +312,30 @@ const timesItalic = helvetica;
   });
 }
 
-  page.drawLine({
-    start: { x: 80, y: bottomY + 12 },
-    end: { x: 290, y: bottomY + 12 },
-    thickness: 1,
-    color: line
-  });
+  const signatureBytes = await fetchAsBytes(signatureUrl);
+  const signatureImage = await pdfDoc.embedPng(signatureBytes);
 
+  const originalWidth = signatureImage.width;
+  const originalHeight = signatureImage.height;
+
+  const targetWidth = 210;
+  const targetHeight = (originalHeight / originalWidth) * targetWidth;
+
+  page.drawImage(signatureImage, {
+    x: 78,
+    y: bottomY + 24,
+    width: targetWidth,
+    height: targetHeight
+  });
+} catch (error) {
   page.drawText('Giuseppe Ardizzone', {
-    x: 125,
-    y: bottomY - 10,
-    size: 13,
-    font: timesBold,
-    color: textDark
-  });
-
-  page.drawText('Founder & Curator', {
-    x: 140,
-    y: bottomY - 30,
-    size: 10,
-    font: timesRoman,
-    color: textMid
-  });
-
-  page.drawText('The Human Mosaic', {
-    x: 138,
-    y: bottomY - 48,
-    size: 10,
+    x: 100,
+    y: bottomY + 42,
+    size: 24,
     font: timesItalic,
-    color: textMid
+    color: navy
   });
+}
 
   page.drawCircle({
     x: width / 2,
