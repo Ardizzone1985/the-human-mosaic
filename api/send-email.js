@@ -304,7 +304,7 @@ async function generateCertificatePdf({
 
     const originalWidth = signatureImage.width;
     const originalHeight = signatureImage.height;
-    const targetWidth = 180;
+    const targetWidth = 150;
     const targetHeight = (originalHeight / originalWidth) * targetWidth;
 
     page.drawImage(signatureImage, {
