@@ -74,7 +74,7 @@ async function generateCertificatePdf({
   submissionId
 }) {
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${encodeURIComponent(submissionId || '')}`;
-  const signatureUrl = 'https://thehumanmosaic.art/signature.jpg';
+  const signatureUrl = 'https://thehumanmosaic.art/signature-clean.png';
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]); // A4 landscape
