@@ -309,7 +309,7 @@ async function generateCertificatePdf({
 
     page.drawImage(signatureImage, {
       x: 70,
-      y: bottomY + 6,
+      y: bottomY + 18,
       width: targetWidth,
       height: targetHeight
     });
