@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
-import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer-core';
+import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import QRCode from 'qrcode';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -37,6 +37,34 @@ function escapeHtml(value = '') {
     .replaceAll("'", '&#039;');
 }
 
+function wrapText(text, maxCharsPerLine = 70) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  const lines = [];
+  let current = '';
+
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word;
+    if (test.length <= maxCharsPerLine) {
+      current = test;
+    } else {
+      if (current) lines.push(current);
+      current = word;
+    }
+  }
+
+  if (current) lines.push(current);
+  return lines;
+}
+
+async function fetchAsBytes(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch asset: ${url} (${response.status})`);
+  }
+  const arrayBuffer = await response.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
+}
+
 async function generateCertificatePdf({
   fullName,
   room,
@@ -45,394 +73,358 @@ async function generateCertificatePdf({
   spot,
   submissionId
 }) {
-  const safeFullName = escapeHtml(fullName);
-  const safeRoom = escapeHtml(room || '—');
-  const safeWall = escapeHtml(wall || '—');
-  const safeSection = escapeHtml(section || '—');
-  const safeSpot = escapeHtml(spot || '—');
-  const safeSubmissionId = escapeHtml(submissionId || '—');
-
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${encodeURIComponent(submissionId || '')}`;
-  const qrUrl = `https://quickchart.io/qr?size=220&text=${encodeURIComponent(verifyUrl)}`;
   const signatureUrl = 'https://thehumanmosaic.art/signature.jpg';
 
-  const html = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <style>
-        * { box-sizing: border-box; }
-        body {
-          margin: 0;
-          padding: 0;
-          background: #f6f3eb;
-          font-family: Georgia, "Times New Roman", serif;
-        }
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([842, 595]); // A4 landscape
+  const { width, height } = page.getSize();
 
-        .page {
-          width: 1600px;
-          height: 1130px;
-          margin: 0 auto;
-          padding: 28px;
-          background: #f6f3eb;
-        }
+  const timesRoman = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesItalic);
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-        .certificate {
-          width: 100%;
-          height: 100%;
-          border: 6px solid #cdbb8a;
-          position: relative;
-          padding: 54px 64px;
-          background:
-            radial-gradient(circle at center, rgba(255,255,255,0.55), rgba(255,255,255,0.9)),
-            #f9f7f2;
-        }
+  const bg = rgb(0.973, 0.965, 0.93);
+  const gold = rgb(0.78, 0.67, 0.42);
+  const goldDark = rgb(0.55, 0.42, 0.14);
+  const textDark = rgb(0.18, 0.18, 0.18);
+  const textMid = rgb(0.35, 0.35, 0.35);
+  const line = rgb(0.84, 0.82, 0.76);
+  const navy = rgb(0.15, 0.19, 0.28);
 
-        .inner-border {
-          position: absolute;
-          inset: 10px;
-          border: 2px solid #d8c79c;
-          pointer-events: none;
-        }
+  page.drawRectangle({
+    x: 0,
+    y: 0,
+    width,
+    height,
+    color: bg
+  });
 
-        .header {
-          text-align: center;
-          margin-bottom: 26px;
-        }
+  page.drawRectangle({
+    x: 12,
+    y: 12,
+    width: width - 24,
+    height: height - 24,
+    borderColor: gold,
+    borderWidth: 2
+  });
 
-        .brand {
-          font-size: 34px;
-          letter-spacing: 0.08em;
-          color: #3a3a3a;
-          margin-bottom: 10px;
-          text-transform: uppercase;
-        }
+  page.drawRectangle({
+    x: 18,
+    y: 18,
+    width: width - 36,
+    height: height - 36,
+    borderColor: rgb(0.86, 0.79, 0.61),
+    borderWidth: 1
+  });
 
-        .pretitle {
-          font-size: 22px;
-          letter-spacing: 0.16em;
-          color: #8c6a2c;
-          text-transform: uppercase;
-          margin-bottom: 12px;
-        }
+  page.drawText('THE HUMAN MOSAIC', {
+    x: width / 2 - 130,
+    y: height - 70,
+    size: 22,
+    font: helveticaBold,
+    color: textMid
+  });
 
-        .title {
-          font-size: 66px;
-          line-height: 1;
-          color: #2b2b2b;
-          margin: 0 0 14px;
-          font-weight: 700;
-        }
+  page.drawText('PERMANENT POSITION CERTIFICATE', {
+    x: width / 2 - 178,
+    y: height - 110,
+    size: 13,
+    font: helvetica,
+    color: goldDark
+  });
 
-        .divider {
-          width: 72%;
-          margin: 0 auto;
-          border-top: 2px solid #d7d1c6;
-        }
+  page.drawLine({
+    start: { x: 180, y: height - 112 },
+    end: { x: 315, y: height - 112 },
+    thickness: 1,
+    color: gold
+  });
 
-        .certifies {
-          text-align: center;
-          font-size: 22px;
-          color: #5a5a5a;
-          margin-top: 30px;
-          margin-bottom: 10px;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
+  page.drawLine({
+    start: { x: 528, y: height - 112 },
+    end: { x: 662, y: height - 112 },
+    thickness: 1,
+    color: gold
+  });
 
-        .name {
-          text-align: center;
-          font-size: 78px;
-          line-height: 1.1;
-          color: #6e5220;
-          font-style: italic;
-          margin: 10px 0 16px;
-        }
+  page.drawText('CERTIFICATE OF PARTICIPATION', {
+    x: width / 2 - 200,
+    y: height - 165,
+    size: 28,
+    font: timesBold,
+    color: textDark
+  });
 
-        .participant-line {
-          text-align: center;
-          font-size: 28px;
-          font-weight: 700;
-          color: #333;
-          margin-bottom: 18px;
-        }
+  page.drawLine({
+    start: { x: 180, y: height - 182 },
+    end: { x: 662, y: height - 182 },
+    thickness: 1,
+    color: line
+  });
 
-        .statement {
-          max-width: 920px;
-          margin: 0 auto 22px;
-          text-align: center;
-          font-size: 20px;
-          line-height: 1.6;
-          color: #444;
-        }
+  page.drawText('THIS CERTIFIES THAT', {
+    x: width / 2 - 83,
+    y: height - 210,
+    size: 11,
+    font: helvetica,
+    color: textMid
+  });
 
-        .recorded {
-          text-align: center;
-          font-size: 20px;
-          font-style: italic;
-          color: #444;
-          margin: 20px 0 26px;
-        }
+  const nameText = fullName || 'Participant Name';
+  const nameSize = Math.min(42, Math.max(26, 620 / Math.max(nameText.length, 10)));
+  const nameWidth = timesItalic.widthOfTextAtSize(nameText, nameSize);
+  page.drawText(nameText, {
+    x: (width - nameWidth) / 2,
+    y: height - 265,
+    size: nameSize,
+    font: timesItalic,
+    color: goldDark
+  });
 
-        .details {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 0 auto 34px;
-          table-layout: fixed;
-        }
+  page.drawLine({
+    start: { x: 210, y: height - 280 },
+    end: { x: 632, y: height - 280 },
+    thickness: 1,
+    color: line
+  });
 
-        .details td {
-          width: 20%;
-          border-top: 1px solid #ddd5c7;
-          border-bottom: 1px solid #ddd5c7;
-          padding: 18px 8px;
-          text-align: center;
-          vertical-align: top;
-        }
+  const participantLine = `Official Participant • ${room} Room`;
+  const participantWidth = timesBold.widthOfTextAtSize(participantLine, 15);
+  page.drawText(participantLine, {
+    x: (width - participantWidth) / 2,
+    y: height - 315,
+    size: 15,
+    font: timesBold,
+    color: textDark
+  });
 
-        .details-label {
-          font-size: 14px;
-          letter-spacing: 0.14em;
-          color: #777;
-          text-transform: uppercase;
-          margin-bottom: 8px;
-        }
+  const statement =
+    'has officially secured a permanent position within The Human Mosaic, a global collective artwork composed of millions of participants.';
+  const statementLines = wrapText(statement, 62);
+  let statementY = height - 352;
+  for (const lineText of statementLines) {
+    const lineWidth = timesItalic.widthOfTextAtSize(lineText, 13);
+    page.drawText(lineText, {
+      x: (width - lineWidth) / 2,
+      y: statementY,
+      size: 13,
+      font: timesItalic,
+      color: textMid
+    });
+    statementY -= 18;
+  }
 
-        .details-value {
-          font-size: 21px;
-          font-weight: 700;
-          color: #2f2f2f;
-        }
+  const recorded = 'This position is permanently recorded within The Human Mosaic.';
+  const recordedWidth = timesItalic.widthOfTextAtSize(recorded, 13);
+  page.drawText(recorded, {
+    x: (width - recordedWidth) / 2,
+    y: statementY - 18,
+    size: 13,
+    font: timesItalic,
+    color: textDark
+  });
 
-        .bottom {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          gap: 28px;
-          margin-top: 10px;
-        }
+  const tableTop = statementY - 48;
+  const tableLeft = 175;
+  const tableWidth = 492;
+  const colWidth = tableWidth / 5;
 
-        .signature-block {
-          width: 38%;
-          text-align: left;
-        }
+  page.drawLine({
+    start: { x: tableLeft, y: tableTop },
+    end: { x: tableLeft + tableWidth, y: tableTop },
+    thickness: 1,
+    color: line
+  });
 
-        .signature-image {
-          display: block;
-          max-width: 380px;
-          max-height: 110px;
-          margin-bottom: 12px;
-        }
+  page.drawLine({
+    start: { x: tableLeft, y: tableTop - 56 },
+    end: { x: tableLeft + tableWidth, y: tableTop - 56 },
+    thickness: 1,
+    color: line
+  });
 
-        .signature-name {
-          font-size: 24px;
-          font-weight: 700;
-          color: #2f2f2f;
-          margin-bottom: 4px;
-        }
+  const detailItems = [
+    ['ROOM', room || '—'],
+    ['WALL', wall || '—'],
+    ['SECTION', section || '—'],
+    ['SPOT', spot || '—'],
+    ['SUBMISSION ID', submissionId || '—']
+  ];
 
-        .signature-role {
-          font-size: 18px;
-          color: #666;
-          line-height: 1.5;
-        }
+  detailItems.forEach((item, i) => {
+    const x = tableLeft + i * colWidth;
+    if (i > 0) {
+      page.drawLine({
+        start: { x, y: tableTop - 4 },
+        end: { x, y: tableTop - 52 },
+        thickness: 1,
+        color: line
+      });
+    }
 
-        .seal-block {
-          width: 24%;
-          text-align: center;
-        }
+    page.drawText(item[0], {
+      x: x + 10,
+      y: tableTop - 18,
+      size: 8,
+      font: helvetica,
+      color: textMid
+    });
 
-        .seal {
-          width: 150px;
-          height: 150px;
-          margin: 0 auto 10px;
-          border-radius: 50%;
-          border: 10px solid #caa347;
-          background: radial-gradient(circle, #f7e3a5 0%, #d6af4f 68%, #ae8222 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #7c5a16;
-          font-size: 20px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          box-shadow: inset 0 0 0 4px rgba(255,255,255,0.25);
-        }
+    const value = String(item[1]);
+    const valueSize = item[0] === 'SUBMISSION ID' ? 10 : 13;
+    page.drawText(value, {
+      x: x + 10,
+      y: tableTop - 40,
+      size: valueSize,
+      font: timesBold,
+      color: textDark
+    });
+  });
 
-        .seal-caption {
-          font-size: 15px;
-          color: #8c6a2c;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
+  const bottomY = 110;
 
-        .meta-block {
-          width: 28%;
-          text-align: left;
-        }
+  try {
+    const signatureBytes = await fetchAsBytes(signatureUrl);
+    const signatureImage = await pdfDoc.embedJpg(signatureBytes);
+    const sigDims = signatureImage.scale(0.22);
+    page.drawImage(signatureImage, {
+      x: 95,
+      y: bottomY + 18,
+      width: sigDims.width,
+      height: sigDims.height
+    });
+  } catch (error) {
+    page.drawText('Giuseppe Ardizzone', {
+      x: 100,
+      y: bottomY + 42,
+      size: 24,
+      font: timesItalic,
+      color: navy
+    });
+  }
 
-        .meta-group {
-          margin-bottom: 16px;
-        }
+  page.drawLine({
+    start: { x: 80, y: bottomY + 12 },
+    end: { x: 290, y: bottomY + 12 },
+    thickness: 1,
+    color: line
+  });
 
-        .meta-title {
-          font-size: 14px;
-          letter-spacing: 0.14em;
-          color: #777;
-          text-transform: uppercase;
-          margin-bottom: 6px;
-        }
+  page.drawText('Giuseppe Ardizzone', {
+    x: 125,
+    y: bottomY - 10,
+    size: 13,
+    font: timesBold,
+    color: textDark
+  });
 
-        .meta-value {
-          font-size: 22px;
-          font-weight: 700;
-          color: #2f2f2f;
-          margin-bottom: 10px;
-        }
+  page.drawText('Founder & Curator', {
+    x: 140,
+    y: bottomY - 30,
+    size: 10,
+    font: timesRoman,
+    color: textMid
+  });
 
-        .qr-box {
-          margin-top: 10px;
-        }
+  page.drawText('The Human Mosaic', {
+    x: 138,
+    y: bottomY - 48,
+    size: 10,
+    font: timesItalic,
+    color: textMid
+  });
 
-        .qr-box img {
-          width: 120px;
-          height: 120px;
-          display: block;
-          margin-top: 8px;
-        }
+  page.drawCircle({
+    x: width / 2,
+    y: bottomY + 8,
+    size: 55,
+    borderColor: gold,
+    borderWidth: 6,
+    color: rgb(0.95, 0.87, 0.58)
+  });
 
-        .verify-text {
-          margin-top: 8px;
-          font-size: 15px;
-          color: #555;
-          font-style: italic;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="page">
-        <div class="certificate">
-          <div class="inner-border"></div>
+  page.drawText('CERTIFIED', {
+    x: width / 2 - 33,
+    y: bottomY + 2,
+    size: 11,
+    font: helveticaBold,
+    color: goldDark
+  });
 
-          <div class="header">
-            <div class="brand">The Human Mosaic</div>
-            <div class="pretitle">Permanent Position Certificate</div>
-            <div class="title">Certificate of Participation</div>
-            <div class="divider"></div>
-          </div>
+  page.drawText('PROJECT ORIGIN', {
+    x: 565,
+    y: bottomY + 58,
+    size: 8,
+    font: helvetica,
+    color: textMid
+  });
 
-          <div class="certifies">This certifies that</div>
-          <div class="name">${safeFullName}</div>
+  page.drawText('Italy', {
+    x: 565,
+    y: bottomY + 38,
+    size: 14,
+    font: timesBold,
+    color: textDark
+  });
 
-          <div class="participant-line">
-            Official Participant • ${safeRoom} Room
-          </div>
+  page.drawText('CERTIFICATE ID', {
+    x: 565,
+    y: bottomY + 8,
+    size: 8,
+    font: helvetica,
+    color: textMid
+  });
 
-          <div class="statement">
-            has officially secured a permanent position within The Human Mosaic,
-            a global collective artwork composed of millions of participants.
-          </div>
-
-          <div class="recorded">
-            This position is permanently recorded within The Human Mosaic.
-          </div>
-
-          <table class="details">
-            <tr>
-              <td>
-                <div class="details-label">Room</div>
-                <div class="details-value">${safeRoom}</div>
-              </td>
-              <td>
-                <div class="details-label">Wall</div>
-                <div class="details-value">${safeWall}</div>
-              </td>
-              <td>
-                <div class="details-label">Section</div>
-                <div class="details-value">${safeSection}</div>
-              </td>
-              <td>
-                <div class="details-label">Spot</div>
-                <div class="details-value">${safeSpot}</div>
-              </td>
-              <td>
-                <div class="details-label">Submission ID</div>
-                <div class="details-value">${safeSubmissionId}</div>
-              </td>
-            </tr>
-          </table>
-
-          <div class="bottom">
-            <div class="signature-block">
-              <img class="signature-image" src="${signatureUrl}" alt="Signature" />
-              <div class="signature-name">Giuseppe Ardizzone</div>
-              <div class="signature-role">
-                Founder & Curator<br>
-                The Human Mosaic
-              </div>
-            </div>
-
-            <div class="seal-block">
-              <div class="seal">Certified</div>
-              <div class="seal-caption">Official Seal</div>
-            </div>
-
-            <div class="meta-block">
-              <div class="meta-group">
-                <div class="meta-title">Project Origin</div>
-                <div class="meta-value">Italy</div>
-              </div>
-
-              <div class="meta-group">
-                <div class="meta-title">Certificate ID</div>
-                <div class="meta-value">${safeSubmissionId}</div>
-              </div>
-
-              <div class="qr-box">
-                <div class="meta-title">Verify Certificate</div>
-                <img src="${qrUrl}" alt="QR Code" />
-                <div class="verify-text">Verify Authenticity</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
-
-  const executablePath = await chromium.executablePath();
-
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath,
-    headless: chromium.headless
+  page.drawText(String(submissionId || '—'), {
+    x: 565,
+    y: bottomY - 12,
+    size: 12,
+    font: timesBold,
+    color: textDark
   });
 
   try {
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      landscape: true,
-      printBackground: true,
-      margin: {
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0'
+    const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
+      margin: 1,
+      width: 220,
+      color: {
+        dark: '#1f1f1f',
+        light: '#0000'
       }
     });
 
-    return pdfBuffer;
-  } finally {
-    await browser.close();
+    const qrBase64 = qrDataUrl.split(',')[1];
+    const qrBytes = Uint8Array.from(Buffer.from(qrBase64, 'base64'));
+    const qrImage = await pdfDoc.embedPng(qrBytes);
+
+    page.drawImage(qrImage, {
+      x: 700,
+      y: bottomY - 8,
+      width: 78,
+      height: 78
+    });
+
+    page.drawText('Verify Certificate', {
+      x: 688,
+      y: bottomY - 28,
+      size: 9,
+      font: timesItalic,
+      color: textMid
+    });
+  } catch (error) {
+    page.drawText('QR unavailable', {
+      x: 700,
+      y: bottomY + 18,
+      size: 10,
+      font: helvetica,
+      color: textMid
+    });
   }
+
+  return await pdfDoc.save();
 }
 
 export default async function handler(req, res) {
