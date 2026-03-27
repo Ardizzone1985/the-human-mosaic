@@ -288,23 +288,29 @@ const timesItalic = helvetica;
 
   try {
     const signatureBytes = await fetchAsBytes(signatureUrl);
-    const signatureImage = await pdfDoc.embedJpg(signatureBytes);
-    const sigDims = signatureImage.scale(0.22);
-    page.drawImage(signatureImage, {
-      x: 80,
-      y: 80,
-      width: 180,
-      height: 60,
-    });
-  } catch (error) {
-    page.drawText('Giuseppe Ardizzone', {
-      x: 100,
-      y: bottomY + 42,
-      size: 24,
-      font: timesItalic,
-      color: navy
-    });
-  }
+  const signatureImage = await pdfDoc.embedPng(signatureBytes);
+
+  const originalWidth = signatureImage.width;
+  const originalHeight = signatureImage.height;
+
+  const targetWidth = 210;
+  const targetHeight = (originalHeight / originalWidth) * targetWidth;
+
+  page.drawImage(signatureImage, {
+    x: 78,
+    y: bottomY + 24,
+    width: targetWidth,
+    height: targetHeight
+  });
+} catch (error) {
+  page.drawText('Giuseppe Ardizzone', {
+    x: 100,
+    y: bottomY + 42,
+    size: 24,
+    font: timesItalic,
+    color: navy
+  });
+}
 
   page.drawLine({
     start: { x: 80, y: bottomY + 12 },
