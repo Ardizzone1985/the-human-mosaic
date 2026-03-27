@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import QRCode from 'qrcode';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -37,7 +37,7 @@ function escapeHtml(value = '') {
     .replaceAll("'", '&#039;');
 }
 
-function wrapText(text, maxCharsPerLine = 70) {
+function wrapText(text, maxCharsPerLine = 65) {
   const words = String(text || '').split(/\s+/).filter(Boolean);
   const lines = [];
   let current = '';
@@ -81,10 +81,12 @@ async function generateCertificatePdf({
   const { width, height } = page.getSize();
 
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-const timesRoman = helvetica;
-const timesBold = helveticaBold;
-const timesItalic = helvetica;
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  // fallback semplice e stabile
+  const timesRoman = helvetica;
+  const timesBold = helveticaBold;
+  const timesItalic = helvetica;
 
   const bg = rgb(0.973, 0.965, 0.93);
   const gold = rgb(0.78, 0.67, 0.42);
@@ -121,115 +123,120 @@ const timesItalic = helvetica;
   });
 
   page.drawText('THE HUMAN MOSAIC', {
-    x: width / 2 - 130,
-    y: height - 70,
-    size: 22,
+    x: 305,
+    y: 545,
+    size: 24,
     font: helveticaBold,
     color: textMid
   });
 
   page.drawText('PERMANENT POSITION CERTIFICATE', {
-    x: width / 2 - 178,
-    y: height - 110,
-    size: 13,
+    x: 255,
+    y: 502,
+    size: 12,
     font: helvetica,
     color: goldDark
   });
 
   page.drawLine({
-    start: { x: 180, y: height - 112 },
-    end: { x: 315, y: height - 112 },
+    start: { x: 170, y: 500 },
+    end: { x: 245, y: 500 },
     thickness: 1,
     color: gold
   });
 
   page.drawLine({
-    start: { x: 528, y: height - 112 },
-    end: { x: 662, y: height - 112 },
+    start: { x: 555, y: 500 },
+    end: { x: 630, y: 500 },
     thickness: 1,
     color: gold
   });
 
   page.drawText('CERTIFICATE OF PARTICIPATION', {
-    x: width / 2 - 200,
-    y: height - 165,
-    size: 28,
-    font: timesBold,
+    x: 215,
+    y: 438,
+    size: 38,
+    font: helveticaBold,
     color: textDark
   });
 
   page.drawLine({
-    start: { x: 180, y: height - 182 },
-    end: { x: 662, y: height - 182 },
+    start: { x: 170, y: 435 },
+    end: { x: 630, y: 435 },
     thickness: 1,
     color: line
   });
 
   page.drawText('THIS CERTIFIES THAT', {
-    x: width / 2 - 83,
-    y: height - 210,
+    x: 351,
+    y: 398,
     size: 11,
     font: helvetica,
     color: textMid
   });
 
-  const nameText = fullName || 'Participant Name';
-  const nameSize = Math.min(42, Math.max(26, 620 / Math.max(nameText.length, 10)));
-  const nameWidth = timesItalic.widthOfTextAtSize(nameText, nameSize);
+  const nameText = String(fullName || 'Participant Name');
+  const nameSize = Math.min(30, Math.max(20, 520 / Math.max(nameText.length, 10)));
+  const nameWidth = helvetica.widthOfTextAtSize(nameText, nameSize);
+
   page.drawText(nameText, {
     x: (width - nameWidth) / 2,
-    y: height - 265,
+    y: 346,
     size: nameSize,
-    font: timesItalic,
+    font: helvetica,
     color: goldDark
   });
 
   page.drawLine({
-    start: { x: 210, y: height - 280 },
-    end: { x: 632, y: height - 280 },
+    start: { x: 200, y: 342 },
+    end: { x: 600, y: 342 },
     thickness: 1,
     color: line
   });
 
   const participantLine = `Official Participant • ${room} Room`;
-  const participantWidth = timesBold.widthOfTextAtSize(participantLine, 15);
+  const participantWidth = helveticaBold.widthOfTextAtSize(participantLine, 12);
+
   page.drawText(participantLine, {
     x: (width - participantWidth) / 2,
-    y: height - 315,
-    size: 15,
-    font: timesBold,
+    y: 296,
+    size: 12,
+    font: helveticaBold,
     color: textDark
   });
 
   const statement =
     'has officially secured a permanent position within The Human Mosaic, a global collective artwork composed of millions of participants.';
-  const statementLines = wrapText(statement, 62);
-  let statementY = height - 352;
+  const statementLines = wrapText(statement, 58);
+
+  let statementY = 250;
   for (const lineText of statementLines) {
-    const lineWidth = timesItalic.widthOfTextAtSize(lineText, 13);
+    const lineWidth = helvetica.widthOfTextAtSize(lineText, 10);
     page.drawText(lineText, {
       x: (width - lineWidth) / 2,
       y: statementY,
-      size: 13,
-      font: timesItalic,
+      size: 10,
+      font: helvetica,
       color: textMid
     });
     statementY -= 18;
   }
 
   const recorded = 'This position is permanently recorded within The Human Mosaic.';
-  const recordedWidth = timesItalic.widthOfTextAtSize(recorded, 13);
+  const recordedWidth = helvetica.widthOfTextAtSize(recorded, 10.5);
+
   page.drawText(recorded, {
     x: (width - recordedWidth) / 2,
-    y: statementY - 18,
-    size: 13,
-    font: timesItalic,
+    y: 160,
+    size: 10.5,
+    font: helvetica,
     color: textDark
   });
 
-  const tableTop = statementY - 48;
-  const tableLeft = 175;
-  const tableWidth = 492;
+  // tabella dettagli
+  const tableTop = 122;
+  const tableLeft = 150;
+  const tableWidth = 540;
   const colWidth = tableWidth / 5;
 
   page.drawLine({
@@ -240,8 +247,8 @@ const timesItalic = helvetica;
   });
 
   page.drawLine({
-    start: { x: tableLeft, y: tableTop - 56 },
-    end: { x: tableLeft + tableWidth, y: tableTop - 56 },
+    start: { x: tableLeft, y: tableTop - 46 },
+    end: { x: tableLeft + tableWidth, y: tableTop - 46 },
     thickness: 1,
     color: line
   });
@@ -256,133 +263,145 @@ const timesItalic = helvetica;
 
   detailItems.forEach((item, i) => {
     const x = tableLeft + i * colWidth;
+
     if (i > 0) {
       page.drawLine({
         start: { x, y: tableTop - 4 },
-        end: { x, y: tableTop - 52 },
+        end: { x, y: tableTop - 42 },
         thickness: 1,
         color: line
       });
     }
 
     page.drawText(item[0], {
-      x: x + 10,
-      y: tableTop - 18,
-      size: 8,
+      x: x + 8,
+      y: tableTop - 14,
+      size: 7,
       font: helvetica,
       color: textMid
     });
 
-    const value = String(item[1]);
-    const valueSize = item[0] === 'SUBMISSION ID' ? 10 : 13;
+    const rawValue = String(item[1]);
+    const value = item[0] === 'SUBMISSION ID' && rawValue.length > 14
+      ? rawValue.slice(0, 14)
+      : rawValue;
+
     page.drawText(value, {
-      x: x + 10,
-      y: tableTop - 40,
-      size: valueSize,
-      font: timesBold,
+      x: x + 8,
+      y: tableTop - 32,
+      size: item[0] === 'SUBMISSION ID' ? 8.5 : 11.5,
+      font: helveticaBold,
       color: textDark
     });
   });
 
-  const bottomY = 110;
+  const bottomY = 68;
 
+  // firma
   try {
     const signatureBytes = await fetchAsBytes(signatureUrl);
-  const signatureImage = await pdfDoc.embedPng(signatureBytes);
+    const signatureImage = await pdfDoc.embedPng(signatureBytes);
 
-  const originalWidth = signatureImage.width;
-  const originalHeight = signatureImage.height;
+    const originalWidth = signatureImage.width;
+    const originalHeight = signatureImage.height;
+    const targetWidth = 180;
+    const targetHeight = (originalHeight / originalWidth) * targetWidth;
 
-  const targetWidth = 210;
-  const targetHeight = (originalHeight / originalWidth) * targetWidth;
+    page.drawImage(signatureImage, {
+      x: 70,
+      y: bottomY + 6,
+      width: targetWidth,
+      height: targetHeight
+    });
+  } catch (error) {
+    page.drawText('Giuseppe Ardizzone', {
+      x: 82,
+      y: bottomY + 36,
+      size: 18,
+      font: timesItalic,
+      color: navy
+    });
+  }
 
-  page.drawImage(signatureImage, {
-    x: 78,
-    y: bottomY + 24,
-    width: targetWidth,
-    height: targetHeight
+  page.drawLine({
+    start: { x: 62, y: bottomY + 2 },
+    end: { x: 230, y: bottomY + 2 },
+    thickness: 1,
+    color: line
   });
-} catch (error) {
+
   page.drawText('Giuseppe Ardizzone', {
-    x: 100,
-    y: bottomY + 42,
-    size: 24,
-    font: timesItalic,
-    color: navy
+    x: 86,
+    y: bottomY - 16,
+    size: 10.5,
+    font: helveticaBold,
+    color: textDark
   });
-}
 
-  const signatureBytes = await fetchAsBytes(signatureUrl);
-  const signatureImage = await pdfDoc.embedPng(signatureBytes);
-
-  const originalWidth = signatureImage.width;
-  const originalHeight = signatureImage.height;
-
-  const targetWidth = 210;
-  const targetHeight = (originalHeight / originalWidth) * targetWidth;
-
-  page.drawImage(signatureImage, {
-    x: 78,
-    y: bottomY + 24,
-    width: targetWidth,
-    height: targetHeight
+  page.drawText('Founder & Curator', {
+    x: 102,
+    y: bottomY - 32,
+    size: 8.5,
+    font: helvetica,
+    color: textMid
   });
-} catch (error) {
-  page.drawText('Giuseppe Ardizzone', {
-    x: 100,
-    y: bottomY + 42,
-    size: 24,
-    font: timesItalic,
-    color: navy
-  });
-}
 
+  page.drawText('The Human Mosaic', {
+    x: 96,
+    y: bottomY - 46,
+    size: 8.5,
+    font: helvetica,
+    color: textMid
+  });
+
+  // sigillo
   page.drawCircle({
-    x: width / 2,
-    y: bottomY + 8,
-    size: 55,
+    x: 420,
+    y: 110,
+    size: 42,
     borderColor: gold,
-    borderWidth: 6,
+    borderWidth: 5,
     color: rgb(0.95, 0.87, 0.58)
   });
 
   page.drawText('CERTIFIED', {
-    x: width / 2 - 33,
-    y: bottomY + 2,
-    size: 11,
+    x: 390,
+    y: 106,
+    size: 10,
     font: helveticaBold,
     color: goldDark
   });
 
+  // meta + qr
   page.drawText('PROJECT ORIGIN', {
-    x: 565,
-    y: bottomY + 58,
-    size: 8,
+    x: 560,
+    y: 120,
+    size: 7,
     font: helvetica,
     color: textMid
   });
 
   page.drawText('Italy', {
-    x: 565,
-    y: bottomY + 38,
-    size: 14,
-    font: timesBold,
+    x: 560,
+    y: 102,
+    size: 11.5,
+    font: helveticaBold,
     color: textDark
   });
 
   page.drawText('CERTIFICATE ID', {
-    x: 565,
-    y: bottomY + 8,
-    size: 8,
+    x: 560,
+    y: 80,
+    size: 7,
     font: helvetica,
     color: textMid
   });
 
-  page.drawText(String(submissionId || '—'), {
-    x: 565,
-    y: bottomY - 12,
-    size: 12,
-    font: timesBold,
+  page.drawText(String(submissionId || '—').slice(0, 18), {
+    x: 560,
+    y: 62,
+    size: 9.5,
+    font: helveticaBold,
     color: textDark
   });
 
@@ -392,7 +411,7 @@ const timesItalic = helvetica;
       width: 220,
       color: {
         dark: '#1f1f1f',
-        light: '#0000'
+        light: '#FFFFFF'
       }
     });
 
@@ -401,24 +420,24 @@ const timesItalic = helvetica;
     const qrImage = await pdfDoc.embedPng(qrBytes);
 
     page.drawImage(qrImage, {
-      x: 700,
-      y: bottomY - 8,
-      width: 78,
-      height: 78
+      x: 704,
+      y: 56,
+      width: 74,
+      height: 74
     });
 
     page.drawText('Verify Certificate', {
-      x: 688,
-      y: bottomY - 28,
-      size: 9,
-      font: timesItalic,
+      x: 685,
+      y: 42,
+      size: 8.5,
+      font: helvetica,
       color: textMid
     });
   } catch (error) {
     page.drawText('QR unavailable', {
       x: 700,
-      y: bottomY + 18,
-      size: 10,
+      y: 84,
+      size: 9,
       font: helvetica,
       color: textMid
     });
