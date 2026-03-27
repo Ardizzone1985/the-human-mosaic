@@ -1,41 +1,539 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Human Mosaic Certificate</title>
   <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #f4f1e8;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #2f2f2f;
+    }
+
     body {
-      font-family: Georgia, serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .certificate-page {
+      width: 1600px;
+      height: 1131px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.88), rgba(249,247,242,0.96)),
+        repeating-radial-gradient(circle at center, rgba(0,0,0,0.012) 0 2px, rgba(255,255,255,0) 2px 12px),
+        #f8f5ee;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .outer-border {
+      position: absolute;
+      inset: 26px;
+      border: 4px solid #cdbb8a;
+      pointer-events: none;
+    }
+
+    .inner-border {
+      position: absolute;
+      inset: 38px;
+      border: 2px solid #d8c79c;
+      pointer-events: none;
+    }
+
+    .corner {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-color: #cdbb8a;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .corner.tl {
+      top: 48px;
+      left: 48px;
+      border-top: 3px solid #cdbb8a;
+      border-left: 3px solid #cdbb8a;
+      border-top-left-radius: 18px;
+    }
+
+    .corner.tr {
+      top: 48px;
+      right: 48px;
+      border-top: 3px solid #cdbb8a;
+      border-right: 3px solid #cdbb8a;
+      border-top-right-radius: 18px;
+    }
+
+    .corner.bl {
+      bottom: 48px;
+      left: 48px;
+      border-bottom: 3px solid #cdbb8a;
+      border-left: 3px solid #cdbb8a;
+      border-bottom-left-radius: 18px;
+    }
+
+    .corner.br {
+      bottom: 48px;
+      right: 48px;
+      border-bottom: 3px solid #cdbb8a;
+      border-right: 3px solid #cdbb8a;
+      border-bottom-right-radius: 18px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      padding: 70px 110px 70px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 6px;
+    }
+
+    .logo-wrap img.logo {
+      width: 150px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      line-height: 0.9;
+      text-transform: uppercase;
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-text .the {
+      display: block;
+      font-size: 34px;
+      color: #555;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .brand-text .human {
+      display: block;
+      font-size: 78px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #d08d2f 0%, #5f4fa3 75%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .brand-text .mosaic {
+      display: block;
+      font-size: 58px;
+      color: #4b4b4b;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .pretitle-row {
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .pretitle-line {
+      width: 180px;
+      height: 2px;
+      background: #b89245;
+    }
+
+    .pretitle {
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      color: #8a6928;
+      text-transform: uppercase;
+    }
+
+    .main-title {
       text-align: center;
-      padding: 60px;
-      background: #f8f8f6;
+      font-size: 86px;
+      color: #3a3a3a;
+      margin: 18px 0 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
     }
 
-    .certificate {
-      border: 4px solid gold;
-      padding: 40px;
+    .main-divider {
+      width: 76%;
+      margin: 0 auto 28px;
+      border-top: 3px solid #cfc9bc;
     }
 
-    h1 { font-size: 40px; }
-    .name { font-size: 32px; margin: 20px 0; }
+    .certifies {
+      text-align: center;
+      font-size: 26px;
+      color: #5a5a5a;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .participant-name {
+      text-align: center;
+      font-size: 92px;
+      color: #7a5a1f;
+      font-style: italic;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .name-divider {
+      width: 58%;
+      margin: 0 auto 18px;
+      border-top: 2px solid #d3cbbb;
+    }
+
+    .participant-line {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 700;
+      color: #3a3a3a;
+      margin-bottom: 18px;
+    }
+
+    .statement {
+      text-align: center;
+      max-width: 920px;
+      margin: 0 auto;
+      font-size: 26px;
+      color: #4a4a4a;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .record-row {
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .record-line {
+      width: 180px;
+      height: 2px;
+      background: #c9b07c;
+    }
+
+    .record-dots {
+      font-size: 20px;
+      color: #b08b42;
+      letter-spacing: 0.25em;
+      transform: translateY(-2px);
+    }
+
+    .recorded {
+      text-align: center;
+      font-size: 26px;
+      color: #4b4b4b;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    .details-row {
+      margin: 36px auto 26px;
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: stretch;
+      border-top: 2px solid #d7cfbf;
+      border-bottom: 2px solid #d7cfbf;
+    }
+
+    .detail {
+      padding: 18px 14px 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .detail:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      background: #d8c79c;
+    }
+
+    .detail-label {
+      font-size: 18px;
+      color: #666;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .detail-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #333;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .bottom-row {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.9fr 1fr;
+      align-items: end;
+      gap: 16px;
+    }
+
+    .signature-block {
+      text-align: left;
+      padding-left: 40px;
+    }
+
+    .signature-block img {
+      max-width: 360px;
+      max-height: 120px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .signature-line {
+      width: 340px;
+      height: 2px;
+      background: #c9b07c;
+      margin-bottom: 14px;
+    }
+
+    .signature-name {
+      font-size: 30px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .signature-role,
+    .signature-project {
+      font-size: 22px;
+      color: #5f5f5f;
+      line-height: 1.35;
+    }
+
+    .signature-project {
+      font-style: italic;
+    }
+
+    .seal-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .seal-wrap img {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .meta-block {
+      text-align: left;
+      padding-right: 28px;
+    }
+
+    .meta-group {
+      margin-bottom: 24px;
+    }
+
+    .meta-label {
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5d5d5d;
+      margin-bottom: 10px;
+    }
+
+    .meta-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #333;
+      line-height: 1.25;
+    }
+
+    .meta-subvalue {
+      font-size: 22px;
+      color: #444;
+      line-height: 1.35;
+    }
+
+    .qr-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .qr-row img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .qr-caption {
+      font-size: 24px;
+      color: #5b5b5b;
+      font-style: italic;
+      line-height: 1.2;
+      padding-bottom: 6px;
+    }
+
+    .laurel-left,
+    .laurel-right {
+      position: absolute;
+      top: 360px;
+      width: 250px;
+      opacity: 0.08;
+      z-index: 1;
+    }
+
+    .laurel-left {
+      left: 250px;
+      transform: scaleX(-1);
+    }
+
+    .laurel-right {
+      right: 250px;
+    }
   </style>
 </head>
 <body>
+  <div class="certificate-page">
+    <div class="outer-border"></div>
+    <div class="inner-border"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
 
-<div class="certificate">
-  <h1>Certificate of Participation</h1>
+    <img class="laurel-left" src="{{LAUREL_URL}}" alt="">
+    <img class="laurel-right" src="{{LAUREL_URL}}" alt="">
 
-  <p>This certifies that</p>
+    <div class="content">
+      <div class="logo-wrap">
+        <img class="logo" src="{{LOGO_URL}}" alt="The Human Mosaic Logo">
+        <div class="brand-text">
+          <span class="the">THE</span>
+          <span class="human">HUMAN</span>
+          <span class="mosaic">MOSAIC</span>
+        </div>
+      </div>
 
-  <div class="name">{{NAME}}</div>
+      <div class="pretitle-row">
+        <div class="pretitle-line"></div>
+        <div class="pretitle">Permanent Position Certificate</div>
+        <div class="pretitle-line"></div>
+      </div>
 
-  <p>has secured a permanent position in The Human Mosaic</p>
+      <div class="main-title">Certificate of Participation</div>
+      <div class="main-divider"></div>
 
-  <p>Room: {{ROOM}}</p>
-  <p>Wall: {{WALL}}</p>
-  <p>Section: {{SECTION}}</p>
-  <p>Spot: {{SPOT}}</p>
+      <div class="certifies">This certifies that</div>
+      <div class="participant-name">{{FULL_NAME}}</div>
+      <div class="name-divider"></div>
 
-  <p>Submission ID: {{ID}}</p>
-</div>
+      <div class="participant-line">
+        Official Participant #{{PARTICIPANT_NUMBER}} of 1,000,000 • {{ROOM_UPPER}} ROOM
+      </div>
 
+      <div class="statement">
+        has permanently secured a position within The Human Mosaic,<br>
+        a global collective artwork composed of one million participants worldwide.
+      </div>
+
+      <div class="record-row">
+        <div class="record-line"></div>
+        <div class="record-dots">◆◆◆</div>
+        <div class="record-line"></div>
+      </div>
+
+      <div class="recorded">
+        This position is permanently recorded within The Human Mosaic.
+      </div>
+
+      <div class="details-row">
+        <div class="detail">
+          <div class="detail-label">Room</div>
+          <div class="detail-value">{{ROOM_UPPER}}</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Wall</div>
+          <div class="detail-value">{{WALL_UPPER}}</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Section</div>
+          <div class="detail-value">{{SECTION}}</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Spot</div>
+          <div class="detail-value">{{SPOT}}</div>
+        </div>
+        <div class="detail">
+          <div class="detail-label">Submission ID</div>
+          <div class="detail-value">{{SUBMISSION_ID}}</div>
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="signature-block">
+          <img src="{{SIGNATURE_URL}}" alt="Signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">Giuseppe Ardizzone</div>
+          <div class="signature-role">Founder & Curator</div>
+          <div class="signature-project">The Human Mosaic</div>
+        </div>
+
+        <div class="seal-wrap">
+          <img src="{{SEAL_URL}}" alt="Certified Seal">
+        </div>
+
+        <div class="meta-block">
+          <div class="meta-group">
+            <div class="meta-label">Project Origin</div>
+            <div class="meta-subvalue">Future Museum Location:</div>
+            <div class="meta-value">ITALY</div>
+          </div>
+
+          <div class="meta-group">
+            <div class="meta-label">Certificate ID</div>
+            <div class="meta-value">{{CERTIFICATE_ID}}</div>
+          </div>
+
+          <div class="qr-row">
+            <img src="{{QR_URL}}" alt="QR Code">
+            <div class="qr-caption">Verify Authenticity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
