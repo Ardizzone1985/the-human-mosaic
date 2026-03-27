@@ -357,7 +357,7 @@ async function generateCertificatePdf({
   // sigillo
   page.drawCircle({
     x: 420,
-    y: 85,
+    y: 70,
     size: 42,
     borderColor: gold,
     borderWidth: 5,
