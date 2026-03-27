@@ -155,7 +155,7 @@ async function generateCertificatePdf({
   page.drawText('CERTIFICATE OF PARTICIPATION', {
     x: 215,
     y: 438,
-    size: 38,
+    size: 30,
     font: helveticaBold,
     color: textDark
   });
