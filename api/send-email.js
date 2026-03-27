@@ -291,10 +291,10 @@ const timesItalic = helvetica;
     const signatureImage = await pdfDoc.embedJpg(signatureBytes);
     const sigDims = signatureImage.scale(0.22);
     page.drawImage(signatureImage, {
-      x: 95,
-      y: bottomY + 18,
-      width: sigDims.width,
-      height: sigDims.height
+      x: 80,
+      y: 80,
+      width: 180,
+      height: 60,
     });
   } catch (error) {
     page.drawText('Giuseppe Ardizzone', {
