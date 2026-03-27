@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -51,6 +52,10 @@ async function generateCertificatePdf({
   const safeSpot = escapeHtml(spot || '—');
   const safeSubmissionId = escapeHtml(submissionId || '—');
 
+  const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${encodeURIComponent(submissionId || '')}`;
+  const qrUrl = `https://quickchart.io/qr?size=220&text=${encodeURIComponent(verifyUrl)}`;
+  const signatureUrl = 'https://thehumanmosaic.art/signature.jpg';
+
   const html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -80,7 +85,7 @@ async function generateCertificatePdf({
           position: relative;
           padding: 54px 64px;
           background:
-            radial-gradient(circle at center, rgba(255,255,255,0.55), rgba(255,255,255,0.88)),
+            radial-gradient(circle at center, rgba(255,255,255,0.55), rgba(255,255,255,0.9)),
             #f9f7f2;
         }
 
@@ -213,11 +218,11 @@ async function generateCertificatePdf({
           text-align: left;
         }
 
-        .signature-script {
-          font-size: 34px;
-          font-style: italic;
-          color: #243047;
-          margin-bottom: 10px;
+        .signature-image {
+          display: block;
+          max-width: 380px;
+          max-height: 110px;
+          margin-bottom: 12px;
         }
 
         .signature-name {
@@ -285,6 +290,25 @@ async function generateCertificatePdf({
           font-size: 22px;
           font-weight: 700;
           color: #2f2f2f;
+          margin-bottom: 10px;
+        }
+
+        .qr-box {
+          margin-top: 10px;
+        }
+
+        .qr-box img {
+          width: 120px;
+          height: 120px;
+          display: block;
+          margin-top: 8px;
+        }
+
+        .verify-text {
+          margin-top: 8px;
+          font-size: 15px;
+          color: #555;
+          font-style: italic;
         }
       </style>
     </head>
@@ -343,7 +367,7 @@ async function generateCertificatePdf({
 
           <div class="bottom">
             <div class="signature-block">
-              <div class="signature-script">Giuseppe Ardizzone</div>
+              <img class="signature-image" src="${signatureUrl}" alt="Signature" />
               <div class="signature-name">Giuseppe Ardizzone</div>
               <div class="signature-role">
                 Founder & Curator<br>
@@ -366,6 +390,12 @@ async function generateCertificatePdf({
                 <div class="meta-title">Certificate ID</div>
                 <div class="meta-value">${safeSubmissionId}</div>
               </div>
+
+              <div class="qr-box">
+                <div class="meta-title">Verify Certificate</div>
+                <img src="${qrUrl}" alt="QR Code" />
+                <div class="verify-text">Verify Authenticity</div>
+              </div>
             </div>
           </div>
         </div>
@@ -374,9 +404,13 @@ async function generateCertificatePdf({
     </html>
   `;
 
+  const executablePath = await chromium.executablePath();
+
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath,
+    headless: chromium.headless
   });
 
   try {
@@ -442,6 +476,7 @@ export default async function handler(req, res) {
     const safeSpot = escapeHtml(spot);
     const safePrice = escapeHtml(price || '€15 — one-time participation fee');
     const safeSubmissionId = escapeHtml(submissionId);
+    const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${encodeURIComponent(submissionId)}`;
 
     let certificatePdf = null;
 
@@ -500,7 +535,14 @@ export default async function handler(req, res) {
             <p><strong>What happens next?</strong></p>
             <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
             <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
-            <p>3. Certificate — Your certificate PDF is attached to this email as your official prototype record when available.</p>
+            <p>3. Certificate — Your certificate PDF is attached when available.</p>
+            <p>4. Verification — In the future your certificate will be verifiable online from this link:</p>
+
+            <p style="word-break: break-all;">
+              <a href="${verifyUrl}" style="color: #111; text-decoration: underline;">
+                ${verifyUrl}
+              </a>
+            </p>
 
             <p style="margin-top: 24px;">
               For questions or support:
@@ -545,7 +587,9 @@ Participation Fee: ${price || '€15 — one-time participation fee'}
 What happens next?
 1. Review — We verify that your submission matches the project guidelines and the selected room.
 2. Confirmation — Your position and participation request are confirmed after review.
-3. Certificate — Your certificate PDF is attached to this email as your official prototype record when available.
+3. Certificate — Your certificate PDF is attached when available.
+4. Verification — Future verification link:
+${verifyUrl}
 
 Support: info@thehumanmosaic.art
 
