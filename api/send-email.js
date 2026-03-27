@@ -199,7 +199,7 @@ async function generateCertificatePdf({
 
   page.drawText(participantLine, {
     x: (width - participantWidth) / 2,
-    y: 296,
+    y: 285,
     size: 12,
     font: helveticaBold,
     color: textDark
