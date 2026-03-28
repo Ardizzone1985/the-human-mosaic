@@ -20,7 +20,8 @@ async function generateCertificatePdf(data, req) {
     wall,
     section,
     spot,
-    submissionId
+    submissionId,
+    country
   } = data;
 
   const baseImageUrl = `https://${req.headers.host}/certificate-base1.png`;
@@ -139,7 +140,7 @@ async function generateCertificatePdf(data, req) {
   const shortId = String(submissionId || '').toUpperCase();
 
   // ===== BLOCCO DESTRA =====
-  page.drawText('ITALY', {
+  page.drawText(String(country || 'ITALY').toUpperCase(), {
     x: 610,
     y: 85,
     size: 12,
