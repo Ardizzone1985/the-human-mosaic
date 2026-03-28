@@ -69,12 +69,10 @@ async function generateCertificatePdf(data, req) {
     return size;
   };
 
-  // ===== NOME =====
   const cleanName = String(fullName || '').trim();
   const nameSize = fitText(cleanName, 420, 34, fontBold, 22);
   drawCentered(cleanName, 332, nameSize, fontBold, gold);
 
-  // ===== SOTTOTITOLO =====
   drawCentered(
     `Official Participant • ${String(room || '').trim()} Room`,
     290,
@@ -83,8 +81,6 @@ async function generateCertificatePdf(data, req) {
     textDark
   );
 
-    // ===== BLOCCO VALORI BASSI DESTRA =====
-  // Questi sono pensati per la nuova base "pulita"
   const valueY = 48;
 
   const roomText = String(room || '').toUpperCase();
@@ -125,7 +121,6 @@ async function generateCertificatePdf(data, req) {
     color: textDark
   });
 
-  // Submission ID su riga sotto, centrato nella zona finale
   page.drawText(shortId, {
     x: 660,
     y: 32,
@@ -134,8 +129,6 @@ async function generateCertificatePdf(data, req) {
     color: textDark
   });
 
-  // ===== PAESE DINAMICO =====
-  // Gestione paesi lunghi: taglio elegante
   let countryText = String(country || 'ITALY').toUpperCase().trim();
 
   if (countryText.length > 20) {
@@ -145,15 +138,14 @@ async function generateCertificatePdf(data, req) {
   const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
   const countryWidth = fontBold.widthOfTextAtSize(countryText, countrySize);
 
-page.drawText(countryText, {
-  x: 640 - (countryWidth / 2),
-  y: 95,
-  size: countrySize,
-  font: fontBold,
-  color: textDark
-});
-  
-  // ===== QR =====
+  page.drawText(countryText, {
+    x: 640 - (countryWidth / 2),
+    y: 95,
+    size: countrySize,
+    font: fontBold,
+    color: textDark
+  });
+
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
   const qrData = await QRCode.toDataURL(verifyUrl, {
     margin: 1,
@@ -172,14 +164,14 @@ page.drawText(countryText, {
     y: 465,
     width: 88,
     height: 88
-   });
+  });
 
   page.drawText('VERIFY', {
-  x: 712,
-  y: 488,
-  size: 7,
-  font: fontBold,
-  color: textSoft
+    x: 712,
+    y: 448,
+    size: 7,
+    font: fontBold,
+    color: textSoft
   });
 
   return await pdfDoc.save();
