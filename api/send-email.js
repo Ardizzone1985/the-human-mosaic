@@ -102,28 +102,28 @@ async function generateCertificatePdf(data, req) {
   );
 
   // ===== POSIZIONE CORRETTA SULLA RIGA =====
-  const y = 95;
+  const y = 105;
 
   page.drawText(String(room || '').toUpperCase(), {
-    x: 305,
+    x: 300,
     y,
-    size: 13,
+    size: 12,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(wall || '').toUpperCase(), {
-    x: 420,
+    x: 410,
     y,
-    size: 13,
+    size: 12,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(section || '').toUpperCase(), {
-    x: 520,
+    x: 510,
     y,
-    size: 13,
+    size: 12,
     font: fontBold,
     color: textDark
   });
@@ -131,7 +131,7 @@ async function generateCertificatePdf(data, req) {
   page.drawText(String(spot || '').toUpperCase(), {
     x: 610,
     y,
-    size: 13,
+    size: 12,
     font: fontBold,
     color: textDark
   });
