@@ -167,10 +167,18 @@ async function generateCertificatePdf(data, req) {
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
 
   page.drawImage(qrImage, {
-    x: 725,
-    y: 65,
-    width: 82,
-    height: 82
+    x: 690,
+    y: 465,
+    width: 88,
+    height: 88
+
+  page.drawText('VERIFY', {
+  x: 712,
+  y: 488,
+  size: 7,
+  font: fontBold,
+  color: textSoft
+
   });
 
   return await pdfDoc.save();
