@@ -39,7 +39,6 @@ async function generateCertificatePdf(data, req) {
     height: 595
   });
 
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
@@ -78,6 +77,7 @@ async function generateCertificatePdf(data, req) {
 
   // ===== TESTO CENTRALE =====
   drawCentered(
+    drawCentered(
     'has permanently secured a position within The Human Mosaic,',
     238,
     11.5,
