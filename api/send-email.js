@@ -13,7 +13,7 @@ async function getJsonBody(req) {
   });
 }
 
-async function generateCertificatePdf(data) {
+async function generateCertificatePdf(data, req) {
   const {
     fullName,
     room,
