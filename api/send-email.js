@@ -24,8 +24,9 @@ async function generateCertificatePdf(data) {
   } = data;
 
   // 📥 carica immagine base
-  const baseImageBytes = await fetch(new URL('../../certificate-base.png', import.meta.url))
-  .then(res => res.arrayBuffer());
+  const baseImageUrl = `https://${req.headers.host}/certificate-base.png`;
+const baseImageResponse = await fetch(baseImageUrl);
+const baseImageBytes = await baseImageResponse.arrayBuffer();
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]); // A4 landscape
