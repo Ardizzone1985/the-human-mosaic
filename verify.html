@@ -285,15 +285,22 @@
       statusBadge.textContent = text;
     }
 
-    function renderInfo(data) {
-      const room = data.room || '—';
-      const wall = data.wall || '—';
-      const section = data.section || '—';
-      const slotCode = data.slot_code || '—';
-      const submissionId = data.submission_id || '—';
-      const status = data.status || '—';
-      const country = data.country || 'Not available';
-      const participantName = data.full_name || 'Not publicly displayed';
+    function renderInfo(slotData, submissionData) {
+      const room = slotData?.room || '—';
+      const wall = slotData?.wall || '—';
+      const section = slotData?.section || '—';
+      const slotCode = slotData?.slot_code || '—';
+      const submissionId = slotData?.submission_id || certificateId || '—';
+      const status = slotData?.status || '—';
+
+      const participantName =
+        submissionData?.full_name ||
+        submissionData?.fullName ||
+        'Not publicly displayed';
+
+      const country =
+        submissionData?.country ||
+        'Not available';
 
       resultArea.innerHTML = `
         <div class="grid">
@@ -367,14 +374,15 @@
       verifyTitle.textContent = 'Checking certificate record...';
       verifySubtitle.textContent = `Certificate ID: ${certificateId}`;
 
-      const { data, error } = await supabaseClient
+      // 1. Cerca lo slot
+      const { data: slotData, error: slotError } = await supabaseClient
         .from('slots')
         .select('*')
         .eq('submission_id', certificateId)
         .maybeSingle();
 
-      if (error) {
-        console.error('Verification error:', error);
+      if (slotError) {
+        console.error('Slot verification error:', slotError);
         setStatus('invalid', 'Verification failed');
         verifyTitle.textContent = 'Unable to verify certificate';
         verifySubtitle.textContent = 'A temporary error occurred while checking the record.';
@@ -382,7 +390,7 @@
         return;
       }
 
-      if (!data) {
+      if (!slotData) {
         setStatus('invalid', 'Certificate not found');
         verifyTitle.textContent = 'Certificate not found';
         verifySubtitle.textContent = `We could not find any record for ID: ${certificateId}`;
@@ -390,10 +398,23 @@
         return;
       }
 
+      // 2. Cerca anche la submission
+      let submissionData = null;
+
+      const { data: submissionRow, error: submissionError } = await supabaseClient
+        .from('submissions')
+        .select('*')
+        .eq('submission_id', certificateId)
+        .maybeSingle();
+
+      if (!submissionError && submissionRow) {
+        submissionData = submissionRow;
+      }
+
       setStatus('valid', 'Certificate verified');
       verifyTitle.textContent = 'Certificate verified successfully';
       verifySubtitle.textContent = 'This certificate ID is officially recorded in The Human Mosaic.';
-      renderInfo(data);
+      renderInfo(slotData, submissionData);
     }
 
     verifyCertificate();
