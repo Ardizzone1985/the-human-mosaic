@@ -59,6 +59,7 @@ async function generateCertificatePdf(data, req) {
     });
   };
 
+  // ===== NOME =====
   const cleanName = String(fullName || '').trim();
   const nameSize =
     cleanName.length > 24 ? 26 :
@@ -66,6 +67,7 @@ async function generateCertificatePdf(data, req) {
 
   drawCentered(cleanName, 332, nameSize, fontBold, gold);
 
+  // ===== SOTTOTITOLO =====
   drawCentered(
     `Official Participant • ${String(room || '').trim()} Room`,
     275,
@@ -74,6 +76,7 @@ async function generateCertificatePdf(data, req) {
     textDark
   );
 
+  // ===== TESTO CENTRALE =====
   drawCentered(
     'has permanently secured a position within The Human Mosaic,',
     238,
@@ -98,80 +101,79 @@ async function generateCertificatePdf(data, req) {
     textSoft
   );
 
-  const baseY = 95;
+  // ===== BLOCCO BASSO SPOSTATO A DESTRA =====
+  const valueY = 96;
 
   page.drawText(String(room || '').toUpperCase(), {
-    x: 160,
-    y: baseY,
-    size: 13,
+    x: 305,
+    y: valueY,
+    size: 12.5,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(wall || '').toUpperCase(), {
-    x: 275,
-    y: baseY,
-    size: 13,
+    x: 415,
+    y: valueY,
+    size: 12.5,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(section || '').toUpperCase(), {
-    x: 390,
-    y: baseY,
-    size: 13,
+    x: 520,
+    y: valueY,
+    size: 12.5,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(spot || '').toUpperCase(), {
-    x: 495,
-    y: baseY,
-    size: 13,
+    x: 610,
+    y: valueY,
+    size: 12.5,
     font: fontBold,
     color: textDark
   });
 
   const shortId = String(submissionId || '').toUpperCase();
 
-  page.drawText(shortId, {
-    x: 595,
-    y: baseY,
-    size: 10,
-    font: fontBold,
-    color: textDark
-  });
-
+  // ===== BLOCCO DESTRA =====
   page.drawText('ITALY', {
-    x: 600,
-    y: 70,
+    x: 615,
+    y: 58,
     size: 12,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(shortId, {
-    x: 585,
-    y: 40,
+    x: 575,
+    y: 32,
     size: 9,
     font: fontBold,
     color: textDark
   });
 
+  // ===== QR =====
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
   const qrData = await QRCode.toDataURL(verifyUrl, {
     margin: 1,
-    width: 220
+    width: 220,
+    color: {
+      dark: '#1f1f1f',
+      light: '#FFFFFF'
+    }
   });
 
   const qrImageBytes = await fetch(qrData).then(res => res.arrayBuffer());
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
 
   page.drawImage(qrImage, {
-    x: 720,
-    y: 60,
-    width: 90,
-    height: 90
+    x: 726,
+    y: 54,
+    width: 88,
+    height: 88
   });
 
   return await pdfDoc.save();
