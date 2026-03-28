@@ -142,6 +142,7 @@ async function generateCertificatePdf(data, req) {
     countryText = countryText.slice(0, 18);
   }
 
+  const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
   const countryWidth = fontBold.widthOfTextAtSize(countryText, countrySize);
 
 page.drawText(countryText, {
