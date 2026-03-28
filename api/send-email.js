@@ -24,7 +24,8 @@ async function generateCertificatePdf(data) {
   } = data;
 
   // 📥 carica immagine base
-  const baseImageBytes = await fetch('https://thehumanmosaic.art/certificate-base.png').then(res => res.arrayBuffer());
+  const baseImageBytes = await fetch(new URL('../../certificate-base.png', import.meta.url))
+  .then(res => res.arrayBuffer());
 
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]); // A4 landscape
