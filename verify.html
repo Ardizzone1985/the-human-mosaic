@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Certificate – The Human Mosaic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8f8f6;
+      color: #1f1f1f;
+      line-height: 1.6;
+    }
+
+    header {
+      border-bottom: 1px solid #ddd;
+      background: rgba(255,255,255,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      width: min(1000px, 92%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 90px 0 40px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #555;
+      font-size: 1.04rem;
+    }
+
+    section {
+      padding: 30px 0 70px;
+    }
+
+    .verify-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 22px;
+    }
+
+    .status-valid {
+      background: #eef8f1;
+      color: #17603a;
+      border: 1px solid #cfe8d8;
+    }
+
+    .status-invalid {
+      background: #fff1f1;
+      color: #9e1f1f;
+      border: 1px solid #f0c9c9;
+    }
+
+    .status-loading {
+      background: #f3f3f3;
+      color: #555;
+      border: 1px solid #ddd;
+    }
+
+    .verify-title {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .verify-subtitle {
+      color: #666;
+      margin-bottom: 26px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .info-box {
+      border: 1px solid #e7e7e7;
+      border-radius: 20px;
+      padding: 20px;
+      background: #fcfcfb;
+    }
+
+    .label {
+      font-size: 0.78rem;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+
+    .value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1f1f1f;
+      word-break: break-word;
+    }
+
+    .muted {
+      color: #666;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #111;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+    }
+
+    .btn-secondary:hover {
+      background: #111;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .not-found-box {
+      margin-top: 10px;
+      padding: 22px;
+      border: 1px solid #f0d2d2;
+      background: #fff9f9;
+      border-radius: 20px;
+      color: #6a3030;
+    }
+
+    footer {
+      padding: 30px 0 60px;
+      color: #777;
+      font-size: 0.95rem;
+      text-align: center;
+      border-top: 1px solid #e3e3e3;
+      margin-top: 30px;
+    }
+
+    footer a {
+      color: #111;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 70px 0 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; padding:20px 0;">
+      <a href="index.html">
+        <img src="logo-cropped.png" alt="The Human Mosaic Logo" style="height:95px;">
+      </a>
+
+      <div style="font-size:13px; color:#666; letter-spacing:0.15em;">
+        ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Verify Certificate</h1>
+        <p>
+          This page confirms whether a certificate ID is officially recorded in The Human Mosaic.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="verify-card">
+          <div id="statusBadge" class="status-badge status-loading">Checking certificate...</div>
+
+          <h2 class="verify-title" id="verifyTitle">Loading verification...</h2>
+          <p class="verify-subtitle" id="verifySubtitle">
+            Please wait while we validate this certificate.
+          </p>
+
+          <div id="resultArea"></div>
+
+          <div class="actions">
+            <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            <a href="join.html" class="btn btn-primary">Join the Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="margin-bottom:10px;">The Human Mosaic — Certificate verification</div>
+      <div>
+        Contact: <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const { createClient } = supabase;
+
+    const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
+    );
+
+    const statusBadge = document.getElementById('statusBadge');
+    const verifyTitle = document.getElementById('verifyTitle');
+    const verifySubtitle = document.getElementById('verifySubtitle');
+    const resultArea = document.getElementById('resultArea');
+
+    const params = new URLSearchParams(window.location.search);
+    const certificateId = params.get('id');
+
+    function setStatus(type, text) {
+      statusBadge.className = 'status-badge';
+      if (type === 'valid') statusBadge.classList.add('status-valid');
+      if (type === 'invalid') statusBadge.classList.add('status-invalid');
+      if (type === 'loading') statusBadge.classList.add('status-loading');
+      statusBadge.textContent = text;
+    }
+
+    function renderInfo(data) {
+      const room = data.room || '—';
+      const wall = data.wall || '—';
+      const section = data.section || '—';
+      const slotCode = data.slot_code || '—';
+      const submissionId = data.submission_id || '—';
+      const status = data.status || '—';
+      const country = data.country || 'Not available';
+      const participantName = data.full_name || 'Not publicly displayed';
+
+      resultArea.innerHTML = `
+        <div class="grid">
+          <div class="info-box">
+            <div class="label">Certificate ID</div>
+            <div class="value">${submissionId}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Verification Status</div>
+            <div class="value">Valid</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Participant</div>
+            <div class="value">${participantName}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Country</div>
+            <div class="value">${country}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Room</div>
+            <div class="value">${room}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Wall</div>
+            <div class="value">${wall}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Section</div>
+            <div class="value">${section}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Spot</div>
+            <div class="value">${slotCode}</div>
+          </div>
+
+          <div class="info-box">
+            <div class="label">Slot Status</div>
+            <div class="value">${status}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNotFound(message) {
+      resultArea.innerHTML = `
+        <div class="not-found-box">
+          <strong>Certificate not found.</strong><br>
+          <span class="muted">${message}</span>
+        </div>
+      `;
+    }
+
+    async function verifyCertificate() {
+      if (!certificateId) {
+        setStatus('invalid', 'Invalid request');
+        verifyTitle.textContent = 'No certificate ID provided';
+        verifySubtitle.textContent = 'This verification link is incomplete.';
+        renderNotFound('The URL does not contain a valid certificate ID.');
+        return;
+      }
+
+      setStatus('loading', 'Checking certificate...');
+      verifyTitle.textContent = 'Checking certificate record...';
+      verifySubtitle.textContent = `Certificate ID: ${certificateId}`;
+
+      const { data, error } = await supabaseClient
+        .from('slots')
+        .select('*')
+        .eq('submission_id', certificateId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Verification error:', error);
+        setStatus('invalid', 'Verification failed');
+        verifyTitle.textContent = 'Unable to verify certificate';
+        verifySubtitle.textContent = 'A temporary error occurred while checking the record.';
+        renderNotFound('Please try again later or contact support if the issue continues.');
+        return;
+      }
+
+      if (!data) {
+        setStatus('invalid', 'Certificate not found');
+        verifyTitle.textContent = 'Certificate not found';
+        verifySubtitle.textContent = `We could not find any record for ID: ${certificateId}`;
+        renderNotFound('This ID is not currently registered in the verification system.');
+        return;
+      }
+
+      setStatus('valid', 'Certificate verified');
+      verifyTitle.textContent = 'Certificate verified successfully';
+      verifySubtitle.textContent = 'This certificate ID is officially recorded in The Human Mosaic.';
+      renderInfo(data);
+    }
+
+    verifyCertificate();
+  </script>
+</body>
+</html>
