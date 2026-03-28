@@ -24,7 +24,7 @@ async function generateCertificatePdf(data, req) {
   } = data;
 
   // 🔥 CARICA IMMAGINE BASE (FIX VERCEL)
-  const baseImageUrl = `https://${req.headers.host}/certificate-base.png`;
+  const baseImageUrl = `https://${req.headers.host}/certificate-base1.png`;
   const baseImageResponse = await fetch(baseImageUrl);
   const baseImageBytes = await baseImageResponse.arrayBuffer();
 
