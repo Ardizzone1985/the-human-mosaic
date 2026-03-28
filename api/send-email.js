@@ -85,7 +85,7 @@ async function generateCertificatePdf(data, req) {
 
     // ===== BLOCCO VALORI BASSI DESTRA =====
   // Questi sono pensati per la nuova base "pulita"
-  const valueY = 72;
+  const valueY = 48;
 
   const roomText = String(room || '').toUpperCase();
   const wallText = String(wall || '').toUpperCase();
@@ -94,7 +94,7 @@ async function generateCertificatePdf(data, req) {
   const shortId = String(submissionId || '').toUpperCase();
 
   page.drawText(roomText, {
-    x: 505,
+    x: 520,
     y: valueY,
     size: fitText(roomText, 60, 12, fontBold, 9),
     font: fontBold,
@@ -102,7 +102,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(wallText, {
-    x: 585,
+    x: 600,
     y: valueY,
     size: fitText(wallText, 55, 12, fontBold, 9),
     font: fontBold,
@@ -110,7 +110,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(sectionText, {
-    x: 655,
+    x: 670,
     y: valueY,
     size: fitText(sectionText, 60, 12, fontBold, 9),
     font: fontBold,
@@ -118,7 +118,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(spotText, {
-    x: 735,
+    x: 750,
     y: valueY,
     size: fitText(spotText, 55, 12, fontBold, 8.5),
     font: fontBold,
@@ -128,7 +128,7 @@ async function generateCertificatePdf(data, req) {
   // Submission ID su riga sotto, centrato nella zona finale
   page.drawText(shortId, {
     x: 660,
-    y: 48,
+    y: 28,
     size: fitText(shortId, 125, 9.5, fontBold, 7.5),
     font: fontBold,
     color: textDark
@@ -145,8 +145,8 @@ async function generateCertificatePdf(data, req) {
   const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
 
   page.drawText(countryText, {
-    x: 600,
-    y: 105,
+    x: 590,
+    y: 95,
     size: countrySize,
     font: fontBold,
     color: textDark
