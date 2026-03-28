@@ -150,7 +150,7 @@ async function generateCertificatePdf(data, req) {
 
   page.drawText(shortId, {
     x: 580,
-    y: 55,
+    y: 65,
     size: 9,
     font: fontBold,
     color: textDark
