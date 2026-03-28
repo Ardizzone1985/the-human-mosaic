@@ -171,6 +171,7 @@ async function generateCertificatePdf(data, req) {
     y: 465,
     width: 88,
     height: 88
+   });
 
   page.drawText('VERIFY', {
   x: 712,
@@ -178,7 +179,6 @@ async function generateCertificatePdf(data, req) {
   size: 7,
   font: fontBold,
   color: textSoft
-
   });
 
   return await pdfDoc.save();
