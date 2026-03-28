@@ -78,7 +78,6 @@ async function generateCertificatePdf(data, req) {
 
   // ===== TESTO CENTRALE =====
   drawCentered(
-    drawCentered(
     'has permanently secured a position within The Human Mosaic,',
     238,
     11.5,
