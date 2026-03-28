@@ -128,7 +128,7 @@ async function generateCertificatePdf(data, req) {
   // Submission ID su riga sotto, centrato nella zona finale
   page.drawText(shortId, {
     x: 660,
-    y: 28,
+    y: 32,
     size: fitText(shortId, 125, 9.5, fontBold, 7.5),
     font: fontBold,
     color: textDark
@@ -142,16 +142,16 @@ async function generateCertificatePdf(data, req) {
     countryText = countryText.slice(0, 18);
   }
 
-  const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
+  const countryWidth = fontBold.widthOfTextAtSize(countryText, countrySize);
 
-  page.drawText(countryText, {
-    x: 590,
-    y: 95,
-    size: countrySize,
-    font: fontBold,
-    color: textDark
-  });
-
+page.drawText(countryText, {
+  x: 640 - (countryWidth / 2),
+  y: 95,
+  size: countrySize,
+  font: fontBold,
+  color: textDark
+});
+  
   // ===== QR =====
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
   const qrData = await QRCode.toDataURL(verifyUrl, {
