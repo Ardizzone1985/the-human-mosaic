@@ -153,7 +153,7 @@ async function generateCertificatePdf(data, req) {
     y: 65,
     size: 9,
     font: fontBold,
-    color: textDark
+    color: textDark,
   });
 
   // ===== QR =====
