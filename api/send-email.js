@@ -170,8 +170,8 @@ async function generateCertificatePdf(data, req) {
   const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
 
   page.drawText(countryText, {
-    x: 640,
-    y: 88,
+    x: 620,
+    y: 105,
     size: countrySize,
     font: fontBold,
     color: textDark
@@ -192,10 +192,10 @@ async function generateCertificatePdf(data, req) {
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
 
   page.drawImage(qrImage, {
-    x: 730,
-    y: 78,
-    width: 78,
-    height: 78
+    x: 725,
+    y: 65,
+    width: 82,
+    height: 82
   });
 
   return await pdfDoc.save();
