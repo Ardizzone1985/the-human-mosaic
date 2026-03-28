@@ -118,7 +118,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(spotText, {
-    x: 735
+    x: 735,
     y: valueY,
     size: fitText(spotText, 55, 12, fontBold, 8.5),
     font: fontBold,
