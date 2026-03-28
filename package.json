@@ -4,5 +4,6 @@
     "puppeteer-core": "^24.0.0",
     "@sparticuz/chromium": "^123.0.1",
     "qrcode": "^1.5.4"
+    "pdf-lib": "^1.17.1"
   }
 }
