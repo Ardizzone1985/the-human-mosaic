@@ -139,13 +139,13 @@ async function generateCertificatePdf(data, req) {
   const shortId = String(submissionId || '').toUpperCase();
 
   // ===== BLOCCO DESTRA =====
-  const countryText = String(country || 'ITALY').toUpperCase().slice(0, 20);
+  const countryText = String(country || 'ITALY').toUpperCase().slice(0, 18);
   page.drawText(countryText, {
-  x: 600,
+  x: 585,
   y: 80,
   size: 10,
   font: fontBold,
-  color: textDark
+  color: textDark,
   });
 
   page.drawText(shortId, {
