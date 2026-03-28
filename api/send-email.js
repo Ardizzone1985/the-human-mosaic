@@ -114,7 +114,7 @@ export default async function handler(req, res) {
   try {
     const body = await getJsonBody(req);
 
-    const pdfBytes = await generateCertificatePdf(body);
+    const pdfBytes = await generateCertificatePdf(body, req);
 
     await resend.emails.send({
       from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
