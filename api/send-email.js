@@ -102,7 +102,7 @@ async function generateCertificatePdf(data, req) {
   );
 
   // ===== POSIZIONE CORRETTA SULLA RIGA =====
-  const y = 118;
+  const y = 95;
 
   page.drawText(String(room || '').toUpperCase(), {
     x: 305,
