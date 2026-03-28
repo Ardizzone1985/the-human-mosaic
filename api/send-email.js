@@ -23,13 +23,13 @@ async function generateCertificatePdf(data, req) {
     submissionId
   } = data;
 
-  // 📥 carica immagine base
+  // 🔥 CARICA IMMAGINE BASE (FIX VERCEL)
   const baseImageUrl = `https://${req.headers.host}/certificate-base.png`;
-const baseImageResponse = await fetch(baseImageUrl);
-const baseImageBytes = await baseImageResponse.arrayBuffer();
+  const baseImageResponse = await fetch(baseImageUrl);
+  const baseImageBytes = await baseImageResponse.arrayBuffer();
 
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([842, 595]); // A4 landscape
+  const page = pdfDoc.addPage([842, 595]);
 
   const baseImage = await pdfDoc.embedPng(baseImageBytes);
 
@@ -40,11 +40,11 @@ const baseImageBytes = await baseImageResponse.arrayBuffer();
     height: 595
   });
 
-  // 🔤 font
+  // 🔤 FONT
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  // 🎯 NOME (centrato)
+  // 🎯 NOME (centrato approx)
   page.drawText(fullName, {
     x: 421 - (fullName.length * 8),
     y: 300,
@@ -54,7 +54,7 @@ const baseImageBytes = await baseImageResponse.arrayBuffer();
   });
 
   // 📍 ROOM
-  page.drawText(room.toUpperCase(), {
+  page.drawText((room || '').toUpperCase(), {
     x: 120,
     y: 130,
     size: 12,
@@ -78,7 +78,7 @@ const baseImageBytes = await baseImageResponse.arrayBuffer();
   });
 
   // 📍 SPOT
-  page.drawText(spot, {
+  page.drawText(spot || '', {
     x: 450,
     y: 130,
     size: 12,
@@ -86,14 +86,14 @@ const baseImageBytes = await baseImageResponse.arrayBuffer();
   });
 
   // 📍 ID
-  page.drawText(submissionId, {
+  page.drawText(submissionId || '', {
     x: 580,
     y: 130,
     size: 10,
     font: fontRegular
   });
 
-  // 🔗 QR
+  // 🔗 QR CODE
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
   const qrData = await QRCode.toDataURL(verifyUrl);
 
