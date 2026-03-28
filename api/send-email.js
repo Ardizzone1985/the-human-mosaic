@@ -94,7 +94,7 @@ async function generateCertificatePdf(data, req) {
   const shortId = String(submissionId || '').toUpperCase();
 
   page.drawText(roomText, {
-    x: 470,
+    x: 505,
     y: valueY,
     size: fitText(roomText, 60, 12, fontBold, 9),
     font: fontBold,
@@ -102,7 +102,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(wallText, {
-    x: 560,
+    x: 585,
     y: valueY,
     size: fitText(wallText, 55, 12, fontBold, 9),
     font: fontBold,
@@ -110,7 +110,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(sectionText, {
-    x: 650,
+    x: 655,
     y: valueY,
     size: fitText(sectionText, 60, 12, fontBold, 9),
     font: fontBold,
@@ -118,7 +118,7 @@ async function generateCertificatePdf(data, req) {
   });
 
   page.drawText(spotText, {
-    x: 740,
+    x: 735
     y: valueY,
     size: fitText(spotText, 55, 12, fontBold, 8.5),
     font: fontBold,
@@ -127,8 +127,8 @@ async function generateCertificatePdf(data, req) {
 
   // Submission ID su riga sotto, centrato nella zona finale
   page.drawText(shortId, {
-    x: 650,
-    y: 45,
+    x: 660,
+    y: 48,
     size: fitText(shortId, 125, 9.5, fontBold, 7.5),
     font: fontBold,
     color: textDark
@@ -138,14 +138,14 @@ async function generateCertificatePdf(data, req) {
   // Gestione paesi lunghi: taglio elegante
   let countryText = String(country || 'ITALY').toUpperCase().trim();
 
-  if (countryText.length > 22) {
-    countryText = countryText.slice(0, 22);
+  if (countryText.length > 20) {
+    countryText = countryText.slice(0, 18);
   }
 
   const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
 
   page.drawText(countryText, {
-    x: 620,
+    x: 600,
     y: 105,
     size: countrySize,
     font: fontBold,
