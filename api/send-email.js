@@ -101,37 +101,37 @@ async function generateCertificatePdf(data, req) {
     textSoft
   );
 
-  // ===== BLOCCO BASSO SPOSTATO A DESTRA =====
-  const valueY = 96;
+  // ===== POSIZIONE CORRETTA SULLA RIGA =====
+  const y = 118;
 
   page.drawText(String(room || '').toUpperCase(), {
     x: 305,
-    y: valueY,
-    size: 12.5,
+    y,
+    size: 13,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(wall || '').toUpperCase(), {
-    x: 415,
-    y: valueY,
-    size: 12.5,
+    x: 420,
+    y,
+    size: 13,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(section || '').toUpperCase(), {
     x: 520,
-    y: valueY,
-    size: 12.5,
+    y,
+    size: 13,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(String(spot || '').toUpperCase(), {
     x: 610,
-    y: valueY,
-    size: 12.5,
+    y,
+    size: 13,
     font: fontBold,
     color: textDark
   });
@@ -140,16 +140,16 @@ async function generateCertificatePdf(data, req) {
 
   // ===== BLOCCO DESTRA =====
   page.drawText('ITALY', {
-    x: 615,
-    y: 58,
+    x: 610,
+    y: 85,
     size: 12,
     font: fontBold,
     color: textDark
   });
 
   page.drawText(shortId, {
-    x: 575,
-    y: 32,
+    x: 580,
+    y: 55,
     size: 9,
     font: fontBold,
     color: textDark
@@ -157,23 +157,16 @@ async function generateCertificatePdf(data, req) {
 
   // ===== QR =====
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
-  const qrData = await QRCode.toDataURL(verifyUrl, {
-    margin: 1,
-    width: 220,
-    color: {
-      dark: '#1f1f1f',
-      light: '#FFFFFF'
-    }
-  });
+  const qrData = await QRCode.toDataURL(verifyUrl);
 
   const qrImageBytes = await fetch(qrData).then(res => res.arrayBuffer());
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
 
   page.drawImage(qrImage, {
-    x: 726,
-    y: 54,
-    width: 88,
-    height: 88
+    x: 725,
+    y: 70,
+    width: 85,
+    height: 85
   });
 
   return await pdfDoc.save();
