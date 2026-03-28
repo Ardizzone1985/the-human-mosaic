@@ -24,7 +24,7 @@ async function generateCertificatePdf(data, req) {
     country
   } = data;
 
-  const baseImageUrl = `https://${req.headers.host}/certificate-base1.png`;
+  const baseImageUrl = `https://${req.headers.host}/certificate-base2.png`;
   const baseImageBytes = await fetch(baseImageUrl).then(res => res.arrayBuffer());
 
   const pdfDoc = await PDFDocument.create();
@@ -40,6 +40,7 @@ async function generateCertificatePdf(data, req) {
     height: 595
   });
 
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
@@ -59,18 +60,24 @@ async function generateCertificatePdf(data, req) {
     });
   };
 
+  const fitText = (text, maxWidth, startSize, font, minSize = 8) => {
+    let size = startSize;
+    const safe = String(text || '');
+    while (size > minSize && font.widthOfTextAtSize(safe, size) > maxWidth) {
+      size -= 0.5;
+    }
+    return size;
+  };
+
   // ===== NOME =====
   const cleanName = String(fullName || '').trim();
-  const nameSize =
-    cleanName.length > 24 ? 26 :
-    cleanName.length > 18 ? 30 : 34;
-
+  const nameSize = fitText(cleanName, 420, 34, fontBold, 22);
   drawCentered(cleanName, 332, nameSize, fontBold, gold);
 
   // ===== SOTTOTITOLO =====
   drawCentered(
     `Official Participant • ${String(room || '').trim()} Room`,
-    275,
+    290,
     16,
     fontBold,
     textDark
@@ -101,73 +108,94 @@ async function generateCertificatePdf(data, req) {
     textSoft
   );
 
-  // ===== POSIZIONE CORRETTA SULLA RIGA =====
-  const y = 105;
+  // ===== BLOCCO VALORI BASSI DESTRA =====
+  // Questi sono pensati per la nuova base "pulita"
+  const valueY = 58;
 
-  page.drawText(String(room || '').toUpperCase(), {
-    x: 300,
-    y,
-    size: 12,
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(String(wall || '').toUpperCase(), {
-    x: 410,
-    y,
-    size: 12,
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(String(section || '').toUpperCase(), {
-    x: 510,
-    y,
-    size: 12,
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(String(spot || '').toUpperCase(), {
-    x: 610,
-    y,
-    size: 12,
-    font: fontBold,
-    color: textDark
-  });
-
+  const roomText = String(room || '').toUpperCase();
+  const wallText = String(wall || '').toUpperCase();
+  const sectionText = String(section || '').toUpperCase();
+  const spotText = String(spot || '').toUpperCase();
   const shortId = String(submissionId || '').toUpperCase();
 
-  // ===== BLOCCO DESTRA =====
-  const countryText = String(country || 'ITALY').toUpperCase().slice(0, 18);
-  page.drawText(countryText, {
-  x: 585,
-  y: 80,
-  size: 10,
-  font: fontBold,
-  color: textDark,
+  page.drawText(roomText, {
+    x: 515,
+    y: valueY,
+    size: fitText(roomText, 60, 12, fontBold, 9),
+    font: fontBold,
+    color: textDark
   });
 
-  page.drawText(shortId, {
-    x: 580,
-    y: 65,
-    size: 9,
+  page.drawText(wallText, {
+    x: 600,
+    y: valueY,
+    size: fitText(wallText, 55, 12, fontBold, 9),
     font: fontBold,
-    color: textDark,
+    color: textDark
+  });
+
+  page.drawText(sectionText, {
+    x: 685,
+    y: valueY,
+    size: fitText(sectionText, 60, 12, fontBold, 9),
+    font: fontBold,
+    color: textDark
+  });
+
+  page.drawText(spotText, {
+    x: 765,
+    y: valueY,
+    size: fitText(spotText, 55, 12, fontBold, 8.5),
+    font: fontBold,
+    color: textDark
+  });
+
+  // Submission ID su riga sotto, centrato nella zona finale
+  page.drawText(shortId, {
+    x: 690,
+    y: 30,
+    size: fitText(shortId, 125, 9.5, fontBold, 7.5),
+    font: fontBold,
+    color: textDark
+  });
+
+  // ===== PAESE DINAMICO =====
+  // Gestione paesi lunghi: taglio elegante
+  let countryText = String(country || 'ITALY').toUpperCase().trim();
+
+  if (countryText.length > 22) {
+    countryText = countryText.slice(0, 22);
+  }
+
+  const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
+
+  page.drawText(countryText, {
+    x: 640,
+    y: 88,
+    size: countrySize,
+    font: fontBold,
+    color: textDark
   });
 
   // ===== QR =====
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
-  const qrData = await QRCode.toDataURL(verifyUrl);
+  const qrData = await QRCode.toDataURL(verifyUrl, {
+    margin: 1,
+    width: 220,
+    color: {
+      dark: '#1f1f1f',
+      light: '#FFFFFF'
+    }
+  });
 
   const qrImageBytes = await fetch(qrData).then(res => res.arrayBuffer());
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
 
   page.drawImage(qrImage, {
-    x: 725,
-    y: 70,
-    width: 85,
-    height: 85
+    x: 730,
+    y: 78,
+    width: 78,
+    height: 78
   });
 
   return await pdfDoc.save();
