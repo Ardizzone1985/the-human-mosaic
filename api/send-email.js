@@ -83,32 +83,7 @@ async function generateCertificatePdf(data, req) {
     textDark
   );
 
-  // ===== TESTO CENTRALE =====
-  drawCentered(
-    'has permanently secured a position within The Human Mosaic,',
-    238,
-    11.5,
-    fontItalic,
-    textSoft
-  );
-
-  drawCentered(
-    'a global collective artwork composed of one million participants worldwide.',
-    219,
-    11.5,
-    fontItalic,
-    textSoft
-  );
-
-  drawCentered(
-    'This position is permanently recorded within The Human Mosaic.',
-    175,
-    12.5,
-    fontItalic,
-    textSoft
-  );
-
-  // ===== BLOCCO VALORI BASSI DESTRA =====
+    // ===== BLOCCO VALORI BASSI DESTRA =====
   // Questi sono pensati per la nuova base "pulita"
   const valueY = 72;
 
