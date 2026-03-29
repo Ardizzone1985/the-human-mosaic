@@ -182,12 +182,56 @@
   background: #fdecec;
   color: #b42318;
 }
+    .admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-stat-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.admin-stat-label {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.admin-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+}
   </style>
 </head>
 <body>
   <div class="container">
   <h1>Admin Approvals</h1>
   <p>Review pending submissions and approve or reject them.</p>
+    <div class="admin-stats">
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">Pending</div>
+    <div class="admin-stat-value" id="count-pending">—</div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">Approved</div>
+    <div class="admin-stat-value" id="count-approved">—</div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-label">Rejected</div>
+    <div class="admin-stat-value" id="count-rejected">—</div>
+  </div>
+</div>
 
   <div id="status" class="status">Loading pending submissions...</div>
 
