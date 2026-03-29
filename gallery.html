@@ -60,53 +60,59 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function loadImages() {
-      const { data, error } = await supabaseClient
-        .from("submissions")
-        .select("image_file_name")
-        .eq("approval_status", "approved");
-        
-      console.log("DATA:", data);
-      console.log("ERROR:", error);
+  const { data, error } = await supabaseClient
+    .from("submissions")
+    .select("image_file_name")
+    .eq("approval_status", "approved");
 
-      if (error) {
-        document.getElementById("error").innerText = "Errore nel caricamento dati";
-        console.error(error);
-        return;
-      }
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-      if (!data || data.length === 0) {
-        document.getElementById("error").innerText = "Nessuna immagine trovata";
-        return;
-      }
+  const errorBox = document.getElementById("error");
+  const container = document.getElementById("gallery");
 
-      const container = document.getElementById("gallery");
+  container.innerHTML = "";
+  errorBox.innerText = "";
 
-      data.forEach(item => {
-        if (!item.image_file_name) return;
+  if (error) {
+    errorBox.innerText = "Errore nel caricamento dati";
+    console.error(error);
+    return;
+  }
 
-        const { data: imgData } = supabaseClient
-          .storage
-          .from(BUCKET)
-          .getPublicUrl(item.image_file_name);
+  if (!data || data.length === 0) {
+    errorBox.innerText = "Nessuna immagine trovata";
+    return;
+  }
 
-        console.log("IMG URL:", imgData.publicUrl);
+  data.forEach(item => {
+    if (!item.image_file_name) return;
 
-        const img = document.createElement("img");
-        img.src = imgData.publicUrl;
+    const { data: imgData } = supabaseClient
+      .storage
+      .from(BUCKET)
+      .getPublicUrl(item.image_file_name);
 
-        img.onerror = () => {
-          console.error("Immagine non trovata:", item.image_file_name);
-        };
+    console.log("IMG URL:", imgData.publicUrl);
 
-        const card = document.createElement("div");
-        card.className = "card";
-        card.appendChild(img);
+    const card = document.createElement("div");
+    card.className = "card";
 
-        container.appendChild(card);
-      });
-    }
+    const img = document.createElement("img");
+    img.src = imgData.publicUrl;
+    img.alt = "Gallery image";
 
-    loadImages();
+    img.onerror = () => {
+      console.error("Immagine non trovata:", item.image_file_name);
+      card.remove();
+    };
+
+    card.appendChild(img);
+    container.appendChild(card);
+  });
+}
+
+loadImages();
   </script>
 
 </body>
