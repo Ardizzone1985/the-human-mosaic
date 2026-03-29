@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -14,23 +15,82 @@
       color: #111;
       padding: 40px;
     }
+
     .container {
       width: min(1200px, 94%);
       margin: 0 auto;
     }
+
     h1 {
       margin-bottom: 10px;
       font-size: clamp(2rem, 5vw, 3.5rem);
     }
+
     p {
       color: #555;
       margin-bottom: 30px;
     }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .admin-stat-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+
+    .admin-stat-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .admin-stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .status {
+      margin-bottom: 18px;
+      color: #666;
+    }
+
+    .status-filter-btn,
+    .filter-btn {
+      border: 1px solid #111;
+      background: white;
+      color: #111;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .status-filter-btn:hover,
+    .status-filter-btn.active,
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #111;
+      color: white;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
     }
+
     .card {
       background: white;
       border: 1px solid #ddd;
@@ -38,26 +98,86 @@
       overflow: hidden;
       box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
+
     .card img {
       width: 100%;
       height: 260px;
       object-fit: cover;
       display: block;
       background: #eee;
+      cursor: zoom-in;
     }
+
     .card-body {
       padding: 16px;
     }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-room-identity {
+      background: #ece8ff;
+      color: #4b2dbd;
+    }
+
+    .badge-room-love {
+      background: #ffe7ee;
+      color: #b42352;
+    }
+
+    .badge-room-creativity {
+      background: #e8f7ee;
+      color: #18794e;
+    }
+
+    .badge-status-pending {
+      background: #fff4d6;
+      color: #8a5a00;
+    }
+
+    .badge-status-approved {
+      background: #e8f7ee;
+      color: #18794e;
+    }
+
+    .badge-status-rejected {
+      background: #fdecec;
+      color: #b42318;
+    }
+
     .meta {
       font-size: 0.92rem;
       color: #555;
       margin-bottom: 6px;
     }
+
+    .card-top-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
     .actions {
       display: flex;
       gap: 10px;
       margin-top: 14px;
+      flex-wrap: wrap;
     }
+
     button {
       border: none;
       padding: 12px 14px;
@@ -65,218 +185,101 @@
       font-weight: 700;
       cursor: pointer;
     }
+
     .approve-btn {
       background: #111;
       color: white;
     }
+
     .reject-btn {
       background: #eee;
       color: #111;
     }
-    .status {
-      margin-bottom: 18px;
-      color: #666;
+
+    .open-btn {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+      text-decoration: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: inline-block;
     }
-    .filter-btn {
-  border: 1px solid #111;
-  background: white;
-  color: #111;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
 
-.filter-btn:hover,
-.filter-btn.active {
-  background: #111;
-  color: white;
-}
-    .badges {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.badge {
-  display: inline-block;
-  padding: 7px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.badge-room-identity {
-  background: #ece8ff;
-  color: #4b2dbd;
-}
-
-.badge-room-love {
-  background: #ffe7ee;
-  color: #b42352;
-}
-
-.badge-room-creativity {
-  background: #e8f7ee;
-  color: #18794e;
-}
-
-.badge-status-pending {
-  background: #fff4d6;
-  color: #8a5a00;
-}
-
-.card-top-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-}
-
-.open-btn {
-  background: white;
-  color: #111;
-  border: 1px solid #111;
-  text-decoration: none;
-  padding: 12px 14px;
-  border-radius: 12px;
-  font-weight: 700;
-  display: inline-block;
-}
-
-.open-btn:hover {
-  background: #111;
-  color: white;
-}
-
-.card img {
-  cursor: zoom-in;
-}
-
-    .status-filter-btn {
-  border: 1px solid #111;
-  background: white;
-  color: #111;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.status-filter-btn:hover,
-.status-filter-btn.active {
-  background: #111;
-  color: white;
-}
-
-.badge-status-approved {
-  background: #e8f7ee;
-  color: #18794e;
-}
-
-.badge-status-rejected {
-  background: #fdecec;
-  color: #b42318;
-}
-    .admin-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.admin-stat-card {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-}
-
-.admin-stat-label {
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.admin-stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111;
-}
+    .open-btn:hover {
+      background: #111;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-  <h1>Admin Approvals</h1>
-  <p>Review pending submissions and approve or reject them.</p>
+    <h1>Admin Approvals</h1>
+    <p>Review submissions and approve or reject them.</p>
+
     <div class="admin-stats">
-  <div class="admin-stat-card">
-    <div class="admin-stat-label">Pending</div>
-    <div class="admin-stat-value" id="count-pending">—</div>
-  </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Pending</div>
+        <div class="admin-stat-value" id="count-pending">—</div>
+      </div>
 
-  <div class="admin-stat-card">
-    <div class="admin-stat-label">Approved</div>
-    <div class="admin-stat-value" id="count-approved">—</div>
-  </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Approved</div>
+        <div class="admin-stat-value" id="count-approved">—</div>
+      </div>
 
-  <div class="admin-stat-card">
-    <div class="admin-stat-label">Rejected</div>
-    <div class="admin-stat-value" id="count-rejected">—</div>
-  </div>
-</div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-label">Rejected</div>
+        <div class="admin-stat-value" id="count-rejected">—</div>
+      </div>
+    </div>
 
-  <div id="status" class="status">Loading pending submissions...</div>
+    <div id="status" class="status">Loading submissions...</div>
 
     <div class="status-filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-  <button class="status-filter-btn active" data-status="pending">Pending</button>
-  <button class="status-filter-btn" data-status="approved">Approved</button>
-  <button class="status-filter-btn" data-status="rejected">Rejected</button>
-</div>
+      <button class="status-filter-btn active" data-status="pending">Pending</button>
+      <button class="status-filter-btn" data-status="approved">Approved</button>
+      <button class="status-filter-btn" data-status="rejected">Rejected</button>
+    </div>
 
-  <div class="filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
-    <button class="filter-btn active" data-room="ALL">All Pending</button>
-    <button class="filter-btn" data-room="Identity">Identity</button>
-    <button class="filter-btn" data-room="Love">Love</button>
-    <button class="filter-btn" data-room="Creativity">Creativity</button>
+    <div class="filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+      <button class="filter-btn active" data-room="ALL">All Rooms</button>
+      <button class="filter-btn" data-room="Identity">Identity</button>
+      <button class="filter-btn" data-room="Love">Love</button>
+      <button class="filter-btn" data-room="Creativity">Creativity</button>
+    </div>
+
+    <div id="grid" class="grid"></div>
   </div>
-
-  <div id="grid" class="grid"></div>
-</div>
 
   <script>
     const ADMIN_PASSWORD = "BiriSam83++??";
 
-const enteredPassword = prompt("Enter admin password:");
+    const enteredPassword = prompt("Enter admin password:");
 
-if (enteredPassword !== ADMIN_PASSWORD) {
-  document.body.innerHTML = `
-    <div style="
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: #f8f8f6;
-      color: #111;
-      padding: 40px;
-      text-align: center;
-    ">
-      <div>
-        <h1 style="font-size: 2rem; margin-bottom: 12px;">Access denied</h1>
-        <p style="color:#555;">Incorrect password.</p>
-      </div>
-    </div>
-  `;
-  throw new Error("Unauthorized access");
-}
+    if (enteredPassword !== ADMIN_PASSWORD) {
+      document.body.innerHTML = `
+        <div style="
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: Arial, sans-serif;
+          background: #f8f8f6;
+          color: #111;
+          padding: 40px;
+          text-align: center;
+        ">
+          <div>
+            <h1 style="font-size: 2rem; margin-bottom: 12px;">Access denied</h1>
+            <p style="color:#555;">Incorrect password.</p>
+          </div>
+        </div>
+      `;
+      throw new Error("Unauthorized access");
+    }
+
     const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY";
     const BUCKET = "images";
@@ -288,153 +291,126 @@ if (enteredPassword !== ADMIN_PASSWORD) {
 
     let currentRoom = "ALL";
     let currentStatus = "pending";
+
     function getRoomBadgeClass(room) {
-  if (room === "Identity") return "badge-room-identity";
-  if (room === "Love") return "badge-room-love";
-  if (room === "Creativity") return "badge-room-creativity";
-  return "";
-}
+      if (room === "Identity") return "badge-room-identity";
+      if (room === "Love") return "badge-room-love";
+      if (room === "Creativity") return "badge-room-creativity";
+      return "";
+    }
+
     function getStatusBadgeClass(status) {
-  if (status === "pending") return "badge-status-pending";
-  if (status === "approved") return "badge-status-approved";
-  if (status === "rejected") return "badge-status-rejected";
-  return "";
-}
+      if (status === "pending") return "badge-status-pending";
+      if (status === "approved") return "badge-status-approved";
+      if (status === "rejected") return "badge-status-rejected";
+      return "";
+    }
 
-function formatDate(dateString) {
-  if (!dateString) return "—";
-  const date = new Date(dateString);
-  return date.toLocaleString();
-}
+    function formatDate(dateString) {
+      if (!dateString) return "—";
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    }
 
-    let currentRoom = "ALL";
-let currentStatus = "pending";
+    async function loadAdminStats() {
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("approval_status");
 
-function getRoomBadgeClass(room) {
-  if (room === "Identity") return "badge-room-identity";
-  if (room === "Love") return "badge-room-love";
-  if (room === "Creativity") return "badge-room-creativity";
-  return "";
-}
+      if (error) {
+        console.error("Stats load error:", error);
+        return;
+      }
 
-function getStatusBadgeClass(status) {
-  if (status === "pending") return "badge-status-pending";
-  if (status === "approved") return "badge-status-approved";
-  if (status === "rejected") return "badge-status-rejected";
-  return "";
-}
+      let pending = 0;
+      let approved = 0;
+      let rejected = 0;
 
-function formatDate(dateString) {
-  if (!dateString) return "—";
-  const date = new Date(dateString);
-  return date.toLocaleString();
-}
+      data.forEach(item => {
+        if (item.approval_status === "pending") pending++;
+        if (item.approval_status === "approved") approved++;
+        if (item.approval_status === "rejected") rejected++;
+      });
 
-async function loadAdminStats() {
-  const { data, error } = await supabaseClient
-    .from("submissions")
-    .select("approval_status");
+      document.getElementById("count-pending").textContent = pending.toLocaleString();
+      document.getElementById("count-approved").textContent = approved.toLocaleString();
+      document.getElementById("count-rejected").textContent = rejected.toLocaleString();
+    }
 
-  if (error) {
-    console.error("Stats load error:", error);
-    return;
-  }
+    async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
+      grid.innerHTML = "";
+      statusBox.textContent = "Loading submissions...";
 
-  let pending = 0;
-  let approved = 0;
-  let rejected = 0;
+      let query = supabaseClient
+        .from("submissions")
+        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at")
+        .eq("approval_status", statusFilter)
+        .order("created_at", { ascending: false });
 
-  data.forEach(item => {
-    if (item.approval_status === "pending") pending++;
-    if (item.approval_status === "approved") approved++;
-    if (item.approval_status === "rejected") rejected++;
-  });
+      if (roomFilter !== "ALL") {
+        query = query.eq("room", roomFilter);
+      }
 
-  document.getElementById("count-pending").textContent = pending.toLocaleString();
-  document.getElementById("count-approved").textContent = approved.toLocaleString();
-  document.getElementById("count-rejected").textContent = rejected.toLocaleString();
-}
+      const { data, error } = await query;
 
-async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
-  ...
-}
-async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
-  grid.innerHTML = "";
-  statusBox.textContent = "Loading submissions...";
+      if (error) {
+        console.error("Admin load error:", error);
+        statusBox.textContent = "Error loading submissions.";
+        return;
+      }
 
-  let query = supabaseClient
-    .from("submissions")
-    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at")
-    .eq("approval_status", statusFilter)
-    .order("created_at", { ascending: false });
+      if (!data || data.length === 0) {
+        statusBox.textContent =
+          roomFilter === "ALL"
+            ? `No ${statusFilter} submissions.`
+            : `No ${statusFilter} submissions for ${roomFilter}.`;
+        return;
+      }
 
-  if (roomFilter !== "ALL") {
-    query = query.eq("room", roomFilter);
-  }
+      statusBox.textContent =
+        roomFilter === "ALL"
+          ? `${data.length} ${statusFilter} submission(s)`
+          : `${data.length} ${statusFilter} submission(s) in ${roomFilter}`;
 
-  const { data, error } = await query;
+      data.forEach(item => {
+        const { data: imgData } = supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(item.image_file_name);
 
-  console.log("ADMIN DATA:", data);
-  console.log("ADMIN ERROR:", error);
+        const showApprove = item.approval_status !== "approved";
+        const showReject = item.approval_status !== "rejected";
 
-  if (error) {
-    console.error(error);
-    statusBox.textContent = "Error loading submissions.";
-    return;
-  }
+        const card = document.createElement("div");
+        card.className = "card";
 
-  if (!data || data.length === 0) {
-    statusBox.textContent =
-      roomFilter === "ALL"
-        ? `No ${statusFilter} submissions.`
-        : `No ${statusFilter} submissions for ${roomFilter}.`;
-    return;
-  }
+        card.innerHTML = `
+          <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
+          <div class="card-body">
+            <div class="badges">
+              <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
+              <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
+            </div>
 
-  statusBox.textContent =
-    roomFilter === "ALL"
-      ? `${data.length} ${statusFilter} submission(s)`
-      : `${data.length} ${statusFilter} submission(s) in ${roomFilter}`;
+            <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+            <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+            <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+            <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
 
-  data.forEach(item => {
-    const { data: imgData } = supabaseClient
-      .storage
-      .from(BUCKET)
-      .getPublicUrl(item.image_file_name);
+            <div class="card-top-actions">
+              <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
+            </div>
 
-    const showApprove = item.approval_status !== "approved";
-    const showReject = item.approval_status !== "rejected";
+            <div class="actions">
+              ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
+              ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
+            </div>
+          </div>
+        `;
 
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
-      <div class="card-body">
-        <div class="badges">
-          <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
-          <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
-        </div>
-
-        <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
-        <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
-        <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
-        <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
-
-        <div class="card-top-actions">
-          <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
-        </div>
-
-        <div class="actions">
-          ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
-          ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
-        </div>
-      </div>
-    `;
-
-    grid.appendChild(card);
-  });
-}
+        grid.appendChild(card);
+      });
+    }
 
     async function approveSubmission(submissionId) {
       const { error } = await supabaseClient
@@ -451,8 +427,8 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
         return;
       }
 
-      loadSubmissions(currentStatus, currentRoom);
-      loadAdminStats();
+      await loadSubmissions(currentStatus, currentRoom);
+      await loadAdminStats();
     }
 
     async function rejectSubmission(submissionId) {
@@ -469,37 +445,35 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
         return;
       }
 
-      loadSubmissions(currentStatus, currentRoom);
-      loadAdminStats();
+      await loadSubmissions(currentStatus, currentRoom);
+      await loadAdminStats();
     }
 
     const filterButtons = document.querySelectorAll(".filter-btn");
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentRoom = button.dataset.room;
+        loadSubmissions(currentStatus, currentRoom);
+      });
+    });
 
-filterButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    filterButtons.forEach(btn => btn.classList.remove("active"));
-    button.classList.add("active");
-    currentRoom = button.dataset.room;
-    loadSubmissions(currentStatus, currentRoom);
-  });
-});
     const statusFilterButtons = document.querySelectorAll(".status-filter-btn");
+    statusFilterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        statusFilterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentStatus = button.dataset.status;
+        loadSubmissions(currentStatus, currentRoom);
+      });
+    });
 
-statusFilterButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    statusFilterButtons.forEach(btn => btn.classList.remove("active"));
-    button.classList.add("active");
-    currentStatus = button.dataset.status;
-    loadSubmissions(currentStatus, currentRoom);
-  });
-});
-   
     window.approveSubmission = approveSubmission;
     window.rejectSubmission = rejectSubmission;
 
     loadSubmissions(currentStatus, currentRoom);
     loadAdminStats();
-    
   </script>
 </body>
 </html>
