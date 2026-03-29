@@ -271,18 +271,28 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${imgData.publicUrl}" alt="Pending submission" />
-      <div class="card-body">
-        <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
-        <div class="meta"><strong>Room:</strong> ${item.room || "—"}</div>
-        <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
-        <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
-        <div class="actions">
-          <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
-          <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
-        </div>
-      </div>
-    `;
+  <img src="${imgData.publicUrl}" alt="Pending submission" onclick="window.open('${imgData.publicUrl}', '_blank')" />
+  <div class="card-body">
+    <div class="badges">
+      <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
+      <span class="badge badge-status-pending">${item.approval_status || "pending"}</span>
+    </div>
+
+    <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+    <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+    <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+    <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
+
+    <div class="card-top-actions">
+      <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
+    </div>
+
+    <div class="actions">
+      <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
+      <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
+    </div>
+  </div>
+`;
 
     grid.appendChild(card);
   });
