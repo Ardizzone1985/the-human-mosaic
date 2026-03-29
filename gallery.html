@@ -63,7 +63,7 @@
       const { data, error } = await supabaseClient
         .from("submissions")
         .select("image_file_name")
-        .eq("status", "approved");
+        .eq("approval_status", "approved");
 
       console.log("DATA:", data);
       console.log("ERROR:", error);
