@@ -8,13 +8,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       font-family: Arial, sans-serif;
       background: #f8f8f6;
-      color: #111;
       padding: 40px;
+      color: #111;
+      margin: 0;
     }
 
     .container {
@@ -24,23 +27,25 @@
 
     h1 {
       text-align: center;
-      font-size: clamp(2.3rem, 5vw, 4rem);
-      margin-bottom: 12px;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 14px;
     }
 
     .subtitle {
       text-align: center;
       color: #555;
-      margin-bottom: 30px;
+      max-width: 760px;
+      margin: 0 auto 30px;
       font-size: 1.05rem;
+      line-height: 1.6;
     }
 
     .filters {
       display: flex;
       justify-content: center;
-      flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
     }
 
     .filter-btn {
@@ -51,7 +56,7 @@
       border-radius: 999px;
       cursor: pointer;
       font-weight: 700;
-      transition: all 0.2s ease;
+      transition: 0.2s ease;
     }
 
     .filter-btn:hover,
@@ -62,23 +67,30 @@
 
     .top-actions {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
 
-    .cta-btn {
+    .join-btn {
       display: inline-block;
-      padding: 14px 22px;
-      border-radius: 14px;
+      text-decoration: none;
       background: #111;
       color: white;
-      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 16px;
       font-weight: 700;
-      transition: all 0.2s ease;
+      transition: 0.2s ease;
     }
 
-    .cta-btn:hover {
+    .join-btn:hover {
       background: #333;
-      transform: translateY(-2px);
+      transform: translateY(-1px);
+    }
+
+    .status-message {
+      text-align: center;
+      margin-bottom: 22px;
+      color: #666;
+      min-height: 24px;
     }
 
     .grid {
@@ -92,28 +104,37 @@
       border-radius: 18px;
       overflow: hidden;
       border: 1px solid #ddd;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
 
     .card img {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      height: 240px;
       object-fit: cover;
       display: block;
+      background: #eee;
+    }
+
+    .card-info {
+      padding: 12px 14px;
+    }
+
+    .room-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .cta-bottom {
+      text-align: center;
+      margin-top: 40px;
     }
 
     .error {
-      text-align: center;
       color: red;
-      margin-top: 25px;
-      font-size: 1rem;
-    }
-
-    .count-box {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #444;
-      font-size: 1rem;
     }
   </style>
 </head>
@@ -121,18 +142,128 @@
   <div class="container">
     <h1>Live Gallery</h1>
     <p class="subtitle">
-      Explore the approved contributions already shaping The Human Mosaic.
+      Explore approved contributions from the three rooms of The Human Mosaic.
+      Identity, Love, and Creativity are already taking shape.
     </p>
 
     <div class="top-actions">
-      <a class="cta-btn" href="join.html">Claim Your Spot</a>
+      <a class="join-btn" href="join.html">Claim Your Spot</a>
     </div>
 
     <div class="filters">
-      <button class="filter-btn active" data-room="All">All</button>
+      <button class="filter-btn active" data-room="ALL">All Rooms</button>
       <button class="filter-btn" data-room="Identity">Identity</button>
       <button class="filter-btn" data-room="Love">Love</button>
       <button class="filter-btn" data-room="Creativity">Creativity</button>
     </div>
 
-    <div class="count-box" id
+    <div id="statusMessage" class="status-message"></div>
+
+    <div class="grid" id="gallery"></div>
+
+    <div class="cta-bottom">
+      <a class="join-btn" href="join.html">Join The Human Mosaic</a>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_KEY = "LA_TUA_ANON_KEY";
+    const BUCKET = "images";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const gallery = document.getElementById("gallery");
+    const statusMessage = document.getElementById("statusMessage");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+    let currentRoom = "ALL";
+
+    async function loadImages(roomFilter = "ALL") {
+      gallery.innerHTML = "";
+      statusMessage.textContent = "Loading gallery...";
+
+      let query = supabaseClient
+        .from("submissions")
+        .select("image_file_name, room")
+        .eq("approval_status", "approved");
+
+      if (roomFilter !== "ALL") {
+        query = query.eq("room", roomFilter);
+      }
+
+      const { data, error } = await query;
+
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+
+      if (error) {
+        statusMessage.textContent = "Error loading gallery.";
+        statusMessage.className = "status-message error";
+        console.error(error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        statusMessage.className = "status-message";
+        statusMessage.textContent =
+          roomFilter === "ALL"
+            ? "No approved images yet."
+            : `No approved images yet for ${roomFilter}.`;
+        return;
+      }
+
+      statusMessage.className = "status-message";
+      statusMessage.textContent =
+        roomFilter === "ALL"
+          ? `${data.length} approved image(s) currently visible`
+          : `${data.length} approved image(s) in ${roomFilter}`;
+
+      data.forEach(item => {
+        if (!item.image_file_name) return;
+
+        const { data: imgData } = supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(item.image_file_name);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = imgData.publicUrl;
+        img.alt = `${item.room} contribution`;
+
+        const info = document.createElement("div");
+        info.className = "card-info";
+
+        const tag = document.createElement("div");
+        tag.className = "room-tag";
+        tag.textContent = item.room;
+
+        info.appendChild(tag);
+        card.appendChild(img);
+        card.appendChild(info);
+
+        img.onerror = () => {
+          card.remove();
+          console.error("Image not found:", item.image_file_name);
+        };
+
+        gallery.appendChild(card);
+      });
+    }
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentRoom = button.dataset.room;
+        loadImages(currentRoom);
+      });
+    });
+
+    loadImages(currentRoom);
+  </script>
+</body>
+</html>
