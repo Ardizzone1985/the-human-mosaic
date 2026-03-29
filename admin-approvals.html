@@ -155,7 +155,8 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
 
   let query = supabaseClient
     .from("submissions")
-    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status")
+    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at")
+.order("created_at", { ascending: false })
     .eq("approval_status", "pending");
 
   if (roomFilter !== "ALL") {
