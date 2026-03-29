@@ -144,54 +144,71 @@ if (enteredPassword !== ADMIN_PASSWORD) {
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
 
-    async function loadPendingSubmissions() {
-      grid.innerHTML = "";
-      statusBox.textContent = "Loading pending submissions...";
+    let currentRoom = "ALL";
 
-      const { data, error } = await supabaseClient
-        .from("submissions")
-        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status")
-        .eq("approval_status", "pending");
+async function loadPendingSubmissions(roomFilter = "ALL") {
+  grid.innerHTML = "";
+  statusBox.textContent = "Loading pending submissions...";
 
-      if (error) {
-        console.error(error);
-        statusBox.textContent = "Error loading pending submissions.";
-        return;
-      }
+  let query = supabaseClient
+    .from("submissions")
+    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status")
+    .eq("approval_status", "pending");
 
-      if (!data || data.length === 0) {
-        statusBox.textContent = "No pending submissions.";
-        return;
-      }
+  if (roomFilter !== "ALL") {
+    query = query.eq("room", roomFilter);
+  }
 
-      statusBox.textContent = `${data.length} pending submission(s)`;
+  const { data, error } = await query;
 
-      data.forEach(item => {
-        const { data: imgData } = supabaseClient
-          .storage
-          .from(BUCKET)
-          .getPublicUrl(item.image_file_name);
+  console.log("ADMIN DATA:", data);
+  console.log("ADMIN ERROR:", error);
 
-        const card = document.createElement("div");
-        card.className = "card";
+  if (error) {
+    console.error(error);
+    statusBox.textContent = "Error loading pending submissions.";
+    return;
+  }
 
-        card.innerHTML = `
-          <img src="${imgData.publicUrl}" alt="Pending submission" />
-          <div class="card-body">
-            <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
-            <div class="meta"><strong>Room:</strong> ${item.room || "—"}</div>
-            <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
-            <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
-            <div class="actions">
-              <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
-              <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
-            </div>
-          </div>
-        `;
+  if (!data || data.length === 0) {
+    statusBox.textContent =
+      roomFilter === "ALL"
+        ? "No pending submissions."
+        : `No pending submissions for ${roomFilter}.`;
+    return;
+  }
 
-        grid.appendChild(card);
-      });
-    }
+  statusBox.textContent =
+    roomFilter === "ALL"
+      ? `${data.length} pending submission(s)`
+      : `${data.length} pending submission(s) in ${roomFilter}`;
+
+  data.forEach(item => {
+    const { data: imgData } = supabaseClient
+      .storage
+      .from(BUCKET)
+      .getPublicUrl(item.image_file_name);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${imgData.publicUrl}" alt="Pending submission" />
+      <div class="card-body">
+        <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+        <div class="meta"><strong>Room:</strong> ${item.room || "—"}</div>
+        <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+        <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+        <div class="actions">
+          <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
+          <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
 
     async function approveSubmission(submissionId) {
       const { error } = await supabaseClient
