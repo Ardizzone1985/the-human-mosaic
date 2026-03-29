@@ -210,6 +210,18 @@ if (enteredPassword !== ADMIN_PASSWORD) {
     const statusBox = document.getElementById("status");
 
     let currentRoom = "ALL";
+    function getRoomBadgeClass(room) {
+  if (room === "Identity") return "badge-room-identity";
+  if (room === "Love") return "badge-room-love";
+  if (room === "Creativity") return "badge-room-creativity";
+  return "";
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  return date.toLocaleString();
+}
 
 async function loadPendingSubmissions(roomFilter = "ALL") {
   grid.innerHTML = "";
