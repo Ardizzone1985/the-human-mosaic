@@ -97,17 +97,20 @@
 </head>
 <body>
   <div class="container">
-    <h1>Admin Approvals</h1>
-    <p>Review pending submissions and approve or reject them.</p>
+  <h1>Admin Approvals</h1>
+  <p>Review pending submissions and approve or reject them.</p>
 
-    <div id="status" class="status">Loading pending submissions...</div>
-    <div id="grid" class="grid"></div>
-    <div class="filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
-  <button class="filter-btn active" data-room="ALL">All Pending</button>
-  <button class="filter-btn" data-room="Identity">Identity</button>
-  <button class="filter-btn" data-room="Love">Love</button>
-  <button class="filter-btn" data-room="Creativity">Creativity</button>
+  <div id="status" class="status">Loading pending submissions...</div>
+
+  <div class="filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+    <button class="filter-btn active" data-room="ALL">All Pending</button>
+    <button class="filter-btn" data-room="Identity">Identity</button>
+    <button class="filter-btn" data-room="Love">Love</button>
+    <button class="filter-btn" data-room="Creativity">Creativity</button>
   </div>
+
+  <div id="grid" class="grid"></div>
+</div>
 
   <script>
     const ADMIN_PASSWORD = "BiriSam83++??";
