@@ -56,7 +56,7 @@
     async function loadImages() {
       const { data, error } = await supabaseClient
         .from("submissions")
-        .select("image_path")
+        .select("image_file_name")
         .eq("approval_status", "approved");
 
       if (error) {
@@ -70,7 +70,7 @@
         const { data: imgData } = supabaseClient
           .storage
           .from(BUCKET)
-          .getPublicUrl(item.image_path);
+          .getPublicUrl(item.image_file_name);
 
         const img = document.createElement("img");
         img.src = imgData.publicUrl;
