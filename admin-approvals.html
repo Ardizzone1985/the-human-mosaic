@@ -350,7 +350,7 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
         return;
       }
 
-      loadPendingSubmissions(currentRoom);
+      loadSubmissions(currentStatus, currentRoom);
     }
 
     async function rejectSubmission(submissionId) {
@@ -367,7 +367,7 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
         return;
       }
 
-      loadPendingSubmissions(currentRoom);
+      loadSubmissions(currentStatus, currentRoom);
     }
 
     const filterButtons = document.querySelectorAll(".filter-btn");
@@ -377,10 +377,20 @@ filterButtons.forEach(button => {
     filterButtons.forEach(btn => btn.classList.remove("active"));
     button.classList.add("active");
     currentRoom = button.dataset.room;
-    loadPendingSubmissions(currentRoom);
+    loadSubmissions(currentStatus, currentRoom);
   });
 });
-    loadPendingSubmissions(currentRoom);
+    const statusFilterButtons = document.querySelectorAll(".status-filter-btn");
+
+statusFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    statusFilterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentStatus = button.dataset.status;
+    loadSubmissions(currentStatus, currentRoom);
+  });
+});
+    loadSubmissions(currentStatus, currentRoom);
 
     window.approveSubmission = approveSubmission;
     window.rejectSubmission = rejectSubmission;
