@@ -62,7 +62,8 @@
     async function loadImages() {
       const { data, error } = await supabaseClient
         .from("submissions")
-        .select("image_file_name, approval_status");
+        .select("image_file_name")
+        .eq("approval_status", "approved");
         
       console.log("DATA:", data);
       console.log("ERROR:", error);
