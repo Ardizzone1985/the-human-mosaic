@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Approvals – The Human Mosaic</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f8f6;
+      color: #111;
+      padding: 40px;
+    }
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+    }
+    p {
+      color: #555;
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+    .card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      background: #eee;
+    }
+    .card-body {
+      padding: 16px;
+    }
+    .meta {
+      font-size: 0.92rem;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    button {
+      border: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .approve-btn {
+      background: #111;
+      color: white;
+    }
+    .reject-btn {
+      background: #eee;
+      color: #111;
+    }
+    .status {
+      margin-bottom: 18px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Approvals</h1>
+    <p>Review pending submissions and approve or reject them.</p>
+
+    <div id="status" class="status">Loading pending submissions...</div>
+    <div id="grid" class="grid"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_KEY = "LA_TUA_ANON_KEY";
+    const BUCKET = "images";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const grid = document.getElementById("grid");
+    const statusBox = document.getElementById("status");
+
+    async function loadPendingSubmissions() {
+      grid.innerHTML = "";
+      statusBox.textContent = "Loading pending submissions...";
+
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status")
+        .eq("approval_status", "pending");
+
+      if (error) {
+        console.error(error);
+        statusBox.textContent = "Error loading pending submissions.";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        statusBox.textContent = "No pending submissions.";
+        return;
+      }
+
+      statusBox.textContent = `${data.length} pending submission(s)`;
+
+      data.forEach(item => {
+        const { data: imgData } = supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(item.image_file_name);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <img src="${imgData.publicUrl}" alt="Pending submission" />
+          <div class="card-body">
+            <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+            <div class="meta"><strong>Room:</strong> ${item.room || "—"}</div>
+            <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+            <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+            <div class="actions">
+              <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
+              <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    async function approveSubmission(submissionId) {
+      const { error } = await supabaseClient
+        .from("submissions")
+        .update({
+          approval_status: "approved",
+          approved_at: new Date().toISOString()
+        })
+        .eq("submission_id", submissionId);
+
+      if (error) {
+        alert("Approve error");
+        console.error(error);
+        return;
+      }
+
+      loadPendingSubmissions();
+    }
+
+    async function rejectSubmission(submissionId) {
+      const { error } = await supabaseClient
+        .from("submissions")
+        .update({
+          approval_status: "rejected"
+        })
+        .eq("submission_id", submissionId);
+
+      if (error) {
+        alert("Reject error");
+        console.error(error);
+        return;
+      }
+
+      loadPendingSubmissions();
+    }
+
+    loadPendingSubmissions();
+
+    window.approveSubmission = approveSubmission;
+    window.rejectSubmission = rejectSubmission;
+  </script>
+</body>
+</html>
