@@ -225,7 +225,7 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
         return;
       }
 
-      loadPendingSubmissions();
+      loadPendingSubmissions(currentRoom);
     }
 
     async function rejectSubmission(submissionId) {
@@ -242,10 +242,20 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
         return;
       }
 
-      loadPendingSubmissions();
+      loadPendingSubmissions(currentRoom);
     }
 
-    loadPendingSubmissions();
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    filterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentRoom = button.dataset.room;
+    loadPendingSubmissions(currentRoom);
+  });
+});
+    loadPendingSubmissions(currentRoom);
 
     window.approveSubmission = approveSubmission;
     window.rejectSubmission = rejectSubmission;
