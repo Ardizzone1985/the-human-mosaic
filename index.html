@@ -392,6 +392,11 @@
       color: #444;
     }
 
+    .live-links {
+      text-align: center;
+      margin-top: 24px;
+    }
+
     .final {
       background: #111;
       color: white;
@@ -430,21 +435,22 @@
     }
 
     .progress-bar {
-  width: 100%;
-  height: 10px;
-  background: #eee;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 12px;
-}
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
 
-.progress-fill {
-  height: 100%;
-  background: #111;
-  width: 0;
-  border-radius: 999px;
-  transition: width 1.5s ease;
-}
+    .progress-fill {
+      height: 100%;
+      background: #111;
+      width: 0;
+      border-radius: 999px;
+      transition: width 1s ease;
+    }
+
     @media (max-width: 768px) {
       .hero {
         min-height: auto;
@@ -522,6 +528,7 @@
 
           <div class="buttons">
             <a href="join.html" class="btn btn-primary">Secure Your Spot</a>
+            <a href="gallery.html" class="btn btn-secondary">Explore Live Gallery</a>
             <a href="#project" class="btn btn-secondary">Explore the Project</a>
           </div>
         </div>
@@ -538,39 +545,39 @@
         <div class="live-grid">
           <div class="live-card">
             <h3>Identity</h3>
-            <div class="live-number">12,458</div>
-  <div class="live-capacity">reserved positions out of 1,000,000</div>
-
-  <div class="progress-bar">
-    <div class="progress-fill" style="width: 1.24%;"></div>
-  </div>
-
-  <div class="live-note">A room dedicated to personal roots, place, and identity.</div>
-</div>
+            <div class="live-number" id="count-identity">—</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-identity"></div>
+            </div>
+            <div class="live-note">A room dedicated to personal roots, place, and identity.</div>
+          </div>
 
           <div class="live-card">
             <h3>Love</h3>
-            <div class="live-number">8,932</div>
-  <div class="live-capacity">reserved positions out of 1,000,000</div>
-
-  <div class="progress-bar">
-    <div class="progress-fill" style="width: 0.89%;"></div>
-  </div>
-
-  <div class="live-note">A room built from human bonds, affection, and meaning.</div>
-</div>
+            <div class="live-number" id="count-love">—</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-love"></div>
+            </div>
+            <div class="live-note">A room built from human bonds, affection, and meaning.</div>
+          </div>
 
           <div class="live-card">
             <h3>Creativity</h3>
-            <div class="live-number">5,211</div>
-  <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="live-number" id="count-creativity">—</div>
+            <div class="live-capacity">reserved positions out of 1,000,000</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-creativity"></div>
+            </div>
+            <div class="live-note">A room for imagination, art, and fearless expression.</div>
+          </div>
+        </div>
 
-  <div class="progress-bar">
-    <div class="progress-fill" style="width: 0.52%;"></div>
-  </div>
-
-  <div class="live-note">A room for imagination, art, and fearless expression.</div>
-</div>
+        <div class="live-links">
+          <a href="gallery.html" class="btn btn-primary">Visit the Live Gallery</a>
+        </div>
+      </div>
     </section>
 
     <section class="trust">
@@ -744,5 +751,57 @@
       </div>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const { createClient } = supabase;
+
+    const supabaseClient = createClient(
+      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+      "LA_TUA_ANON_KEY"
+    );
+
+    async function loadStats() {
+      try {
+        const { data, error } = await supabaseClient
+          .from("slots")
+          .select("room, status");
+
+        if (error) {
+          console.error("Stats error:", error);
+          return;
+        }
+
+        let identity = 0;
+        let love = 0;
+        let creativity = 0;
+
+        data.forEach(item => {
+          if (item.status !== "submitted") return;
+
+          if (item.room === "Identity") identity++;
+          if (item.room === "Love") love++;
+          if (item.room === "Creativity") creativity++;
+        });
+
+        document.getElementById("count-identity").textContent = identity.toLocaleString();
+        document.getElementById("count-love").textContent = love.toLocaleString();
+        document.getElementById("count-creativity").textContent = creativity.toLocaleString();
+
+        const totalPerRoom = 1000000;
+        const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
+        const lovePercent = Math.min((love / totalPerRoom) * 100, 100);
+        const creativityPercent = Math.min((creativity / totalPerRoom) * 100, 100);
+
+        document.getElementById("progress-identity").style.width = `${identityPercent}%`;
+        document.getElementById("progress-love").style.width = `${lovePercent}%`;
+        document.getElementById("progress-creativity").style.width = `${creativityPercent}%`;
+      } catch (err) {
+        console.error("Unexpected stats error:", err);
+      }
+    }
+
+    loadStats();
+  </script>
 </body>
 </html>
