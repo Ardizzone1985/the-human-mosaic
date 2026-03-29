@@ -250,6 +250,12 @@ if (enteredPassword !== ADMIN_PASSWORD) {
   if (room === "Creativity") return "badge-room-creativity";
   return "";
 }
+    function getStatusBadgeClass(status) {
+  if (status === "pending") return "badge-status-pending";
+  if (status === "approved") return "badge-status-approved";
+  if (status === "rejected") return "badge-status-rejected";
+  return "";
+}
 
 function formatDate(dateString) {
   if (!dateString) return "—";
