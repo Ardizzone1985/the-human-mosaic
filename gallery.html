@@ -8,112 +8,131 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: Arial, sans-serif;
       background: #f8f8f6;
+      color: #111;
       padding: 40px;
-      text-align: center;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
     }
 
     h1 {
+      text-align: center;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
       margin-bottom: 30px;
+      font-size: 1.05rem;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .filter-btn {
+      border: 1px solid #111;
+      background: white;
+      color: #111;
+      padding: 12px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #111;
+      color: white;
+    }
+
+    .top-actions {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 14px;
+      background: #111;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .cta-btn:hover {
+      background: #333;
+      transform: translateY(-2px);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
     }
 
     .card {
       background: white;
-      border-radius: 10px;
+      border-radius: 18px;
       overflow: hidden;
       border: 1px solid #ddd;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
     }
 
     .card img {
       width: 100%;
-      height: 200px;
+      aspect-ratio: 1 / 1;
       object-fit: cover;
+      display: block;
     }
 
     .error {
+      text-align: center;
       color: red;
-      margin-top: 20px;
+      margin-top: 25px;
+      font-size: 1rem;
+    }
+
+    .count-box {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #444;
+      font-size: 1rem;
     }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>Live Gallery</h1>
+    <p class="subtitle">
+      Explore the approved contributions already shaping The Human Mosaic.
+    </p>
 
-  <h1>Live Gallery</h1>
+    <div class="top-actions">
+      <a class="cta-btn" href="join.html">Claim Your Spot</a>
+    </div>
 
-  <div class="grid" id="gallery"></div>
-  <div id="error" class="error"></div>
+    <div class="filters">
+      <button class="filter-btn active" data-room="All">All</button>
+      <button class="filter-btn" data-room="Identity">Identity</button>
+      <button class="filter-btn" data-room="Love">Love</button>
+      <button class="filter-btn" data-room="Creativity">Creativity</button>
+    </div>
 
-  <script>
-    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"; // ← rimetti la tua key qui
-    const BUCKET = "images";
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    async function loadImages() {
-  const { data, error } = await supabaseClient
-    .from("submissions")
-    .select("image_file_name")
-    .eq("approval_status", "approved");
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  const errorBox = document.getElementById("error");
-  const container = document.getElementById("gallery");
-
-  container.innerHTML = "";
-  errorBox.innerText = "";
-
-  if (error) {
-    errorBox.innerText = "Errore nel caricamento dati";
-    console.error(error);
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    errorBox.innerText = "Nessuna immagine trovata";
-    return;
-  }
-
-  data.forEach(item => {
-    if (!item.image_file_name) return;
-
-    const { data: imgData } = supabaseClient
-      .storage
-      .from(BUCKET)
-      .getPublicUrl(item.image_file_name);
-
-    console.log("IMG URL:", imgData.publicUrl);
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const img = document.createElement("img");
-    img.src = imgData.publicUrl;
-    img.alt = "Gallery image";
-
-    img.onerror = () => {
-      console.error("Immagine non trovata:", item.image_file_name);
-      card.remove();
-    };
-
-    card.appendChild(img);
-    container.appendChild(card);
-  });
-}
-
-loadImages();
-  </script>
-
-</body>
-</html>
+    <div class="count-box" id
