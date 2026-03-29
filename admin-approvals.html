@@ -243,6 +243,7 @@ if (enteredPassword !== ADMIN_PASSWORD) {
     const statusBox = document.getElementById("status");
 
     let currentRoom = "ALL";
+    let currentStatus = "pending";
     function getRoomBadgeClass(room) {
   if (room === "Identity") return "badge-room-identity";
   if (room === "Love") return "badge-room-love";
