@@ -307,6 +307,57 @@ function formatDate(dateString) {
   return date.toLocaleString();
 }
 
+    let currentRoom = "ALL";
+let currentStatus = "pending";
+
+function getRoomBadgeClass(room) {
+  if (room === "Identity") return "badge-room-identity";
+  if (room === "Love") return "badge-room-love";
+  if (room === "Creativity") return "badge-room-creativity";
+  return "";
+}
+
+function getStatusBadgeClass(status) {
+  if (status === "pending") return "badge-status-pending";
+  if (status === "approved") return "badge-status-approved";
+  if (status === "rejected") return "badge-status-rejected";
+  return "";
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  return date.toLocaleString();
+}
+
+async function loadAdminStats() {
+  const { data, error } = await supabaseClient
+    .from("submissions")
+    .select("approval_status");
+
+  if (error) {
+    console.error("Stats load error:", error);
+    return;
+  }
+
+  let pending = 0;
+  let approved = 0;
+  let rejected = 0;
+
+  data.forEach(item => {
+    if (item.approval_status === "pending") pending++;
+    if (item.approval_status === "approved") approved++;
+    if (item.approval_status === "rejected") rejected++;
+  });
+
+  document.getElementById("count-pending").textContent = pending.toLocaleString();
+  document.getElementById("count-approved").textContent = approved.toLocaleString();
+  document.getElementById("count-rejected").textContent = rejected.toLocaleString();
+}
+
+async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
+  ...
+}
 async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
   grid.innerHTML = "";
   statusBox.textContent = "Loading submissions...";
@@ -442,10 +493,13 @@ statusFilterButtons.forEach(button => {
     loadSubmissions(currentStatus, currentRoom);
   });
 });
-    loadSubmissions(currentStatus, currentRoom);
-
+   
     window.approveSubmission = approveSubmission;
     window.rejectSubmission = rejectSubmission;
+
+    loadSubmissions(currentStatus, currentRoom);
+    loadAdminStats();
+    
   </script>
 </body>
 </html>
