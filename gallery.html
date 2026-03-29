@@ -37,6 +37,11 @@
       height: 200px;
       object-fit: cover;
     }
+
+    .error {
+      color: red;
+      margin-top: 20px;
+    }
   </style>
 </head>
 
@@ -45,10 +50,11 @@
   <h1>Live Gallery</h1>
 
   <div class="grid" id="gallery"></div>
+  <div id="error" class="error"></div>
 
   <script>
     const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY";
+    const SUPABASE_KEY = "LA_TUA_ANON_KEY"; // ← rimetti la tua key qui
     const BUCKET = "images";
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -59,21 +65,38 @@
         .select("image_file_name")
         .eq("approval_status", "approved");
 
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+
       if (error) {
+        document.getElementById("error").innerText = "Errore nel caricamento dati";
         console.error(error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        document.getElementById("error").innerText = "Nessuna immagine trovata";
         return;
       }
 
       const container = document.getElementById("gallery");
 
       data.forEach(item => {
+        if (!item.image_file_name) return;
+
         const { data: imgData } = supabaseClient
           .storage
           .from(BUCKET)
           .getPublicUrl(item.image_file_name);
 
+        console.log("IMG URL:", imgData.publicUrl);
+
         const img = document.createElement("img");
         img.src = imgData.publicUrl;
+
+        img.onerror = () => {
+          console.error("Immagine non trovata:", item.image_file_name);
+        };
 
         const card = document.createElement("div");
         card.className = "card";
