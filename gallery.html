@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Gallery – The Human Mosaic</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f6;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Live Gallery</h1>
+
+  <div class="grid" id="gallery"></div>
+
+  <script>
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY";
+    const BUCKET = "images";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadImages() {
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("image_path")
+        .eq("approval_status", "approved");
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      const container = document.getElementById("gallery");
+
+      data.forEach(item => {
+        const { data: imgData } = supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(item.image_path);
+
+        const img = document.createElement("img");
+        img.src = imgData.publicUrl;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.appendChild(img);
+
+        container.appendChild(card);
+      });
+    }
+
+    loadImages();
+  </script>
+
+</body>
+</html>
