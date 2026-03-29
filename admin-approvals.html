@@ -401,6 +401,7 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
       }
 
       loadSubmissions(currentStatus, currentRoom);
+      loadAdminStats();
     }
 
     async function rejectSubmission(submissionId) {
@@ -418,6 +419,7 @@ async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
       }
 
       loadSubmissions(currentStatus, currentRoom);
+      loadAdminStats();
     }
 
     const filterButtons = document.querySelectorAll(".filter-btn");
