@@ -257,15 +257,15 @@ function formatDate(dateString) {
   return date.toLocaleString();
 }
 
-async function loadPendingSubmissions(roomFilter = "ALL") {
+async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
   grid.innerHTML = "";
-  statusBox.textContent = "Loading pending submissions...";
+  statusBox.textContent = "Loading submissions...";
 
   let query = supabaseClient
     .from("submissions")
     .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at")
-.order("created_at", { ascending: false })
-    .eq("approval_status", "pending");
+    .eq("approval_status", statusFilter)
+    .order("created_at", { ascending: false });
 
   if (roomFilter !== "ALL") {
     query = query.eq("room", roomFilter);
@@ -278,22 +278,22 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
 
   if (error) {
     console.error(error);
-    statusBox.textContent = "Error loading pending submissions.";
+    statusBox.textContent = "Error loading submissions.";
     return;
   }
 
   if (!data || data.length === 0) {
     statusBox.textContent =
       roomFilter === "ALL"
-        ? "No pending submissions."
-        : `No pending submissions for ${roomFilter}.`;
+        ? `No ${statusFilter} submissions.`
+        : `No ${statusFilter} submissions for ${roomFilter}.`;
     return;
   }
 
   statusBox.textContent =
     roomFilter === "ALL"
-      ? `${data.length} pending submission(s)`
-      : `${data.length} pending submission(s) in ${roomFilter}`;
+      ? `${data.length} ${statusFilter} submission(s)`
+      : `${data.length} ${statusFilter} submission(s) in ${roomFilter}`;
 
   data.forEach(item => {
     const { data: imgData } = supabaseClient
@@ -301,32 +301,35 @@ async function loadPendingSubmissions(roomFilter = "ALL") {
       .from(BUCKET)
       .getPublicUrl(item.image_file_name);
 
+    const showApprove = item.approval_status !== "approved";
+    const showReject = item.approval_status !== "rejected";
+
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-  <img src="${imgData.publicUrl}" alt="Pending submission" onclick="window.open('${imgData.publicUrl}', '_blank')" />
-  <div class="card-body">
-    <div class="badges">
-      <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
-      <span class="badge badge-status-pending">${item.approval_status || "pending"}</span>
-    </div>
+      <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
+      <div class="card-body">
+        <div class="badges">
+          <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
+          <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
+        </div>
 
-    <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
-    <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
-    <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
-    <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
+        <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+        <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+        <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+        <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
 
-    <div class="card-top-actions">
-      <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
-    </div>
+        <div class="card-top-actions">
+          <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
+        </div>
 
-    <div class="actions">
-      <button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>
-      <button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>
-    </div>
-  </div>
-`;
+        <div class="actions">
+          ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
+          ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
+        </div>
+      </div>
+    `;
 
     grid.appendChild(card);
   });
