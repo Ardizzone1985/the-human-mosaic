@@ -586,22 +586,46 @@
       reader.readAsDataURL(file);
     });
 
-    uploadForm.addEventListener("submit", async function (e) {
-      e.preventDefault();
+    <script>
+  uploadForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-      const file = imageUpload.files[0];
-      if (!file) return;
+    const file = imageUpload.files[0];
+    if (!file) return;
 
-      const confirmed = confirm(
-        "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
-      );
+    const confirmed = confirm(
+      "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
+    );
 
-      if (!confirmed) return;
+    if (!confirmed) return;
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Finalizing submission...";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Finalizing submission...";
 
+    try {
       const submissionId = generateSubmissionId();
+
+      const fileExt = (file.name.split(".").pop() || "").toLowerCase();
+      const safeExt = fileExt || "jpg";
+      const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
+      const filePath = `${safeSubmissionId}.${safeExt}`;
+
+      // 1) Upload file to Supabase Storage
+      const { error: uploadError } = await supabaseClient
+        .storage
+        .from("images")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (uploadError) {
+        alert("Storage upload error: " + (uploadError.message || "Unknown error"));
+        console.error("Storage upload error:", uploadError);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Finalize Submission";
+        return;
+      }
 
       const submissionData = {
         submissionId,
@@ -615,10 +639,11 @@
         slotCode,
         price,
         note,
-        imageFileName: file.name,
+        imageFileName: filePath,
         submittedAt: new Date().toISOString()
       };
 
+      // 2) Save submission in DB
       const dbSubmission = {
         submission_id: submissionId,
         full_name: fullName,
@@ -631,7 +656,8 @@
         slot_code: slotCode,
         price: price,
         note: note,
-        image_file_name: file.name,
+        image_file_name: filePath,
+        approval_status: "pending",
         status: "pending"
       };
 
@@ -640,6 +666,9 @@
         .insert([dbSubmission]);
 
       if (dbError) {
+        // rollback storage upload if DB insert fails
+        await supabaseClient.storage.from("images").remove([filePath]);
+
         alert("Supabase error: " + (dbError.message || "Unknown error"));
         console.error("Supabase insert error:", dbError);
         submitBtn.disabled = false;
@@ -647,6 +676,7 @@
         return;
       }
 
+      // 3) Update slot
       const { error: slotUpdateError } = await supabaseClient
         .from("slots")
         .update({
@@ -678,7 +708,13 @@
         `&fullName=${encodeURIComponent(fullName)}` +
         `&email=${encodeURIComponent(email)}` +
         `&country=${encodeURIComponent(country)}`;
-    });
-  </script>
+    } catch (error) {
+      alert("Unexpected error during submission.");
+      console.error("Unexpected submission error:", error);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Finalize Submission";
+    }
+  });
+</script>
 </body>
 </html>
