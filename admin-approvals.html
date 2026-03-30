@@ -343,7 +343,7 @@
 
       let query = supabaseClient
         .from("submissions")
-        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at")
+        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at, note")
         .eq("approval_status", statusFilter)
         .order("created_at", { ascending: false });
 
