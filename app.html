@@ -98,9 +98,9 @@ const supabaseClient = createClient(
 );
 
 async function loadRoom(room) {
-  const { data } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from("submissions")
-    .select("*")
+    .select("image_file_name, room")
     .eq("approval_status", "approved")
     .eq("room", room)
     .limit(50);
@@ -108,9 +108,28 @@ async function loadRoom(room) {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
 
+  if (error) {
+    console.error(error);
+    gallery.innerHTML = "<p>Error loading images</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    gallery.innerHTML = "<p>No images yet</p>";
+    return;
+  }
+
   data.forEach(item => {
+    if (!item.image_file_name) return;
+
+    const { data: imgData } = supabaseClient
+      .storage
+      .from("images") // 🔥 IMPORTANTISSIMO: stesso bucket della gallery
+      .getPublicUrl(item.image_file_name);
+
     const img = document.createElement("img");
-    img.src = item.image_url;
+    img.src = imgData.publicUrl;
+
     gallery.appendChild(img);
   });
 }
