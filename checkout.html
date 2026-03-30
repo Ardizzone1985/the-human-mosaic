@@ -766,8 +766,7 @@ window.location.href = data.url;
 
   } catch (error) {
     console.error(error);
-    alert("Something went wrong. Please try again.");
-
+alert(error.message || "Something went wrong. Please try again.");
     checkoutBtn.disabled = false;
     checkoutBtn.textContent = "Secure Your Spot & Continue";
   }
