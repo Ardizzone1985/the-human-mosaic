@@ -796,6 +796,30 @@
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
   );
 
+function animateCount(elementId, endValue, duration = 1200) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+
+  const startValue = 0;
+  const startTime = performance.now();
+
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const currentValue = Math.floor(startValue + (endValue - startValue) * progress);
+
+    element.textContent = currentValue.toLocaleString();
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      element.textContent = endValue.toLocaleString();
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+  
   async function loadStats() {
     try {
       const { data, error } = await supabaseClient
@@ -822,10 +846,10 @@
         if (item.room === "Creativity") creativity++;
       });
 
-      document.getElementById("count-total").textContent = total.toLocaleString();
-      document.getElementById("count-identity").textContent = identity.toLocaleString();
-      document.getElementById("count-love").textContent = love.toLocaleString();
-      document.getElementById("count-creativity").textContent = creativity.toLocaleString();
+      animateCount("count-total", total);
+animateCount("count-identity", identity);
+animateCount("count-love", love);
+animateCount("count-creativity", creativity);
 
       const totalPerRoom = 1000000;
       const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
