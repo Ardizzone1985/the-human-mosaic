@@ -745,25 +745,21 @@
         const instagram = encodeURIComponent(document.getElementById("instagram").value);
         const note = encodeURIComponent(document.getElementById("notes").value);
 
-        window.location.href =
-          `upload.html?room=${encodeURIComponent(currentRoom)}` +
-          `&wall=${encodeURIComponent(wall)}` +
-          `&section=${encodeURIComponent(section)}` +
-          `&spot=${encodeURIComponent(spot)}` +
-          `&slotCode=${encodeURIComponent(slotCode)}` +
-          `&price=${encodeURIComponent(price)}` +
-          `&fullName=${fullName}` +
-          `&email=${email}` +
-          `&country=${country}` +
-          `&instagram=${instagram}` +
-          `&note=${note}`;
-      } catch (error) {
-        alert(error.message || "Unable to reserve this slot.");
-        console.error("Slot reservation error:", error);
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = "Secure Your Spot & Continue";
-      }
-    });
+       const res = await fetch("/api/create-checkout-session", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    room: currentRoom,
+    slot: slotCode,
+    price: parseInt(price.replace(/[^\d]/g, "")) || 15
+  }),
+});
+
+const data = await res.json();
+
+window.location.href = data.url;
   </script>
 </body>
 </html>
