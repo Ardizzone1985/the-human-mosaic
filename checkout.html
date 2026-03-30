@@ -731,35 +731,42 @@
     }
 
     checkoutForm.addEventListener("submit", async function(e) {
-      e.preventDefault();
+  e.preventDefault();
 
-      checkoutBtn.disabled = true;
-      checkoutBtn.textContent = "Reserving slot...";
+  checkoutBtn.disabled = true;
+  checkoutBtn.textContent = "Reserving slot...";
 
-      try {
-        await reserveSelectedSlot();
+  try {
+    await reserveSelectedSlot();
 
-        const fullName = encodeURIComponent(document.getElementById("fullName").value);
-        const email = encodeURIComponent(document.getElementById("email").value);
-        const country = encodeURIComponent(document.getElementById("country").value);
-        const instagram = encodeURIComponent(document.getElementById("instagram").value);
-        const note = encodeURIComponent(document.getElementById("notes").value);
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        room: currentRoom,
+        slot: slotCode,
+        price: parseInt(price.replace(/[^\d]/g, "")) || 15
+      }),
+    });
 
-       const res = await fetch("/api/create-checkout-session", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    room: currentRoom,
-    slot: slotCode,
-    price: parseInt(price.replace(/[^\d]/g, "")) || 15
-  }),
+    const data = await res.json();
+
+    if (!data.url) {
+      throw new Error("Stripe session not created");
+    }
+
+    window.location.href = data.url;
+
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Please try again.");
+
+    checkoutBtn.disabled = false;
+    checkoutBtn.textContent = "Secure Your Spot & Continue";
+  }
 });
-
-const data = await res.json();
-
-window.location.href = data.url;
   </script>
 </body>
 </html>
