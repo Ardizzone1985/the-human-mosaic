@@ -417,6 +417,11 @@
             <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
             <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
 
+<div class="note-preview">
+  <div class="note-label">Optional Note</div>
+  <div>${item.note && item.note.trim() ? item.note : "No note provided."}</div>
+</div>
+
             <div class="card-top-actions">
               <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
             </div>
