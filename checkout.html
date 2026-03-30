@@ -627,14 +627,6 @@
     const { createClient } = supabase;
     const supabaseClient = createClient(
       "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-    );
-  </script>
-
-  <script>
-    const { createClient: createSupabaseClient } = supabase;
-    const supabaseClientFixed = createSupabaseClient(
-      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
     );
 
@@ -684,7 +676,7 @@
         throw new Error("Missing slot code.");
       }
 
-      const { data: slot, error: fetchError } = await supabaseClientFixed
+      const { data: slot, error: fetchError } = await supabaseClient
         .from("slots")
         .select("id, status, submission_id")
         .eq("slot_code", slotCode)
@@ -702,7 +694,7 @@
         throw new Error("This slot is no longer available.");
       }
 
-      const { error: updateError } = await supabaseClientFixed
+      const { error: updateError } = await supabaseClient
         .from("slots")
         .update({
           status: "reserved",
@@ -715,7 +707,7 @@
         throw new Error(updateError.message || "Unable to reserve slot.");
       }
 
-      const { data: verifySlot, error: verifyError } = await supabaseClientFixed
+      const { data: verifySlot, error: verifyError } = await supabaseClient
         .from("slots")
         .select("status")
         .eq("slot_code", slotCode)
@@ -731,46 +723,53 @@
     }
 
     checkoutForm.addEventListener("submit", async function(e) {
-  e.preventDefault();
+      e.preventDefault();
 
-  checkoutBtn.disabled = true;
-  checkoutBtn.textContent = "Reserving slot...";
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = "Reserving slot...";
 
-  try {
-    await reserveSelectedSlot();
+      try {
+        await reserveSelectedSlot();
 
-    const res = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        room: currentRoom,
-        slot: slotCode,
-        price: parseInt(price.replace(/[^\d]/g, "")) || 15
-      }),
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            room: currentRoom,
+            slot: slotCode,
+            price: parseInt(price.replace(/[^\d]/g, "")) || 15
+          }),
+        });
+
+        const raw = await res.text();
+        let data;
+
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          throw new Error(raw || "Server returned an invalid response.");
+        }
+
+        if (!res.ok) {
+          throw new Error(data.error || "Stripe session not created");
+        }
+
+        if (!data.url) {
+          throw new Error("Stripe session not created");
+        }
+
+        window.location.href = data.url;
+
+      } catch (error) {
+        console.error(error);
+        alert(error.message || "Something went wrong. Please try again.");
+
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = "Secure Your Spot & Continue";
+      }
     });
-
-    const data = await res.json();
-console.log("Stripe response:", data);
-
-if (!res.ok) {
-  throw new Error(data.error || "Stripe session not created");
-}
-
-if (!data.url) {
-  throw new Error("Stripe session not created");
-}
-
-window.location.href = data.url;
-
-  } catch (error) {
-    console.error(error);
-alert(error.message || "Something went wrong. Please try again.");
-    checkoutBtn.disabled = false;
-    checkoutBtn.textContent = "Secure Your Spot & Continue";
-  }
-});
   </script>
 </body>
 </html>
