@@ -583,13 +583,13 @@
 
         const title = document.createElement("div");
         title.className = "card-title";
-        title.textContent = "Approved Contribution";
+        title.textContent = `${item.room} Contribution`;
 
         const notePreview = document.createElement("div");
         notePreview.className = "card-note-preview";
         notePreview.textContent = item.note && item.note.trim()
           ? item.note
-          : "Open the image to view the participant note.";
+          : "No participant note provided.";
 
         info.appendChild(tag);
         info.appendChild(title);
