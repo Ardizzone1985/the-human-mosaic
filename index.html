@@ -759,55 +759,59 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const { createClient } = supabase;
+<script>
+  const { createClient } = supabase;
 
-    const supabaseClient = createClient(
-      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
-    );
+  const supabaseClient = createClient(
+    "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+    "LA_TUA_ANON_KEY"
+  );
 
-    async function loadStats() {
-      try {
-        const { data, error } = await supabaseClient
-          .from("slots")
-          .select("room, status");
+  async function loadStats() {
+    try {
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("room, approval_status");
 
-        if (error) {
-          console.error("Stats error:", error);
-          return;
-        }
-
-        let identity = 0;
-        let love = 0;
-        let creativity = 0;
-
-        data.forEach(item => {
-          if (item.status !== "submitted") return;
-
-          if (item.room === "Identity") identity++;
-          if (item.room === "Love") love++;
-          if (item.room === "Creativity") creativity++;
-        });
-
-        document.getElementById("count-identity").textContent = identity.toLocaleString();
-        document.getElementById("count-love").textContent = love.toLocaleString();
-        document.getElementById("count-creativity").textContent = creativity.toLocaleString();
-
-        const totalPerRoom = 1000000;
-        const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
-        const lovePercent = Math.min((love / totalPerRoom) * 100, 100);
-        const creativityPercent = Math.min((creativity / totalPerRoom) * 100, 100);
-
-        document.getElementById("progress-identity").style.width = `${identityPercent}%`;
-        document.getElementById("progress-love").style.width = `${lovePercent}%`;
-        document.getElementById("progress-creativity").style.width = `${creativityPercent}%`;
-      } catch (err) {
-        console.error("Unexpected stats error:", err);
+      if (error) {
+        console.error("Stats error:", error);
+        return;
       }
-    }
 
-    loadStats();
-  </script>
+      let total = 0;
+      let identity = 0;
+      let love = 0;
+      let creativity = 0;
+
+      data.forEach(item => {
+        if (item.approval_status !== "approved") return;
+
+        total++;
+
+        if (item.room === "Identity") identity++;
+        if (item.room === "Love") love++;
+        if (item.room === "Creativity") creativity++;
+      });
+
+      document.getElementById("count-total").textContent = total.toLocaleString();
+      document.getElementById("count-identity").textContent = identity.toLocaleString();
+      document.getElementById("count-love").textContent = love.toLocaleString();
+      document.getElementById("count-creativity").textContent = creativity.toLocaleString();
+
+      const totalPerRoom = 1000000;
+      const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
+      const lovePercent = Math.min((love / totalPerRoom) * 100, 100);
+      const creativityPercent = Math.min((creativity / totalPerRoom) * 100, 100);
+
+      document.getElementById("progress-identity").style.width = `${identityPercent}%`;
+      document.getElementById("progress-love").style.width = `${lovePercent}%`;
+      document.getElementById("progress-creativity").style.width = `${creativityPercent}%`;
+    } catch (err) {
+      console.error("Unexpected stats error:", err);
+    }
+  }
+
+  loadStats();
+</script>
 </body>
 </html>
