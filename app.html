@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Human Mosaic App</title>
+
+  <style>
+    body {
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#111;
+      color:white;
+    }
+
+    .container {
+      padding:20px;
+    }
+
+    h1 {
+      text-align:center;
+      margin-bottom:10px;
+    }
+
+    .rooms {
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .room-btn {
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid #444;
+      background:#222;
+      color:white;
+      cursor:pointer;
+    }
+
+    .gallery {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:10px;
+    }
+
+    .gallery img {
+      width:100%;
+      border-radius:10px;
+    }
+
+    .cta {
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:#000;
+      padding:15px;
+      text-align:center;
+    }
+
+    .cta a {
+      background:white;
+      color:#111;
+      padding:10px 20px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>The Human Mosaic</h1>
+
+  <div class="rooms">
+    <button class="room-btn" onclick="loadRoom('Identity')">Identity</button>
+    <button class="room-btn" onclick="loadRoom('Love')">Love</button>
+    <button class="room-btn" onclick="loadRoom('Creativity')">Creativity</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<div class="cta">
+  <a href="https://thehumanmosaic.art">Join the Project</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
+  "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
+  "YOUR_PUBLIC_KEY"
+);
+
+async function loadRoom(room) {
+  const { data } = await supabaseClient
+    .from("submissions")
+    .select("*")
+    .eq("approval_status", "approved")
+    .eq("room", room)
+    .limit(50);
+
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
+
+  data.forEach(item => {
+    const img = document.createElement("img");
+    img.src = item.image_url;
+    gallery.appendChild(img);
+  });
+}
+</script>
+
+</body>
+</html>
