@@ -13,32 +13,120 @@
     }
 
     body {
-  font-family: Arial, sans-serif;
-  background: url('hero-background.jpg') center/cover no-repeat fixed;
-  padding: 40px;
-  margin: 0;
-}
+      font-family: Arial, sans-serif;
+      background:
+        linear-gradient(rgba(248,248,246,0.78), rgba(248,248,246,0.88)),
+        url('hero-background.jpg') center/cover no-repeat fixed;
+      padding: 40px;
+      margin: 0;
+      color: #111;
+    }
 
-.container {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(8px);
-  border-radius: 20px;
-  padding: 20px;
-}
+    .container {
+      width: min(1250px, 95%);
+      margin: 0 auto;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #111;
+    }
+
+    .brand img {
+      height: 74px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-tagline {
+      font-size: 0.78rem;
+      color: #666;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
 
     h1 {
       text-align: center;
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      margin-bottom: 14px;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      margin: 10px 0 12px;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
     }
 
     .subtitle {
       text-align: center;
       color: #555;
-      max-width: 760px;
+      max-width: 780px;
       margin: 0 auto 30px;
-      font-size: 1.05rem;
-      line-height: 1.6;
+      font-size: 1.06rem;
+      line-height: 1.7;
+    }
+
+    .top-actions {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .join-btn,
+    .ghost-btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .join-btn {
+      background: #111;
+      color: white;
+      border: 1px solid #111;
+    }
+
+    .join-btn:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    .ghost-btn {
+      background: white;
+      color: #111;
+      border: 1px solid #111;
+    }
+
+    .ghost-btn:hover {
+      background: #111;
+      color: white;
     }
 
     .filters {
@@ -46,7 +134,7 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .filter-btn {
@@ -66,85 +154,247 @@
       color: white;
     }
 
-    .top-actions {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .join-btn {
-      display: inline-block;
-      text-decoration: none;
-      background: #111;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 16px;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .join-btn:hover {
-      background: #333;
-      transform: translateY(-1px);
-    }
-
     .status-message {
       text-align: center;
       margin-bottom: 22px;
       color: #666;
       min-height: 24px;
+      font-size: 0.96rem;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 20px;
     }
 
     .card {
-      background: white;
-      border-radius: 18px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
       overflow: hidden;
       border: 1px solid #ddd;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.09);
     }
 
     .card img {
       width: 100%;
-      height: 240px;
+      height: 260px;
       object-fit: cover;
       display: block;
       background: #eee;
+      cursor: zoom-in;
     }
 
     .card-info {
-      padding: 12px 14px;
+      padding: 14px 16px 16px;
     }
 
     .room-tag {
       display: inline-block;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
       margin-bottom: 6px;
+    }
+
+    .card-note-preview {
+      color: #666;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 2.8em;
     }
 
     .cta-bottom {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 42px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .error {
-      color: red;
+      color: #c72222;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 999;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(1100px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.28);
+      position: relative;
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      display: block;
+      border: none;
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin: 18px 18px 0 auto;
+      z-index: 2;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 0;
+    }
+
+    .modal-image-wrap {
+      background: #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+      padding: 0;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      display: block;
+      background: #f2f2f2;
+    }
+
+    .modal-info {
+      padding: 28px;
+      border-left: 1px solid #eee;
+    }
+
+    .modal-room {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.7rem;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .modal-note-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #777;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .modal-note {
+      color: #333;
+      font-size: 1rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .modal-note.empty {
+      color: #888;
+      font-style: italic;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 18px;
+      }
+
+      .container {
+        padding: 18px;
+        border-radius: 22px;
+      }
+
+      .topbar {
+        justify-content: center;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-info {
+        border-left: none;
+        border-top: 1px solid #eee;
+      }
+
+      .card img {
+        height: 220px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="topbar">
+      <a href="index.html" class="brand">
+        <img src="logo-cropped.png" alt="The Human Mosaic logo">
+        <div class="brand-text">
+          <div class="brand-title">The Human Mosaic</div>
+          <div class="brand-tagline">One Humanity. Millions of Faces. One Mosaic.</div>
+        </div>
+      </a>
+
+      <a class="ghost-btn" href="index.html">Back Home</a>
+    </div>
+
     <h1>Live Gallery</h1>
     <p class="subtitle">
       Explore approved contributions from the three rooms of The Human Mosaic.
-      Identity, Love, and Creativity are already taking shape.
+      Each image represents a real position inside a growing collective artwork.
     </p>
 
     <div class="top-actions">
@@ -164,6 +414,24 @@
 
     <div class="cta-bottom">
       <a class="join-btn" href="join.html">Join The Human Mosaic</a>
+      <a class="ghost-btn" href="index.html#rooms">Explore the Rooms</a>
+    </div>
+  </div>
+
+  <div class="modal" id="imageModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModalBtn" aria-label="Close">×</button>
+      <div class="modal-body">
+        <div class="modal-image-wrap">
+          <img id="modalImage" class="modal-image" src="" alt="Expanded gallery image">
+        </div>
+        <div class="modal-info">
+          <div id="modalRoom" class="modal-room">Room</div>
+          <h2 id="modalTitle" class="modal-title">Approved Contribution</h2>
+          <div class="modal-note-label">Participant Note</div>
+          <div id="modalNote" class="modal-note">—</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -178,7 +446,52 @@
     const statusMessage = document.getElementById("statusMessage");
     const filterButtons = document.querySelectorAll(".filter-btn");
 
+    const imageModal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalRoom = document.getElementById("modalRoom");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalNote = document.getElementById("modalNote");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
     let currentRoom = "ALL";
+
+    function openModal(imageUrl, room, note) {
+      modalImage.src = imageUrl;
+      modalRoom.textContent = room || "Unknown Room";
+      modalTitle.textContent = `${room || "Gallery"} Contribution`;
+
+      const cleanedNote = (note || "").trim();
+      if (cleanedNote) {
+        modalNote.textContent = cleanedNote;
+        modalNote.classList.remove("empty");
+      } else {
+        modalNote.textContent = "No note provided for this submission.";
+        modalNote.classList.add("empty");
+      }
+
+      imageModal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      imageModal.classList.remove("open");
+      modalImage.src = "";
+      document.body.style.overflow = "";
+    }
+
+    closeModalBtn.addEventListener("click", closeModal);
+
+    imageModal.addEventListener("click", (e) => {
+      if (e.target === imageModal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && imageModal.classList.contains("open")) {
+        closeModal();
+      }
+    });
 
     async function loadImages(roomFilter = "ALL") {
       gallery.innerHTML = "";
@@ -186,7 +499,7 @@
 
       let query = supabaseClient
         .from("submissions")
-        .select("image_file_name, room")
+        .select("image_file_name, room, note")
         .eq("approval_status", "approved");
 
       if (roomFilter !== "ALL") {
@@ -194,9 +507,6 @@
       }
 
       const { data, error } = await query;
-
-      console.log("DATA:", data);
-      console.log("ERROR:", error);
 
       if (error) {
         statusMessage.textContent = "Error loading gallery.";
@@ -235,6 +545,10 @@
         img.src = imgData.publicUrl;
         img.alt = `${item.room} contribution`;
 
+        img.addEventListener("click", () => {
+          openModal(imgData.publicUrl, item.room, item.note);
+        });
+
         const info = document.createElement("div");
         info.className = "card-info";
 
@@ -242,7 +556,20 @@
         tag.className = "room-tag";
         tag.textContent = item.room;
 
+        const title = document.createElement("div");
+        title.className = "card-title";
+        title.textContent = "Approved Contribution";
+
+        const notePreview = document.createElement("div");
+        notePreview.className = "card-note-preview";
+        notePreview.textContent = item.note && item.note.trim()
+          ? item.note
+          : "Open the image to view the participant note.";
+
         info.appendChild(tag);
+        info.appendChild(title);
+        info.appendChild(notePreview);
+
         card.appendChild(img);
         card.appendChild(info);
 
