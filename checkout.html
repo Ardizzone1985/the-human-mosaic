@@ -752,12 +752,17 @@
     });
 
     const data = await res.json();
+console.log("Stripe response:", data);
 
-    if (!data.url) {
-      throw new Error("Stripe session not created");
-    }
+if (!res.ok) {
+  throw new Error(data.error || "Stripe session not created");
+}
 
-    window.location.href = data.url;
+if (!data.url) {
+  throw new Error("Stripe session not created");
+}
+
+window.location.href = data.url;
 
   } catch (error) {
     console.error(error);
