@@ -1,139 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Human Mosaic App</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    body {
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:#111;
-      color:white;
+    * {
+      box-sizing: border-box;
     }
 
-    .container {
-      padding:20px;
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(8,8,10,0.92), rgba(8,8,10,0.96)),
+        url('hero-background.jpg') center/cover no-repeat fixed;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+      padding: 26px 0 120px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .topbar img {
+      height: 72px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tagline {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.68);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-box {
+      max-width: 860px;
+      margin: 0 auto 28px;
+      text-align: center;
+      padding: 30px 22px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.05em;
     }
 
     h1 {
-      text-align:center;
-      margin-bottom:10px;
+      font-size: clamp(2.3rem, 6vw, 4.4rem);
+      line-height: 0.98;
+      margin: 0 0 14px;
+      letter-spacing: -0.03em;
     }
 
-    .rooms {
-      display:flex;
-      gap:10px;
-      justify-content:center;
-      margin-bottom:20px;
-      flex-wrap:wrap;
+    .subtitle {
+      max-width: 720px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.80);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .room-selector {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 28px 0 14px;
     }
 
     .room-btn {
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid #444;
-      background:#222;
-      color:white;
-      cursor:pointer;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      padding: 13px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.96rem;
+      transition: 0.22s ease;
+      min-width: 120px;
+    }
+
+    .room-btn:hover,
+    .room-btn.active {
+      background: white;
+      color: #111;
+      transform: translateY(-2px);
+    }
+
+    .status-message {
+      text-align: center;
+      min-height: 24px;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.70);
+      font-size: 0.95rem;
     }
 
     .gallery {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-      gap:10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 18px;
     }
 
-    .gallery img {
-      width:100%;
-      border-radius:10px;
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
     }
 
-    .cta {
-      position:fixed;
-      bottom:0;
-      left:0;
-      right:0;
-      background:#000;
-      padding:15px;
-      text-align:center;
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.22);
     }
 
-    .cta a {
-      background:white;
-      color:#111;
-      padding:10px 20px;
-      border-radius:999px;
-      text-decoration:none;
-      font-weight:bold;
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+      background: #ddd;
+    }
+
+    .card-info {
+      padding: 14px 14px 16px;
+      color: #111;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(248,248,246,0.98));
+    }
+
+    .room-tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #444;
+      background: #f3f3f1;
+      border: 1px solid #e7e7e2;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card-note-preview {
+      color: #666;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 4.4em;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.72);
+    }
+
+    .cta-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 16px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.10);
+      z-index: 50;
+    }
+
+    .cta-inner {
+      width: min(900px, 94%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-copy {
+      color: rgba(255,255,255,0.84);
+      font-size: 0.95rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: white;
+      color: #111;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      background: #f2f2f2;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(1100px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 26px 70px rgba(0,0,0,0.35);
+      position: relative;
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      display: block;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 999px;
+      background: #111;
+      color: white;
+      font-size: 1.15rem;
+      cursor: pointer;
+      margin: 18px 18px 0 auto;
+      z-index: 5;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .modal-image-wrap {
+      background: linear-gradient(135deg, #f0f0f0, #e7e7e7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
+      background: #f2f2f2;
+    }
+
+    .modal-info {
+      padding: 30px;
+      border-left: 1px solid #ececec;
+      color: #111;
+      background: linear-gradient(to bottom, #ffffff, #fbfbfa);
+    }
+
+    .modal-room {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: #555;
+      background: #f2f2f0;
+      border: 1px solid #e7e7e2;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      line-height: 1.08;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-badge {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #111;
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .modal-note-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #777;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .modal-note {
+      color: #333;
+      font-size: 1rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      padding: 16px 18px;
+      background: #fcfcfb;
+      border: 1px solid #ececec;
+      border-radius: 16px;
+    }
+
+    .modal-note.empty {
+      color: #888;
+      font-style: italic;
+    }
+
+    @media (max-width: 900px) {
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-info {
+        border-left: none;
+        border-top: 1px solid #ececec;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app-shell {
+        padding-bottom: 130px;
+      }
+
+      .topbar img {
+        height: 60px;
+      }
+
+      .brand-title {
+        font-size: 1.45rem;
+      }
+
+      .hero-box {
+        padding: 24px 16px;
+        border-radius: 24px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .card img {
+        height: 190px;
+      }
+
+      .cta-inner {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .cta-copy {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="app-shell">
+    <div class="topbar">
+      <img src="logo-cropped.png" alt="The Human Mosaic logo" />
+      <div class="brand-copy">
+        <div class="brand-title">The Human Mosaic</div>
+        <div class="brand-tagline">One Humanity. Millions of Faces. One Mosaic.</div>
+      </div>
+    </div>
 
-<div class="container">
-  <h1>The Human Mosaic</h1>
+    <div class="hero-box">
+      <div class="hero-badge">Public Live Gallery</div>
+      <h1>Explore the mosaic in real time.</h1>
+      <p class="subtitle">
+        Discover approved submissions from Identity, Love, and Creativity.
+        A living global artwork, visible one image at a time.
+      </p>
+    </div>
 
-  <div class="rooms">
-    <button class="room-btn" onclick="loadRoom('Identity')">Identity</button>
-    <button class="room-btn" onclick="loadRoom('Love')">Love</button>
-    <button class="room-btn" onclick="loadRoom('Creativity')">Creativity</button>
+    <div class="room-selector">
+      <button class="room-btn active" data-room="Identity">Identity</button>
+      <button class="room-btn" data-room="Love">Love</button>
+      <button class="room-btn" data-room="Creativity">Creativity</button>
+    </div>
+
+    <div id="statusMessage" class="status-message">Select a room to begin.</div>
+
+    <div class="gallery" id="gallery"></div>
   </div>
 
-  <div class="gallery" id="gallery"></div>
-</div>
+  <div class="cta-bar">
+    <div class="cta-inner">
+      <div class="cta-copy">Want to become part of the mosaic?</div>
+      <a href="https://thehumanmosaic.art/join.html" class="cta-btn">Join the Project</a>
+    </div>
+  </div>
 
-<div class="cta">
-  <a href="https://thehumanmosaic.art">Join the Project</a>
-</div>
+  <div class="modal" id="imageModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModalBtn" aria-label="Close">×</button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const { createClient } = supabase;
+      <div class="modal-body">
+        <div class="modal-image-wrap">
+          <img id="modalImage" class="modal-image" src="" alt="Expanded gallery image" />
+        </div>
 
-const supabaseClient = createClient(
-  "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
-);
+        <div class="modal-info">
+          <div id="modalRoom" class="modal-room">Room</div>
+          <h2 id="modalTitle" class="modal-title">Approved Contribution</h2>
+          <div class="modal-badge">Approved Submission</div>
 
-async function loadRoom(room) {
-  const { data, error } = await supabaseClient
-    .from("submissions")
-    .select("image_file_name, room")
-    .eq("approval_status", "approved")
-    .eq("room", room)
-    .limit(50);
+          <div class="modal-note-label">Participant Note</div>
+          <div id="modalNote" class="modal-note">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "";
+  <script>
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY";
+    const BUCKET = "images";
 
-  if (error) {
-    console.error(error);
-    gallery.innerHTML = "<p>Error loading images</p>";
-    return;
-  }
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  if (!data || data.length === 0) {
-    gallery.innerHTML = "<p>No images yet</p>";
-    return;
-  }
+    const gallery = document.getElementById("gallery");
+    const statusMessage = document.getElementById("statusMessage");
+    const roomButtons = document.querySelectorAll(".room-btn");
 
-  data.forEach(item => {
-    if (!item.image_file_name) return;
+    const imageModal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalRoom = document.getElementById("modalRoom");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalNote = document.getElementById("modalNote");
+    const closeModalBtn = document.getElementById("closeModalBtn");
 
-    const { data: imgData } = supabaseClient
-      .storage
-      .from("images") // 🔥 IMPORTANTISSIMO: stesso bucket della gallery
-      .getPublicUrl(item.image_file_name);
+    let currentRoom = "Identity";
 
-    const img = document.createElement("img");
-    img.src = imgData.publicUrl;
+    function openModal(imageUrl, room, note) {
+      modalImage.src = imageUrl;
+      modalRoom.textContent = room || "Unknown Room";
+      modalTitle.textContent = `${room || "Gallery"} Contribution`;
 
-    gallery.appendChild(img);
-  });
-}
-</script>
+      const cleanedNote = (note || "").trim();
+      if (cleanedNote) {
+        modalNote.textContent = cleanedNote;
+        modalNote.classList.remove("empty");
+      } else {
+        modalNote.textContent = "No note provided for this submission.";
+        modalNote.classList.add("empty");
+      }
 
+      imageModal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      imageModal.classList.remove("open");
+      modalImage.src = "";
+      document.body.style.overflow = "";
+    }
+
+    closeModalBtn.addEventListener("click", closeModal);
+
+    imageModal.addEventListener("click", (e) => {
+      if (e.target === imageModal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && imageModal.classList.contains("open")) {
+        closeModal();
+      }
+    });
+
+    async function loadRoom(room) {
+      gallery.innerHTML = "";
+      statusMessage.textContent = `Loading ${room}...`;
+
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("image_file_name, room, note")
+        .eq("approval_status", "approved")
+        .eq("room", room)
+        .limit(60);
+
+      if (error) {
+        console.error(error);
+        statusMessage.textContent = "Error loading images.";
+        gallery.innerHTML = `
+          <div class="empty-state">
+            Something went wrong while loading this room.
+          </div>
+        `;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        statusMessage.textContent = `No approved submissions yet in ${room}.`;
+        gallery.innerHTML = `
+          <div class="empty-state">
+            No approved submissions are visible in ${room} yet.
+          </div>
+        `;
+        return;
+      }
+
+      statusMessage.textContent = `${data.length} approved submission(s) currently visible in ${room}.`;
+
+      data.forEach(item => {
+        if (!item.image_file_name) return;
+
+        const { data: imgData } = supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(item.image_file_name);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = imgData.publicUrl;
+        img.alt = `${item.room} contribution`;
+
+        const info = document.createElement("div");
+        info.className = "card-info";
+
+        const tag = document.createElement("div");
+        tag.className = "room-tag";
+        tag.textContent = item.room;
+
+        const title = document.createElement("div");
+        title.className = "card-title";
+        title.textContent = `${item.room} Contribution`;
+
+        const notePreview = document.createElement("div");
+        notePreview.className = "card-note-preview";
+        notePreview.textContent = item.note && item.note.trim()
+          ? item.note
+          : "No participant note provided.";
+
+        card.addEventListener("click", () => {
+          openModal(imgData.publicUrl, item.room, item.note);
+        });
+
+        img.onerror = () => {
+          card.remove();
+          console.error("Image not found:", item.image_file_name);
+        };
+
+        info.appendChild(tag);
+        info.appendChild(title);
+        info.appendChild(notePreview);
+
+        card.appendChild(img);
+        card.appendChild(info);
+
+        gallery.appendChild(card);
+      });
+    }
+
+    roomButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        roomButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentRoom = button.dataset.room;
+        loadRoom(currentRoom);
+      });
+    });
+
+    loadRoom(currentRoom);
+  </script>
 </body>
 </html>
