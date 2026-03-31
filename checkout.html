@@ -736,10 +736,14 @@
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            room: currentRoom,
-            slot: slotCode,
-            price: parseInt(price.replace(/[^\d]/g, "")) || 15
+         body: JSON.stringify({
+  room: currentRoom,
+  slot: slotCode,
+  price: parseInt(price.replace(/[^\d]/g, "")) || 15,
+  fullName: document.getElementById("fullName").value,
+  email: document.getElementById("email").value,
+  country: document.getElementById("country").value,
+  note: document.getElementById("notes").value
           }),
         });
 
