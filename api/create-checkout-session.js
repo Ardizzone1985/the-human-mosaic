@@ -29,7 +29,8 @@ export default async function handler(req, res) {
 
     // Costruiamo la URL di ritorno (IMPORTANTISSIMO)
     const successUrl =
-      `https://thehumanmosaic.art/upload.html` +
+  `https://thehumanmosaic.art/upload.html` +
+  `?session_id={CHECKOUT_SESSION_ID}` +
       `?room=${encodeURIComponent(room)}` +
       `&slotCode=${encodeURIComponent(slot)}` +
       `&fullName=${encodeURIComponent(fullName || "")}` +
