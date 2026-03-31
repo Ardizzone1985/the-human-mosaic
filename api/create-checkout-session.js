@@ -29,8 +29,7 @@ export default async function handler(req, res) {
           quantity: 1
         }
       ],
-      success_url: `https://thehumanmosaic.art/upload.html?room=${encodeURIComponent(room)}&slotCode=${encodeURIComponent(slot)}`,
-      cancel_url: `https://thehumanmosaic.art/checkout.html`
+success_url: `https://thehumanmosaic.art/upload.html?room=${encodeURIComponent(room)}&slotCode=${encodeURIComponent(slot)}&fullName=${encodeURIComponent(req.body.fullName || "")}&email=${encodeURIComponent(req.body.email || "")}&country=${encodeURIComponent(req.body.country || "")}&note=${encodeURIComponent(req.body.note || "")}`      cancel_url: `https://thehumanmosaic.art/checkout.html`
     });
 
     return res.status(200).json({ url: session.url });
