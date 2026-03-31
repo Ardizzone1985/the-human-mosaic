@@ -433,6 +433,42 @@
 
     const params = new URLSearchParams(window.location.search);
 
+    // 🔒 PAYMENT VERIFICATION
+(async function verifyPayment() {
+  const sessionId = params.get("session_id");
+
+  if (!sessionId) {
+    alert("Access denied. Invalid session.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/verify-payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ session_id: sessionId })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert("Payment verification failed.");
+      window.location.href = "checkout.html";
+      return;
+    }
+
+    console.log("Payment verified ✅");
+
+  } catch (err) {
+    console.error("Verification error:", err);
+    alert("Server error during verification.");
+    window.location.href = "checkout.html";
+  }
+})();
+
     const room = params.get("room") || "Identity";
     const wall = params.get("wall") || "Front Wall";
     const section = params.get("section") || "F1";
