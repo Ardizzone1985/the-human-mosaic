@@ -3,17 +3,41 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
+  // Metodo consentito
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { price, room, slot } = req.body;
+    // Prendiamo tutti i dati dal body
+    const {
+      price,
+      room,
+      slot,
+      fullName,
+      email,
+      country,
+      note
+    } = req.body || {};
 
+    // Validazione base
     if (!price || !room || !slot) {
-      return res.status(400).json({ error: "Missing required checkout data" });
+      return res.status(400).json({
+        error: "Missing required checkout data"
+      });
     }
 
+    // Costruiamo la URL di ritorno (IMPORTANTISSIMO)
+    const successUrl =
+      `https://thehumanmosaic.art/upload.html` +
+      `?room=${encodeURIComponent(room)}` +
+      `&slotCode=${encodeURIComponent(slot)}` +
+      `&fullName=${encodeURIComponent(fullName || "")}` +
+      `&email=${encodeURIComponent(email || "")}` +
+      `&country=${encodeURIComponent(country || "")}` +
+      `&note=${encodeURIComponent(note || "")}`;
+
+    // Creazione sessione Stripe
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -29,12 +53,18 @@ export default async function handler(req, res) {
           quantity: 1
         }
       ],
-success_url: `https://thehumanmosaic.art/upload.html?room=${encodeURIComponent(room)}&slotCode=${encodeURIComponent(slot)}&fullName=${encodeURIComponent(req.body.fullName || "")}&email=${encodeURIComponent(req.body.email || "")}&country=${encodeURIComponent(req.body.country || "")}&note=${encodeURIComponent(req.body.note || "")}`      cancel_url: `https://thehumanmosaic.art/checkout.html`
+      success_url: successUrl,
+      cancel_url: "https://thehumanmosaic.art/checkout.html"
     });
 
+    // Ritorniamo URL Stripe
     return res.status(200).json({ url: session.url });
+
   } catch (err) {
     console.error("STRIPE ERROR:", err);
-    return res.status(500).json({ error: err.message });
+
+    return res.status(500).json({
+      error: err.message || "Stripe session creation failed"
+    });
   }
 }
