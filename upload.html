@@ -453,7 +453,9 @@
     });
 
     const data = await res.json();
-
+    
+console.log("Verify response:", data);
+    
     if (!res.ok) {
       alert("Payment verification failed.");
       window.location.href = "checkout.html";
