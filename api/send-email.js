@@ -180,6 +180,9 @@ async function generateCertificatePdf(data, req) {
 export default async function handler(req, res) {
   try {
     const body = await getJsonBody(req);
+    if (!body.email || body.email === "—") {
+  return res.status(400).json({ error: "Invalid email" });
+}
 
     const pdfBytes = await generateCertificatePdf(body, req);
 
