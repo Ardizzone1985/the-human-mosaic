@@ -630,7 +630,28 @@
       });
     }
 
+    async function releaseExpiredSlots() {
+  const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+
+  const { error } = await supabaseClient
+    .from("slots")
+    .update({
+      status: "available",
+      reserved_at: null,
+      submission_id: null
+    })
+    .eq("status", "reserved")
+    .lt("reserved_at", fifteenMinutesAgo);
+
+  if (error) {
+    console.error("Error releasing expired slots:", error);
+  } else {
+    console.log("Expired slots released ✅");
+  }
+}
+    
     async function loadSlots() {
+      await releaseExpiredSlots();
       spotGrid.innerHTML = "";
       statusPill.textContent = "Loading slots...";
 
