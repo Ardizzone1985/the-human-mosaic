@@ -671,6 +671,58 @@
     const checkoutForm = document.getElementById("checkoutForm");
     const checkoutBtn = document.querySelector(".checkout-btn");
 
+const HOLD_MINUTES = 15;
+
+function getExpiryIso(minutes = HOLD_MINUTES) {
+  return new Date(Date.now() - minutes * 60 * 1000).toISOString();
+}
+
+function isExpiredReserved(reservedAt) {
+  if (!reservedAt) return false;
+  const reservedTime = new Date(reservedAt).getTime();
+  const now = Date.now();
+  return now - reservedTime > HOLD_MINUTES * 60 * 1000;
+}
+
+async function releaseExpiredReservedSlots() {
+  const expiryIso = getExpiryIso();
+
+  const { error } = await supabaseClient
+    .from("slots")
+    .update({
+      status: "available",
+      reserved_at: null,
+      submission_id: null
+    })
+    .eq("status", "reserved")
+    .lt("reserved_at", expiryIso);
+
+  if (error) {
+    console.error("Expired slots cleanup error:", error);
+  }
+}
+
+async function releaseCancelledSlotIfNeeded() {
+  const cancelled = params.get("cancelled");
+  if (cancelled !== "1" || !slotCode) return;
+
+  const { error } = await supabaseClient
+    .from("slots")
+    .update({
+      status: "available",
+      reserved_at: null,
+      submission_id: null
+    })
+    .eq("slot_code", slotCode)
+    .eq("status", "reserved");
+
+  if (error) {
+    console.error("Cancelled slot release error:", error);
+  } else {
+    console.log("Cancelled checkout slot released ✅");
+  }
+}
+    
     async function reserveSelectedSlot() {
       if (!slotCode) {
         throw new Error("Missing slot code.");
