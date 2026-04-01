@@ -742,9 +742,37 @@ async function releaseCancelledSlotIfNeeded() {
         throw new Error("Selected slot not found.");
       }
 
-      if (slot.status !== "available") {
-        throw new Error("This slot is no longer available.");
-      }
+      if (slot.status === "reserved" && isExpiredReserved(slot.reserved_at)) {
+  const { error: releaseError } = await supabaseClient
+    .from("slots")
+    .update({
+      status: "available",
+      reserved_at: null,
+      submission_id: null
+    })
+    .eq("slot_code", slotCode)
+    .eq("status", "reserved");
+
+  if (releaseError) {
+    throw new Error(releaseError.message || "Unable to release expired slot.");
+  }
+
+  const { data: refreshedSlot, error: refreshedError } = await supabaseClient
+    .from("slots")
+    .select("id, status, submission_id, reserved_at")
+    .eq("slot_code", slotCode)
+    .single();
+
+  if (refreshedError) {
+    throw new Error(refreshedError.message || "Unable to reload slot.");
+  }
+
+  if (!refreshedSlot || refreshedSlot.status !== "available") {
+    throw new Error("This slot is no longer available.");
+  }
+} else if (slot.status !== "available") {
+  throw new Error("This slot is no longer available.");
+}
 
       const { error: updateError } = await supabaseClient
         .from("slots")
