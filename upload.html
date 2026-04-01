@@ -643,9 +643,10 @@ console.log("Verify response:", data);
       const submissionId = generateSubmissionId();
 
       const fileExt = (file.name.split(".").pop() || "").toLowerCase();
-      const safeExt = fileExt || "jpg";
-      const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
-      const filePath = `${safeSubmissionId}.${safeExt}`;
+const safeExt = fileExt || "jpg";
+const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
+const uniqueSuffix = Date.now();
+const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
 
       // 1) Upload file to Supabase Storage
       const { error: uploadError } = await supabaseClient
