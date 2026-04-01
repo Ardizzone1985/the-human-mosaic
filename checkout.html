@@ -730,7 +730,7 @@ async function releaseCancelledSlotIfNeeded() {
 
       const { data: slot, error: fetchError } = await supabaseClient
         .from("slots")
-        .select("id, status, submission_id")
+        .select("id, status, submission_id, reserved_at")
         .eq("slot_code", slotCode)
         .single();
 
