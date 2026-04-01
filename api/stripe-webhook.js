@@ -36,7 +36,23 @@ export default async function handler(req, res) {
       case "checkout.session.completed": {
         const session = event.data.object;
 
-        console.log("✅ Stripe webhook: checkout.session.completed", {
+        console.log("✅ Webhook received: checkout.session.completed");
+        console.log({
+          sessionId: session.id,
+          paymentStatus: session.payment_status,
+          customerEmail: session.customer_details?.email || null,
+          amountTotal: session.amount_total || null,
+          currency: session.currency || null
+        });
+
+        break;
+      }
+
+      case "checkout.session.expired": {
+        const session = event.data.object;
+
+        console.log("⌛ Webhook received: checkout.session.expired");
+        console.log({
           sessionId: session.id,
           paymentStatus: session.payment_status,
           customerEmail: session.customer_details?.email || null
