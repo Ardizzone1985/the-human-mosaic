@@ -802,6 +802,11 @@ async function releaseCancelledSlotIfNeeded() {
       }
     }
 
+(async function initializeCheckoutSafety() {
+  await releaseExpiredReservedSlots();
+  await releaseCancelledSlotIfNeeded();
+})();
+    
     checkoutForm.addEventListener("submit", async function(e) {
       e.preventDefault();
 
