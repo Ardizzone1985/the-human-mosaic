@@ -54,6 +54,14 @@ export default async function handler(req, res) {
           quantity: 1
         }
       ],
+      metadata: {
+  room,
+  slotCode: slot,
+  fullName: fullName || "",
+  email: email || "",
+  country: country || "",
+  note: note || ""
+},
       success_url: successUrl,
       cancel_url:
   `https://thehumanmosaic.art/checkout.html` +
