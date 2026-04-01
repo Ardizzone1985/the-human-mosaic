@@ -640,8 +640,7 @@ console.log("Verify response:", data);
     submitBtn.textContent = "Finalizing submission...";
 
     try {
-      const submissionId = generateSubmissionId();
-
+const submissionId = crypto.randomUUID();
       const fileExt = (file.name.split(".").pop() || "").toLowerCase();
 const safeExt = fileExt || "jpg";
 const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
