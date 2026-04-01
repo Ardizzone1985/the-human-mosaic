@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     const successUrl =
   `https://thehumanmosaic.art/upload.html` +
   `?session_id={CHECKOUT_SESSION_ID}` +
-      `?room=${encodeURIComponent(room)}` +
+      `&room=${encodeURIComponent(room)}` +
       `&slotCode=${encodeURIComponent(slot)}` +
       `&fullName=${encodeURIComponent(fullName || "")}` +
       `&email=${encodeURIComponent(email || "")}` +
