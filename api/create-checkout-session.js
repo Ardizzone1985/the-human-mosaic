@@ -55,7 +55,11 @@ export default async function handler(req, res) {
         }
       ],
       success_url: successUrl,
-      cancel_url: "https://thehumanmosaic.art/checkout.html"
+      cancel_url:
+  `https://thehumanmosaic.art/checkout.html` +
+  `?room=${encodeURIComponent(room)}` +
+  `&slotCode=${encodeURIComponent(slot)}` +
+  `&cancelled=1`
     });
 
     // Ritorniamo URL Stripe
