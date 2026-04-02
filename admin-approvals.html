@@ -532,6 +532,16 @@ if (aiFilter !== "ALL") {
       });
     });
 
+const aiFilterButtons = document.querySelectorAll(".ai-filter-btn");
+aiFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    aiFilterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentAi = button.dataset.ai;
+    loadSubmissions(currentStatus, currentRoom, currentAi);
+  });
+});
+    
     const statusFilterButtons = document.querySelectorAll(".status-filter-btn");
     statusFilterButtons.forEach(button => {
       button.addEventListener("click", () => {
