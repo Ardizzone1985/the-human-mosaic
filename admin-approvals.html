@@ -305,6 +305,12 @@
       <button class="filter-btn" data-room="Creativity">Creativity</button>
     </div>
 
+    <div class="ai-filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+  <button class="filter-btn active ai-filter-btn" data-ai="ALL">All AI</button>
+  <button class="filter-btn ai-filter-btn" data-ai="review">Review Only</button>
+  <button class="filter-btn ai-filter-btn" data-ai="reject">Reject Only</button>
+</div>
+
     <div id="grid" class="grid"></div>
   </div>
 
@@ -320,6 +326,7 @@
 
     let currentRoom = "ALL";
     let currentStatus = "pending";
+    let currentAi = "ALL";
 
     function getRoomBadgeClass(room) {
       if (room === "Identity") return "badge-room-identity";
@@ -373,7 +380,7 @@
       document.getElementById("count-rejected").textContent = rejected.toLocaleString();
     }
 
-    async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL") {
+    async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL", aiFilter = "ALL") {
       grid.innerHTML = "";
       statusBox.textContent = "Loading submissions...";
 
