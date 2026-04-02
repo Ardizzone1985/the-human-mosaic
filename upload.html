@@ -731,6 +731,7 @@ const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
       }
 
       const noteModeration = moderateNote(note);
+      const imageModeration = moderateImage(file);
       const submissionData = {
         submissionId,
         fullName,
