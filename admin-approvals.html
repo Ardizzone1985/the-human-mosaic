@@ -381,104 +381,104 @@
     }
 
     async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL", aiFilter = "ALL") {
-      grid.innerHTML = "";
-      statusBox.textContent = "Loading submissions...";
+  grid.innerHTML = "";
+  statusBox.textContent = "Loading submissions...";
 
-      let query = supabaseClient
-        .from("submissions")
-        .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at, note, moderation_status, moderation_reason, note_flagged, image_moderation_status, image_moderation_reason, image_flagged")
-        .eq("approval_status", statusFilter)
-        .order("created_at", { ascending: false });
+  let query = supabaseClient
+    .from("submissions")
+    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at, note, moderation_status, moderation_reason, note_flagged, image_moderation_status, image_moderation_reason, image_flagged")
+    .eq("approval_status", statusFilter)
+    .order("created_at", { ascending: false });
 
-      if (roomFilter !== "ALL") {
-        query = query.eq("room", roomFilter);
-      }
+  if (roomFilter !== "ALL") {
+    query = query.eq("room", roomFilter);
+  }
 
-      const { data, error } = await query;
+  const { data, error } = await query;
 
-      if (error) {
-        console.error("Admin load error:", error);
-        statusBox.textContent = "Error loading submissions.";
-        return;
-      }
+  if (error) {
+    console.error("Admin load error:", error);
+    statusBox.textContent = "Error loading submissions.";
+    return;
+  }
 
-      if (!filteredData || filteredData.length === 0) {
-        statusBox.textContent =
-          roomFilter === "ALL"
-            ? `No ${statusFilter} submissions.`
-            : `No ${statusFilter} submissions for ${roomFilter}.`;
-        return;
-      }
+  let filteredData = data || [];
 
-let filteredData = data || [];
+  if (aiFilter !== "ALL") {
+    filteredData = filteredData.filter(item =>
+      item.moderation_status === aiFilter || item.image_moderation_status === aiFilter
+    );
+  }
 
-if (aiFilter !== "ALL") {
-  filteredData = filteredData.filter(item =>
-    item.moderation_status === aiFilter || item.image_moderation_status === aiFilter
-  );
+  if (!filteredData || filteredData.length === 0) {
+    statusBox.textContent =
+      roomFilter === "ALL"
+        ? `No ${statusFilter} submissions for AI filter "${aiFilter}".`
+        : `No ${statusFilter} submissions for ${roomFilter} with AI filter "${aiFilter}".`;
+    return;
+  }
+
+  statusBox.textContent =
+    roomFilter === "ALL"
+      ? `${filteredData.length} ${statusFilter} submission(s)`
+      : `${filteredData.length} ${statusFilter} submission(s) in ${roomFilter}`;
+
+  filteredData.forEach(item => {
+    const { data: imgData } = supabaseClient
+      .storage
+      .from(BUCKET)
+      .getPublicUrl(item.image_file_name);
+
+    const showApprove = item.approval_status !== "approved";
+    const showReject = item.approval_status !== "rejected";
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
+      <div class="card-body">
+        <div class="badges">
+          <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
+          <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
+          <span class="badge ${getModerationBadgeClass(item.moderation_status)}">AI Note: ${item.moderation_status || "safe"}</span>
+          <span class="badge ${getModerationBadgeClass(item.image_moderation_status)}">AI Image: ${item.image_moderation_status || "safe"}</span>
+        </div>
+
+        <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
+        <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
+        <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
+        <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
+
+        <div class="note-preview">
+          <div class="note-label">Optional Note</div>
+          <div>${item.note && item.note.trim() ? item.note : "No note provided."}</div>
+        </div>
+
+        <div class="note-preview">
+          <div class="note-label">AI Moderation</div>
+          <div>${item.moderation_reason && item.moderation_reason.trim() ? item.moderation_reason : "No moderation notes."}</div>
+        </div>
+
+        <div class="note-preview">
+          <div class="note-label">AI Image Moderation</div>
+          <div>${item.image_moderation_reason && item.image_moderation_reason.trim() ? item.image_moderation_reason : "No image moderation notes."}</div>
+        </div>
+
+        <div class="card-top-actions">
+          <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
+        </div>
+
+        <div class="actions">
+          ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
+          ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
 }
-      
-      statusBox.textContent =
-        roomFilter === "ALL"
-          ? `${filteredData.length} ${statusFilter} submission(s)`
-          : `${data.length} ${statusFilter} submission(s) in ${roomFilter}`;
-
-      filteredData.forEach(item => {
-        const { data: imgData } = supabaseClient
-          .storage
-          .from(BUCKET)
-          .getPublicUrl(item.image_file_name);
-
-        const showApprove = item.approval_status !== "approved";
-        const showReject = item.approval_status !== "rejected";
-
-        const card = document.createElement("div");
-        card.className = "card";
-
-        card.innerHTML = `
-          <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
-          <div class="card-body">
-            <div class="badges">
-  <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
-  <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
-  <span class="badge ${getModerationBadgeClass(item.moderation_status)}">AI Note: ${item.moderation_status || "safe"}</span>
-  <span class="badge ${getModerationBadgeClass(item.image_moderation_status)}">AI Image: ${item.image_moderation_status || "safe"}</span>
-</div>
-
-            <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
-            <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
-            <div class="meta"><strong>Submission ID:</strong> ${item.submission_id || "—"}</div>
-            <div class="meta"><strong>Submitted:</strong> ${formatDate(item.created_at)}</div>
-
-            <div class="note-preview">
-              <div class="note-label">Optional Note</div>
-              <div>${item.note && item.note.trim() ? item.note : "No note provided."}</div>
-            </div>
-
-            <div class="note-preview">
-  <div class="note-label">AI Moderation</div>
-  <div>${item.moderation_reason && item.moderation_reason.trim() ? item.moderation_reason : "No moderation notes."}</div>
-</div>
-
-<div class="note-preview">
-  <div class="note-label">AI Image Moderation</div>
-  <div>${item.image_moderation_reason && item.image_moderation_reason.trim() ? item.image_moderation_reason : "No image moderation notes."}</div>
-</div>
-
-            <div class="card-top-actions">
-              <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
-            </div>
-
-            <div class="actions">
-              ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
-              ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
-            </div>
-          </div>
-        `;
-
-        grid.appendChild(card);
-      });
-    }
 
     async function approveSubmission(submissionId) {
       const { error } = await supabaseClient
@@ -522,15 +522,15 @@ if (aiFilter !== "ALL") {
       window.location.href = "admin-login.html";
     });
 
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    filterButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        filterButtons.forEach(btn => btn.classList.remove("active"));
-        button.classList.add("active");
-        currentRoom = button.dataset.room;
-        loadSubmissions(currentStatus, currentRoom, currentAi);
-      });
-    });
+    const roomFilterButtons = document.querySelectorAll('.filters .filter-btn');
+roomFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    roomFilterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentRoom = button.dataset.room;
+    loadSubmissions(currentStatus, currentRoom, currentAi);
+  });
+});
 
 const aiFilterButtons = document.querySelectorAll(".ai-filter-btn");
 aiFilterButtons.forEach(button => {
@@ -541,16 +541,16 @@ aiFilterButtons.forEach(button => {
     loadSubmissions(currentStatus, currentRoom, currentAi);
   });
 });
-    
-    const statusFilterButtons = document.querySelectorAll(".status-filter-btn");
-    statusFilterButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        statusFilterButtons.forEach(btn => btn.classList.remove("active"));
-        button.classList.add("active");
-        currentStatus = button.dataset.status;
-        loadSubmissions(currentStatus, currentRoom, currentAi);
-      });
-    });
+
+const statusFilterButtons = document.querySelectorAll(".status-filter-btn");
+statusFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    statusFilterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentStatus = button.dataset.status;
+    loadSubmissions(currentStatus, currentRoom, currentAi);
+  });
+});
 
     window.approveSubmission = approveSubmission;
     window.rejectSubmission = rejectSubmission;
