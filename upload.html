@@ -748,7 +748,10 @@ const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
         submittedAt: new Date().toISOString(),
          moderationStatus: noteModeration.moderationStatus,
 moderationReason: noteModeration.moderationReason,
-noteFlagged: noteModeration.noteFlagged
+noteFlagged: noteModeration.noteFlagged,
+        imageModerationStatus: imageModeration.status,
+imageModerationReason: imageModeration.reason,
+imageFlagged: imageModeration.flagged
       };
 
       if (imageModeration.status === "reject") {
@@ -833,7 +836,10 @@ noteFlagged: noteModeration.noteFlagged
         status: "pending",
         moderation_status: noteModeration.moderationStatus,
   moderation_reason: noteModeration.moderationReason,
-  note_flagged: noteModeration.noteFlagged
+  note_flagged: noteModeration.noteFlagged,
+        image_moderation_status: imageModeration.status,
+image_moderation_reason: imageModeration.reason,
+image_flagged: imageModeration.flagged
       };
 
       const { error: dbError } = await supabaseClient
