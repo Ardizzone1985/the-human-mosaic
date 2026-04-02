@@ -420,10 +420,10 @@ if (aiFilter !== "ALL") {
       
       statusBox.textContent =
         roomFilter === "ALL"
-          ? `${data.length} ${statusFilter} submission(s)`
+          ? `${filteredData.length} ${statusFilter} submission(s)`
           : `${data.length} ${statusFilter} submission(s) in ${roomFilter}`;
 
-      data.forEach(item => {
+      filteredData.forEach(item => {
         const { data: imgData } = supabaseClient
           .storage
           .from(BUCKET)
