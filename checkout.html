@@ -823,6 +823,9 @@ async function releaseCancelledSlotIfNeeded() {
           },
          body: JSON.stringify({
   room: currentRoom,
+           wall,
+  section,
+  spot,
   slot: slotCode,
   price: parseInt(price.replace(/[^\d]/g, "")) || 15,
   fullName: document.getElementById("fullName").value,
