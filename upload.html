@@ -750,6 +750,65 @@ moderationReason: noteModeration.moderationReason,
 noteFlagged: noteModeration.noteFlagged
       };
 
+      function moderateImage(file) {
+  if (!file) {
+    return {
+      status: "reject",
+      reason: "No file provided",
+      flagged: true
+    };
+  }
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    return {
+      status: "reject",
+      reason: "Invalid file type",
+      flagged: true
+    };
+  }
+
+  const maxSizeMB = 5;
+  const sizeMB = file.size / (1024 * 1024);
+
+  if (sizeMB > maxSizeMB) {
+    return {
+      status: "reject",
+      reason: "File too large",
+      flagged: true
+    };
+  }
+
+  if (sizeMB < 0.02) {
+    return {
+      status: "review",
+      reason: "File too small (possible spam)",
+      flagged: true
+    };
+  }
+
+  const suspiciousNames = ["test", "temp", "xxx", "porn", "fake"];
+
+  const fileName = file.name.toLowerCase();
+
+  for (const keyword of suspiciousNames) {
+    if (fileName.includes(keyword)) {
+      return {
+        status: "review",
+        reason: `Suspicious filename: ${keyword}`,
+        flagged: true
+      };
+    }
+  }
+
+  return {
+    status: "safe",
+    reason: "Image passed basic checks",
+    flagged: false
+  };
+}
+
       // 2) Save submission in DB
       const dbSubmission = {
         submission_id: submissionId,
