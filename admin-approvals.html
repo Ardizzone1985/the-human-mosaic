@@ -402,7 +402,7 @@
         return;
       }
 
-      if (!data || data.length === 0) {
+      if (!filteredData || filteredData.length === 0) {
         statusBox.textContent =
           roomFilter === "ALL"
             ? `No ${statusFilter} submissions.`
@@ -410,6 +410,14 @@
         return;
       }
 
+let filteredData = data || [];
+
+if (aiFilter !== "ALL") {
+  filteredData = filteredData.filter(item =>
+    item.moderation_status === aiFilter || item.image_moderation_status === aiFilter
+  );
+}
+      
       statusBox.textContent =
         roomFilter === "ALL"
           ? `${data.length} ${statusFilter} submission(s)`
