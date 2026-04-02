@@ -335,6 +335,13 @@
       return "";
     }
 
+    function getModerationBadgeClass(status) {
+  if (status === "safe") return "badge-status-approved";
+  if (status === "review") return "badge-status-pending";
+  if (status === "reject") return "badge-status-rejected";
+  return "";
+}
+
     function formatDate(dateString) {
       if (!dateString) return "—";
       const date = new Date(dateString);
@@ -417,9 +424,10 @@
           <img src="${imgData.publicUrl}" alt="Submission image" onclick="window.open('${imgData.publicUrl}', '_blank')" />
           <div class="card-body">
             <div class="badges">
-              <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
-              <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
-            </div>
+  <span class="badge ${getRoomBadgeClass(item.room)}">${item.room || "Unknown room"}</span>
+  <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
+  <span class="badge ${getModerationBadgeClass(item.moderation_status)}">AI: ${item.moderation_status || "safe"}</span>
+</div>
 
             <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
             <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
