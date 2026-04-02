@@ -445,6 +445,11 @@
   <div>${item.moderation_reason && item.moderation_reason.trim() ? item.moderation_reason : "No moderation notes."}</div>
 </div>
 
+<div class="note-preview">
+  <div class="note-label">AI Image Moderation</div>
+  <div>${item.image_moderation_reason && item.image_moderation_reason.trim() ? item.image_moderation_reason : "No image moderation notes."}</div>
+</div>
+
             <div class="card-top-actions">
               <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
             </div>
