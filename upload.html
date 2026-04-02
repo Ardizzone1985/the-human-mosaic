@@ -751,6 +751,11 @@ moderationReason: noteModeration.moderationReason,
 noteFlagged: noteModeration.noteFlagged
       };
 
+      if (imageModeration.status === "reject") {
+  alert("Image rejected: " + imageModeration.reason);
+  return;
+}
+
       function moderateImage(file) {
   if (!file) {
     return {
