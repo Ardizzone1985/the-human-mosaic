@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY // 🔥 IMPORTANTE
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 async function getRawBody(req) {
@@ -38,39 +38,66 @@ export default async function handler(req, res) {
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
-    // ============================
-    // 🎯 PAYMENT COMPLETED
-    // ============================
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-
-      const slotCode = session.metadata?.slotCode;
+      const slotCode = session.metadata?.slotCode || null;
 
       console.log("✅ PAYMENT CONFIRMED VIA WEBHOOK");
       console.log({
         sessionId: session.id,
         slotCode,
-        email: session.metadata?.email
+        email: session.metadata?.email || null,
+        paymentStatus: session.payment_status || null
       });
 
       if (slotCode) {
         const { error } = await supabase
           .from("slots")
           .update({
-            payment_confirmed: true
+            payment_confirmed: true,
+            payment_confirmed_at: new Date().toISOString()
           })
           .eq("slot_code", slotCode);
 
         if (error) {
-          console.error("❌ DB UPDATE ERROR:", error);
+          console.error("❌ DB UPDATE ERROR (completed):", error);
         } else {
           console.log("✅ Slot marked as paid");
         }
       }
     }
 
-    return res.status(200).json({ received: true });
+    if (event.type === "checkout.session.expired") {
+      const session = event.data.object;
+      const slotCode = session.metadata?.slotCode || null;
 
+      console.log("⌛ CHECKOUT SESSION EXPIRED");
+      console.log({
+        sessionId: session.id,
+        slotCode,
+        email: session.metadata?.email || null
+      });
+
+      if (slotCode) {
+        const { error } = await supabase
+          .from("slots")
+          .update({
+            status: "available",
+            reserved_at: null,
+            submission_id: null
+          })
+          .eq("slot_code", slotCode)
+          .eq("status", "reserved");
+
+        if (error) {
+          console.error("❌ DB UPDATE ERROR (expired):", error);
+        } else {
+          console.log("✅ Expired reserved slot released");
+        }
+      }
+    }
+
+    return res.status(200).json({ received: true });
   } catch (err) {
     console.error("❌ STRIPE WEBHOOK ERROR:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
