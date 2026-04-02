@@ -730,6 +730,7 @@ const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
         return;
       }
 
+      const noteModeration = moderateNote(note);
       const submissionData = {
         submissionId,
         fullName,
@@ -742,8 +743,11 @@ const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
         slotCode,
         price,
         note,
-        imageFileName: filePath,
-        submittedAt: new Date().toISOString()
+               imageFileName: filePath,
+        submittedAt: new Date().toISOString(),
+         moderationStatus: noteModeration.moderationStatus,
+moderationReason: noteModeration.moderationReason,
+noteFlagged: noteModeration.noteFlagged
       };
 
       // 2) Save submission in DB
@@ -761,7 +765,10 @@ const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
         note: note,
         image_file_name: filePath,
         approval_status: "pending",
-        status: "pending"
+        status: "pending",
+        moderation_status: noteModeration.moderationStatus,
+  moderation_reason: noteModeration.moderationReason,
+  note_flagged: noteModeration.noteFlagged
       };
 
       const { error: dbError } = await supabaseClient
