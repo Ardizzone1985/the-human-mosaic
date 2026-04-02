@@ -511,6 +511,72 @@ console.log("Verify response:", data);
 
     const currentRoom = roomConfig[room] ? room : "Identity";
 
+    function moderateNote(noteText) {
+  const text = String(noteText || "").trim().toLowerCase();
+
+  if (!text) {
+    return {
+      moderationStatus: "safe",
+      moderationReason: "Empty note",
+      noteFlagged: false
+    };
+  }
+
+  const rejectKeywords = [
+    "kill",
+    "rape",
+    "terrorist",
+    "bomb",
+    "suicide",
+    "nazi",
+    "isis",
+    "child porn",
+    "pornographic",
+    "explicit sex"
+  ];
+
+  const reviewKeywords = [
+    "blood",
+    "weapon",
+    "gun",
+    "knife",
+    "nude",
+    "nudity",
+    "sex",
+    "violent",
+    "hate",
+    "racist",
+    "drugs",
+    "abuse"
+  ];
+
+  for (const keyword of rejectKeywords) {
+    if (text.includes(keyword)) {
+      return {
+        moderationStatus: "reject",
+        moderationReason: `Rejected keyword detected: ${keyword}`,
+        noteFlagged: true
+      };
+    }
+  }
+
+  for (const keyword of reviewKeywords) {
+    if (text.includes(keyword)) {
+      return {
+        moderationStatus: "review",
+        moderationReason: `Review keyword detected: ${keyword}`,
+        noteFlagged: true
+      };
+    }
+  }
+
+  return {
+    moderationStatus: "safe",
+    moderationReason: "No risky keywords detected",
+    noteFlagged: false
+  };
+}
+
     function generateSubmissionId() {
       const roomCodeMap = {
         Identity: "ID",
