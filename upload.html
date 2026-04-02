@@ -749,173 +749,156 @@ console.log("Verify response:", data);
     });
 
     uploadForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const file = imageUpload.files[0];
-    if (!file) return;
+  const file = imageUpload.files[0];
+  if (!file) return;
 
-    const confirmed = confirm(
-      "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
-    );
+  const confirmed = confirm(
+    "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
+  );
 
-    if (!confirmed) return;
+  if (!confirmed) return;
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Finalizing submission...";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Finalizing submission...";
 
-    try {
-const submissionId = crypto.randomUUID();
-      const fileExt = (file.name.split(".").pop() || "").toLowerCase();
-const safeExt = fileExt || "jpg";
-const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
-const uniqueSuffix = Date.now();
-const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
+  try {
+    const submissionId = crypto.randomUUID();
 
-      // 1) Upload file to Supabase Storage
-      const { error: uploadError } = await supabaseClient
-        .storage
-        .from("images")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false
-        });
+    const noteModeration = moderateNote(note);
+    const imageModeration = moderateImage(file);
 
-      if (uploadError) {
-        alert("Storage upload error: " + (uploadError.message || "Unknown error"));
-        console.error("Storage upload error:", uploadError);
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Finalize Submission";
-        return;
-      }
-
-      const noteModeration = moderateNote(note);
-      const imageModeration = moderateImage(file);
-      const submissionData = {
-        submissionId,
-        fullName,
-        email,
-        country,
-        room: currentRoom,
-        wall,
-        section,
-        spot,
-        slotCode,
-        price,
-        note,
-               imageFileName: filePath,
-        submittedAt: new Date().toISOString(),
-         moderationStatus: noteModeration.moderationStatus,
-moderationReason: noteModeration.moderationReason,
-noteFlagged: noteModeration.noteFlagged,
-        imageModerationStatus: imageModeration.status,
-imageModerationReason: imageModeration.reason,
-imageFlagged: imageModeration.flagged
-      };
-
-      if (imageModeration.status === "reject") {
-  alert("Image rejected: " + imageModeration.reason);
-  return;
-}
-
-    const suspiciousNames = ["test", "temp", "xxx", "porn", "fake"];
-
-  const fileName = file.name.toLowerCase();
-
-  for (const keyword of suspiciousNames) {
-    if (fileName.includes(keyword)) {
-      return {
-        status: "review",
-        reason: `Suspicious filename: ${keyword}`,
-        flagged: true
-      };
-    }
-  }
-
-  return {
-    status: "safe",
-    reason: "Image passed basic checks",
-    flagged: false
-  };
-}
-
-      // 2) Save submission in DB
-      const dbSubmission = {
-        submission_id: submissionId,
-        full_name: fullName,
-        email: email,
-        country: country,
-        room: currentRoom,
-        wall: wall,
-        section: section,
-        spot: spot,
-        slot_code: slotCode,
-        price: price,
-        note: note,
-        image_file_name: filePath,
-        approval_status: "pending",
-        status: "pending",
-        moderation_status: noteModeration.moderationStatus,
-  moderation_reason: noteModeration.moderationReason,
-  note_flagged: noteModeration.noteFlagged,
-        image_moderation_status: imageModeration.status,
-image_moderation_reason: imageModeration.reason,
-image_flagged: imageModeration.flagged
-      };
-
-      const { error: dbError } = await supabaseClient
-        .from("submissions")
-        .insert([dbSubmission]);
-
-      if (dbError) {
-        // rollback storage upload if DB insert fails
-        await supabaseClient.storage.from("images").remove([filePath]);
-
-        alert("Supabase error: " + (dbError.message || "Unknown error"));
-        console.error("Supabase insert error:", dbError);
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Finalize Submission";
-        return;
-      }
-
-      // 3) Update slot
-      const { error: slotUpdateError } = await supabaseClient
-        .from("slots")
-        .update({
-          status: "submitted",
-          submission_id: submissionId
-        })
-        .eq("slot_code", slotCode);
-
-      if (slotUpdateError) {
-        alert("Slot update error: " + (slotUpdateError.message || "Unknown error"));
-        console.error("Slot update error:", slotUpdateError);
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Finalize Submission";
-        return;
-      }
-
-      localStorage.setItem("thm_submission", JSON.stringify(submissionData));
-
-      await sendConfirmationEmail(submissionData);
-
-      window.location.href =
-        `success.html?submissionId=${encodeURIComponent(submissionId)}` +
-        `&room=${encodeURIComponent(currentRoom)}` +
-        `&wall=${encodeURIComponent(wall)}` +
-        `&section=${encodeURIComponent(section)}` +
-        `&spot=${encodeURIComponent(spot)}` +
-        `&slotCode=${encodeURIComponent(slotCode)}` +
-        `&price=${encodeURIComponent(price)}` +
-        `&fullName=${encodeURIComponent(fullName)}` +
-        `&email=${encodeURIComponent(email)}` +
-        `&country=${encodeURIComponent(country)}`;
-    } catch (error) {
-      alert("Unexpected error during submission.");
-      console.error("Unexpected submission error:", error);
+    if (imageModeration.status === "reject") {
+      alert("Image rejected: " + imageModeration.reason);
       submitBtn.disabled = false;
       submitBtn.textContent = "Finalize Submission";
+      return;
     }
-  });
+
+    const fileExt = (file.name.split(".").pop() || "").toLowerCase();
+    const safeExt = fileExt || "jpg";
+    const safeSubmissionId = submissionId.replace(/[^A-Za-z0-9-_]/g, "");
+    const uniqueSuffix = Date.now();
+    const filePath = `${safeSubmissionId}-${uniqueSuffix}.${safeExt}`;
+
+    // 1) Upload file to Supabase Storage
+    const { error: uploadError } = await supabaseClient
+      .storage
+      .from("images")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false
+      });
+
+    if (uploadError) {
+      alert("Storage upload error: " + (uploadError.message || "Unknown error"));
+      console.error("Storage upload error:", uploadError);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Finalize Submission";
+      return;
+    }
+
+    const submissionData = {
+      submissionId,
+      fullName,
+      email,
+      country,
+      room: currentRoom,
+      wall,
+      section,
+      spot,
+      slotCode,
+      price,
+      note,
+      imageFileName: filePath,
+      submittedAt: new Date().toISOString(),
+      moderationStatus: noteModeration.moderationStatus,
+      moderationReason: noteModeration.moderationReason,
+      noteFlagged: noteModeration.noteFlagged,
+      imageModerationStatus: imageModeration.status,
+      imageModerationReason: imageModeration.reason,
+      imageFlagged: imageModeration.flagged
+    };
+
+    // 2) Save submission in DB
+    const dbSubmission = {
+      submission_id: submissionId,
+      full_name: fullName,
+      email: email,
+      country: country,
+      room: currentRoom,
+      wall: wall,
+      section: section,
+      spot: spot,
+      slot_code: slotCode,
+      price: price,
+      note: note,
+      image_file_name: filePath,
+      approval_status: "pending",
+      status: "pending",
+      moderation_status: noteModeration.moderationStatus,
+      moderation_reason: noteModeration.moderationReason,
+      note_flagged: noteModeration.noteFlagged,
+      image_moderation_status: imageModeration.status,
+      image_moderation_reason: imageModeration.reason,
+      image_flagged: imageModeration.flagged
+    };
+
+    const { error: dbError } = await supabaseClient
+      .from("submissions")
+      .insert([dbSubmission]);
+
+    if (dbError) {
+      // rollback storage upload if DB insert fails
+      await supabaseClient.storage.from("images").remove([filePath]);
+
+      alert("Supabase error: " + (dbError.message || "Unknown error"));
+      console.error("Supabase insert error:", dbError);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Finalize Submission";
+      return;
+    }
+
+    // 3) Update slot
+    const { error: slotUpdateError } = await supabaseClient
+      .from("slots")
+      .update({
+        status: "submitted",
+        submission_id: submissionId
+      })
+      .eq("slot_code", slotCode);
+
+    if (slotUpdateError) {
+      alert("Slot update error: " + (slotUpdateError.message || "Unknown error"));
+      console.error("Slot update error:", slotUpdateError);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Finalize Submission";
+      return;
+    }
+
+    localStorage.setItem("thm_submission", JSON.stringify(submissionData));
+
+    await sendConfirmationEmail(submissionData);
+
+    window.location.href =
+      `success.html?submissionId=${encodeURIComponent(submissionId)}` +
+      `&room=${encodeURIComponent(currentRoom)}` +
+      `&wall=${encodeURIComponent(wall)}` +
+      `&section=${encodeURIComponent(section)}` +
+      `&spot=${encodeURIComponent(spot)}` +
+      `&slotCode=${encodeURIComponent(slotCode)}` +
+      `&price=${encodeURIComponent(price)}` +
+      `&fullName=${encodeURIComponent(fullName)}` +
+      `&email=${encodeURIComponent(email)}` +
+      `&country=${encodeURIComponent(country)}`;
+  } catch (error) {
+    alert("Unexpected error during submission.");
+    console.error("Unexpected submission error:", error);
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Finalize Submission";
+  }
+});
 </script>
 </body>
 </html>
