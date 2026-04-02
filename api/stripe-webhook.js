@@ -1,6 +1,12 @@
 import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY // 🔥 IMPORTANTE
+);
 
 async function getRawBody(req) {
   return await new Promise((resolve, reject) => {
@@ -32,40 +38,39 @@ export default async function handler(req, res) {
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
-    switch (event.type) {
-      case "checkout.session.completed": {
-        const session = event.data.object;
+    // ============================
+    // 🎯 PAYMENT COMPLETED
+    // ============================
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
 
-        console.log("✅ Webhook received: checkout.session.completed");
-        console.log({
-          sessionId: session.id,
-          paymentStatus: session.payment_status,
-          customerEmail: session.customer_details?.email || null,
-          amountTotal: session.amount_total || null,
-          currency: session.currency || null
-        });
+      const slotCode = session.metadata?.slotCode;
 
-        break;
+      console.log("✅ PAYMENT CONFIRMED VIA WEBHOOK");
+      console.log({
+        sessionId: session.id,
+        slotCode,
+        email: session.metadata?.email
+      });
+
+      if (slotCode) {
+        const { error } = await supabase
+          .from("slots")
+          .update({
+            payment_confirmed: true
+          })
+          .eq("slot_code", slotCode);
+
+        if (error) {
+          console.error("❌ DB UPDATE ERROR:", error);
+        } else {
+          console.log("✅ Slot marked as paid");
+        }
       }
-
-      case "checkout.session.expired": {
-        const session = event.data.object;
-
-        console.log("⌛ Webhook received: checkout.session.expired");
-        console.log({
-          sessionId: session.id,
-          paymentStatus: session.payment_status,
-          customerEmail: session.customer_details?.email || null
-        });
-
-        break;
-      }
-
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
     }
 
     return res.status(200).json({ received: true });
+
   } catch (err) {
     console.error("❌ STRIPE WEBHOOK ERROR:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
