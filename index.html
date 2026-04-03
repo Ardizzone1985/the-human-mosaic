@@ -759,6 +759,18 @@
   color: #b02a2a;
   font-weight: 600;
 }
+
+  .progress-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+  .progress-label {
+  font-weight: 600;
+  color: #111;
+}
   
 }
 
@@ -892,6 +904,7 @@
         <h3>Identity</h3>
         <div class="live-number" id="count-identity">—</div>
         <div class="live-capacity">approved positions out of 1,000,000</div>
+        <div class="progress-label" id="label-identity"></div>
         <div class="progress-bar">
           <div class="live-remaining" id="remaining-identity"></div>
           <div class="progress-fill" id="progress-identity"></div>
@@ -903,6 +916,7 @@
         <h3>Love</h3>
         <div class="live-number" id="count-love">—</div>
         <div class="live-capacity">approved positions out of 1,000,000</div>
+        <div class="progress-label" id="label-love"></div>
         <div class="progress-bar">
           <div class="live-remaining" id="remaining-love"></div>
           <div class="progress-fill" id="progress-love"></div>
@@ -914,6 +928,7 @@
         <h3>Creativity</h3>
         <div class="live-number" id="count-creativity">—</div>
         <div class="live-capacity">approved positions out of 1,000,000</div>
+        <div class="progress-label" id="label-creativity"></div>
         <div class="progress-bar">
           <div class="live-remaining" id="remaining-creativity"></div>
           <div class="progress-fill" id="progress-creativity"></div>
@@ -1313,6 +1328,15 @@ document.getElementById("remaining-love").textContent =
 
 document.getElementById("remaining-creativity").textContent =
   `${remainingCreativity.toLocaleString()} spots remaining`;
+
+      document.getElementById("label-identity").textContent =
+  `${identity.toLocaleString()} / 1,000,000`;
+
+document.getElementById("label-love").textContent =
+  `${love.toLocaleString()} / 1,000,000`;
+
+document.getElementById("label-creativity").textContent =
+  `${creativity.toLocaleString()} / 1,000,000`;
       
     } catch (err) {
       console.error("Unexpected stats error:", err);
