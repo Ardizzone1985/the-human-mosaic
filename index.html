@@ -687,7 +687,65 @@
   .snapshot-grid {
     grid-template-columns: 1fr;
   }
+
+  .proof-section {
+  background: #fbfbf8;
 }
+
+.proof-header {
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto 42px;
+}
+
+.proof-kicker {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: #666;
+}
+
+.proof-header h2 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  margin-bottom: 16px;
+  color: #111;
+}
+
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.proof-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+}
+
+.proof-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.proof-card p {
+  color: #555;
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .proof-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -1047,6 +1105,41 @@
   </div>
 </section>
 
+    <section class="proof-section">
+  <div class="container">
+    <div class="proof-header">
+      <span class="proof-kicker">TRUST & PROOF</span>
+      <h2>A structured participation system, built to last.</h2>
+      <p class="section-text" style="margin-left:auto; margin-right:auto; text-align:center;">
+        The Human Mosaic combines a real reservation flow, human review, and a live public gallery designed to show the artwork as it grows.
+      </p>
+    </div>
+
+    <div class="proof-grid">
+      <div class="proof-card">
+        <h3>Verified participation flow</h3>
+        <p>
+          Each participant follows a complete path: room selection, spot reservation, secure payment, image upload, review, and official confirmation.
+        </p>
+      </div>
+
+      <div class="proof-card">
+        <h3>Human review within 48 hours</h3>
+        <p>
+          Every submission is checked before approval to ensure consistency with the selected room and the project guidelines.
+        </p>
+      </div>
+
+      <div class="proof-card">
+        <h3>Live public gallery</h3>
+        <p>
+          Approved images already appear inside the live gallery, allowing visitors to witness the artwork taking shape in real time.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+    
     <section>
       <div class="container">
         <div class="final">
