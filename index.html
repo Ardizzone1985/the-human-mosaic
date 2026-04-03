@@ -1300,9 +1300,24 @@ animateCount("count-creativity", creativity);
       document.getElementById("progress-identity").style.width = `${identityPercent}%`;
       document.getElementById("progress-love").style.width = `${lovePercent}%`;
       document.getElementById("progress-creativity").style.width = `${creativityPercent}%`;
+
+      const remainingIdentity = totalPerRoom - identity;
+const remainingLove = totalPerRoom - love;
+const remainingCreativity = totalPerRoom - creativity;
+
+document.getElementById("remaining-identity").textContent =
+  `${remainingIdentity.toLocaleString()} spots remaining`;
+
+document.getElementById("remaining-love").textContent =
+  `${remainingLove.toLocaleString()} spots remaining`;
+
+document.getElementById("remaining-creativity").textContent =
+  `${remainingCreativity.toLocaleString()} spots remaining`;
+      
     } catch (err) {
       console.error("Unexpected stats error:", err);
     }
+    
   }
 
   loadStats();
