@@ -312,6 +312,24 @@
                 <a href="#" class="btn btn-disabled">Track Your Submission — Coming Soon</a>
               </div>
 
+              <div class="share-section" style="margin-top:30px;">
+  <p style="margin-bottom:10px; font-weight:600;">
+    Share your position in The Human Mosaic
+  </p>
+
+  <input id="shareLink" readonly style="
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:10px;
+  " />
+
+  <button onclick="copyShare()" class="btn btn-secondary">
+    Copy Link
+  </button>
+</div>
+
               <div class="contact-note">
                 For questions, support, or participation inquiries, contact
                 <a href="mailto:info@thehumanmosaic.art">info@thehumanmosaic.art</a>
@@ -481,6 +499,18 @@
     document.getElementById("roomGuideline").innerHTML = roomConfig[submission.room].guideline;
     document.getElementById("heroText").innerHTML =
       `Thank you for becoming part of <strong>The Human Mosaic</strong>. Your participation in the <strong>${submission.room} Room</strong> has been successfully received and is now entering the official review process.`;
+
+    const shareLink = `https://thehumanmosaic.art/gallery.html?slot=${submission.spot}`;
+
+const shareInput = document.getElementById("shareLink");
+if (shareInput) {
+  shareInput.value = shareLink;
+}
+
+function copyShare() {
+  navigator.clipboard.writeText(shareLink);
+  alert("Link copied!");
+}
   </script>
 </body>
 </html>
