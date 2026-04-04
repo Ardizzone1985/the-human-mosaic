@@ -181,6 +181,10 @@
       font-weight: 700;
     }
 
+    .room-tag.identity { color: #1d4ed8; }
+.room-tag.love { color: #b91c1c; }
+.room-tag.creativity { color: #7c3aed; }
+    
     .card-title {
       font-weight: 700;
       margin-bottom: 8px;
@@ -255,24 +259,37 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const gallery = document.getElementById("gallery");
 const statusMessage = document.getElementById("statusMessage");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
 const params = new URLSearchParams(window.location.search);
 const highlightId = params.get("id");
 
-async function loadImages() {
+let allImages = [];
+let currentRoom = "all";
 
-  const { data, error } = await supabaseClient
-    .from("submissions")
-    .select("image_file_name, room, note, submission_id")
-    .eq("approval_status", "approved");
-  if (error) {
-  console.error(error);
-  statusMessage.textContent = "Error loading gallery";
-  return;
+function getRoomClass(room) {
+  if (!room) return "";
+  return room.toLowerCase();
 }
 
-  data.forEach(item => {
+function renderImages() {
+  gallery.innerHTML = "";
 
+  const filtered = currentRoom === "all"
+    ? allImages
+    : allImages.filter(item => item.room === currentRoom);
+
+  if (filtered.length === 0) {
+    statusMessage.textContent = "No approved images found for this room yet.";
+    return;
+  }
+
+  statusMessage.textContent =
+    currentRoom === "all"
+      ? `${filtered.length} approved images`
+      : `${filtered.length} approved images in ${currentRoom}`;
+
+  filtered.forEach(item => {
     const { data: imgData } = supabaseClient
       .storage
       .from("images")
@@ -291,6 +308,7 @@ async function loadImages() {
 
     const img = document.createElement("img");
     img.src = imgData.publicUrl;
+    img.alt = `${item.room} contribution`;
 
     img.onclick = () => {
       document.getElementById("modalImg").src = img.src;
@@ -300,19 +318,41 @@ async function loadImages() {
     const info = document.createElement("div");
     info.className = "card-info";
     info.innerHTML = `
-      <div class="room-tag">${item.room}</div>
+      <div class="room-tag ${getRoomClass(item.room)}">${item.room}</div>
       <div class="card-title">${item.room} Contribution</div>
       <div class="card-note-preview">${item.note || ""}</div>
     `;
 
     card.appendChild(img);
     card.appendChild(info);
-
     gallery.appendChild(card);
   });
-
-  statusMessage.textContent = `${data.length} images`;
 }
+
+async function loadImages() {
+  const { data, error } = await supabaseClient
+    .from("submissions")
+    .select("image_file_name, room, note, submission_id, approval_status")
+    .eq("approval_status", "approved");
+
+  if (error) {
+    console.error(error);
+    statusMessage.textContent = "Error loading gallery";
+    return;
+  }
+
+  allImages = data || [];
+  renderImages();
+}
+
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    filterButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    currentRoom = button.dataset.room;
+    renderImages();
+  });
+});
 
 loadImages();
 </script>
