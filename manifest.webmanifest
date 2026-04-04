@@ -1,0 +1,20 @@
+{
+  "name": "The Human Mosaic",
+  "short_name": "Mosaic",
+  "start_url": "/gallery.html",
+  "display": "standalone",
+  "background_color": "#f8f8f6",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/logo-cropped.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-cropped.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
