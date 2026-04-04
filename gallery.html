@@ -215,15 +215,37 @@
 <body>
 <div class="container">
 
-<h1>Live Gallery</h1>
+  <div class="topbar">
+    <a href="index.html" class="brand">
+      <img src="logo-cropped.png" alt="The Human Mosaic Logo">
+      <div>
+        <div class="brand-title">The Human Mosaic</div>
+        <div class="brand-tagline">One Humanity. Millions of Faces. One Mosaic.</div>
+      </div>
+    </a>
+  </div>
 
-<div id="statusMessage" class="status-message"></div>
-<div class="grid" id="gallery"></div>
+  <h1>Live Gallery</h1>
 
-</div>
+  <p class="subtitle">
+    Explore approved participant submissions across the three growing rooms of The Human Mosaic.
+  </p>
 
-<div class="modal" id="modal" onclick="this.classList.remove('open')">
-  <img id="modalImg">
+  <div class="top-actions">
+    <a href="join.html" class="join-btn">Claim Your Spot</a>
+    <a href="index.html" class="ghost-btn" style="margin-left:10px;">Back to Website</a>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" data-room="all">All</button>
+    <button class="filter-btn" data-room="Identity">Identity</button>
+    <button class="filter-btn" data-room="Love">Love</button>
+    <button class="filter-btn" data-room="Creativity">Creativity</button>
+  </div>
+
+  <div id="statusMessage" class="status-message"></div>
+  <div class="grid" id="gallery"></div>
+
 </div>
 
 <script>
