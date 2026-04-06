@@ -539,7 +539,7 @@
             <div class="support-description">
               A small but meaningful voluntary contribution to support the early growth of the project.
             </div>
-            <a href="#" class="btn btn-primary">Support with €5</a>
+            <button class="btn btn-primary" onclick="startSupportCheckout(5)">Support with €5</button>
           </div>
 
           <div class="support-card">
@@ -548,7 +548,7 @@
             <div class="support-description">
               Help strengthen the infrastructure and support the continued development of the platform.
             </div>
-            <a href="#" class="btn btn-primary">Support with €10</a>
+            <button class="btn btn-primary" onclick="startSupportCheckout(10)">Support with €10</button>
           </div>
 
           <div class="support-card">
@@ -557,7 +557,7 @@
             <div class="support-description">
               A stronger voluntary gesture in support of the technology, gallery evolution, and future museum vision.
             </div>
-            <a href="#" class="btn btn-primary">Support with €25</a>
+            <button class="btn btn-primary" onclick="startSupportCheckout(25)">Support with €25</button>
           </div>
 
           <div class="support-card">
@@ -566,7 +566,7 @@
             <div class="support-description">
               Help push the project forward in a more substantial way and support its long-term realization.
             </div>
-            <a href="#" class="btn btn-primary">Support with €50</a>
+            <button class="btn btn-primary" onclick="startSupportCheckout(50)">Support with €50</button>
           </div>
         </div>
 
@@ -668,6 +668,27 @@
   </footer>
 
   <script>
+async function startSupportCheckout(amount) {
+  try {
+    const response = await fetch('/api/create-support-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount })
+    });
+
+    const data = await response.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Unable to start checkout');
+      console.error(data);
+    }
+  } catch (err) {
+    alert('Something went wrong');
+    console.error(err);
+  }
+}
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js")
         .then(() => console.log("SW registered"))
