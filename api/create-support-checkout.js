@@ -32,7 +32,7 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      success_url: `${req.headers.origin}/success.html`,
+      success_url: `${req.headers.origin}/support-success.html`,
       cancel_url: `${req.headers.origin}/support.html`,
     });
 
