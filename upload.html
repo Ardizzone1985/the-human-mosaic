@@ -330,6 +330,18 @@
               Your position is now being finalized and linked to your submission.
             </div>
 
+            <div style="margin-top:20px; margin-bottom:20px; text-align:left; max-width:520px;">
+  <label style="display:flex; align-items:flex-start; gap:10px; font-size:0.9rem; color:#444; line-height:1.4;">
+    
+    <input type="checkbox" id="consentCheckbox" style="margin-top:4px; transform:scale(1.1);" />
+
+    <span>
+      I confirm that I have the legal right to upload this image and that I have obtained consent from all identifiable individuals.
+      If minors are present, I confirm that I have obtained consent from their parent or legal guardian.
+    </span>
+
+  </label>
+</div>
             <button type="submit" class="submit-btn">Finalize Submission</button>
             <a id="backToCheckout" href="checkout.html?room=Identity" class="back-btn">Back to Checkout</a>
 
@@ -750,6 +762,12 @@ console.log("Verify response:", data);
 
     uploadForm.addEventListener("submit", async function (e) {
   e.preventDefault();
+      const consent = document.getElementById("consentCheckbox");
+
+if (!consent.checked) {
+  alert("You must confirm that you have the rights and required consent to upload this image.");
+  return;
+}
 
   const file = imageUpload.files[0];
   if (!file) return;
