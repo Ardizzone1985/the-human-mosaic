@@ -358,9 +358,8 @@ img.alt = `${item.room} contribution`;
 img.className = "protected-image";
 img.draggable = false;
 
-img.onclick = () => {
-  document.getElementById("modalImg").src = img.src;
-  document.getElementById("modal").classList.add("open");
+img.onclick = (e) => {
+  e.preventDefault();
 };
 
 img.addEventListener("contextmenu", (e) => e.preventDefault());
