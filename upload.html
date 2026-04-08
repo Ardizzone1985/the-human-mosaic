@@ -302,7 +302,7 @@
             <div class="upload-card">
               <strong>Select your image file</strong>
               <p style="margin-top:10px; color:#666;">
-                Accepted formats: JPG, JPEG, PNG, WEBP
+                Accepted formats: JPG, JPEG, PNG, WEBP · Max file size: 8 MB
               </p>
               <input type="file" id="imageUpload" name="imageUpload" accept=".jpg,.jpeg,.png,.webp,image/*" required>
             </div>
@@ -311,6 +311,8 @@
               <img id="previewImage" src="" alt="Preview">
               <div class="file-name" id="fileName"></div>
             </div>
+
+            <div id="uploadError" style="display:none; margin-top:16px; padding:14px 16px; border:1px solid #e7c3c3; border-radius:14px; background:#fff6f6; color:#b02a2a; font-size:0.93rem;"></div>
 
             <label class="checkbox-wrap">
               <input type="checkbox" required>
