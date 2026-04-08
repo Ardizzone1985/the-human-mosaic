@@ -808,7 +808,26 @@ if (!consent.checked) {
 }
 
   const file = imageUpload.files[0];
-  if (!file) return;
+if (!file) {
+  showUploadError("Please select an image before finalizing your submission.");
+  return;
+}
+
+const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+const maxSizeMB = 8;
+const sizeMB = file.size / (1024 * 1024);
+
+if (!allowedTypes.includes(file.type)) {
+  showUploadError("Invalid file format. Please upload JPG, JPEG, PNG, or WEBP.");
+  return;
+}
+
+if (sizeMB > maxSizeMB) {
+  showUploadError("File too large. The maximum allowed size is 8 MB.");
+  return;
+}
+
+clearUploadError();
 
   const confirmed = confirm(
     "Are you sure you want to finalize this submission?\n\nAfter submission, your image will enter the official review process."
