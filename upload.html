@@ -749,23 +749,54 @@ console.log("Verify response:", data);
     const uploadForm = document.getElementById("uploadForm");
     const submitBtn = document.querySelector(".submit-btn");
 
-    imageUpload.addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) {
-        previewBox.style.display = "none";
-        previewImage.src = "";
-        fileName.textContent = "";
-        return;
-      }
+    const uploadError = document.getElementById("uploadError");
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        previewImage.src = e.target.result;
-        fileName.textContent = file.name;
-        previewBox.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    });
+function showUploadError(message) {
+  uploadError.textContent = message;
+  uploadError.style.display = "block";
+}
+
+function clearUploadError() {
+  uploadError.textContent = "";
+  uploadError.style.display = "none";
+}
+
+imageUpload.addEventListener("change", function () {
+  const file = this.files[0];
+
+  previewBox.style.display = "none";
+  previewImage.src = "";
+  fileName.textContent = "";
+  clearUploadError();
+
+  if (!file) {
+    return;
+  }
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const maxSizeMB = 8;
+  const sizeMB = file.size / (1024 * 1024);
+
+  if (!allowedTypes.includes(file.type)) {
+    this.value = "";
+    showUploadError("Invalid file format. Please upload JPG, JPEG, PNG, or WEBP.");
+    return;
+  }
+
+  if (sizeMB > maxSizeMB) {
+    this.value = "";
+    showUploadError("File too large. The maximum allowed size is 8 MB.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    previewImage.src = e.target.result;
+    fileName.textContent = `${file.name} (${sizeMB.toFixed(2)} MB)`;
+    previewBox.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+});
 
     uploadForm.addEventListener("submit", async function (e) {
   e.preventDefault();
