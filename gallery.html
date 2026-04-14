@@ -277,6 +277,23 @@
   opacity: 1;
 }
 
+    .card {
+  position: relative;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 50px;
+  height: 50px;
+  background: url('logo-cropped.png') no-repeat center;
+  background-size: contain;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
   </style>
 </head>
 
