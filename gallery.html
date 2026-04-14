@@ -252,6 +252,24 @@
       border-radius: 12px;
     }
 
+    .card::after {
+  content: "View contribution";
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.7rem;
+  border-radius: 999px;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
   </style>
 </head>
 
