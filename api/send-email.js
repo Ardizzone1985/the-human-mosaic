@@ -223,6 +223,19 @@ export default async function handler(req, res) {
 
             <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
+<p style="margin-bottom:10px;">
+  <strong>View your contribution in the live gallery:</strong>
+</p>
+
+<p>
+  <a href="https://thehumanmosaic.art/gallery.html?id=${body.submissionId}" 
+     style="color:#111; font-weight:700; text-decoration:none;">
+    Open your personal gallery link
+  </a>
+</p>
+
+            <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
+
             <p><strong>What happens next?</strong></p>
             <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
             <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
