@@ -230,7 +230,7 @@ export default async function handler(req, res) {
 <p>
   <a href="https://thehumanmosaic.art/gallery.html?id=${body.submissionId}" 
      style="color:#111; font-weight:700; text-decoration:none;">
-    Open your personal gallery link
+    View your position in the live gallery
   </a>
 </p>
 
