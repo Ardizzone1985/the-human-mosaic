@@ -535,22 +535,54 @@
 }
 
     async function rejectSubmission(submissionId) {
-      const { error } = await supabaseClient
-        .from("submissions")
-        .update({
-          approval_status: "rejected"
-        })
-        .eq("submission_id", submissionId);
+  const { error } = await supabaseClient
+    .from("submissions")
+    .update({
+      approval_status: "rejected"
+    })
+    .eq("submission_id", submissionId);
 
-      if (error) {
-        alert("Reject error");
-        console.error(error);
-        return;
-      }
+  if (error) {
+    alert("Reject error");
+    console.error(error);
+    return;
+  }
 
-      await loadSubmissions(currentStatus, currentRoom, currentAi);
-      await loadAdminStats();
-    }
+  const { data: submission, error: fetchError } = await supabaseClient
+    .from("submissions")
+    .select("*")
+    .eq("submission_id", submissionId)
+    .single();
+
+  if (fetchError || !submission) {
+    console.error("Fetch error:", fetchError);
+    return;
+  }
+
+  try {
+    await fetch("/api/reject-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        submissionId: submission.submission_id,
+        fullName: submission.full_name,
+        email: submission.email,
+        room: submission.room,
+        wall: submission.wall,
+        section: submission.section,
+        spot: submission.spot,
+        slotCode: submission.slot_code
+      })
+    });
+  } catch (err) {
+    console.error("Reject email send error:", err);
+  }
+
+  await loadSubmissions(currentStatus, currentRoom, currentAi);
+  await loadAdminStats();
+}
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       sessionStorage.removeItem("thm_admin_authenticated");
