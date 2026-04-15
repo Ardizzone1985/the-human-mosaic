@@ -955,7 +955,7 @@ clearUploadError();
 
     localStorage.setItem("thm_submission", JSON.stringify(submissionData));
 
-    await sendConfirmationEmail(submissionData);
+   // await sendConfirmationEmail(submissionData);
 
     window.location.href =
       `success.html?submissionId=${encodeURIComponent(submissionId)}` +
