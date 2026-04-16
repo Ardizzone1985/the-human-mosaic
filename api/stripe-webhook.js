@@ -23,21 +23,31 @@ export default async function handler(req, res) {
     return res.status(405).send("Method Not Allowed");
   }
 
+  console.log("📩 Stripe webhook received");
+
   const signature = req.headers["stripe-signature"];
 
   if (!signature) {
-    return res.status(400).send("Missing Stripe-Signature header");
+    console.error("❌ Missing Stripe-Signature header");
+    return res.status(200).json({ received: true });
   }
+
+  let event;
 
   try {
     const rawBody = await getRawBody(req);
 
-    const event = stripe.webhooks.constructEvent(
+    event = stripe.webhooks.constructEvent(
       rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+  } catch (err) {
+    console.error("❌ STRIPE WEBHOOK SIGNATURE ERROR:", err.message);
+    return res.status(200).json({ received: true });
+  }
 
+  try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const slotCode = session.metadata?.slotCode || null;
@@ -99,7 +109,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ received: true });
   } catch (err) {
-    console.error("❌ STRIPE WEBHOOK ERROR:", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    console.error("❌ STRIPE WEBHOOK PROCESSING ERROR:", err.message);
+    return res.status(200).json({ received: true });
   }
 }
