@@ -1,12 +1,11 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 async function getRawBody(req) {
   return await new Promise((resolve, reject) => {
@@ -25,29 +24,51 @@ export default async function handler(req, res) {
 
   console.log("📩 Stripe webhook received");
 
-  const signature = req.headers["stripe-signature"];
-
-  if (!signature) {
-    console.error("❌ Missing Stripe-Signature header");
-    return res.status(200).json({ received: true });
-  }
-
-  let event;
-
   try {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!stripeSecretKey) {
+      console.error("❌ Missing STRIPE_SECRET_KEY");
+      return res.status(200).json({ received: true });
+    }
+
+    if (!stripeWebhookSecret) {
+      console.error("❌ Missing STRIPE_WEBHOOK_SECRET");
+      return res.status(200).json({ received: true });
+    }
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("❌ Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+      return res.status(200).json({ received: true });
+    }
+
+    const stripe = new Stripe(stripeSecretKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+    const signature = req.headers["stripe-signature"];
+
+    if (!signature) {
+      console.error("❌ Missing Stripe-Signature header");
+      return res.status(200).json({ received: true });
+    }
+
     const rawBody = await getRawBody(req);
 
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error("❌ STRIPE WEBHOOK SIGNATURE ERROR:", err.message);
-    return res.status(200).json({ received: true });
-  }
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        stripeWebhookSecret
+      );
+    } catch (err) {
+      console.error("❌ STRIPE WEBHOOK SIGNATURE ERROR:", err.message);
+      return res.status(200).json({ received: true });
+    }
 
-  try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const slotCode = session.metadata?.slotCode || null;
@@ -57,7 +78,7 @@ export default async function handler(req, res) {
         sessionId: session.id,
         slotCode,
         email: session.metadata?.email || null,
-        paymentStatus: session.payment_status || null
+        paymentStatus: session.payment_status || null,
       });
 
       if (slotCode) {
@@ -65,7 +86,7 @@ export default async function handler(req, res) {
           .from("slots")
           .update({
             payment_confirmed: true,
-            payment_confirmed_at: new Date().toISOString()
+            payment_confirmed_at: new Date().toISOString(),
           })
           .eq("slot_code", slotCode);
 
@@ -85,7 +106,7 @@ export default async function handler(req, res) {
       console.log({
         sessionId: session.id,
         slotCode,
-        email: session.metadata?.email || null
+        email: session.metadata?.email || null,
       });
 
       if (slotCode) {
@@ -94,7 +115,7 @@ export default async function handler(req, res) {
           .update({
             status: "available",
             reserved_at: null,
-            submission_id: null
+            submission_id: null,
           })
           .eq("slot_code", slotCode)
           .eq("status", "reserved");
@@ -109,7 +130,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ received: true });
   } catch (err) {
-    console.error("❌ STRIPE WEBHOOK PROCESSING ERROR:", err.message);
+    console.error("❌ STRIPE WEBHOOK FATAL ERROR:", err.message);
     return res.status(200).json({ received: true });
   }
 }
