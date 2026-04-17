@@ -484,7 +484,23 @@
 }
 
     async function approveSubmission(submissionId) {
-  // 1. aggiorna stato
+  const { data: submission, error: fetchError } = await supabaseClient
+    .from("submissions")
+    .select("submission_id, full_name, email, room, wall, section, spot, slot_code, slots!inner(payment_confirmed)")
+    .eq("submission_id", submissionId)
+    .single();
+
+  if (fetchError || !submission) {
+    alert("Unable to load submission data.");
+    console.error(fetchError);
+    return;
+  }
+
+  if (!submission.slots?.payment_confirmed) {
+    alert("Cannot approve this submission because payment is not confirmed.");
+    return;
+  }
+
   const { error } = await supabaseClient
     .from("submissions")
     .update({
@@ -499,19 +515,6 @@
     return;
   }
 
-  // 2. recupera dati completi submission
-  const { data: submission, error: fetchError } = await supabaseClient
-    .from("submissions")
-    .select("*")
-    .eq("submission_id", submissionId)
-    .single();
-
-  if (fetchError || !submission) {
-    console.error("Fetch error:", fetchError);
-    return;
-  }
-
-  // 3. invia email SOLO ORA
   try {
     await fetch("/api/send-email", {
       method: "POST",
@@ -525,14 +528,14 @@
         room: submission.room,
         wall: submission.wall,
         section: submission.section,
-        spot: submission.spot
+        spot: submission.spot,
+        slotCode: submission.slot_code
       })
     });
   } catch (err) {
     console.error("Email send error:", err);
   }
 
-  // 4. refresh UI
   await loadSubmissions(currentStatus, currentRoom, currentAi);
   await loadAdminStats();
 }
