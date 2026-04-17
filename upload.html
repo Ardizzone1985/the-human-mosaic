@@ -453,10 +453,18 @@
 
     const params = new URLSearchParams(window.location.search);
 
-    // 🔒 PAYMENT VERIFICATION
-(async function verifyPayment() {
+    // 🔒 PAYMENT / RE-UPLOAD VERIFICATION
+(async function verifyAccess() {
   const sessionId = params.get("session_id");
+  const reuploadSubmissionId = params.get("submissionId");
 
+  // ✅ Caso 1: accesso da email di rifiuto / re-upload
+  if (reuploadSubmissionId) {
+    console.log("Re-upload access granted ✅");
+    return;
+  }
+
+  // ✅ Caso 2: accesso normale dopo pagamento Stripe
   if (!sessionId) {
     alert("Access denied. Invalid session.");
     window.location.href = "index.html";
@@ -472,10 +480,10 @@
       body: JSON.stringify({ session_id: sessionId })
     });
 
-    const data = await res.json();
-    
-console.log("Verify response:", data);
-    
+    const data = await res.json().catch(() => null);
+
+    console.log("Verify response:", data);
+
     if (!res.ok) {
       alert("Payment verification failed.");
       window.location.href = "checkout.html";
@@ -483,7 +491,6 @@ console.log("Verify response:", data);
     }
 
     console.log("Payment verified ✅");
-
   } catch (err) {
     console.error("Verification error:", err);
     alert("Server error during verification.");
