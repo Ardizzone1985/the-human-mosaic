@@ -443,6 +443,9 @@
           <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
           <span class="badge ${getModerationBadgeClass(item.moderation_status)}">AI Note: ${item.moderation_status || "safe"}</span>
           <span class="badge ${getModerationBadgeClass(item.image_moderation_status)}">AI Image: ${item.image_moderation_status || "safe"}</span>
+          <span class="badge ${item.slots?.payment_confirmed ? 'badge-status-approved' : 'badge-status-rejected'}">
+  Payment: ${item.slots?.payment_confirmed ? 'confirmed' : 'not confirmed'}
+</span>
         </div>
 
         <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
