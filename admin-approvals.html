@@ -443,10 +443,7 @@
           <span class="badge ${getStatusBadgeClass(item.approval_status)}">${item.approval_status || "unknown"}</span>
           <span class="badge ${getModerationBadgeClass(item.moderation_status)}">AI Note: ${item.moderation_status || "safe"}</span>
           <span class="badge ${getModerationBadgeClass(item.image_moderation_status)}">AI Image: ${item.image_moderation_status || "safe"}</span>
-          <span class="badge ${(item.slots && item.slots.payment_confirmed) ? 'badge-status-approved' : 'badge-status-rejected'}">
-  Payment: ${(item.slots && item.slots.payment_confirmed) ? 'confirmed' : 'not confirmed'}
-</span>
-        </div>
+                  </div>
 
         <div class="meta"><strong>Name:</strong> ${item.full_name || "—"}</div>
         <div class="meta"><strong>Slot:</strong> ${item.slot_code || "—"}</div>
@@ -483,10 +480,10 @@
   });
 }
 
-    async function approveSubmission(submissionId) {
+   async function approveSubmission(submissionId) {
   const { data: submission, error: fetchError } = await supabaseClient
     .from("submissions")
-    .select("submission_id, full_name, email, room, wall, section, spot, slot_code, slots!inner(payment_confirmed)")
+    .select("submission_id, full_name, email, room, wall, section, spot, slot_code")
     .eq("submission_id", submissionId)
     .single();
 
@@ -496,7 +493,19 @@
     return;
   }
 
-  if (!submission.slots?.payment_confirmed) {
+  const { data: slot, error: slotError } = await supabaseClient
+    .from("slots")
+    .select("payment_confirmed")
+    .eq("slot_code", submission.slot_code)
+    .single();
+
+  if (slotError || !slot) {
+    alert("Unable to verify payment status.");
+    console.error(slotError);
+    return;
+  }
+
+  if (!slot.payment_confirmed) {
     alert("Cannot approve this submission because payment is not confirmed.");
     return;
   }
