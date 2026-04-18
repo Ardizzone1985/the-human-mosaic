@@ -180,10 +180,97 @@ async function generateCertificatePdf(data, req) {
 export default async function handler(req, res) {
   try {
     const body = await getJsonBody(req);
-    if (!body.email || body.email === "—") {
-  return res.status(400).json({ error: "Invalid email" });
-}
 
+    if (!body.email || body.email === "—") {
+      return res.status(400).json({ error: "Invalid email" });
+    }
+
+    const emailType = body.type || "approved";
+    const galleryLink = `https://thehumanmosaic.art/gallery.html?id=${body.submissionId}`;
+
+    // ✅ EMAIL 1: SUBMITTED (immediata dopo upload, SENZA certificato)
+    if (emailType === "submitted") {
+      await resend.emails.send({
+        from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
+        to: [body.email],
+        subject: 'Your submission has been received',
+        html: `
+          <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 680px; margin: 0 auto; padding: 24px;">
+            <div style="background: #ffffff; border: 1px solid #e8e8e8; border-radius: 20px; padding: 32px;">
+              <p style="font-size: 12px; letter-spacing: 0.14em; color: #777; margin: 0 0 18px;">
+                ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+              </p>
+
+              <h2 style="margin: 0 0 18px; font-size: 28px; line-height: 1.2;">
+                Your submission has been received
+              </h2>
+
+              <p>Hello ${body.fullName || 'Participant'},</p>
+
+              <p style="color:#555;">
+                Thank you for taking part in <strong>The Human Mosaic</strong>.
+              </p>
+
+              <p>
+                Your image has been successfully submitted and is now in the official review process.
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
+
+              <p><strong>Submission ID:</strong> ${body.submissionId || '—'}</p>
+              <p><strong>Room:</strong> ${body.room || '—'}</p>
+              <p><strong>Wall:</strong> ${body.wall || '—'}</p>
+              <p><strong>Section:</strong> ${body.section || '—'}</p>
+              <p><strong>Spot:</strong> ${body.spot || '—'}</p>
+
+              <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
+
+              <p><strong>What happens next?</strong></p>
+              <p>1. Review — We check that your image matches the selected room and project guidelines.</p>
+              <p>2. Approval — Once approved, your image will become part of the live gallery.</p>
+              <p>3. Certificate — After approval, you will receive your official certificate by email.</p>
+
+              <p style="margin-top: 24px;">
+                For questions or support:
+                <a href="mailto:info@thehumanmosaic.art" style="color: #111; text-decoration: none; font-weight: 700;">
+                  info@thehumanmosaic.art
+                </a>
+              </p>
+
+              <p style="margin-top: 24px; font-weight: 700;">— The Human Mosaic</p>
+            </div>
+          </div>
+        `,
+        text: `
+Your submission has been received
+
+Hello ${body.fullName || 'Participant'},
+
+Thank you for taking part in The Human Mosaic.
+
+Your image has been successfully submitted and is now in the official review process.
+
+Submission ID: ${body.submissionId || '—'}
+Room: ${body.room || '—'}
+Wall: ${body.wall || '—'}
+Section: ${body.section || '—'}
+Spot: ${body.spot || '—'}
+
+What happens next?
+1. Review — We check that your image matches the selected room and project guidelines.
+2. Approval — Once approved, your image will become part of the live gallery.
+3. Certificate — After approval, you will receive your official certificate by email.
+
+Support: info@thehumanmosaic.art
+
+— The Human Mosaic
+        `.trim()
+      });
+
+      return res.status(200).json({ success: true, type: "submitted" });
+    }
+
+    // ✅ EMAIL 2: APPROVED (dopo approvazione, CON certificato)
     const pdfBytes = await generateCertificatePdf(body, req);
 
     await resend.emails.send({
@@ -204,14 +291,10 @@ export default async function handler(req, res) {
             <p>Hello ${body.fullName},</p>
 
             <p style="color:#555;">
-              We’re glad to have you in this global artwork.
+              Your image has been approved and is now part of this global artwork.
             </p>
 
-            <p>Thank you for becoming part of <strong>The Human Mosaic</strong>.</p>
-
-            <p><strong>You are now part of something that will live forever.</strong></p>
-
-            <p>Your participation request has been successfully received and is now entering the official review process.</p>
+            <p><strong>Your contribution is now officially included.</strong></p>
 
             <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
@@ -223,23 +306,19 @@ export default async function handler(req, res) {
 
             <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
-<p style="margin-bottom:10px;">
-  <strong>View your contribution in the live gallery:</strong>
-</p>
+            <p style="margin-bottom:10px;">
+              <strong>View your contribution in the live gallery:</strong>
+            </p>
 
-<p>
-  <a href="https://thehumanmosaic.art/gallery.html?id=${body.submissionId}" 
-     style="color:#111; font-weight:700; text-decoration:none;">
-    View your position in the live gallery
-  </a>
-</p>
+            <p>
+              <a href="${galleryLink}" style="color:#111; font-weight:700; text-decoration:none;">
+                Open your personal gallery link
+              </a>
+            </p>
 
-            <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
-
-            <p><strong>What happens next?</strong></p>
-            <p>1. Review — We verify that your submission matches the project guidelines and the selected room.</p>
-            <p>2. Confirmation — Your position and participation request are confirmed after review.</p>
-            <p>3. Certificate — Your official certificate prototype is attached to this email.</p>
+            <p style="margin-top: 24px;">
+              Your official certificate is attached to this email.
+            </p>
 
             <p style="margin-top: 24px;">
               For questions or support:
@@ -257,11 +336,9 @@ Welcome to The Human Mosaic
 
 Hello ${body.fullName},
 
-Thank you for becoming part of The Human Mosaic.
+Your image has been approved and is now part of this global artwork.
 
-You are now part of something that will live forever.
-
-Your participation request has been successfully received and is now entering the official review process.
+Your contribution is now officially included.
 
 Submission ID: ${body.submissionId}
 Room: ${body.room}
@@ -269,10 +346,10 @@ Wall: ${body.wall || '—'}
 Section: ${body.section || '—'}
 Spot: ${body.spot}
 
-What happens next?
-1. Review — We verify that your submission matches the project guidelines and the selected room.
-2. Confirmation — Your position and participation request are confirmed after review.
-3. Certificate — Your official certificate prototype is attached to this email.
+View your contribution in the live gallery:
+${galleryLink}
+
+Your official certificate is attached to this email.
 
 Support: info@thehumanmosaic.art
 
@@ -286,9 +363,9 @@ Support: info@thehumanmosaic.art
       ]
     });
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, type: "approved" });
   } catch (error) {
-    console.error('PDF ERROR:', error);
+    console.error('PDF / EMAIL ERROR:', error);
     return res.status(500).json({ error: error.message });
   }
 }
