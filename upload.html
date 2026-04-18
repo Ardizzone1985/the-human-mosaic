@@ -696,6 +696,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            type: "submitted",
             fullName: submissionData.fullName,
             email: submissionData.email,
             country: submissionData.country,
@@ -962,7 +963,7 @@ clearUploadError();
 
     localStorage.setItem("thm_submission", JSON.stringify(submissionData));
 
-   // await sendConfirmationEmail(submissionData);
+   await sendConfirmationEmail(submissionData);
 
     window.location.href =
       `success.html?submissionId=${encodeURIComponent(submissionId)}` +
