@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       `&note=${encodeURIComponent(note || "")}`;
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "paypal"],
       mode: "payment",
       line_items: [
         {
