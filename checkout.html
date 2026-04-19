@@ -535,7 +535,7 @@
               </span>
             </label>
 
-            <button type="submit" class="checkout-btn">Secure Your Spot & Continue</button>
+            <button type="submit" class="checkout-btn">Secure Your Spot & Proceed to Payment</button>
             <p class="micro-trust">
   Secure payment powered by Stripe · Instant reservation · No subscription · One-time payment
 </p>
@@ -863,7 +863,7 @@ async function releaseCancelledSlotIfNeeded() {
         alert(error.message || "Something went wrong. Please try again.");
 
         checkoutBtn.disabled = false;
-        checkoutBtn.textContent = "Secure Your Spot & Continue";
+        checkoutBtn.textContent = "Redirecting to secure payment...";
       }
     });
   </script>
