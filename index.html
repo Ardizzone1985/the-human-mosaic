@@ -803,76 +803,57 @@
       <div class="container">
         <div class="hero-content">
           <div class="hero-badge">
-            A permanent global artwork in the making
-          </div>
-
-          <h1>
-  <h1>
-  Be part of a permanent global artwork
-</h1>
-
-<div class="tagline">
-  Explore the live gallery. Discover the first participants. Become part of it.
+  A permanent global artwork in the making
 </div>
 
-<p style="margin-top:10px; font-size:0.9rem; color:rgba(255,255,255,0.8);">
-  Start by exploring the gallery — then claim your spot if you feel it.
-</p>
+<h1>Be part of a permanent global artwork</h1>
+
+<div class="tagline">
+  Explore the live gallery. See real participants. Become part of it.
+</div>
 
 <div class="hero-highlight">
   A permanent global artwork built by real people, one approved image at a time.
-</div>
-
-<p class="intro">
-  Join <span class="highlight" style="color:white;">The Human Mosaic</span> and reserve your place inside a permanent collective artwork.
-  Every approved submission becomes part of one of three growing rooms:
-  <span class="highlight" style="color:white;">Identity, Love, and Creativity</span>.
-</p>
-
-<div class="hero-trust-line">
-  Secure participation process • Image review within 48 hours • Official digital certificate
-</div>
-
-<div class="hero-urgency">
-  Public gallery now live • Early participants are already shaping the first visible rooms
-</div>
-
-<div class="hero-limited">
-  Each room offers a limited number of participant spots
 </div>
 
 <div class="live-activity" id="liveActivity">
   People around the world are joining right now...
 </div>
 
-<!-- 🔥 INFO PRIMA DEI BOTTONI -->
-<p style="margin-top:12px; font-size:0.95rem; color:rgba(255,255,255,0.85);">
-  Participation starts from €15 • One-time payment • Lifetime inclusion
-</p>
-
-<p style="margin-top:10px; font-size:0.9rem; color:rgba(255,255,255,0.75);">
-  Secure payment · Instant confirmation · Official certificate included
-</p>
-
-<p style="margin-top:14px; font-size:0.95rem; color:rgba(255,255,255,0.9); line-height:1.7;">
-  ✔ Real participants already joining<br>
-  ✔ Live gallery is active<br>
-  ✔ First submissions already approved
-</p>
-
-<p style="margin-top:10px; color:#ff4d4d; font-weight:600;">
-  Be among the first to secure your position
-</p>
-
-<!-- 🔥 SOLO BOTTONI QUI -->
 <div class="buttons">
-  <a href="#app" class="btn btn-primary">Explore Live Gallery →</a>
+  <a href="#app" class="btn btn-primary">Explore Live Gallery</a>
   <a href="join.html" class="btn btn-secondary">Claim Your Spot</a>
   <a href="#project" class="btn btn-secondary">Explore the Project</a>
 </div>
+          <p style="margin-top:14px; font-size:0.92rem; color:rgba(255,255,255,0.82);">
+  From €15 · One-time payment · Official digital certificate included
+</p>
         </div>
       </div>
     </section>
+
+    <section style="background:#fff; padding:42px 0; border-top:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">
+  <div class="container" style="text-align:center; max-width:820px;">
+
+    <div style="font-size:0.8rem; letter-spacing:0.16em; font-weight:700; color:#666; margin-bottom:12px;">
+      REAL PARTICIPATION
+    </div>
+
+    <h2 style="margin-bottom:10px;">
+      Already <span id="count-total-inline">5</span> people joined
+    </h2>
+
+    <p style="color:#555; margin-bottom:22px; font-size:1rem; line-height:1.7;">
+      Real participants are already becoming part of The Human Mosaic.
+      Explore the live gallery and see the first approved contributions.
+    </p>
+
+    <a href="/gallery.html" class="btn btn-secondary">
+      View Real Participants
+    </a>
+
+  </div>
+</section>
 
     <section class="snapshot-section">
   <div class="container">
@@ -1222,9 +1203,9 @@
   </h2>
 
   <p>
-    The Human Mosaic is not a temporary project. It is a long-term collective artwork designed to become a permanent museum installation.
-    Every position is unique. Once occupied, it will not be available again.
-  </p>
+  The Human Mosaic is a long-term collective artwork designed to grow into a permanent museum installation.
+  Every participant who joins now becomes part of its earliest visible structure.
+</p>
 
   <p>
     Early participants are already shaping the first visible structure of the artwork.
@@ -1232,7 +1213,7 @@
   </p>
 
           <p style="margin-top:10px; font-size:0.9rem; color:rgba(255,255,255,0.7);">
-  First positions are being taken — early participants will define the foundation of the artwork.
+  The project is already live — early participants are shaping its first real form.
 </p>
 
   <div style="margin-top:28px;">
@@ -1240,13 +1221,13 @@
       Claim Your Spot
     </a>
     <p class="micro-trust">
-  Join thousands of participants worldwide · Official digital certificate included
+  Real participants already joining · Official digital certificate included
 </p>
   </div>
 
   <div style="margin-top:18px; font-size:0.9rem; color:rgba(255,255,255,0.65);">
-    Limited positions per room • Image review within 48 hours • Official certificate included
-  </div>
+  From €15 • Image review within 48 hours • Official certificate included
+</div>
 </div>
     </section>
 
@@ -1418,6 +1399,9 @@ function animateCount(elementId, endValue, duration = 1200) {
 animateCount("count-identity", identity);
 animateCount("count-love", love);
 animateCount("count-creativity", creativity);
+
+      const inlineTotal = document.getElementById("count-total-inline");
+if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
 
       const totalPerRoom = 1000000;
       const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
