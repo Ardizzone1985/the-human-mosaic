@@ -17,6 +17,59 @@ async function getRawBody(req) {
   });
 }
 
+async function markSlotAsPaid(supabase, payload) {
+  const {
+    slotCode,
+    sessionId = null,
+    paymentStatus = "paid",
+    customerEmail = null,
+    room = null,
+    fullName = null,
+    country = null
+  } = payload;
+
+  if (!slotCode) {
+    console.error("❌ Missing slotCode while marking payment");
+    return;
+  }
+
+  const now = new Date().toISOString();
+
+  const { error: slotError } = await supabase
+    .from("slots")
+    .update({
+      payment_confirmed: true,
+      payment_confirmed_at: now
+    })
+    .eq("slot_code", slotCode);
+
+  if (slotError) {
+    console.error("❌ SLOT PAYMENT UPDATE ERROR:", slotError);
+  } else {
+    console.log("✅ Slot marked as paid:", slotCode);
+  }
+
+  const row = {
+    stripe_session_id: sessionId,
+    payment_status: paymentStatus,
+    customer_email: customerEmail,
+    room,
+    slot_code: slotCode,
+    full_name: fullName,
+    country
+  };
+
+  const { error: paymentInsertError } = await supabase
+    .from("stripe_payments")
+    .insert([row]);
+
+  if (paymentInsertError) {
+    console.error("❌ STRIPE_PAYMENTS INSERT ERROR:", paymentInsertError);
+  } else {
+    console.log("✅ stripe_payments row inserted");
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).send("Method Not Allowed");
@@ -71,39 +124,60 @@ export default async function handler(req, res) {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      const slotCode = session.metadata?.slotCode || null;
 
-      console.log("✅ PAYMENT CONFIRMED VIA WEBHOOK");
-      console.log({
+      const slotCode =
+        session.metadata?.slotCode ||
+        session.client_reference_id ||
+        null;
+
+      console.log("✅ checkout.session.completed", {
         sessionId: session.id,
         slotCode,
-        email: session.metadata?.email || null,
         paymentStatus: session.payment_status || null,
+        email: session.metadata?.email || session.customer_details?.email || null,
       });
 
-      if (slotCode) {
-        const { error } = await supabase
-          .from("slots")
-          .update({
-            payment_confirmed: true,
-            payment_confirmed_at: new Date().toISOString(),
-          })
-          .eq("slot_code", slotCode);
+      await markSlotAsPaid(supabase, {
+        slotCode,
+        sessionId: session.id,
+        paymentStatus: session.payment_status || "paid",
+        customerEmail: session.metadata?.email || session.customer_details?.email || null,
+        room: session.metadata?.room || null,
+        fullName: session.metadata?.fullName || null,
+        country: session.metadata?.country || null
+      });
+    }
 
-        if (error) {
-          console.error("❌ DB UPDATE ERROR (completed):", error);
-        } else {
-          console.log("✅ Slot marked as paid");
-        }
-      }
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object;
+      const slotCode = paymentIntent.metadata?.slotCode || null;
+
+      console.log("✅ payment_intent.succeeded", {
+        paymentIntentId: paymentIntent.id,
+        slotCode,
+        amount: paymentIntent.amount,
+        currency: paymentIntent.currency
+      });
+
+      await markSlotAsPaid(supabase, {
+        slotCode,
+        sessionId: paymentIntent.id,
+        paymentStatus: "paid",
+        customerEmail: paymentIntent.metadata?.email || null,
+        room: paymentIntent.metadata?.room || null,
+        fullName: paymentIntent.metadata?.fullName || null,
+        country: paymentIntent.metadata?.country || null
+      });
     }
 
     if (event.type === "checkout.session.expired") {
       const session = event.data.object;
-      const slotCode = session.metadata?.slotCode || null;
+      const slotCode =
+        session.metadata?.slotCode ||
+        session.client_reference_id ||
+        null;
 
-      console.log("⌛ CHECKOUT SESSION EXPIRED");
-      console.log({
+      console.log("⌛ checkout.session.expired", {
         sessionId: session.id,
         slotCode,
         email: session.metadata?.email || null,
