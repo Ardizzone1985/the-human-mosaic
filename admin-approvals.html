@@ -526,21 +526,21 @@
 
   try {
     await fetch("/api/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        submissionId: submission.submission_id,
-        fullName: submission.full_name,
-        email: submission.email,
-        room: submission.room,
-        wall: submission.wall,
-        section: submission.section,
-        spot: submission.spot,
-        slotCode: submission.slot_code
-      })
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    submissionId: submission.submission_id,
+    fullName: submission.full_name,
+    email: submission.email,
+    country: submission.country,
+    room: submission.room,
+    wall: submission.wall,
+    section: submission.section,
+    spot: submission.spot
+  })
+});
   } catch (err) {
     console.error("Email send error:", err);
   }
