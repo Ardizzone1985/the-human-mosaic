@@ -457,7 +457,7 @@ gallery.appendChild(card);
 async function loadImages() {
   const { data, error } = await supabaseClient
     .from("submissions")
-    .select("image_file_name, room, note, submission_id, approval_status")
+    .select("image_file_name, room, note, country, submission_id, approval_status")
     .eq("approval_status", "approved");
 
   if (error) {
