@@ -241,6 +241,14 @@
       font-size: 0.9rem;
     }
 
+    .card-country {
+  color: #888;
+  font-size: 0.84rem;
+  margin-top: 6px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
     .modal {
       position: fixed;
       inset: 0;
@@ -437,6 +445,7 @@ info.innerHTML = `
   <div class="room-tag ${getRoomClass(item.room)}">${item.room}</div>
   <div class="card-title">${item.room} Contribution</div>
   <div class="card-note-preview">${item.note || ""}</div>
+  <div class="card-country">${item.country ? `From ${item.country}` : ""}</div>
 `;
 
 card.appendChild(media);
