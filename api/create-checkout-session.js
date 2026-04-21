@@ -90,8 +90,7 @@ const session = await stripe.checkout.sessions.create({
       quantity: 1
     }
   ],
-  metadata,
-      
+  metadata: metadata,
   success_url: successUrl,
   cancel_url:
     `https://thehumanmosaic.art/checkout.html` +
@@ -103,7 +102,6 @@ const session = await stripe.checkout.sessions.create({
     `&price=${encodeURIComponent(formattedPrice)}` +
     `&cancelled=1`
 });
-
     return res.status(200).json({ url: session.url });
   } catch (err) {
     console.error("STRIPE ERROR:", err);
