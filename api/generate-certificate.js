@@ -1,39 +1,111 @@
 import puppeteer from "puppeteer";
 
 export default async function handler(req, res) {
-  const { name, room, wall, section, spot, id } = req.body;
+  const { name, room, wall, section, spot, id, country } = req.body;
 
-  const verifyLink = `https://thehumanmosaic.art/verify.html?id=${id}`;
+const verifyLink = `https://thehumanmosaic.art/verify.html?id=${id}`;
 
-  const html = `
-  <html>
-    <body style="font-family: Arial; text-align:center; padding:40px;">
-      
-      <h1 style="margin-bottom:20px;">The Human Mosaic</h1>
-      
-      <h2 style="margin-bottom:10px;">Official Participation Certificate</h2>
-      
-      <p style="margin-bottom:30px;">This certifies that</p>
+const html = `
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 40px;
+    background: #f8f8f6;
+  }
 
-      <h2 style="margin-bottom:30px;">${name}</h2>
+  .container {
+    border: 8px solid #d4af37;
+    padding: 40px;
+    background: white;
+  }
 
-      <p>${room} Room</p>
-      <p>${wall} - ${section}</p>
-      <p>Spot: ${spot}</p>
+  h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
 
-      <p style="margin-top:20px;">ID: ${id}</p>
+  .subtitle {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 20px;
+  }
 
-      <div style="margin-top:40px;">
-        <p style="font-size:12px; color:#666;">
-          Scan to verify your participation
-        </p>
+  .name {
+    font-size: 36px;
+    font-weight: bold;
+    color: #b8962e;
+    margin: 30px 0;
+  }
 
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyLink}" />
-      </div>
+  .big-line {
+    font-size: 18px;
+    margin: 15px 0;
+  }
 
-    </body>
-  </html>
-  `;
+  .highlight {
+    font-weight: bold;
+  }
+
+  .footer {
+    margin-top: 40px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .qr {
+    margin-top: 30px;
+  }
+</style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="subtitle">PERMANENT POSITION CERTIFICATE</div>
+
+    <h1>CERTIFICATE OF PARTICIPATION</h1>
+
+    <p class="big-line">This certifies that</p>
+
+    <div class="name">${name}</div>
+
+    <p class="big-line highlight">
+      Official Participant • ${room} Room
+    </p>
+
+    <p class="big-line">
+      You are now part of the largest human artwork ever created.
+    </p>
+
+    <p class="big-line">
+      Participant #${id.slice(0,6)} of 1,000,000
+    </p>
+
+    <p class="big-line">
+      Origin: ${country || "Unknown"} 🌍
+    </p>
+
+    <p class="big-line">
+      ${room} • ${wall} • ${section} • ${spot}
+    </p>
+
+    <div class="footer">
+      This artwork will exist as a permanent physical installation.
+    </div>
+
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${verifyLink}" />
+      <p style="font-size:10px;">Scan to verify</p>
+    </div>
+
+  </div>
+</body>
+</html>
+`;
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
