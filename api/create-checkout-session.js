@@ -91,9 +91,7 @@ const session = await stripe.checkout.sessions.create({
     }
   ],
   metadata,
-  payment_intent_data: {
-    metadata
-  },
+      
   success_url: successUrl,
   cancel_url:
     `https://thehumanmosaic.art/checkout.html` +
