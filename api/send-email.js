@@ -45,11 +45,13 @@ async function generateCertificatePdf(data, req) {
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
   const gold = rgb(0.60, 0.45, 0.10);
-  const textDark = rgb(0.22, 0.22, 0.22);
-  const textSoft = rgb(0.33, 0.33, 0.33);
+  const darkGold = rgb(0.50, 0.37, 0.08);
+  const textDark = rgb(0.18, 0.18, 0.18);
+  const textSoft = rgb(0.35, 0.35, 0.35);
+  const lineSoft = rgb(0.78, 0.78, 0.78);
 
   const drawCentered = (text, y, size, font, color = textDark) => {
-    const safe = String(text || '');
+    const safe = String(text || "");
     const textWidth = font.widthOfTextAtSize(safe, size);
     page.drawText(safe, {
       x: (width - textWidth) / 2,
@@ -62,97 +64,154 @@ async function generateCertificatePdf(data, req) {
 
   const fitText = (text, maxWidth, startSize, font, minSize = 8) => {
     let size = startSize;
-    const safe = String(text || '');
+    const safe = String(text || "");
     while (size > minSize && font.widthOfTextAtSize(safe, size) > maxWidth) {
       size -= 0.5;
     }
     return size;
   };
 
-  const cleanName = String(fullName || '').trim();
-  const nameSize = fitText(cleanName, 420, 34, fontBold, 22);
+  const cleanName = String(fullName || "").trim();
+  const roomText = String(room || "").toUpperCase().trim();
+  const wallText = String(wall || "").toUpperCase().trim();
+  const sectionText = String(section || "").toUpperCase().trim();
+  const spotText = String(spot || "").toUpperCase().trim();
+  const shortId = String(submissionId || "").toUpperCase().trim();
+
+  let countryText = String(country || "ITALY").toUpperCase().trim();
+  if (countryText.length > 20) {
+    countryText = countryText.slice(0, 18);
+  }
+
+  // --- NAME ---
+  const nameSize = fitText(cleanName, 430, 34, fontBold, 22);
   drawCentered(cleanName, 332, nameSize, fontBold, gold);
 
+  // underline under name
+  page.drawLine({
+    start: { x: 275, y: 322 },
+    end: { x: 567, y: 322 },
+    thickness: 1,
+    color: lineSoft
+  });
+
+  // --- MAIN TITLE LINE ---
   drawCentered(
-    `Official Participant • ${String(room || '').trim()} Room`,
-    290,
+    `Official Participant • ${String(room || "").trim()} Room`,
+    288,
     16,
     fontBold,
     textDark
   );
 
+  // --- WOW LINE ---
+  drawCentered(
+    `One face. One story. One piece of humanity.`,
+    268,
+    12,
+    fontItalic,
+    darkGold
+  );
+
+  // --- GLOBAL VALUE LINE ---
+  drawCentered(
+    `One of 1,000,000 participants in a permanent global artwork.`,
+    246,
+    11,
+    fontRegular,
+    textSoft
+  );
+
+  // --- LEGACY LINE ---
+  drawCentered(
+    `This contribution becomes part of a future permanent physical installation.`,
+    186,
+    10.5,
+    fontItalic,
+    textDark
+  );
+
+  // --- SIGNATURE BLOCK BOOST ---
+  drawCentered(
+    `Permanent Position Verified`,
+    120,
+    10,
+    fontBold,
+    darkGold
+  );
+
+  // --- INFO BLOCK BOTTOM RIGHT ---
+  const headerY = 94;
   const valueY = 48;
 
-  const roomText = String(room || '').toUpperCase();
-  const wallText = String(wall || '').toUpperCase();
-  const sectionText = String(section || '').toUpperCase();
-  const spotText = String(spot || '').toUpperCase();
-  const shortId = String(submissionId || '').toUpperCase();
-
-  page.drawText(roomText, {
-    x: 520,
-    y: valueY,
-    size: fitText(roomText, 60, 12, fontBold, 9),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(wallText, {
-    x: 600,
-    y: valueY,
-    size: fitText(wallText, 55, 12, fontBold, 9),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(sectionText, {
-    x: 670,
-    y: valueY,
-    size: fitText(sectionText, 60, 12, fontBold, 9),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(spotText, {
-    x: 750,
-    y: valueY,
-    size: fitText(spotText, 55, 12, fontBold, 8.5),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(shortId, {
-    x: 660,
-    y: 32,
-    size: fitText(shortId, 125, 9.5, fontBold, 7.5),
-    font: fontBold,
-    color: textDark
-  });
-
-  let countryText = String(country || 'ITALY').toUpperCase().trim();
-
-  if (countryText.length > 20) {
-    countryText = countryText.slice(0, 18);
-  }
-
-  const countrySize = fitText(countryText, 150, 10.5, fontBold, 7.5);
+  // country centered over block
+  const countrySize = fitText(countryText, 150, 11, fontBold, 8);
   const countryWidth = fontBold.widthOfTextAtSize(countryText, countrySize);
 
   page.drawText(countryText, {
     x: 640 - (countryWidth / 2),
-    y: 95,
+    y: headerY,
     size: countrySize,
     font: fontBold,
     color: textDark
   });
 
+  // participant id label line under the bottom block title
+  page.drawLine({
+    start: { x: 455, y: 89 },
+    end: { x: 780, y: 89 },
+    thickness: 0.8,
+    color: lineSoft
+  });
+
+  page.drawText(roomText, {
+    x: 520,
+    y: valueY,
+    size: fitText(roomText, 65, 12, fontBold, 9),
+    font: fontBold,
+    color: textDark
+  });
+
+  page.drawText(wallText, {
+    x: 598,
+    y: valueY,
+    size: fitText(wallText, 62, 11.5, fontBold, 8.5),
+    font: fontBold,
+    color: textDark
+  });
+
+  page.drawText(sectionText, {
+    x: 675,
+    y: valueY,
+    size: fitText(sectionText, 42, 12, fontBold, 9),
+    font: fontBold,
+    color: textDark
+  });
+
+  page.drawText(spotText, {
+    x: 744,
+    y: valueY,
+    size: fitText(spotText, 48, 12, fontBold, 8.5),
+    font: fontBold,
+    color: textDark
+  });
+
+  page.drawText(shortId, {
+    x: 618,
+    y: 31,
+    size: fitText(shortId, 165, 9, fontBold, 7),
+    font: fontBold,
+    color: textSoft
+  });
+
+  // --- QR ---
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${submissionId}`;
   const qrData = await QRCode.toDataURL(verifyUrl, {
     margin: 1,
     width: 220,
     color: {
-      dark: '#1f1f1f',
-      light: '#FFFFFF'
+      dark: "#1f1f1f",
+      light: "#FFFFFF"
     }
   });
 
@@ -166,8 +225,8 @@ async function generateCertificatePdf(data, req) {
     height: 88
   });
 
-  page.drawText('VERIFY', {
-    x: 712,
+  page.drawText("SCAN TO VERIFY", {
+    x: 694,
     y: 448,
     size: 7,
     font: fontBold,
