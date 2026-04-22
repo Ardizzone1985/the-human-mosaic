@@ -483,7 +483,7 @@
    async function approveSubmission(submissionId) {
   const { data: submission, error: fetchError } = await supabaseClient
     .from("submissions")
-    .select("submission_id, full_name, email, room, wall, section, spot, slot_code")
+    .select("submission_id, full_name, email, country, room, wall, section, spot, slot_code")
     .eq("submission_id", submissionId)
     .single();
 
