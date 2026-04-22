@@ -100,27 +100,27 @@ async function generateCertificatePdf(data, req) {
 
   drawCentered(
     `One face. One story. One piece of humanity.`,
-    268,
-    12,
+    260,
+    13,
     fontItalic,
     darkGold
   );
 
   drawCentered(
-    `One of 1,000,000 participants in a permanent global artwork.`,
-    246,
-    11,
-    fontRegular,
-    textSoft
-  );
+  `Permanent position registered in a global collective artwork.`,
+  238,
+  11.5,
+  fontRegular,
+  textSoft
+);
 
   drawCentered(
-    `This contribution becomes part of a future permanent physical installation.`,
-    186,
-    10.5,
-    fontItalic,
-    textDark
-  );
+  `Part of a future permanent physical installation.`,
+  180,
+  11,
+  fontItalic,
+  textDark
+);
 
   drawCentered(
     `Permanent Position Verified`,
@@ -129,6 +129,14 @@ async function generateCertificatePdf(data, req) {
     fontBold,
     darkGold
   );
+
+  drawCentered(
+  `One of the first contributors`,
+  105,
+  10,
+  fontItalic,
+  darkGold
+);
 
   const headerY = 94;
   const valueY = 48;
