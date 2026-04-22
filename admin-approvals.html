@@ -483,8 +483,9 @@
         </div>
 
         <div class="card-top-actions">
-          <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
-        </div>
+  <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
+  <button class="download-btn" onclick="downloadCertificate('${item.submission_id}')">Download Certificate</button>
+</div>
 
         <div class="actions">
           ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
