@@ -567,6 +567,58 @@
   await loadAdminStats();
 }
 
+    async function downloadCertificate(submissionId) {
+  const { data: submission, error } = await supabaseClient
+    .from("submissions")
+    .select("submission_id, full_name, country, room, wall, section, spot")
+    .eq("submission_id", submissionId)
+    .single();
+
+  if (error || !submission) {
+    alert("Unable to load submission data for certificate.");
+    console.error(error);
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/generate-certificate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: submission.full_name,
+        room: submission.room,
+        wall: submission.wall,
+        section: submission.section,
+        spot: submission.spot,
+        id: submission.submission_id,
+        country: submission.country
+      })
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || "Certificate generation failed");
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `certificate-${submission.submission_id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Download certificate error:", err);
+    alert("Unable to generate certificate.");
+  }
+}
+
     async function rejectSubmission(submissionId) {
   const { error } = await supabaseClient
     .from("submissions")
@@ -653,7 +705,8 @@ statusFilterButtons.forEach(button => {
 });
 
     window.approveSubmission = approveSubmission;
-    window.rejectSubmission = rejectSubmission;
+window.rejectSubmission = rejectSubmission;
+window.downloadCertificate = downloadCertificate;
 
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
