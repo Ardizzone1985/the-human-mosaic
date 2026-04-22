@@ -485,6 +485,9 @@
         <div class="card-top-actions">
   <a class="open-btn" href="${imgData.publicUrl}" target="_blank">Open image</a>
   <button class="download-btn" onclick="downloadCertificate('${item.submission_id}')">Download Certificate</button>
+  <button class="resend-btn" onclick="resendCertificate('${item.submission_id}')">
+  Resend Certificate
+</button>
 </div>
 
         <div class="actions">
@@ -565,6 +568,49 @@
 
   await loadSubmissions(currentStatus, currentRoom, currentAi);
   await loadAdminStats();
+}
+
+    async function resendCertificate(submissionId) {
+  try {
+    const { data: submission, error } = await supabaseClient
+      .from("submissions")
+      .select("submission_id, full_name, email, country, room, wall, section, spot")
+      .eq("submission_id", submissionId)
+      .single();
+
+    if (error || !submission) {
+      alert("Unable to load submission data.");
+      console.error(error);
+      return;
+    }
+
+    const res = await fetch("/api/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        submissionId: submission.submission_id,
+        fullName: submission.full_name,
+        email: submission.email,
+        country: submission.country,
+        room: submission.room,
+        wall: submission.wall,
+        section: submission.section,
+        spot: submission.spot
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error("Email resend failed");
+    }
+
+    alert("Certificate sent again successfully ✅");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error sending certificate ❌");
+  }
 }
 
     async function downloadCertificate(submissionId) {
