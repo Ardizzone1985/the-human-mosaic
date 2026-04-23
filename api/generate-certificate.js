@@ -21,22 +21,27 @@ async function generateCertificatePdf(data, req) {
     country
   } = data;
 
-  const baseImageUrl = `https://${req.headers.host}/certificate-base2.png`;
-  const baseImageBytes = await fetch(baseImageUrl).then(res => res.arrayBuffer());
-
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([842, 595]);
-  const { width } = page.getSize();
+const page = pdfDoc.addPage([842, 595]);
+const { width } = page.getSize();
 
-  const baseImage = await pdfDoc.embedPng(baseImageBytes);
+  page.drawRectangle({
+  x: 0,
+  y: 0,
+  width: 842,
+  height: 595,
+  color: rgb(0.98, 0.97, 0.94)
+});
 
-  page.drawImage(baseImage, {
-    x: 0,
-    y: 0,
-    width: 842,
-    height: 595
-  });
-
+  page.drawRectangle({
+  x: 20,
+  y: 20,
+  width: 802,
+  height: 555,
+  borderColor: rgb(0.75, 0.6, 0.2),
+  borderWidth: 2
+});
+  
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
@@ -68,6 +73,12 @@ async function generateCertificatePdf(data, req) {
     return size;
   };
 
+  drawCentered("THE HUMAN MOSAIC", 520, 18, fontBold, gold);
+
+drawCentered("PERMANENT POSITION CERTIFICATE", 500, 10, fontRegular, textSoft);
+
+drawCentered("CERTIFICATE OF PARTICIPATION", 470, 26, fontBold, textDark);
+
   const cleanName = String(name || "").trim();
   const roomText = String(room || "").toUpperCase().trim();
   const wallText = String(wall || "").toUpperCase().trim();
@@ -80,8 +91,9 @@ async function generateCertificatePdf(data, req) {
     countryText = countryText.slice(0, 18);
   }
 
-  const nameSize = fitText(cleanName, 430, 34, fontBold, 22);
-  drawCentered(cleanName, 332, nameSize, fontBold, gold);
+  const nameSize = fitText(cleanName, 600, 48, fontBold, 28);
+
+drawCentered(cleanName, 400, nameSize, fontBold, gold);
 
   page.drawLine({
     start: { x: 275, y: 322 },
@@ -91,25 +103,25 @@ async function generateCertificatePdf(data, req) {
   });
 
   drawCentered(
-    `Official Participant • ${String(room || "").trim()} Room`,
-    288,
-    16,
-    fontBold,
-    textDark
-  );
+  `Official Participant • ${roomText} Room`,
+  360,
+  16,
+  fontBold,
+  textDark
+);
 
-  drawCentered(
-    `One face. One story. One piece of humanity.`,
-    260,
-    13,
-    fontItalic,
-    darkGold
-  );
+drawCentered(
+  "One face. One story. One piece of humanity.",
+  335,
+  14,
+  fontItalic,
+  darkGold
+);
 
-  drawCentered(
-  `Permanent position registered in a global collective artwork.`,
-  238,
-  11.5,
+drawCentered(
+  "Permanent position registered in a global collective artwork.",
+  310,
+  12,
   fontRegular,
   textSoft
 );
@@ -138,66 +150,45 @@ async function generateCertificatePdf(data, req) {
   darkGold
 );
 
-  const headerY = 94;
-  const valueY = 48;
+  drawCentered(
+  `FROM ${countryText}`,
+  240,
+  18,
+  fontBold,
+  textDark
+);
 
-  const countrySize = fitText(countryText, 150, 11, fontBold, 8);
-  const countryWidth = fontBold.widthOfTextAtSize(countryText, countrySize);
+  drawCentered(
+  `${roomText} • ${wallText} • ${sectionText} • ${spotText}`,
+  210,
+  12,
+  fontBold,
+  textDark
+);
 
-  page.drawText(countryText, {
-    x: 640 - (countryWidth / 2),
-    y: headerY,
-    size: countrySize,
-    font: fontBold,
-    color: textDark
-  });
+drawCentered(
+  shortId,
+  190,
+  9,
+  fontRegular,
+  textSoft
+);
 
-  page.drawLine({
-    start: { x: 455, y: 89 },
-    end: { x: 780, y: 89 },
-    thickness: 0.8,
-    color: lineSoft
-  });
+  page.drawText("Giuseppe Ardizzone", {
+  x: 80,
+  y: 120,
+  size: 14,
+  font: fontBold,
+  color: textDark
+});
 
-  page.drawText(roomText, {
-    x: 520,
-    y: valueY,
-    size: fitText(roomText, 65, 12, fontBold, 9),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(wallText, {
-    x: 598,
-    y: valueY,
-    size: fitText(wallText, 62, 11.5, fontBold, 8.5),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(sectionText, {
-    x: 675,
-    y: valueY,
-    size: fitText(sectionText, 42, 12, fontBold, 9),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(spotText, {
-    x: 744,
-    y: valueY,
-    size: fitText(spotText, 48, 12, fontBold, 8.5),
-    font: fontBold,
-    color: textDark
-  });
-
-  page.drawText(shortId, {
-    x: 618,
-    y: 31,
-    size: fitText(shortId, 165, 9, fontBold, 7),
-    font: fontBold,
-    color: textSoft
-  });
+page.drawText("Founder & Curator", {
+  x: 80,
+  y: 105,
+  size: 10,
+  font: fontRegular,
+  color: textSoft
+});
 
   const verifyUrl = `https://thehumanmosaic.art/verify.html?id=${id}`;
   const qrData = await QRCode.toDataURL(verifyUrl, {
