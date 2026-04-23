@@ -512,6 +512,7 @@ export default async function handler(req, res) {
           <div class="kicker-line"></div>
         </div>
 
+<div style="font-size:40px; color:red; text-align:center;">PUPPETEER V2 PREMIUM</div>
         <div class="title">Certificate of Participation</div>
         <div class="title-divider"></div>
       </div>
@@ -593,7 +594,7 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="certificate-v2-${id || "download"}.pdf"`
+      `attachment; filename="PUPPETEER-V2-${id || "download"}.pdf"`
     );
     res.send(pdf);
   } catch (err) {
