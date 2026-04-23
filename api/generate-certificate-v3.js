@@ -39,6 +39,9 @@ export default async function handler(req, res) {
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<div style="font-size:42px; color:red; text-align:center; font-weight:700;">
+  PUPPETEER V3 ATTIVO
+</div>
 <title>Certificate</title>
 <style>
   * {
