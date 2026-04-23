@@ -1,6 +1,8 @@
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
 import QRCode from "qrcode";
+chromium.setHeadlessMode = true;
+chromium.setGraphicsMode = false;
 
 function escapeHtml(str = "") {
   return String(str)
@@ -577,10 +579,15 @@ export default async function handler(req, res) {
     `;
 
     const browser = await puppeteer.launch({
-  args: chromium.args,
+  args: [
+    ...chromium.args,
+    "--hide-scrollbars",
+    "--disable-web-security"
+  ],
   defaultViewport: chromium.defaultViewport,
   executablePath: await chromium.executablePath(),
   headless: chromium.headless,
+  ignoreHTTPSErrors: true,
 });
 
     const page = await browser.newPage();
