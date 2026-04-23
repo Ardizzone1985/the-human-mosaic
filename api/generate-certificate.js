@@ -174,17 +174,24 @@ drawCentered(
   textSoft
 );
 
-  page.drawText("Giuseppe Ardizzone", {
+ page.drawText("Giuseppe Ardizzone", {
   x: 80,
-  y: 120,
-  size: 14,
-  font: fontBold,
+  y: 140,
+  size: 28,
+  font: fontItalic,
   color: textDark
+});
+
+page.drawLine({
+  start: { x: 80, y: 130 },
+  end: { x: 280, y: 130 },
+  thickness: 1,
+  color: lineSoft
 });
 
 page.drawText("Founder & Curator", {
   x: 80,
-  y: 105,
+  y: 110,
   size: 10,
   font: fontRegular,
   color: textSoft
