@@ -39,9 +39,6 @@ export default async function handler(req, res) {
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<div style="font-size:42px; color:red; text-align:center; font-weight:700;">
-  PUPPETEER V3 ATTIVO
-</div>
 <title>Certificate</title>
 <style>
   * {
@@ -489,6 +486,9 @@ export default async function handler(req, res) {
 </style>
 </head>
 <body>
+<div style="font-size:42px; color:red; text-align:center; font-weight:700;">
+    PUPPETEER V3 ATTIVO
+  </div>
   <div class="certificate">
     <div class="paper-noise"></div>
     <div class="border-outer"></div>
@@ -577,10 +577,11 @@ export default async function handler(req, res) {
     `;
 
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: true,
-    });
+  args: chromium.args,
+  defaultViewport: chromium.defaultViewport,
+  executablePath: await chromium.executablePath(),
+  headless: chromium.headless,
+});
 
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle0" });
