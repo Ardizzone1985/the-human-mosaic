@@ -627,7 +627,7 @@
   }
 
   try {
-    const response = await fetch("/api/generate-certificate-v2", {
+    const response = await fetch("/api/generate-certificate-v3", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -653,7 +653,7 @@
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `certificate-${submission.submission_id}.pdf`;
+    a.download = `PUPPETEER-V3-${submission.submission_id}.pdf`;
     document.body.appendChild(a);
     a.click();
     a.remove();
