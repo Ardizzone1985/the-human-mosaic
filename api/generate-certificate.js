@@ -135,17 +135,17 @@ drawCentered(
 );
 
   drawCentered(
-    `Permanent Position Verified`,
-    120,
-    10,
-    fontBold,
-    darkGold
-  );
+  `VERIFIED POSITION`,
+  120,
+  11,
+  fontBold,
+  darkGold
+);
 
-  drawCentered(
-  `One of the first contributors`,
+drawCentered(
+  `Early Contributor`,
   105,
-  10,
+  9,
   fontItalic,
   darkGold
 );
@@ -159,17 +159,25 @@ drawCentered(
 );
 
   drawCentered(
-  `${roomText} • ${wallText} • ${sectionText} • ${spotText}`,
-  210,
-  12,
+  `${roomText} ROOM • ${wallText}`,
+  215,
+  13,
   fontBold,
   textDark
 );
 
 drawCentered(
-  shortId,
-  190,
-  9,
+  `SECTION ${sectionText} • SPOT ${spotText}`,
+  195,
+  11,
+  fontRegular,
+  textSoft
+);
+
+drawCentered(
+  `Certificate ID: ${shortId}`,
+  175,
+  8,
   fontRegular,
   textSoft
 );
