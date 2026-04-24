@@ -130,8 +130,8 @@ async function generateCertificatePdf(data, req) {
   drawCentered(
     `CERTIFICATE ID: ${shortId}`,
     190,
-    7.8,
-    fontBold,
+    8.5,
+    fontRegular,
     textSoft
   );
 
