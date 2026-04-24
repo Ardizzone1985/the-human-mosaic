@@ -129,7 +129,7 @@ async function generateCertificatePdf(data, req) {
   // Certificate ID
   drawCentered(
     `CERTIFICATE ID: ${shortId}`,
-    178,
+    190,
     7.8,
     fontBold,
     textSoft
@@ -156,7 +156,18 @@ async function generateCertificatePdf(data, req) {
     height: 78
   });
 
-  return await pdfDoc.save();
+  const qrLabel = "SCAN TO VERIFY";
+const qrLabelWidth = fontBold.widthOfTextAtSize(qrLabel, 8);
+
+page.drawText(qrLabel, {
+  x: 700 + (78 - qrLabelWidth) / 2,
+  y: 455,
+  size: 8,
+  font: fontBold,
+  color: textSoft
+});
+
+    return await pdfDoc.save();
 }
 
 export default async function handler(req, res) {
