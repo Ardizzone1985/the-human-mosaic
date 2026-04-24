@@ -24,7 +24,7 @@ async function generateCertificatePdf(data, req) {
     country
   } = data;
 
-  const baseImageUrl = `https://${req.headers.host}/certificate-base2.png`;
+  const baseImageUrl = `https://${req.headers.host}/certificate-base3.png`;
   const baseImageBytes = await fetch(baseImageUrl).then(res => res.arrayBuffer());
 
   const pdfDoc = await PDFDocument.create();
