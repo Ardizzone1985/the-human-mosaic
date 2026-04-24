@@ -330,7 +330,27 @@ Support: info@thehumanmosaic.art
     }
 
     // ✅ EMAIL 2: APPROVED (dopo approvazione, CON certificato)
-    const pdfBytes = await generateCertificatePdf(body, req);
+    const certificateResponse = await fetch(`https://${req.headers.host}/api/generate-certificate-v3-pdf`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: body.fullName,
+    room: body.room,
+    wall: body.wall,
+    section: body.section,
+    spot: body.spot,
+    id: body.submissionId,
+    country: body.country
+  })
+});
+
+if (!certificateResponse.ok) {
+  throw new Error("Failed to generate certificate via V3 API");
+}
+
+const pdfBytes = await certificateResponse.arrayBuffer();
 
     await resend.emails.send({
       from: 'The Human Mosaic <info@mail.thehumanmosaic.art>',
