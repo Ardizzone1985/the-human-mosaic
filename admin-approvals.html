@@ -220,6 +220,15 @@
       color: #111;
     }
 
+    .delete-btn {
+  background: #b42318;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #7f1d1d;
+}
+
     .open-btn {
       background: white;
       color: #111;
@@ -491,9 +500,12 @@
 </div>
 
         <div class="actions">
-          ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
-          ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
-        </div>
+  ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
+  ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
+  <button class="delete-btn" onclick="deletePhotoAndFreeSlot('${item.submission_id}', '${item.image_file_name}', '${item.slot_code}')">
+    Delete Photo + Free Slot
+  </button>
+</div>
       </div>
     `;
 
@@ -665,6 +677,72 @@
   }
 }
 
+    async function deletePhotoAndFreeSlot(submissionId, imageFileName, slotCode) {
+  const confirmDelete = confirm(
+    "WARNING: This will permanently delete the submission, remove the image from storage, and free the slot. Continue?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    // 1. Delete image from Supabase Storage
+    if (imageFileName) {
+      const { error: storageError } = await supabaseClient
+        .storage
+        .from(BUCKET)
+        .remove([imageFileName]);
+
+      if (storageError) {
+        console.error("Storage delete error:", storageError);
+        alert("Image deletion failed. Check Supabase Storage policies.");
+        return;
+      }
+    }
+
+    // 2. Delete submission from submissions table
+    const { error: submissionError } = await supabaseClient
+      .from("submissions")
+      .delete()
+      .eq("submission_id", submissionId);
+
+    if (submissionError) {
+      console.error("Submission delete error:", submissionError);
+      alert("Submission deletion failed.");
+      return;
+    }
+
+    // 3. Free slot in slots table
+    if (slotCode) {
+      const { error: slotError } = await supabaseClient
+        .from("slots")
+        .update({
+          status: "available",
+          submission_id: null,
+          reserved_at: null,
+          submitted_at: null,
+          payment_confirmed: false,
+          payment_confirmed_at: null
+        })
+        .eq("slot_code", slotCode);
+
+      if (slotError) {
+        console.error("Slot update error:", slotError);
+        alert("Photo deleted, but slot was not freed.");
+        return;
+      }
+    }
+
+    alert("Photo deleted and slot freed ✅");
+
+    await loadSubmissions(currentStatus, currentRoom, currentAi);
+    await loadAdminStats();
+
+  } catch (err) {
+    console.error("Delete + free slot error:", err);
+    alert("Unexpected error while deleting photo.");
+  }
+}
+
     async function rejectSubmission(submissionId) {
   const { error } = await supabaseClient
     .from("submissions")
@@ -753,7 +831,9 @@ statusFilterButtons.forEach(button => {
     window.approveSubmission = approveSubmission;
 window.rejectSubmission = rejectSubmission;
 window.downloadCertificate = downloadCertificate;
-
+window.deletePhotoAndFreeSlot = deletePhotoAndFreeSlot;
+window.resendCertificate = resendCertificate;
+    
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
   </script>
