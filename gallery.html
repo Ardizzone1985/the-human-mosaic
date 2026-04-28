@@ -426,8 +426,7 @@ function renderImages() {
     return;
   }
 
-  statusMessage.textContent =
-    statusMessage.textContent = `${filtered.length} people in the ${currentRoom} room`;
+  statusMessage.textContent = `${filtered.length} people in the ${currentRoom} room`;
 
   filtered.forEach(item => {
     const { data: imgData } = supabaseClient
