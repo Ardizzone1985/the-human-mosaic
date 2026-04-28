@@ -394,8 +394,8 @@ function renderImages() {
 
   statusMessage.textContent =
     currentRoom === "all"
-      ? `${filtered.length} approved images`
-      : `${filtered.length} approved images in ${currentRoom}`;
+      ? `${filtered.length} people already part of the mosaic`
+      : `${filtered.length} people in ${currentRoom}`;
 
   filtered.forEach(item => {
     const { data: imgData } = supabaseClient
@@ -425,6 +425,20 @@ img.draggable = false;
 
 img.onclick = (e) => {
   e.preventDefault();
+};
+
+    img.onclick = () => {
+  const modal = document.createElement("div");
+  modal.className = "modal open";
+
+  const modalImg = document.createElement("img");
+  modalImg.src = img.src;
+
+  modal.appendChild(modalImg);
+
+  modal.onclick = () => modal.remove();
+
+  document.body.appendChild(modal);
 };
 
 img.addEventListener("contextmenu", (e) => e.preventDefault());
