@@ -265,6 +265,40 @@
       border-radius: 12px;
     }
 
+    .modal-content {
+  width: min(92vw, 760px);
+  max-height: 90vh;
+  overflow: auto;
+  background: white;
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+}
+
+.modal-content img {
+  width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #f3f3f3;
+}
+
+.modal-info {
+  padding: 16px 6px 6px;
+  color: #111;
+}
+
+.modal-info h2 {
+  margin: 6px 0 8px;
+  font-size: 1.4rem;
+}
+
+.modal-info p {
+  margin: 0 0 10px;
+  color: #555;
+  line-height: 1.5;
+}
+
     .card::after {
   content: "View contribution";
   position: absolute;
@@ -431,10 +465,25 @@ img.onclick = (e) => {
   const modal = document.createElement("div");
   modal.className = "modal open";
 
+  const modalContent = document.createElement("div");
+  modalContent.className = "modal-content";
+
   const modalImg = document.createElement("img");
   modalImg.src = img.src;
+  modalImg.alt = `${item.room} contribution`;
 
-  modal.appendChild(modalImg);
+  const modalInfo = document.createElement("div");
+  modalInfo.className = "modal-info";
+  modalInfo.innerHTML = `
+    <div class="room-tag ${getRoomClass(item.room)}">${item.room || "Contribution"}</div>
+    <h2>${item.room || "Mosaic"} Contribution</h2>
+    <p>${item.note && item.note.trim() ? item.note : "No note provided."}</p>
+    <strong>${item.country ? `From ${item.country}` : ""}</strong>
+  `;
+
+  modalContent.appendChild(modalImg);
+  modalContent.appendChild(modalInfo);
+  modal.appendChild(modalContent);
 
   modal.onclick = () => modal.remove();
 
