@@ -615,8 +615,11 @@ img.draggable = false;
 
   modal.onclick = () => modal.remove();
 
-  document.body.appendChild(modal);
+modalContent.onclick = (e) => {
+  e.stopPropagation();
 };
+
+document.body.appendChild(modal);
 
 img.addEventListener("contextmenu", (e) => e.preventDefault());
 img.addEventListener("dragstart", (e) => e.preventDefault());
