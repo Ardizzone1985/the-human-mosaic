@@ -402,6 +402,75 @@
   }
 }
 
+    .grid {
+  perspective: 900px;
+}
+
+.card {
+  animation: mosaicFadeIn 0.55s ease both;
+}
+
+.card:nth-child(2n) {
+  animation-delay: 0.05s;
+}
+
+.card:nth-child(3n) {
+  animation-delay: 0.1s;
+}
+
+.card:nth-child(4n) {
+  animation-delay: 0.15s;
+}
+
+@keyframes mosaicFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.22),
+    rgba(255,255,255,0)
+  );
+  opacity: 0;
+  transition: 0.25s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:active {
+  transform: scale(0.96);
+}
+
+.modal-content {
+  animation: modalPop 0.25s ease both;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
   </style>
 </head>
 
