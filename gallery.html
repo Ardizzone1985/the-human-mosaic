@@ -189,6 +189,8 @@
 
    .card img {
   width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   border-radius: 12px;
   transition: transform 0.4s ease;
 }
@@ -647,6 +649,7 @@ modalContent.onclick = (e) => {
 };
 
 document.body.appendChild(modal);
+      };
 
 img.addEventListener("contextmenu", (e) => e.preventDefault());
 img.addEventListener("dragstart", (e) => e.preventDefault());
