@@ -171,12 +171,10 @@
 }
 
     .card.highlight {
-  outline: 4px solid #d6b35a;
-  outline-offset: 4px;
-  transform: scale(1.08);
-  box-shadow: 0 0 0 6px rgba(214,179,90,0.25), 0 24px 70px rgba(0,0,0,0.35);
-  animation: pulseHighlight 1.5s ease-in-out 2 !important;
-  z-index: 10;
+  outline: 5px solid #d6b35a;
+  outline-offset: 5px;
+  box-shadow: 0 0 0 8px rgba(214,179,90,0.35), 0 24px 70px rgba(0,0,0,0.45);
+  z-index: 20;
 }
 
 @keyframes pulseHighlight {
@@ -584,6 +582,7 @@ function getRoomClass(room) {
 
 function renderImages() {
   gallery.innerHTML = "";
+  let targetCard = null;
 
   const filtered = allImages.filter(item => item.room === currentRoom);
   if (filtered.length === 0) {
@@ -603,12 +602,14 @@ function renderImages() {
     card.className = "card";
     card.dataset.id = item.submission_id;
 
-    if (highlightId && String(item.submission_id || "").trim() === String(highlightId || "").trim()) {
-      card.classList.add("highlight");
-      setTimeout(() => {
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
-    }
+    const isHighlighted =
+  highlightId &&
+  String(item.submission_id || "").trim() === String(highlightId || "").trim();
+
+if (isHighlighted) {
+  card.classList.add("highlight");
+  targetCard = card;
+}
 
     const media = document.createElement("div");
 media.className = "card-media";
@@ -674,6 +675,11 @@ info.innerHTML = `
 card.appendChild(media);
 // card.appendChild(info);
 gallery.appendChild(card);
+    if (targetCard === card) {
+  setTimeout(() => {
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 800);
+}
   });
 }
 
