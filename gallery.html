@@ -688,7 +688,23 @@ async function loadImages() {
   }
 
   allImages = data || [];
-  renderImages();
+
+if (highlightId) {
+  const highlightedItem = allImages.find(item => item.submission_id === highlightId);
+
+  if (highlightedItem && highlightedItem.room) {
+    currentRoom = highlightedItem.room;
+
+    filterButtons.forEach(btn => {
+      btn.classList.remove("active");
+      if (btn.dataset.room === currentRoom) {
+        btn.classList.add("active");
+      }
+    });
+  }
+}
+
+renderImages();
 }
 
 filterButtons.forEach(button => {
