@@ -291,24 +291,28 @@
   </script>
 
   <div class="container">
-    <div class="topbar">
-     <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px;">
-  <h1>Admin Approvals</h1>
 
-  <a href="admin-manual.html" style="
-    padding: 10px 16px;
-    background: #111;
-    color: #fff;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-  ">
-    + Manual Entry
-  </a>
-</div>
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+      <h1>Admin Approvals</h1>
 
-       <div class="admin-stats">
+      <a href="admin-manual.html" style="
+        padding: 10px 16px;
+        background: #111;
+        color: #fff;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+      ">
+        + Manual Entry
+      </a>
+    </div>
+
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+
+         <div class="admin-stats">
       <div class="admin-stat-card">
         <div class="admin-stat-label">Pending</div>
         <div class="admin-stat-value" id="count-pending">—</div>
