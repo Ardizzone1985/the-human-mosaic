@@ -20,6 +20,14 @@
 color: #fff;
 }
 
+    .gallery-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.05), transparent 60%);
+}
+
     .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
