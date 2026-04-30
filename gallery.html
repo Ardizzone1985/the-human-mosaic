@@ -618,6 +618,10 @@ function renderImages() {
 if (isHighlighted) {
   card.classList.add("highlight");
   targetCard = card;
+
+  setTimeout(() => {
+    img.click();
+  }, 900);
 }
 
     const media = document.createElement("div");
