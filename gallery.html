@@ -18,10 +18,23 @@
   color: #111;
 }
 
+    .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  padding: 20px;
+  position: relative;
+}
+
     .card {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 0.6s ease forwards;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.35),
+    0 20px 60px rgba(0,0,0,0.4);
 }
 
 @keyframes fadeUp {
