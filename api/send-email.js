@@ -399,6 +399,46 @@ const pdfBytes = await certificateResponse.arrayBuffer();
               Your official certificate is attached to this email.
             </p>
 
+            <div style="margin-top:30px; padding-top:20px; border-top:1px solid #eee; text-align:center;">
+  
+  <p style="font-size:0.95rem; color:#555; margin-bottom:10px;">
+    Stay connected with The Human Mosaic and follow the evolution of this global artwork.
+  </p>
+
+  <p style="font-size:0.95rem; color:#555; margin-bottom:16px;">
+    Follow us for updates, new rooms, and future developments.
+  </p>
+
+  <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+    
+    <a href="https://www.facebook.com/profile.php?id=61573309801007" target="_blank" style="
+      padding:10px 16px;
+      background:#1877F2;
+      color:white;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.9rem;
+    ">
+      Facebook
+    </a>
+
+    <a href="https://www.instagram.com/thehumanmosaic.art/" target="_blank" style="
+      padding:10px 16px;
+      background:#E4405F;
+      color:white;
+      border-radius:8px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:0.9rem;
+    ">
+      Instagram
+    </a>
+
+  </div>
+
+</div>
+
             <p style="margin-top: 24px;">
               For questions or support:
               <a href="mailto:info@thehumanmosaic.art" style="color: #111; text-decoration: none; font-weight: 700;">
