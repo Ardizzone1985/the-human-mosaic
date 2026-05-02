@@ -663,7 +663,7 @@
         .eq("section", selectedSection)
         .order("row_number", { ascending: true })
         .order("col_number", { ascending: true })
-        .limit(200);
+        .limit(1000);
 
       if (error) {
         console.error("Supabase slots error:", error);
