@@ -1,4 +1,10 @@
 import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseClient = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -31,7 +37,18 @@ export default async function handler(req, res) {
 let formattedPrice = "";
 
 // EARLY ACCESS LOGIC (temporanea manuale)
-const EARLY_ACCESS_ACTIVE = true;
+const EARLY_ACCESS_LIMIT = 1000;
+
+const { count, error: countError } = await supabaseClient
+  .from("slots")
+  .select("*", { count: "exact", head: true })
+  .eq("payment_confirmed", true);
+
+if (countError) {
+  throw new Error("Unable to verify Early Access availability");
+}
+
+const EARLY_ACCESS_ACTIVE = count < EARLY_ACCESS_LIMIT;
 
 if (EARLY_ACCESS_ACTIVE) {
   if (room === "Creativity") {
