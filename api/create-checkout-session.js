@@ -27,10 +27,29 @@ export default async function handler(req, res) {
       });
     }
 
-    const formattedPrice =
-      Number(price) === 20
-        ? "€20 — one-time participation fee"
-        : "€15 — one-time participation fee";
+    let finalPrice = 0;
+let formattedPrice = "";
+
+// EARLY ACCESS LOGIC (temporanea manuale)
+const EARLY_ACCESS_ACTIVE = true;
+
+if (EARLY_ACCESS_ACTIVE) {
+  if (room === "Creativity") {
+    finalPrice = 10;
+    formattedPrice = "€10 — early access participation fee";
+  } else {
+    finalPrice = 5;
+    formattedPrice = "€5 — early access participation fee";
+  }
+} else {
+  if (room === "Creativity") {
+    finalPrice = 20;
+    formattedPrice = "€20 — one-time participation fee";
+  } else {
+    finalPrice = 15;
+    formattedPrice = "€15 — one-time participation fee";
+  }
+}
 
     const successUrl =
       `https://thehumanmosaic.art/upload.html` +
@@ -70,7 +89,7 @@ export default async function handler(req, res) {
             product_data: {
               name: `The Human Mosaic - ${room} Room`
             },
-            unit_amount: Number(price) * 100
+            unit_amount: finalPrice * 100
           },
           quantity: 1
         }
