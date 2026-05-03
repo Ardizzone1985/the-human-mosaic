@@ -1486,6 +1486,19 @@ animateCount("count-creativity", creativity);
       const inlineTotal = document.getElementById("count-total-inline");
 if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
 
+      const earlyLimit = 1000;
+const earlyClaimed = total;
+const earlyRemaining = Math.max(earlyLimit - earlyClaimed, 0);
+const earlyPercent = Math.min((earlyClaimed / earlyLimit) * 100, 100);
+
+const earlyClaimedEl = document.getElementById("early-claimed");
+const earlyRemainingEl = document.getElementById("early-remaining");
+const earlyFillEl = document.getElementById("early-counter-fill");
+
+if (earlyClaimedEl) earlyClaimedEl.textContent = earlyClaimed.toLocaleString();
+if (earlyRemainingEl) earlyRemainingEl.textContent = `${earlyRemaining.toLocaleString()} early spots remaining`;
+if (earlyFillEl) earlyFillEl.style.width = `${earlyPercent}%`;
+
       const totalPerRoom = 1000000;
       const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
       const lovePercent = Math.min((love / totalPerRoom) * 100, 100);
