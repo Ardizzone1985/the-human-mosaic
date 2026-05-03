@@ -1499,6 +1499,36 @@ if (earlyClaimedEl) earlyClaimedEl.textContent = earlyClaimed.toLocaleString();
 if (earlyRemainingEl) earlyRemainingEl.textContent = `${earlyRemaining.toLocaleString()} early spots remaining`;
 if (earlyFillEl) earlyFillEl.style.width = `${earlyPercent}%`;
 
+      const isEarlyActive = earlyClaimed < earlyLimit;
+
+// elementi
+const earlyKicker = document.getElementById("early-kicker");
+const earlyTitle = document.getElementById("early-title");
+const earlyDesc = document.getElementById("early-desc");
+const priceIdentity = document.getElementById("price-identity");
+const priceLove = document.getElementById("price-love");
+const priceCreativity = document.getElementById("price-creativity");
+const earlyCta = document.getElementById("early-cta");
+
+// SWITCH UI
+if (!isEarlyActive) {
+  if (earlyKicker) earlyKicker.textContent = "STANDARD ACCESS";
+
+  if (earlyTitle)
+    earlyTitle.textContent =
+      "Early Access completed. Join the Mosaic at standard participation fee.";
+
+  if (earlyDesc)
+    earlyDesc.textContent =
+      "The first 1,000 positions have been claimed. New participants can still join the artwork at the standard rate.";
+
+  if (priceIdentity) priceIdentity.textContent = "Identity → €15";
+  if (priceLove) priceLove.textContent = "Love → €15";
+  if (priceCreativity) priceCreativity.textContent = "Creativity → €20";
+
+  if (earlyCta) earlyCta.textContent = "Join the Mosaic";
+}
+
       const totalPerRoom = 1000000;
       const identityPercent = Math.min((identity / totalPerRoom) * 100, 100);
       const lovePercent = Math.min((love / totalPerRoom) * 100, 100);
