@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Share Your Contribution – The Human Mosaic</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at center, #1d1d1d 0%, #050505 100%);
+      color: white;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      width: min(920px, 96%);
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .logo {
+      width: 120px;
+      margin: 20px auto 18px;
+      display: block;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.72);
+      max-width: 620px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    .share-card {
+      width: min(520px, 100%);
+      margin: 0 auto 26px;
+      padding: 22px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)),
+        radial-gradient(circle at top, rgba(214,179,90,0.22), transparent 45%),
+        #111;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45);
+    }
+
+    .card-kicker {
+      color: #d6b35a;
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .photo-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 4px solid rgba(255,255,255,0.85);
+      background: #222;
+      aspect-ratio: 1 / 1;
+      margin-bottom: 18px;
+    }
+
+    .photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .share-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .room-pill {
+      display: inline-block;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(214,179,90,0.14);
+      border: 1px solid rgba(214,179,90,0.35);
+      color: #f2d98a;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .qr-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    #qrCanvas {
+      background: white;
+      border-radius: 14px;
+      padding: 8px;
+    }
+
+    .qr-text {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.9rem;
+      max-width: 230px;
+      text-align: left;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 24px auto;
+    }
+
+    button, a.action-btn {
+      border: none;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 0.95rem;
+    }
+
+    .primary {
+      background: #d6b35a;
+      color: #111;
+    }
+
+    .secondary {
+      background: white;
+      color: #111;
+    }
+
+    .ghost {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.35) !important;
+    }
+
+    .status {
+      color: rgba(255,255,255,0.75);
+      margin-top: 40px;
+    }
+
+    .error {
+      color: #ffb4b4;
+    }
+
+    canvas#downloadCanvas {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 16px; }
+
+      .share-card {
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .qr-text {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="logo-cropped.png" class="logo" alt="The Human Mosaic Logo">
+
+    <h1>Share Your Contribution</h1>
+
+    <p class="subtitle">
+      Your image is now part of The Human Mosaic. Share your official contribution card with your community.
+    </p>
+
+    <div id="status" class="status">Loading your contribution...</div>
+
+    <div id="content" style="display:none;">
+      <div class="share-card" id="shareCard">
+        <div class="card-kicker">THE HUMAN MOSAIC</div>
+
+        <div class="photo-wrap">
+          <img id="photo" src="" alt="Contribution image">
+        </div>
+
+        <div class="share-title">
+          Now I am part of the world's largest humanitarian art gallery.
+        </div>
+
+        <div class="room-pill" id="roomPill">Room</div>
+
+        <div class="qr-box">
+          <canvas id="qrCanvas"></canvas>
+          <div class="qr-text">
+            Scan to open this contribution inside the live gallery.
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share My Contribution</button>
+        <button class="secondary" id="downloadBtn">Download Share Card</button>
+        <a class="action-btn ghost" id="galleryBtn" href="#">Open My Gallery Photo</a>
+      </div>
+    </div>
+
+    <canvas id="downloadCanvas" width="1080" height="1350"></canvas>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_KEY = "INCOLLA_LA_STESSA_ANON_KEY_DEL_TUO_SITO";
+    const BUCKET = "images";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const params = new URLSearchParams(window.location.search);
+    const submissionId = params.get("id");
+
+    const statusBox = document.getElementById("status");
+    const content = document.getElementById("content");
+    const photo = document.getElementById("photo");
+    const roomPill = document.getElementById("roomPill");
+    const qrCanvas = document.getElementById("qrCanvas");
+    const shareBtn = document.getElementById("shareBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const galleryBtn = document.getElementById("galleryBtn");
+    const downloadCanvas = document.getElementById("downloadCanvas");
+
+    let currentImageUrl = "";
+    let currentRoom = "";
+    let galleryLink = "";
+
+    async function loadContribution() {
+      if (!submissionId) {
+        statusBox.textContent = "Missing contribution ID.";
+        statusBox.classList.add("error");
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("submission_id, image_file_name, room, approval_status")
+        .eq("submission_id", submissionId)
+        .eq("approval_status", "approved")
+        .maybeSingle();
+
+      if (error || !data) {
+        console.error(error);
+        statusBox.textContent = "Contribution not found or not approved yet.";
+        statusBox.classList.add("error");
+        return;
+      }
+
+      const { data: imgData } = supabaseClient
+        .storage
+        .from(BUCKET)
+        .getPublicUrl(data.image_file_name);
+
+      currentImageUrl = imgData.publicUrl;
+      currentRoom = data.room || "Mosaic";
+      galleryLink = `https://thehumanmosaic.art/gallery.html?id=${encodeURIComponent(submissionId)}`;
+
+      photo.src = currentImageUrl;
+      roomPill.textContent = `${currentRoom} Room`;
+      galleryBtn.href = galleryLink;
+
+      await QRCode.toCanvas(qrCanvas, galleryLink, {
+        width: 128,
+        margin: 1,
+        color: {
+          dark: "#111111",
+          light: "#ffffff"
+        }
+      });
+
+      statusBox.style.display = "none";
+      content.style.display = "block";
+    }
+
+    async function createShareCardBlob() {
+      const ctx = downloadCanvas.getContext("2d");
+
+      ctx.fillStyle = "#080808";
+      ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+
+      const gradient = ctx.createRadialGradient(540, 180, 80, 540, 300, 760);
+      gradient.addColorStop(0, "rgba(214,179,90,0.35)");
+      gradient.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+
+      ctx.fillStyle = "#d6b35a";
+      ctx.font = "bold 34px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("THE HUMAN MOSAIC", 540, 90);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 54px Arial";
+      wrapText(
+        ctx,
+        "Now I am part of the world's largest humanitarian art gallery.",
+        540,
+        170,
+        850,
+        62
+      );
+
+      const img = await loadImage(currentImageUrl);
+      const imageSize = 760;
+      const imageX = 160;
+      const imageY = 360;
+
+      ctx.save();
+      roundRect(ctx, imageX, imageY, imageSize, imageSize, 34);
+      ctx.clip();
+      drawCoverImage(ctx, img, imageX, imageY, imageSize, imageSize);
+      ctx.restore();
+
+      ctx.strokeStyle = "rgba(255,255,255,0.9)";
+      ctx.lineWidth = 8;
+      roundRect(ctx, imageX, imageY, imageSize, imageSize, 34);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f2d98a";
+      ctx.font = "bold 34px Arial";
+      ctx.fillText(`${currentRoom} Room`, 540, 1185);
+
+      ctx.fillStyle = "rgba(255,255,255,0.78)";
+      ctx.font = "26px Arial";
+      ctx.fillText("Scan the QR code on my certificate to verify my place.", 540, 1240);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 30px Arial";
+      ctx.fillText("thehumanmosaic.art", 540, 1295);
+
+      return new Promise(resolve => {
+        downloadCanvas.toBlob(resolve, "image/png", 0.95);
+      });
+    }
+
+    async function downloadShareCard() {
+      const blob = await createShareCardBlob();
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `the-human-mosaic-share-${submissionId}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    async function shareContribution() {
+      const shareText =
+        "Now I am part of the world's largest humanitarian art gallery. Join The Human Mosaic.";
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "The Human Mosaic",
+            text: shareText,
+            url: galleryLink
+          });
+          return;
+        } catch (err) {
+          console.log("Share cancelled or failed:", err);
+        }
+      }
+
+      await navigator.clipboard.writeText(galleryLink);
+      alert("Gallery link copied ✅");
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    function drawCoverImage(ctx, img, x, y, w, h) {
+      const imgRatio = img.width / img.height;
+      const boxRatio = w / h;
+
+      let drawW, drawH, drawX, drawY;
+
+      if (imgRatio > boxRatio) {
+        drawH = h;
+        drawW = h * imgRatio;
+        drawX = x - (drawW - w) / 2;
+        drawY = y;
+      } else {
+        drawW = w;
+        drawH = w / imgRatio;
+        drawX = x;
+        drawY = y - (drawH - h) / 2;
+      }
+
+      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(" ");
+      let line = "";
+      let currentY = y;
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + " ";
+        const metrics = ctx.measureText(testLine);
+
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, currentY);
+          line = words[n] + " ";
+          currentY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+
+      ctx.fillText(line, x, currentY);
+    }
+
+    shareBtn.addEventListener("click", shareContribution);
+    downloadBtn.addEventListener("click", downloadShareCard);
+
+    loadContribution();
+  </script>
+</body>
+</html>
