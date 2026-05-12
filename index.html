@@ -886,6 +886,62 @@
   .early-remaining {
     color: #111 !important;
   }
+
+    .live-updates-panel {
+  position: absolute;
+  top: 120px;
+  right: 8%;
+  width: 300px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: rgba(17,17,17,0.58);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
+  color: white;
+  z-index: 3;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+.live-updates-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  color: #d6b35a;
+  margin-bottom: 12px;
+}
+
+.live-update-item {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #d6b35a;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 12px rgba(214,179,90,0.8);
+}
+
+@media (max-width: 900px) {
+  .live-updates-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 28px;
+    background: rgba(255,255,255,0.92);
+    color: #111;
+  }
+
+  .live-update-item {
+    color: #333;
+  }
+}
 }
   
   </style>
@@ -934,6 +990,27 @@ Secure payment · Cards & PayPal accepted · Instant reservation
           <p style="margin-top:14px; font-size:0.92rem; color:rgba(255,255,255,0.82);">
   From €15 · One-time payment · Official digital certificate included
 </p>
+
+          <div class="live-updates-panel">
+  <div class="live-updates-kicker">LIVE PROJECT UPDATES</div>
+
+  <div class="live-update-item">
+    <span class="live-dot"></span>Early Access is now live.
+  </div>
+
+  <div class="live-update-item">
+    <span class="live-dot"></span><span id="updates-count">14</span> participants already joined.
+  </div>
+
+  <div class="live-update-item">
+    <span class="live-dot"></span>Premium App in development.
+  </div>
+
+  <div class="live-update-item">
+    <span class="live-dot"></span>Immersive gallery experience coming soon.
+  </div>
+</div>
+          
         </div>
       </div>
     </section>
@@ -1515,6 +1592,8 @@ animateCount("count-creativity", creativity);
 
       const inlineTotal = document.getElementById("count-total-inline");
 if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
+      const updatesCount = document.getElementById("updates-count");
+if (updatesCount) updatesCount.textContent = total.toLocaleString();
 
       const earlyLimit = 1000;
 const earlyClaimed = total;
