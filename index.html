@@ -942,6 +942,48 @@
     color: #333;
   }
 }
+
+/* FIX DESKTOP LIVE UPDATES PANEL */
+.live-updates-panel {
+  position: absolute !important;
+  top: 250px !important;
+  right: 8% !important;
+  width: 320px !important;
+  padding: 20px 22px !important;
+  border-radius: 22px !important;
+  background: rgba(17,17,17,0.92) !important;
+  border: 1px solid rgba(255,255,255,0.22) !important;
+  backdrop-filter: none !important;
+  color: white !important;
+  z-index: 20 !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45) !important;
+}
+
+.live-updates-kicker {
+  color: #d6b35a !important;
+}
+
+.live-update-item {
+  color: rgba(255,255,255,0.92) !important;
+}
+
+/* MOBILE RESTA COME ORA */
+@media (max-width: 900px) {
+  .live-updates-panel {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    margin-top: 28px !important;
+    background: rgba(255,255,255,0.92) !important;
+    color: #111 !important;
+  }
+
+  .live-update-item {
+    color: #333 !important;
+  }
+}
+    
 }
   
   </style>
