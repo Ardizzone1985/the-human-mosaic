@@ -897,54 +897,47 @@
     background: rgba(255,255,255,0.92);
     color: #111;
   }
-
-  .live-update-item {
-    color: #333;
-  }
+ 
 }
 
-/* FIX DESKTOP LIVE UPDATES PANEL */
+ .live-updates-section {
+  background: #111;
+  padding: 34px 20px;
+}
+
 .live-updates-panel {
-  position: absolute !important;
-  top: 250px !important;
-  right: 8% !important;
-  width: 320px !important;
-  padding: 20px 22px !important;
-  border-radius: 22px !important;
-  background: rgba(17,17,17,0.92) !important;
-  border: 1px solid rgba(255,255,255,0.22) !important;
-  backdrop-filter: none !important;
-  color: white !important;
-  z-index: 20 !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.45) !important;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 28px;
+  border-radius: 24px;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.18);
 }
 
 .live-updates-kicker {
-  color: #d6b35a !important;
+  color: #b8872b;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  margin-bottom: 16px;
 }
 
 .live-update-item {
-  color: rgba(255,255,255,0.92) !important;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 8px;
 }
 
-/* MOBILE RESTA COME ORA */
-@media (max-width: 900px) {
-  .live-updates-panel {
-    position: relative !important;
-    top: auto !important;
-    right: auto !important;
-    width: 100% !important;
-    margin-top: 28px !important;
-    background: rgba(255,255,255,0.92) !important;
-    color: #111 !important;
-  }
-
-  .live-update-item {
-    color: #333 !important;
-  }
-}
-    
-}
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #d6b35a;
+  border-radius: 50%;
+  margin-right: 10px;
+} 
   
   </style>
 </head>
@@ -993,29 +986,32 @@ Secure payment · Cards & PayPal accepted · Instant reservation
   From €15 · One-time payment · Official digital certificate included
 </p>
         </div>
-
-          <div class="live-updates-panel">
-  <div class="live-updates-kicker">LIVE PROJECT UPDATES</div>
-
-  <div class="live-update-item">
-    <span class="live-dot"></span>Early Access is now live.
-  </div>
-
-  <div class="live-update-item">
-    <span class="live-dot"></span><span id="updates-count">14</span> participants already joined.
-  </div>
-
-  <div class="live-update-item">
-    <span class="live-dot"></span>Premium App in development.
-  </div>
-
-  <div class="live-update-item">
-    <span class="live-dot"></span>Immersive gallery experience coming soon.
-  </div>
-</div>
-          
+          </div>
+       
       </div>
     </section>
+
+    <section class="live-updates-section">
+  <div class="live-updates-panel">
+    <div class="live-updates-kicker">LIVE PROJECT UPDATES</div>
+
+    <div class="live-update-item">
+      <span class="live-dot"></span>Early Access is now live.
+    </div>
+
+    <div class="live-update-item">
+      <span class="live-dot"></span><span id="updates-count">14</span> participants already joined.
+    </div>
+
+    <div class="live-update-item">
+      <span class="live-dot"></span>Premium App in development.
+    </div>
+
+    <div class="live-update-item">
+      <span class="live-dot"></span>Immersive gallery experience coming soon.
+    </div>
+  </div>
+</section>
 
     <section class="early-access">
   <div class="container">
