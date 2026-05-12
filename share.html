@@ -254,40 +254,48 @@
     let currentRoom = "";
     let galleryLink = "";
 
-    async function loadContribution() {
-      if (!submissionId) {
-        statusBox.textContent = "Missing contribution ID.";
-        statusBox.classList.add("error");
-        return;
-      }
+   async function loadContribution() {
+  try {
+    if (!submissionId) {
+      statusBox.textContent = "Missing contribution ID.";
+      statusBox.classList.add("error");
+      return;
+    }
 
-      const { data, error } = await supabaseClient
-        .from("submissions")
-        .select("submission_id, image_file_name, room, approval_status")
-        .eq("submission_id", submissionId)
-        .eq("approval_status", "approved")
-        .maybeSingle();
+    const { data, error } = await supabaseClient
+      .from("submissions")
+      .select("submission_id, image_file_name, room, approval_status")
+      .eq("submission_id", submissionId)
+      .eq("approval_status", "approved")
+      .maybeSingle();
 
-      if (error || !data) {
-        console.error(error);
-        statusBox.textContent = "Contribution not found or not approved yet.";
-        statusBox.classList.add("error");
-        return;
-      }
+    if (error) {
+      console.error("Supabase error:", error);
+      statusBox.textContent = "Error loading contribution.";
+      statusBox.classList.add("error");
+      return;
+    }
 
-      const { data: imgData } = supabaseClient
-        .storage
-        .from(BUCKET)
-        .getPublicUrl(data.image_file_name);
+    if (!data) {
+      statusBox.textContent = "Contribution not found or not approved yet.";
+      statusBox.classList.add("error");
+      return;
+    }
 
-      currentImageUrl = imgData.publicUrl;
-      currentRoom = data.room || "Mosaic";
-      galleryLink = `https://thehumanmosaic.art/gallery.html?id=${encodeURIComponent(submissionId)}`;
+    const { data: imgData } = supabaseClient
+      .storage
+      .from(BUCKET)
+      .getPublicUrl(data.image_file_name);
 
-      photo.src = currentImageUrl;
-      roomPill.textContent = `${currentRoom} Room`;
-      galleryBtn.href = galleryLink;
+    currentImageUrl = imgData.publicUrl;
+    currentRoom = data.room || "Mosaic";
+    galleryLink = `https://thehumanmosaic.art/gallery.html?id=${encodeURIComponent(submissionId)}`;
 
+    photo.src = currentImageUrl;
+    roomPill.textContent = `${currentRoom} Room`;
+    galleryBtn.href = galleryLink;
+
+    try {
       await QRCode.toCanvas(qrCanvas, galleryLink, {
         width: 128,
         margin: 1,
@@ -296,10 +304,19 @@
           light: "#ffffff"
         }
       });
-
-      statusBox.style.display = "none";
-      content.style.display = "block";
+    } catch (qrError) {
+      console.error("QR error:", qrError);
     }
+
+    statusBox.style.display = "none";
+    content.style.display = "block";
+
+  } catch (err) {
+    console.error("Unexpected share page error:", err);
+    statusBox.textContent = "Unexpected error loading contribution.";
+    statusBox.classList.add("error");
+  }
+}
 
     async function createShareCardBlob() {
       const ctx = downloadCanvas.getContext("2d");
