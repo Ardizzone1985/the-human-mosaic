@@ -179,6 +179,15 @@
   margin-bottom: 14px;
 }
 
+.share-tip {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.72);
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.5;
+}
+    
     @media (max-width: 600px) {
       body { padding: 16px; }
 
@@ -233,12 +242,22 @@
       </div>
 
       <div class="actions">
-        <button class="primary" id="shareBtn">Share My Contribution</button>
-        <button class="secondary" id="downloadBtn">Download Share Card</button>
-        <a class="action-btn ghost" id="galleryBtn" href="#">Open My Gallery Photo</a>
+        <button id="downloadBtn">Download Share Card</button>
+
+<button id="copyLinkBtn">
+  Copy Gallery Link
+</button>
+
+<a id="galleryBtn">
+  Open My Gallery Photo
+</a>
       </div>
     </div>
 
+    <p class="share-tip">
+  Download your card and share it on Instagram, Facebook, or Stories.
+</p>
+    
     <canvas id="downloadCanvas" width="1080" height="1350"></canvas>
   </div>
 
@@ -257,7 +276,7 @@
     const photo = document.getElementById("photo");
     const roomPill = document.getElementById("roomPill");
     const qrImage = document.getElementById("qrImage");
-    const shareBtn = document.getElementById("shareBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
     const downloadBtn = document.getElementById("downloadBtn");
     const galleryBtn = document.getElementById("galleryBtn");
     const downloadCanvas = document.getElementById("downloadCanvas");
