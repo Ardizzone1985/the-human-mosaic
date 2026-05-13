@@ -171,6 +171,12 @@
       display: none;
     }
 
+    .share-subtitle {
+  color: rgba(255,255,255,0.72);
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+
     @media (max-width: 600px) {
       body { padding: 16px; }
 
@@ -207,8 +213,12 @@
         </div>
 
         <div class="share-title">
-          Now I am part of the world's largest humanitarian art gallery.
-        </div>
+  I am now part of The Human Mosaic.
+</div>
+
+<div class="share-subtitle">
+  A permanent global humanitarian artwork.
+</div>
 
         <div class="room-pill" id="roomPill">Room</div>
 
@@ -296,17 +306,19 @@
     galleryBtn.href = galleryLink;
 
     try {
-      await QRCode.toCanvas(qrCanvas, galleryLink, {
-        width: 128,
-        margin: 1,
-        color: {
-          dark: "#111111",
-          light: "#ffffff"
-        }
-      });
-    } catch (qrError) {
-      console.error("QR error:", qrError);
+  qrCanvas.style.background = "#ffffff";
+
+  await QRCode.toCanvas(qrCanvas, galleryLink, {
+    width: 128,
+    margin: 2,
+    color: {
+      dark: "#000000",
+      light: "#ffffff"
     }
+  });
+} catch (qrError) {
+  console.error("QR error:", qrError);
+}
 
     statusBox.style.display = "none";
     content.style.display = "block";
