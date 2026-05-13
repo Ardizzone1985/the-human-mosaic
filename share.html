@@ -223,7 +223,7 @@
         <div class="room-pill" id="roomPill">Room</div>
 
         <div class="qr-box">
-          <canvas id="qrCanvas"></canvas>
+          <img id="qrImage" alt="QR Code" style="width:128px; height:128px; background:white; border-radius:14px; padding:8px;">
           <div class="qr-text">
             Scan to open this contribution inside the live gallery.
           </div>
@@ -254,7 +254,7 @@
     const content = document.getElementById("content");
     const photo = document.getElementById("photo");
     const roomPill = document.getElementById("roomPill");
-    const qrCanvas = document.getElementById("qrCanvas");
+    const qrImage = document.getElementById("qrImage");
     const shareBtn = document.getElementById("shareBtn");
     const downloadBtn = document.getElementById("downloadBtn");
     const galleryBtn = document.getElementById("galleryBtn");
@@ -305,22 +305,7 @@
     roomPill.textContent = `${currentRoom} Room`;
     galleryBtn.href = galleryLink;
 
-    try {
-  qrCanvas.style.background = "#ffffff";
-
-  await QRCode.toCanvas(qrCanvas, galleryLink, {
-    width: 128,
-    margin: 2,
-    color: {
-      dark: "#000000",
-      light: "#ffffff"
-    }
-  });
-} catch (qrError) {
-  console.error("QR error:", qrError);
-}
-
-    statusBox.style.display = "none";
+        statusBox.style.display = "none";
     content.style.display = "block";
 
   } catch (err) {
