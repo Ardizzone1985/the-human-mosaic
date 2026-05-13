@@ -8,6 +8,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -260,7 +262,7 @@
     const galleryBtn = document.getElementById("galleryBtn");
     const downloadCanvas = document.getElementById("downloadCanvas");
 
-    let currentImageUrl = "";
+        let currentImageUrl = "";
     let currentRoom = "";
     let galleryLink = "";
 
@@ -300,6 +302,20 @@
     currentImageUrl = imgData.publicUrl;
     currentRoom = data.room || "Mosaic";
     galleryLink = `https://thehumanmosaic.art/gallery.html?id=${encodeURIComponent(submissionId)}`;
+
+    try {
+  qrImage.src = await QRCode.toDataURL(galleryLink, {
+    width: 180,
+    margin: 2,
+    color: {
+      dark: "#000000",
+      light: "#ffffff"
+    }
+  });
+} catch (qrError) {
+  console.error("QR image error:", qrError);
+  qrImage.style.display = "none";
+}
 
     photo.src = currentImageUrl;
     roomPill.textContent = `${currentRoom} Room`;
