@@ -246,6 +246,7 @@ export default async function handler(req, res) {
 
     const emailType = body.type || "approved";
     const galleryLink = `https://thehumanmosaic.art/gallery.html?id=${body.submissionId}`;
+    const shareLink = `https://thehumanmosaic.art/share.html?id=${body.submissionId}`;
 
     // ✅ EMAIL 1: SUBMITTED (immediata dopo upload, SENZA certificato)
     if (emailType === "submitted") {
@@ -395,6 +396,24 @@ const pdfBytes = await certificateResponse.arrayBuffer();
               </a>
             </p>
 
+            <p style="margin-top:18px; margin-bottom:10px;">
+  <strong>Share your official contribution card:</strong>
+</p>
+
+<p>
+  <a href="${shareLink}" style="
+    display:inline-block;
+    padding:14px 22px;
+    background:#111;
+    color:#fff;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:700;
+  ">
+    Open My Share Card
+  </a>
+</p>
+
             <p style="margin-top: 24px;">
               Your official certificate is attached to this email.
             </p>
@@ -467,6 +486,9 @@ Spot: ${body.spot}
 
 View your contribution in the live gallery:
 ${galleryLink}
+
+Share your official contribution card:
+${shareLink}
 
 Your official certificate is attached to this email.
 
