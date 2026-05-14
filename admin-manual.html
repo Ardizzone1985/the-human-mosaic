@@ -140,15 +140,10 @@
         <option value="Right">Right</option>
       </select>
 
-      <label>Section</label>
-      <input type="text" id="section" placeholder="Example: A" required />
-
-      <label>Spot</label>
-      <input type="text" id="spot" placeholder="Example: 01" required />
-
-      <label>Slot Code</label>
-      <input type="text" id="slotCode" placeholder="Example: ID-FR-A-01" required />
-
+      <div style="margin-top:16px; padding:14px; background:#f7f7f7; border:1px solid #ddd; border-radius:14px;">
+  <strong>Slot assignment:</strong><br>
+  The system will automatically assign the first available slot for the selected Room and Wall.
+</div>
       <label>Optional Note</label>
       <textarea id="note" placeholder="Optional message from participant"></textarea>
 
@@ -202,9 +197,25 @@
       const country = document.getElementById("country").value.trim();
       const room = document.getElementById("room").value;
       const wall = document.getElementById("wall").value;
-      const section = document.getElementById("section").value.trim();
-      const spot = document.getElementById("spot").value.trim();
-      const slotCode = document.getElementById("slotCode").value.trim();
+      const { data: availableSlot, error: slotFindError } = await supabaseClient
+  .from("slots")
+  .select("slot_code, section, spot")
+  .eq("room", room)
+  .eq("wall", wall)
+  .eq("status", "available")
+  .order("slot_code", { ascending: true })
+  .limit(1)
+  .maybeSingle();
+
+if (slotFindError || !availableSlot) {
+  console.error(slotFindError);
+  showStatus("No available slot found for the selected Room and Wall.", "error");
+  return;
+}
+
+const section = availableSlot.section;
+const spot = availableSlot.spot;
+const slotCode = availableSlot.slot_code;
       const note = document.getElementById("note").value.trim();
       const photoFile = document.getElementById("photo").files[0];
 
@@ -246,9 +257,8 @@
             slot_code: slotCode,
             image_file_name: fileName,
             note: note,
-            approval_status: "approved",
-            created_at: new Date().toISOString(),
-            approved_at: new Date().toISOString()
+            approval_status: "pending",
+created_at: new Date().toISOString(),
           });
 
         if (insertError) {
