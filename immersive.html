@@ -224,7 +224,7 @@ scene.add(floorGlow);
 );
 
 ceiling.rotation.x = Math.PI / 2;
-ceiling.position.y = 6;
+ceiling.position.y = 6.2;
 
 scene.add(ceiling);
 
@@ -248,6 +248,50 @@ scene.add(ceiling);
     rightWall.position.set(6, 2.5, 1);
     rightWall.rotation.y = -Math.PI / 2;
     scene.add(rightWall);
+
+    // Architectural glowing lines to make the room readable
+const lineMaterial = new THREE.LineBasicMaterial({
+  color: 0xd8b46a,
+  transparent: true,
+  opacity: 0.55
+});
+
+function addLine(points) {
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geometry, lineMaterial);
+  scene.add(line);
+}
+
+// Back wall rectangle
+addLine([
+  new THREE.Vector3(-9, -0.8, -3.95),
+  new THREE.Vector3(9, -0.8, -3.95),
+  new THREE.Vector3(9, 7.2, -3.95),
+  new THREE.Vector3(-9, 7.2, -3.95),
+  new THREE.Vector3(-9, -0.8, -3.95)
+]);
+
+// Floor depth lines
+addLine([
+  new THREE.Vector3(-9, -0.8, -3.95),
+  new THREE.Vector3(-7, -0.8, 7)
+]);
+
+addLine([
+  new THREE.Vector3(9, -0.8, -3.95),
+  new THREE.Vector3(7, -0.8, 7)
+]);
+
+// Ceiling depth lines
+addLine([
+  new THREE.Vector3(-9, 7.2, -3.95),
+  new THREE.Vector3(-7, 6, 7)
+]);
+
+addLine([
+  new THREE.Vector3(9, 7.2, -3.95),
+  new THREE.Vector3(7, 6, 7)
+]);
 
     async function createPhoto(imageUrl, x, y, z, wall = "back") {
 
