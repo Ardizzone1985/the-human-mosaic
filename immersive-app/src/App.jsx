@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
+import WallGrid from "./WallGrid.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -104,55 +105,9 @@ function Room() {
   );
 })}
 
-      {/* FRONT WALL */}
-      {Array.from({ length: 60 }).map((_, i) => {
-        const col = i % 12;
-        const row = Math.floor(i / 12);
-
-        return (
-          <mesh
-            key={`front-${i}`}
-            position={[-8.8 + col * 1.6, 5.8 - row * 1.25, -5.7]}
-          >
-            <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#d9b66f" roughness={0.35} metalness={0.12} />
-          </mesh>
-        );
-      })}
-
-      {/* LEFT WALL */}
-      {Array.from({ length: 45 }).map((_, i) => {
-        const col = i % 9;
-        const row = Math.floor(i / 9);
-
-        return (
-          <mesh
-            key={`left-${i}`}
-            rotation={[0, Math.PI / 2, 0]}
-            position={[-10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
-          >
-            <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#9fc3ff" roughness={0.35} metalness={0.1} />
-          </mesh>
-        );
-      })}
-
-      {/* RIGHT WALL */}
-      {Array.from({ length: 45 }).map((_, i) => {
-        const col = i % 9;
-        const row = Math.floor(i / 9);
-
-        return (
-          <mesh
-            key={`right-${i}`}
-            rotation={[0, -Math.PI / 2, 0]}
-            position={[10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
-          >
-            <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#ff9fbd" roughness={0.35} metalness={0.1} />
-          </mesh>
-        );
-      })}
+      <WallGrid wall="front" color="#d9b66f" />
+<WallGrid wall="left" color="#b98a4a" />
+<WallGrid wall="right" color="#7f2d2d" />
 
       <OrbitControls enablePan={false} maxDistance={18} minDistance={3} />
     </>
