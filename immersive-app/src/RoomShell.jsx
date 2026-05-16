@@ -104,7 +104,7 @@ export default function RoomShell() {
 
       {/* Ceiling */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 8, 1]}>
-        <planeGeometry args={[26, 22]} />
+        <planeGeometry args={[30, 34]} />
         <meshStandardMaterial
           color="#221914"
           roughness={0.72}
