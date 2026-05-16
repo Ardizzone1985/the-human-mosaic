@@ -64,7 +64,7 @@ export default function RoomShell() {
   position={[0, -1.22, 1]}
   receiveShadow
 >
-  <planeGeometry args={[28, 24]} />
+  <planeGeometry args={[30, 34]} />
   <meshStandardMaterial
     map={createParquetTexture()}
     roughness={0.22}
