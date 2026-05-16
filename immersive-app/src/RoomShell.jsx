@@ -17,20 +17,33 @@ export default function RoomShell() {
         color="#ffd0a0"
       />
 
-      {/* Floor */}
-      <mesh
-  rotation={[-Math.PI / 2, 0, 0]}
-  position={[0, -1.2, 0]}
-  receiveShadow
->
-  <planeGeometry args={[40, 40]} />
+      {/* Real parquet floor */}
+<group position={[0, -1.18, 1]}>
+  {Array.from({ length: 160 }).map((_, i) => {
+    const row = Math.floor(i / 20);
+    const col = i % 20;
 
-  <meshStandardMaterial
-    color="#4a2d18"
-    roughness={0.35}
-    metalness={0.08}
-  />
-</mesh>
+    const isEvenRow = row % 2 === 0;
+    const x = -9.5 + col * 1;
+    const z = -8.5 + row * 1.1;
+
+    return (
+      <mesh
+        key={`parquet-${i}`}
+        rotation={[-Math.PI / 2, 0, isEvenRow ? Math.PI / 4 : -Math.PI / 4]}
+        position={[x, 0, z]}
+        receiveShadow
+      >
+        <boxGeometry args={[1.4, 0.035, 0.42]} />
+        <meshStandardMaterial
+          color={isEvenRow ? "#7a421f" : "#5f3218"}
+          roughness={0.32}
+          metalness={0.18}
+        />
+      </mesh>
+    );
+  })}
+</group>
 
       {/* Back wall */}
       <mesh position={[0, 3, -6]}>
