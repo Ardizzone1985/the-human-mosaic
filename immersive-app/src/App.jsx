@@ -93,9 +93,13 @@ function Room() {
   const { position, rotation } = slotToPosition(item.slot_code, item.wall);
 
   return (
-    <mesh key={item.id} position={position} rotation={rotation}>
-      <planeGeometry args={[0.16, 0.16]} />
-      <meshStandardMaterial color={item.color} />
+    <mesh
+      key={item.id}
+      position={position}
+      rotation={rotation}
+    >
+      <planeGeometry args={[0.7, 0.7]} />
+      <meshBasicMaterial color="#00ff66" />
     </mesh>
   );
 })}
