@@ -8,33 +8,55 @@ function Room() {
 
       <RoomShell />
       
-      {/* TEST WALL IMAGES */}
-      {Array.from({ length: 40 }).map((_, i) => {
-        const col = i % 10;
-        const row = Math.floor(i / 10);
+      {/* FRONT WALL */}
+{Array.from({ length: 60 }).map((_, i) => {
+  const col = i % 12;
+  const row = Math.floor(i / 12);
 
-        return (
-          <mesh
-            key={i}
-            position={[
-              -8 + col * 1.8,
-              5 - row * 1.8,
-              -5.8
-            ]}
-          >
-            <planeGeometry args={[1.5, 1.5]} />
-            <meshStandardMaterial color="#d8c08f" />
-          </mesh>
-        );
-      })}
-
-      <OrbitControls
-        enablePan={false}
-        maxDistance={12}
-        minDistance={4}
-      />
-    </>
+  return (
+    <mesh
+      key={`front-${i}`}
+      position={[-8.8 + col * 1.6, 5.8 - row * 1.25, -5.7]}
+    >
+      <planeGeometry args={[1.15, 0.95]} />
+      <meshStandardMaterial color="#d8b46a" />
+    </mesh>
   );
+})}
+
+{/* LEFT WALL */}
+{Array.from({ length: 45 }).map((_, i) => {
+  const col = i % 9;
+  const row = Math.floor(i / 9);
+
+  return (
+    <mesh
+      key={`left-${i}`}
+      rotation={[0, Math.PI / 2, 0]}
+      position={[-10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
+    >
+      <planeGeometry args={[1.15, 0.95]} />
+      <meshStandardMaterial color="#b98a4a" />
+    </mesh>
+  );
+})}
+
+{/* RIGHT WALL */}
+{Array.from({ length: 45 }).map((_, i) => {
+  const col = i % 9;
+  const row = Math.floor(i / 9);
+
+  return (
+    <mesh
+      key={`right-${i}`}
+      rotation={[0, -Math.PI / 2, 0]}
+      position={[10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
+    >
+      <planeGeometry args={[1.15, 0.95]} />
+      <meshStandardMaterial color="#c99b55" />
+    </mesh>
+  );
+})}
 }
 
 export default function App() {
