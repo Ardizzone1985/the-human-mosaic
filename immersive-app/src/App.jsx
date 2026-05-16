@@ -46,7 +46,7 @@ export default function App() {
         background: "#050505"
       }}
     >
-      <Canvas camera={{ position: [0, 2, 6], fov: 60 }}>
+      <Canvas camera={{ position: [0, 2.2, 7.5], fov: 58 }} shadows>
         <fog attach="fog" args={["#050505", 10, 30]} />
         <Room />
       </Canvas>
