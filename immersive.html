@@ -303,14 +303,10 @@ const supabaseClient = supabase.createClient(
 
   data.forEach((item) => {
 
-  if (!item.image_path) return;
+  if (!item.image_file_name) return;
 
-  const { data: publicImage } = supabaseClient
-    .storage
-    .from("images")
-    .getPublicUrl(item.image_path);
-
-  const imageUrl = publicImage.publicUrl;
+const imageUrl =
+  `${SUPABASE_URL}/storage/v1/object/public/images/${item.image_file_name}`;
 
   const row = Math.floor(index / 8);
   const col = index % 8;
