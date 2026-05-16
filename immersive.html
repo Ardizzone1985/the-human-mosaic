@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Immersive Gallery – The Human Mosaic</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background: #050505;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+    }
+
+    #scene {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 10;
+      max-width: 420px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: #e8d7a2;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: rgba(255,255,255,0.78);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, a {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      background: white;
+      color: #111;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.25s ease;
+    }
+
+    button:hover, a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255,255,255,0.18);
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .hint {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 10;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 700px) {
+      .overlay {
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        max-width: none;
+      }
+
+      .controls {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="scene"></canvas>
+
+  <div class="overlay">
+    <div class="badge">Immersive Preview</div>
+    <h1>The Human Mosaic Museum</h1>
+    <p>
+      Enter the first immersive prototype of The Human Mosaic:
+      a cinematic digital room where the walls slowly become alive with humanity.
+    </p>
+  </div>
+
+  <div class="controls">
+    <button onclick="moveLeft()">← Left Wall</button>
+    <button onclick="moveCenter()">Center</button>
+    <button onclick="moveRight()">Right Wall →</button>
+    <a class="secondary" href="gallery.html">Back to Live Gallery</a>
+  </div>
+
+  <div class="hint">Drag / move your mouse to explore</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <script>
+    const canvas = document.getElementById("scene");
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+    scene.fog = new THREE.Fog(0x050505, 8, 26);
+
+    const camera = new THREE.PerspectiveCamera(
+      65,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+
+    camera.position.set(0, 1.8, 7);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true
+    });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.PointLight(0xffddaa, 2.4, 18);
+    mainLight.position.set(0, 4, 4);
+    scene.add(mainLight);
+
+    const sideLightLeft = new THREE.PointLight(0x88aaff, 1.2, 12);
+    sideLightLeft.position.set(-5, 3, 1);
+    scene.add(sideLightLeft);
+
+    const sideLightRight = new THREE.PointLight(0xff88cc, 1.2, 12);
+    sideLightRight.position.set(5, 3, 1);
+    scene.add(sideLightRight);
+
+    const floorGeometry = new THREE.PlaneGeometry(14, 18);
+    const floorMaterial = new THREE.MeshStandardMaterial({
+      color: 0x111111,
+      roughness: 0.8,
+      metalness: 0.15
+    });
+
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.z = -1;
+    scene.add(floor);
+
+    const backWallGeometry = new THREE.PlaneGeometry(12, 5);
+    const wallMaterial = new THREE.MeshStandardMaterial({
+      color: 0x151515,
+      roughness: 0.9,
+      metalness: 0.05
+    });
+
+    const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+    backWall.position.set(0, 2.5, -4);
+    scene.add(backWall);
+
+    const leftWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+    leftWall.position.set(-6, 2.5, 1);
+    leftWall.rotation.y = Math.PI / 2;
+    scene.add(leftWall);
+
+    const rightWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+    rightWall.position.set(6, 2.5, 1);
+    rightWall.rotation.y = -Math.PI / 2;
+    scene.add(rightWall);
+
+    function createPhoto(x, y, z, color, wall = "back") {
+      const geometry = new THREE.PlaneGeometry(0.72, 0.72);
+      const material = new THREE.MeshStandardMaterial({
+        color,
+        roughness: 0.45,
+        metalness: 0.05
+      });
+
+      const photo = new THREE.Mesh(geometry, material);
+      photo.position.set(x, y, z);
+
+      if (wall === "left") {
+        photo.rotation.y = Math.PI / 2;
+      }
+
+      if (wall === "right") {
+        photo.rotation.y = -Math.PI / 2;
+      }
+
+      scene.add(photo);
+
+      const frameGeometry = new THREE.PlaneGeometry(0.82, 0.82);
+      const frameMaterial = new THREE.MeshBasicMaterial({
+        color: 0xe8d7a2,
+        side: THREE.DoubleSide
+      });
+
+      const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+      frame.position.set(x, y, z - 0.01);
+
+      if (wall === "left") {
+        frame.rotation.y = Math.PI / 2;
+        frame.position.x = x + 0.01;
+      }
+
+      if (wall === "right") {
+        frame.rotation.y = -Math.PI / 2;
+        frame.position.x = x - 0.01;
+      }
+
+      scene.add(frame);
+    }
+
+    const colors = [
+      0xd9a441, 0xc96b6b, 0x6b8fc9, 0x7cc96b,
+      0xb76bc9, 0xc9c16b, 0x6bc9bd, 0xffffff
+    ];
+
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 8; col++) {
+        createPhoto(
+          -4.2 + col * 1.2,
+          1.1 + row * 0.9,
+          -3.92,
+          colors[(row + col) % colors.length],
+          "back"
+        );
+      }
+    }
+
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 5; col++) {
+        createPhoto(
+          -5.92,
+          1.1 + row * 0.9,
+          -1.5 + col * 1.1,
+          colors[(row + col + 2) % colors.length],
+          "left"
+        );
+
+        createPhoto(
+          5.92,
+          1.1 + row * 0.9,
+          -1.5 + col * 1.1,
+          colors[(row + col + 4) % colors.length],
+          "right"
+        );
+      }
+    }
+
+    let targetX = 0;
+    let targetY = 1.8;
+    let targetZ = 7;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    function moveLeft() {
+      targetX = -3.8;
+      targetY = 2;
+      targetZ = 2.4;
+    }
+
+    function moveCenter() {
+      targetX = 0;
+      targetY = 1.8;
+      targetZ = 7;
+    }
+
+    function moveRight() {
+      targetX = 3.8;
+      targetY = 2;
+      targetZ = 2.4;
+    }
+
+    window.addEventListener("mousemove", (event) => {
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 0.5;
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 0.3;
+    });
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      camera.position.x += (targetX + mouseX - camera.position.x) * 0.04;
+      camera.position.y += (targetY - mouseY - camera.position.y) * 0.04;
+      camera.position.z += (targetZ - camera.position.z) * 0.04;
+
+      camera.lookAt(0, 2.2, -2.5);
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
