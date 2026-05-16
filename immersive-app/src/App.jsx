@@ -79,8 +79,6 @@ function Room() {
   minDistance={4}
   maxPolarAngle={Math.PI / 2.1}
   minPolarAngle={Math.PI / 3.1}
-  minAzimuthAngle={-Math.PI / 3.5}
-  maxAzimuthAngle={Math.PI / 3.5}
 />
     </>
   );
@@ -130,54 +128,6 @@ export default function App() {
 
   <Room />
 </Canvas>
-      <div
-        style={{
-          position: "fixed",
-          top: 30,
-          left: 30,
-          padding: 24,
-          borderRadius: 24,
-          background: "rgba(0,0,0,0.55)",
-          backdropFilter: "blur(14px)",
-          color: "white",
-          width: 360,
-          border: "1px solid rgba(255,255,255,0.1)"
-        }}
-      >
-        <div
-          style={{
-            display: "inline-block",
-            padding: "6px 12px",
-            borderRadius: 999,
-            background: "rgba(255,255,255,0.1)",
-            marginBottom: 14,
-            color: "#e7c98f",
-            fontSize: 12,
-            letterSpacing: "0.08em"
-          }}
-        >
-          IMMERSIVE APP
-        </div>
-
-        <h1
-          style={{
-            fontSize: 62,
-            lineHeight: 0.95,
-            marginBottom: 18
-          }}
-        >
-          The Human Mosaic
-        </h1>
-
-        <p
-          style={{
-            color: "rgba(255,255,255,0.75)",
-            lineHeight: 1.6
-          }}
-        >
-          The first immersive prototype of the permanent digital museum of humanity.
-        </p>
-      </div>
-    </div>
+         </div>
   );
 }
