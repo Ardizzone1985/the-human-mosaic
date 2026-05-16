@@ -86,10 +86,40 @@ export default function App() {
       }}
     >
       <Canvas camera={{ position: [0, 2.2, 7.5], fov: 58 }} shadows>
-        <fog attach="fog" args={["#050505", 14, 36]} />
-        <Room />
-      </Canvas>
+  <fog attach="fog" args={["#050505", 14, 36]} />
 
+  <ambientLight intensity={0.35} color="#ffddaa" />
+
+  <directionalLight
+    position={[0, 8, 5]}
+    intensity={1.2}
+    color="#ffe0b5"
+    castShadow
+  />
+
+  <pointLight
+    position={[0, 4, -2]}
+    intensity={2}
+    distance={30}
+    color="#ffb866"
+  />
+
+  <pointLight
+    position={[-8, 4, 0]}
+    intensity={1.4}
+    distance={25}
+    color="#ffcc88"
+  />
+
+  <pointLight
+    position={[8, 4, 0]}
+    intensity={1.4}
+    distance={25}
+    color="#ffcc88"
+  />
+
+  <Room />
+</Canvas>
       <div
         style={{
           position: "fixed",
