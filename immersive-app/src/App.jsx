@@ -2,6 +2,63 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 
+function parseSlotCode(slotCode) {
+  if (!slotCode) return null;
+
+  const rowMatch = slotCode.match(/R(\d+)/i);
+  const colMatch = slotCode.match(/C(\d+)/i);
+
+  if (!rowMatch || !colMatch) return null;
+
+  return {
+    row: Number(rowMatch[1]),
+    col: Number(colMatch[1])
+  };
+}
+
+function slotToPosition(slotCode, wall) {
+  const parsed = parseSlotCode(slotCode);
+
+  if (!parsed) {
+    return {
+      position: [0, 3, -5.7],
+      rotation: [0, 0, 0]
+    };
+  }
+
+  const scaleX = 0.18;
+  const scaleY = 0.18;
+
+  const x = -9 + parsed.col * scaleX;
+  const y = 6.4 - parsed.row * scaleY;
+
+  if (wall === "Front Wall") {
+    return {
+      position: [x, y, -5.7],
+      rotation: [0, 0, 0]
+    };
+  }
+
+  if (wall === "Left Wall") {
+    return {
+      position: [-10.75, y, -5 + parsed.col * scaleX],
+      rotation: [0, Math.PI / 2, 0]
+    };
+  }
+
+  if (wall === "Right Wall") {
+    return {
+      position: [10.75, y, -5 + parsed.col * scaleX],
+      rotation: [0, -Math.PI / 2, 0]
+    };
+  }
+
+  return {
+    position: [x, y, -5.7],
+    rotation: [0, 0, 0]
+  };
+}
+
 function Room() {
   return (
     <>
