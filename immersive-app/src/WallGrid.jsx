@@ -1,3 +1,5 @@
+import PhotoFrame from "./PhotoFrame.jsx";
+
 export default function WallGrid({ wall = "front", color = "#d9b66f" }) {
   const columns = wall === "front" ? 12 : 9;
   const rows = 5;
@@ -33,14 +35,12 @@ export default function WallGrid({ wall = "front", color = "#d9b66f" }) {
         const { position, rotation } = getTransform(i);
 
         return (
-          <mesh key={`${wall}-${i}`} position={position} rotation={rotation}>
-            <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial
-              color={color}
-              roughness={0.38}
-              metalness={0.12}
-            />
-          </mesh>
+          <PhotoFrame
+  key={`${wall}-${i}`}
+  position={position}
+  rotation={rotation}
+  imageColor={color}
+/>
         );
       })}
     </>
