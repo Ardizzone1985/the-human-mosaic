@@ -303,18 +303,25 @@ const supabaseClient = supabase.createClient(
 
   data.forEach((item) => {
 
-    if (!item.image_url) return;
+  if (!item.image_path) return;
 
-    const row = Math.floor(index / 8);
-    const col = index % 8;
+  const { data: publicImage } = supabaseClient
+    .storage
+    .from("images")
+    .getPublicUrl(item.image_path);
 
-    createPhoto(
-      item.image_url,
-      -4.2 + col * 1.2,
-      1.1 + row * 0.9,
-      -3.92,
-      "back"
-    );
+  const imageUrl = publicImage.publicUrl;
+
+  const row = Math.floor(index / 8);
+  const col = index % 8;
+
+  createPhoto(
+    imageUrl,
+    -4.2 + col * 1.2,
+    1.1 + row * 0.9,
+    -3.92,
+    "back"
+  );
 
     index++;
 
