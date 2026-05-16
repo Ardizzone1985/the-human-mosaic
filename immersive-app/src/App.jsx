@@ -59,10 +59,46 @@ function slotToPosition(slotCode, wall) {
   };
 }
 
+const testSubmissions = [
+  {
+    id: 1,
+    room: "Identity",
+    wall: "Front Wall",
+    slot_code: "Identity-FW-R10-C53",
+    color: "#d9b66f"
+  },
+  {
+    id: 2,
+    room: "Identity",
+    wall: "Left Wall",
+    slot_code: "Identity-LW-R15-C22",
+    color: "#9fc3ff"
+  },
+  {
+    id: 3,
+    room: "Identity",
+    wall: "Right Wall",
+    slot_code: "Identity-RW-R8-C40",
+    color: "#ff9fbd"
+  }
+];
+
 function Room() {
   return (
     <>
       <RoomShell />
+
+      {/* TEST REAL SLOT POSITIONS */}
+{testSubmissions.map((item) => {
+  const { position, rotation } = slotToPosition(item.slot_code, item.wall);
+
+  return (
+    <mesh key={item.id} position={position} rotation={rotation}>
+      <planeGeometry args={[0.16, 0.16]} />
+      <meshStandardMaterial color={item.color} />
+    </mesh>
+  );
+})}
 
       {/* FRONT WALL */}
       {Array.from({ length: 60 }).map((_, i) => {
