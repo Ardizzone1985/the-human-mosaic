@@ -50,32 +50,34 @@ function LivePhoto({ item }) {
 
   const texture = useTexture(imageUrl);
 
+  const size = 0.22;
+  const frameThickness = 0.025;
+  const half = size / 2;
+
   return (
     <group position={position} rotation={rotation}>
-      {/* photo */}
       <mesh position={[0, 0, 0.04]}>
-        <planeGeometry args={[0.18, 0.18]} />
+        <planeGeometry args={[size, size]} />
         <meshBasicMaterial map={texture} toneMapped={false} />
       </mesh>
 
-      {/* frame borders */}
-      <mesh position={[0, 0.27, 0.03]}>
-        <boxGeometry args={[0.56, 0.04, 0.04]} />
+      <mesh position={[0, half + frameThickness / 2, 0.035]}>
+        <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
-      <mesh position={[0, -0.27, 0.03]}>
-        <boxGeometry args={[0.56, 0.04, 0.04]} />
+      <mesh position={[0, -half - frameThickness / 2, 0.035]}>
+        <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
-      <mesh position={[-0.27, 0, 0.03]}>
-        <boxGeometry args={[0.56, 0.04, 0.04]} />
+      <mesh position={[-half - frameThickness / 2, 0, 0.035]}>
+        <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
-      <mesh position={[0.27, 0, 0.03]}>
-        <boxGeometry args={[0.56, 0.04, 0.04]} />
+      <mesh position={[half + frameThickness / 2, 0, 0.035]}>
+        <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
     </group>
