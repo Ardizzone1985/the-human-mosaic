@@ -18,7 +18,7 @@ function Room() {
             position={[-8.8 + col * 1.6, 5.8 - row * 1.25, -5.7]}
           >
             <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#d8b46a" />
+            <meshStandardMaterial color="#d9b66f" roughness={0.35} metalness={0.12} />
           </mesh>
         );
       })}
@@ -35,7 +35,7 @@ function Room() {
             position={[-10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
           >
             <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#b98a4a" />
+            <meshStandardMaterial color="#9fc3ff" roughness={0.35} metalness={0.1} />
           </mesh>
         );
       })}
@@ -52,7 +52,7 @@ function Room() {
             position={[10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
           >
             <planeGeometry args={[1.15, 0.95]} />
-            <meshStandardMaterial color="#c99b55" />
+            <meshStandardMaterial color="#ff9fbd" roughness={0.35} metalness={0.1} />
           </mesh>
         );
       })}
