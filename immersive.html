@@ -299,6 +299,8 @@ const supabaseClient = supabase.createClient(
 
   let index = 0;
 
+      console.log("SUPABASE DATA:", data);
+
   data.forEach((item) => {
 
     if (!item.image_url) return;
