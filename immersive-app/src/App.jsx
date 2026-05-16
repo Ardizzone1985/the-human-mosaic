@@ -73,10 +73,14 @@ function Room() {
 
       <OrbitControls
   enablePan={false}
-  maxDistance={14}
+  enableDamping={true}
+  dampingFactor={0.08}
+  maxDistance={12}
   minDistance={4}
-  maxPolarAngle={Math.PI / 2.05}
-  minPolarAngle={Math.PI / 3.2}
+  maxPolarAngle={Math.PI / 2.1}
+  minPolarAngle={Math.PI / 3.1}
+  minAzimuthAngle={-Math.PI / 3.5}
+  maxAzimuthAngle={Math.PI / 3.5}
 />
     </>
   );
