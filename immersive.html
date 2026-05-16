@@ -229,86 +229,99 @@ const supabaseClient = supabase.createClient(
     rightWall.rotation.y = -Math.PI / 2;
     scene.add(rightWall);
 
-    function createPhoto(x, y, z, color, wall = "back") {
-      const geometry = new THREE.PlaneGeometry(0.72, 0.72);
-      const material = new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.45,
-        metalness: 0.05
-      });
+    async function createPhoto(imageUrl, x, y, z, wall = "back") {
 
-      const photo = new THREE.Mesh(geometry, material);
-      photo.position.set(x, y, z);
+  const textureLoader = new THREE.TextureLoader();
 
-      if (wall === "left") {
-        photo.rotation.y = Math.PI / 2;
-      }
+  textureLoader.load(imageUrl, (texture) => {
 
-      if (wall === "right") {
-        photo.rotation.y = -Math.PI / 2;
-      }
+    const geometry = new THREE.PlaneGeometry(0.72, 0.72);
 
-      scene.add(photo);
+    const material = new THREE.MeshStandardMaterial({
+      map: texture,
+      roughness: 0.45,
+      metalness: 0.05
+    });
 
-      const frameGeometry = new THREE.PlaneGeometry(0.82, 0.82);
-      const frameMaterial = new THREE.MeshBasicMaterial({
-        color: 0xe8d7a2,
-        side: THREE.DoubleSide
-      });
+    const photo = new THREE.Mesh(geometry, material);
 
-      const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-      frame.position.set(x, y, z - 0.01);
+    photo.position.set(x, y, z);
 
-      if (wall === "left") {
-        frame.rotation.y = Math.PI / 2;
-        frame.position.x = x + 0.01;
-      }
-
-      if (wall === "right") {
-        frame.rotation.y = -Math.PI / 2;
-        frame.position.x = x - 0.01;
-      }
-
-      scene.add(frame);
+    if (wall === "left") {
+      photo.rotation.y = Math.PI / 2;
     }
 
-    const colors = [
-      0xd9a441, 0xc96b6b, 0x6b8fc9, 0x7cc96b,
-      0xb76bc9, 0xc9c16b, 0x6bc9bd, 0xffffff
-    ];
-
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 8; col++) {
-        createPhoto(
-          -4.2 + col * 1.2,
-          1.1 + row * 0.9,
-          -3.92,
-          colors[(row + col) % colors.length],
-          "back"
-        );
-      }
+    if (wall === "right") {
+      photo.rotation.y = -Math.PI / 2;
     }
 
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 5; col++) {
-        createPhoto(
-          -5.92,
-          1.1 + row * 0.9,
-          -1.5 + col * 1.1,
-          colors[(row + col + 2) % colors.length],
-          "left"
-        );
+    scene.add(photo);
 
-        createPhoto(
-          5.92,
-          1.1 + row * 0.9,
-          -1.5 + col * 1.1,
-          colors[(row + col + 4) % colors.length],
-          "right"
-        );
-      }
+    const frameGeometry = new THREE.PlaneGeometry(0.82, 0.82);
+
+    const frameMaterial = new THREE.MeshBasicMaterial({
+      color: 0xe8d7a2,
+      side: THREE.DoubleSide
+    });
+
+    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+
+    frame.position.set(x, y, z - 0.01);
+
+    if (wall === "left") {
+      frame.rotation.y = Math.PI / 2;
+      frame.position.x = x + 0.01;
     }
 
+    if (wall === "right") {
+      frame.rotation.y = -Math.PI / 2;
+      frame.position.x = x - 0.01;
+    }
+
+    scene.add(frame);
+
+  });
+
+}
+
+    async function loadGalleryImages() {
+
+  const { data, error } = await supabaseClient
+    .from("submissions")
+    .select("*")
+    .eq("approval_status", "approved")
+    .limit(60);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  let index = 0;
+
+  data.forEach((item) => {
+
+    if (!item.image_url) return;
+
+    const row = Math.floor(index / 8);
+    const col = index % 8;
+
+    createPhoto(
+      item.image_url,
+      -4.2 + col * 1.2,
+      1.1 + row * 0.9,
+      -3.92,
+      "back"
+    );
+
+    index++;
+
+  });
+
+}
+
+loadGalleryImages();
+    
     let targetX = 0;
     let targetY = 1.8;
     let targetZ = 7;
