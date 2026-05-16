@@ -1,13 +1,14 @@
 export default function RoomShell() {
   return (
     <>
-      <ambientLight intensity={1.15} />
+      <ambientLight intensity={0.7} color="#ffe2b8" />
 
       <directionalLight
-        position={[0, 8, 6]}
-        intensity={3.5}
-        color="#fff0d0"
-      />
+  position={[5, 8, 5]}
+  intensity={2.5}
+  color="#ffd6a3"
+  castShadow
+/>
 
       <pointLight
         position={[0, 4, 3]}
@@ -17,14 +18,19 @@ export default function RoomShell() {
       />
 
       {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 1]}>
-        <planeGeometry args={[26, 22]} />
-        <meshStandardMaterial
-          color="#5a4938"
-          roughness={0.28}
-          metalness={0.38}
-        />
-      </mesh>
+      <mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.2, 0]}
+  receiveShadow
+>
+  <planeGeometry args={[40, 40]} />
+
+  <meshStandardMaterial
+    color="#4a2d18"
+    roughness={0.35}
+    metalness={0.08}
+  />
+</mesh>
 
       {/* Back wall */}
       <mesh position={[0, 3, -6]}>
