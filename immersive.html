@@ -181,10 +181,10 @@ const supabaseClient = supabase.createClient(
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.32);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.PointLight(0xffddaa, 2.4, 18);
+    const mainLight = new THREE.PointLight(0xffddaa, 3.8, 20);
     mainLight.position.set(0, 4, 4);
     scene.add(mainLight);
 
@@ -244,7 +244,13 @@ const supabaseClient = supabase.createClient(
 
     const photo = new THREE.Mesh(geometry, material);
 
-    photo.position.set(x, y, z);
+    photo.position.set(
+  x,
+  y,
+  z + (Math.random() * 0.08)
+);
+
+    photo.rotation.z = (Math.random() - 0.5) * 0.03;
 
     if (wall === "left") {
       photo.rotation.y = Math.PI / 2;
@@ -312,8 +318,8 @@ const col = index % 7;
 
   createPhoto(
   imageUrl,
-  -4.9 + col * 1.4,
-  1.15 + row * 1.25,
+  -4.2 + col * 1.15,
+  1.05 + row * 1.08,
   -3.92,
   "back"
 );
