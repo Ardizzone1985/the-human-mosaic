@@ -73,7 +73,7 @@ export default function RoomShell() {
 </mesh>
 
       {/* Back wall */}
-      <mesh position={[0, 3, -6]}>
+      <mesh position={[0, 3, -10]}>
         <planeGeometry args={[22, 10]} />
         <meshStandardMaterial
           color="#6a533f"
@@ -113,29 +113,29 @@ export default function RoomShell() {
       </mesh>
 
       {/* Back wall frame */}
-      <mesh position={[0, 8.05, -5.9]}>
+      <mesh position={[0, 8.05, -9.9]}>
         <boxGeometry args={[22, 0.08, 0.12]} />
         <meshStandardMaterial color="#d7b56d" emissive="#6a4216" emissiveIntensity={0.4} />
       </mesh>
 
-      <mesh position={[0, -0.95, -5.9]}>
+      <mesh position={[0, -0.95, -9.9]}>
         <boxGeometry args={[22, 0.08, 0.12]} />
         <meshStandardMaterial color="#d7b56d" emissive="#6a4216" emissiveIntensity={0.4} />
       </mesh>
 
-      <mesh position={[-10.95, 3.5, -5.9]}>
+      <mesh position={[-10.95, 3.5, -9.9]}>
         <boxGeometry args={[0.08, 9, 0.12]} />
         <meshStandardMaterial color="#d7b56d" emissive="#6a4216" emissiveIntensity={0.4} />
       </mesh>
 
-      <mesh position={[10.95, 3.5, -5.9]}>
+      <mesh position={[10.95, 3.5, -9.9]}>
         <boxGeometry args={[0.08, 9, 0.12]} />
         <meshStandardMaterial color="#d7b56d" emissive="#6a4216" emissiveIntensity={0.4} />
       </mesh>
 
       {/* Museum wall panels */}
 {[-7.5, -3.75, 0, 3.75, 7.5].map((x) => (
-  <group key={`back-panel-${x}`} position={[x, 3.1, -5.82]}>
+  <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
     <mesh>
       <boxGeometry args={[2.7, 5.8, 0.08]} />
       <meshStandardMaterial
