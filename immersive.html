@@ -249,49 +249,35 @@ scene.add(ceiling);
     rightWall.rotation.y = -Math.PI / 2;
     scene.add(rightWall);
 
-    // Architectural glowing lines to make the room readable
-const lineMaterial = new THREE.LineBasicMaterial({
-  color: 0xd8b46a,
-  transparent: true,
-  opacity: 0.55
-});
+    // Strong architectural edges
+function addBeam(x, y, z, width, height, depth) {
+  const geometry = new THREE.BoxGeometry(width, height, depth);
+  const material = new THREE.MeshStandardMaterial({
+    color: 0xd8b46a,
+    roughness: 0.35,
+    metalness: 0.45,
+    emissive: 0x5a3b12,
+    emissiveIntensity: 0.35
+  });
 
-function addLine(points) {
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const line = new THREE.Line(geometry, lineMaterial);
-  scene.add(line);
+  const beam = new THREE.Mesh(geometry, material);
+  beam.position.set(x, y, z);
+  scene.add(beam);
 }
 
-// Back wall rectangle
-addLine([
-  new THREE.Vector3(-9, -0.8, -3.95),
-  new THREE.Vector3(9, -0.8, -3.95),
-  new THREE.Vector3(9, 7.2, -3.95),
-  new THREE.Vector3(-9, 7.2, -3.95),
-  new THREE.Vector3(-9, -0.8, -3.95)
-]);
+// Back wall frame
+addBeam(0, 6.9, -3.75, 18, 0.08, 0.08);   // top
+addBeam(0, -0.55, -3.75, 18, 0.08, 0.08); // bottom
+addBeam(-8.95, 3.2, -3.75, 0.08, 7.5, 0.08); // left
+addBeam(8.95, 3.2, -3.75, 0.08, 7.5, 0.08);  // right
 
-// Floor depth lines
-addLine([
-  new THREE.Vector3(-9, -0.8, -3.95),
-  new THREE.Vector3(-7, -0.8, 7)
-]);
+// Floor side edges
+addBeam(-6.9, -0.65, 1.4, 0.08, 0.08, 10.8);
+addBeam(6.9, -0.65, 1.4, 0.08, 0.08, 10.8);
 
-addLine([
-  new THREE.Vector3(9, -0.8, -3.95),
-  new THREE.Vector3(7, -0.8, 7)
-]);
-
-// Ceiling depth lines
-addLine([
-  new THREE.Vector3(-9, 7.2, -3.95),
-  new THREE.Vector3(-7, 6, 7)
-]);
-
-addLine([
-  new THREE.Vector3(9, 7.2, -3.95),
-  new THREE.Vector3(7, 6, 7)
-]);
+// Ceiling side edges
+addBeam(-6.9, 6.1, 1.4, 0.08, 0.08, 10.8);
+addBeam(6.9, 6.1, 1.4, 0.08, 0.08, 10.8);
 
     async function createPhoto(imageUrl, x, y, z, wall = "back") {
 
