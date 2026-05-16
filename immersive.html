@@ -184,9 +184,15 @@ const supabaseClient = supabase.createClient(
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.62);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.PointLight(0xffddaa, 3.8, 20);
+    const mainLight = new THREE.PointLight(0xffddaa, 5.5, 28);
     mainLight.position.set(0, 4, 4);
     scene.add(mainLight);
+
+    const floorGlow = new THREE.PointLight(0xffaa66, 1.8, 16);
+
+floorGlow.position.set(0, 0.6, 2);
+
+scene.add(floorGlow);
 
     const sideLightLeft = new THREE.PointLight(0x88aaff, 1.2, 12);
     sideLightLeft.position.set(-5, 3, 1);
@@ -198,9 +204,9 @@ const supabaseClient = supabase.createClient(
 
     const floorGeometry = new THREE.PlaneGeometry(14, 18);
     const floorMaterial = new THREE.MeshStandardMaterial({
-  color: 0x2a241c,
-  roughness: 0.55,
-  metalness: 0.25
+  color: 0x3b3126,
+  roughness: 0.35,
+  metalness: 0.4
 });
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -208,11 +214,25 @@ const supabaseClient = supabase.createClient(
     floor.position.z = -1;
     scene.add(floor);
 
+    const ceiling = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20),
+  new THREE.MeshStandardMaterial({
+    color: 0x111111,
+    roughness: 0.8,
+    metalness: 0.08
+  })
+);
+
+ceiling.rotation.x = Math.PI / 2;
+ceiling.position.y = 6;
+
+scene.add(ceiling);
+
     const backWallGeometry = new THREE.PlaneGeometry(18, 8);
     const wallMaterial = new THREE.MeshStandardMaterial({
-  color: 0x33291f,
-  roughness: 0.65,
-  metalness: 0.12
+  color: 0x4a3b2d,
+  roughness: 0.55,
+  metalness: 0.18
 });
 
     const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
