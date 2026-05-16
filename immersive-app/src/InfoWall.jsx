@@ -6,7 +6,7 @@ export default function InfoWall() {
   }
 
   return (
-    <group position={[0, 2.8, 7.2]} rotation={[0, Math.PI, 0]}>
+    <group position={[0, 2.8, 12.5]} rotation={[0, Math.PI, 0]}>
       {/* Back info wall */}
       <mesh>
         <planeGeometry args={[18, 8]} />
