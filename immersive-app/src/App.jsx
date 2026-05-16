@@ -21,40 +21,40 @@ function slotToPosition(slotCode, wall) {
 
   if (!parsed) {
     return {
-      position: [0, 3, -5.7],
+      position: [0, 3, -5.55],
       rotation: [0, 0, 0]
     };
   }
 
-  const scaleX = 0.18;
-  const scaleY = 0.18;
+  const slotSizeX = 0.32;
+  const slotSizeY = 0.32;
 
-  const x = -9 + parsed.col * scaleX;
-  const y = 6.4 - parsed.row * scaleY;
+  const col = parsed.col - 1;
+  const row = parsed.row - 1;
 
   if (wall === "Front Wall") {
     return {
-      position: [x, y, -5.7],
+      position: [-8.5 + col * slotSizeX, 6.2 - row * slotSizeY, -5.45],
       rotation: [0, 0, 0]
     };
   }
 
   if (wall === "Left Wall") {
     return {
-      position: [-10.75, y, -5 + parsed.col * scaleX],
+      position: [-10.55, 6.2 - row * slotSizeY, -4.8 + col * slotSizeX],
       rotation: [0, Math.PI / 2, 0]
     };
   }
 
   if (wall === "Right Wall") {
     return {
-      position: [10.75, y, -5 + parsed.col * scaleX],
+      position: [10.55, 6.2 - row * slotSizeY, -4.8 + col * slotSizeX],
       rotation: [0, -Math.PI / 2, 0]
     };
   }
 
   return {
-    position: [x, y, -5.7],
+    position: [0, 3, -5.45],
     rotation: [0, 0, 0]
   };
 }
@@ -98,7 +98,7 @@ function Room() {
       position={position}
       rotation={rotation}
     >
-      <planeGeometry args={[0.7, 0.7]} />
+      <planeGeometry args={[0.28, 0.28]} />
       <meshBasicMaterial color="#00ff66" />
     </mesh>
   );
