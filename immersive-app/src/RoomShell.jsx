@@ -33,7 +33,7 @@ function createParquetTexture() {
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(5, 5);
+  texture.repeat.set(2.2, 2.2);
   texture.anisotropy = 16;
 
   return texture;
@@ -132,6 +132,62 @@ export default function RoomShell() {
         <boxGeometry args={[0.08, 9, 0.12]} />
         <meshStandardMaterial color="#d7b56d" emissive="#6a4216" emissiveIntensity={0.4} />
       </mesh>
+
+      {/* Museum wall panels */}
+{[-7.5, -3.75, 0, 3.75, 7.5].map((x) => (
+  <group key={`back-panel-${x}`} position={[x, 3.1, -5.82]}>
+    <mesh>
+      <boxGeometry args={[2.7, 5.8, 0.08]} />
+      <meshStandardMaterial
+        color="#3a2418"
+        roughness={0.45}
+        metalness={0.12}
+      />
+    </mesh>
+
+    <mesh position={[0, 2.95, 0.06]}>
+      <boxGeometry args={[2.9, 0.08, 0.08]} />
+      <meshStandardMaterial color="#b98942" emissive="#3a2008" emissiveIntensity={0.25} />
+    </mesh>
+
+    <mesh position={[0, -2.95, 0.06]}>
+      <boxGeometry args={[2.9, 0.08, 0.08]} />
+      <meshStandardMaterial color="#b98942" emissive="#3a2008" emissiveIntensity={0.25} />
+    </mesh>
+
+    <mesh position={[-1.4, 0, 0.06]}>
+      <boxGeometry args={[0.08, 5.9, 0.08]} />
+      <meshStandardMaterial color="#b98942" emissive="#3a2008" emissiveIntensity={0.25} />
+    </mesh>
+
+    <mesh position={[1.4, 0, 0.06]}>
+      <boxGeometry args={[0.08, 5.9, 0.08]} />
+      <meshStandardMaterial color="#b98942" emissive="#3a2008" emissiveIntensity={0.25} />
+    </mesh>
+  </group>
+))}
+
+      {/* Ceiling warm frame */}
+<mesh position={[0, 7.85, -0.5]}>
+  <boxGeometry args={[22, 0.08, 0.18]} />
+  <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
+</mesh>
+
+<mesh position={[0, 7.85, 7]}>
+  <boxGeometry args={[22, 0.08, 0.18]} />
+  <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
+</mesh>
+
+<mesh position={[-10.8, 7.85, 3]}>
+  <boxGeometry args={[0.18, 0.08, 16]} />
+  <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
+</mesh>
+
+<mesh position={[10.8, 7.85, 3]}>
+  <boxGeometry args={[0.18, 0.08, 16]} />
+  <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
+</mesh>
+      
     </>
   );
 }
