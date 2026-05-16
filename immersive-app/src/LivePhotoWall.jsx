@@ -27,7 +27,7 @@ const slotSizeY = 0.12;
   const row = parsed.row - 1;
 
   if (wall === "Front Wall") {
-    return { position: [-8.5 + col * slotSizeX, 6.2 - row * slotSizeY, -5.35], rotation: [0, 0, 0] };
+    return { position: [-8.5 + col * slotSizeX, 6.2 - row * slotSizeY, -9.35], rotation: [0, 0, 0] };
   }
 
   if (wall === "Left Wall") {
