@@ -1,63 +1,13 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import RoomShell from "./RoomShell.jsx";
 
 function Room() {
   return (
     <>
-      {/* Ambient light */}
-      <ambientLight intensity={0.6} />
 
-      {/* Main cinematic light */}
-      <pointLight
-        position={[0, 4, 4]}
-        intensity={8}
-        color="#ffd7a8"
-      />
-
-      {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial
-          color="#3b3126"
-          roughness={0.35}
-          metalness={0.4}
-        />
-      </mesh>
-
-      {/* Back wall */}
-      <mesh position={[0, 3, -6]}>
-        <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial
-          color="#4a3b2d"
-          roughness={0.55}
-          metalness={0.18}
-        />
-      </mesh>
-
-      {/* Left wall */}
-      <mesh rotation={[0, Math.PI / 2, 0]} position={[-10, 3, 0]}>
-        <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial
-          color="#2f241b"
-          roughness={0.6}
-        />
-      </mesh>
-
-      {/* Right wall */}
-      <mesh rotation={[0, -Math.PI / 2, 0]} position={[10, 3, 0]}>
-        <planeGeometry args={[20, 10]} />
-        <meshStandardMaterial
-          color="#2f241b"
-          roughness={0.6}
-        />
-      </mesh>
-
-      {/* Ceiling */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 7, 0]}>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial color="#111111" />
-      </mesh>
-
+      <RoomShell />
+      
       {/* TEST WALL IMAGES */}
       {Array.from({ length: 40 }).map((_, i) => {
         const col = i % 10;
