@@ -17,6 +17,7 @@ function parseSlotCode(slotCode) {
 }
 
 function slotToPosition(slotCode, wall) {
+  const cleanWall = (wall || "").trim().toLowerCase();
   const parsed = parseSlotCode(slotCode);
 
   if (!parsed) return { position: [0, 3, -5.45], rotation: [0, 0, 0] };
@@ -26,19 +27,19 @@ const slotSizeY = 0.12;
   const col = parsed.col - 1;
   const row = parsed.row - 1;
 
-  if (wall === "Front Wall") {
+  if (cleanWall === "front wall") {
     return { position: [-8.5 + col * slotSizeX, 5.7 - row * slotSizeY, -9.35], rotation: [0, 0, 0] };
   }
 
-  if (wall === "Left Wall") {
+  if (cleanWall === "left wall") {
     return { position: [-10.45, 6.2 - row * slotSizeY, -4.8 + col * slotSizeX], rotation: [0, Math.PI / 2, 0] };
   }
 
-  if (wall === "Right Wall") {
+  if (cleanWall === "right wall") {
     return { position: [10.45, 6.2 - row * slotSizeY, -4.8 + col * slotSizeX], rotation: [0, -Math.PI / 2, 0] };
   }
 
-  return { position: [0, 3, -5.45], rotation: [0, 0, 0] };
+  return { position: [0, 3, -9.35], rotation: [0, 0, 0] };
 }
 
 function LivePhoto({ item }) {
