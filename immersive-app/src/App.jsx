@@ -71,7 +71,13 @@ function Room() {
 <WallGrid wall="left" color="#b98a4a" />
 <WallGrid wall="right" color="#7f2d2d" />
 
-      <OrbitControls enablePan={false} maxDistance={18} minDistance={3} />
+      <OrbitControls
+  enablePan={false}
+  maxDistance={14}
+  minDistance={4}
+  maxPolarAngle={Math.PI / 2.05}
+  minPolarAngle={Math.PI / 3.2}
+/>
     </>
   );
 }
@@ -85,7 +91,7 @@ export default function App() {
         background: "#050505"
       }}
     >
-      <Canvas camera={{ position: [0, 2.2, 7.5], fov: 58 }} shadows>
+      <Canvas camera={{ position: [0, 2.8, 8.5], fov: 52 }} shadows>
   <fog attach="fog" args={["#050505", 14, 36]} />
 
   <ambientLight intensity={0.35} color="#ffddaa" />
