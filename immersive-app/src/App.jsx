@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import WallGrid from "./WallGrid.jsx";
+import LivePhotoWall from "./LivePhotoWall.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -88,6 +89,7 @@ function Room() {
   return (
     <>
       <RoomShell />
+      <LivePhotoWall />
 
       {/* TEST REAL SLOT POSITIONS */}
 {testSubmissions.map((item) => {
