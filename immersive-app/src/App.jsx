@@ -3,6 +3,7 @@ import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import WallGrid from "./WallGrid.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
+import InfoWall from "./InfoWall.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -65,6 +66,7 @@ function Room() {
   return (
     <>
       <RoomShell />
+      <InfoWall />
       <LivePhotoWall />
 
       <WallGrid wall="front" color="#d9b66f" />
