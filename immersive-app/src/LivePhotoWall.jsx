@@ -54,13 +54,13 @@ function LivePhoto({ item }) {
     <group position={position} rotation={rotation}>
       {/* frame */}
       <mesh position={[0, 0, -0.02]}>
-        boxGeometry args={[0.52, 0.52, 0.05]}
+        <boxGeometry args={[0.52, 0.52, 0.05]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
       {/* photo */}
       <mesh>
-        planeGeometry args={[0.46, 0.46]}
+        <planeGeometry args={[0.46, 0.46]} />
         <meshBasicMaterial map={texture} toneMapped={false} />
       </mesh>
     </group>
