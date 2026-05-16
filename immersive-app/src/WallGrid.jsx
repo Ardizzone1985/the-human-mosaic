@@ -11,7 +11,7 @@ export default function WallGrid({ wall = "front", color = "#d9b66f" }) {
 
     if (wall === "front") {
       return {
-        position: [-8.8 + col * 1.6, 5.8 - row * 1.25, -9.55]
+        position: [-8.8 + col * 1.6, 5.8 - row * 1.25, -9.55],
         rotation: [0, 0, 0]
       };
     }
