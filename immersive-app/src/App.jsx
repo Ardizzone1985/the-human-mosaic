@@ -107,9 +107,11 @@ function Room() {
   );
 })}
 
+      {/* 
       <WallGrid wall="front" color="#d9b66f" />
 <WallGrid wall="left" color="#b98a4a" />
 <WallGrid wall="right" color="#7f2d2d" />
+*/}
 
       <OrbitControls enablePan={false} maxDistance={18} minDistance={3} />
     </>
