@@ -21,8 +21,8 @@ function slotToPosition(slotCode, wall) {
 
   if (!parsed) return { position: [0, 3, -5.45], rotation: [0, 0, 0] };
 
-  const slotSizeX = 0.52;
-const slotSizeY = 0.52;
+  const slotSizeX = 0.32;
+const slotSizeY = 0.12;
   const col = parsed.col - 1;
   const row = parsed.row - 1;
 
@@ -54,7 +54,7 @@ function LivePhoto({ item }) {
     <group position={position} rotation={rotation}>
       {/* photo */}
       <mesh position={[0, 0, 0.04]}>
-        <planeGeometry args={[0.46, 0.46]} />
+        <planeGeometry args={[0.18, 0.18]} />
         <meshBasicMaterial map={texture} toneMapped={false} />
       </mesh>
 
@@ -70,12 +70,12 @@ function LivePhoto({ item }) {
       </mesh>
 
       <mesh position={[-0.27, 0, 0.03]}>
-        <boxGeometry args={[0.04, 0.56, 0.04]} />
+        <boxGeometry args={[0.56, 0.04, 0.04]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
       <mesh position={[0.27, 0, 0.03]}>
-        <boxGeometry args={[0.04, 0.56, 0.04]} />
+        <boxGeometry args={[0.56, 0.04, 0.04]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
     </group>
