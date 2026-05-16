@@ -5,58 +5,61 @@ import RoomShell from "./RoomShell.jsx";
 function Room() {
   return (
     <>
-
       <RoomShell />
-      
+
       {/* FRONT WALL */}
-{Array.from({ length: 60 }).map((_, i) => {
-  const col = i % 12;
-  const row = Math.floor(i / 12);
+      {Array.from({ length: 60 }).map((_, i) => {
+        const col = i % 12;
+        const row = Math.floor(i / 12);
 
-  return (
-    <mesh
-      key={`front-${i}`}
-      position={[-8.8 + col * 1.6, 5.8 - row * 1.25, -5.7]}
-    >
-      <planeGeometry args={[1.15, 0.95]} />
-      <meshStandardMaterial color="#d8b46a" />
-    </mesh>
+        return (
+          <mesh
+            key={`front-${i}`}
+            position={[-8.8 + col * 1.6, 5.8 - row * 1.25, -5.7]}
+          >
+            <planeGeometry args={[1.15, 0.95]} />
+            <meshStandardMaterial color="#d8b46a" />
+          </mesh>
+        );
+      })}
+
+      {/* LEFT WALL */}
+      {Array.from({ length: 45 }).map((_, i) => {
+        const col = i % 9;
+        const row = Math.floor(i / 9);
+
+        return (
+          <mesh
+            key={`left-${i}`}
+            rotation={[0, Math.PI / 2, 0]}
+            position={[-10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
+          >
+            <planeGeometry args={[1.15, 0.95]} />
+            <meshStandardMaterial color="#b98a4a" />
+          </mesh>
+        );
+      })}
+
+      {/* RIGHT WALL */}
+      {Array.from({ length: 45 }).map((_, i) => {
+        const col = i % 9;
+        const row = Math.floor(i / 9);
+
+        return (
+          <mesh
+            key={`right-${i}`}
+            rotation={[0, -Math.PI / 2, 0]}
+            position={[10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
+          >
+            <planeGeometry args={[1.15, 0.95]} />
+            <meshStandardMaterial color="#c99b55" />
+          </mesh>
+        );
+      })}
+
+      <OrbitControls enablePan={false} maxDistance={18} minDistance={3} />
+    </>
   );
-})}
-
-{/* LEFT WALL */}
-{Array.from({ length: 45 }).map((_, i) => {
-  const col = i % 9;
-  const row = Math.floor(i / 9);
-
-  return (
-    <mesh
-      key={`left-${i}`}
-      rotation={[0, Math.PI / 2, 0]}
-      position={[-10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
-    >
-      <planeGeometry args={[1.15, 0.95]} />
-      <meshStandardMaterial color="#b98a4a" />
-    </mesh>
-  );
-})}
-
-{/* RIGHT WALL */}
-{Array.from({ length: 45 }).map((_, i) => {
-  const col = i % 9;
-  const row = Math.floor(i / 9);
-
-  return (
-    <mesh
-      key={`right-${i}`}
-      rotation={[0, -Math.PI / 2, 0]}
-      position={[10.75, 5.8 - row * 1.25, -4.5 + col * 1.6]}
-    >
-      <planeGeometry args={[1.15, 0.95]} />
-      <meshStandardMaterial color="#c99b55" />
-    </mesh>
-  );
-})}
 }
 
 export default function App() {
@@ -69,11 +72,10 @@ export default function App() {
       }}
     >
       <Canvas camera={{ position: [0, 2.2, 7.5], fov: 58 }} shadows>
-        <fog attach="fog" args={["#050505", 10, 30]} />
+        <fog attach="fog" args={["#050505", 14, 36]} />
         <Room />
       </Canvas>
 
-      {/* Overlay UI */}
       <div
         style={{
           position: "fixed",
@@ -81,7 +83,7 @@ export default function App() {
           left: 30,
           padding: 24,
           borderRadius: 24,
-          background: "rgba(0,0,0,0.45)",
+          background: "rgba(0,0,0,0.55)",
           backdropFilter: "blur(14px)",
           color: "white",
           width: 360,
@@ -119,8 +121,7 @@ export default function App() {
             lineHeight: 1.6
           }}
         >
-          The first immersive prototype of the permanent
-          digital museum of humanity.
+          The first immersive prototype of the permanent digital museum of humanity.
         </p>
       </div>
     </div>
