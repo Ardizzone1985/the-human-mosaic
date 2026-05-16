@@ -171,7 +171,7 @@ const supabaseClient = supabase.createClient(
       100
     );
 
-    camera.position.set(0, 1.9, 5.8);
+    camera.position.set(0, 2.3, 4.6);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -208,7 +208,7 @@ const supabaseClient = supabase.createClient(
     floor.position.z = -1;
     scene.add(floor);
 
-    const backWallGeometry = new THREE.PlaneGeometry(12, 5);
+    const backWallGeometry = new THREE.PlaneGeometry(18, 8);
     const wallMaterial = new THREE.MeshStandardMaterial({
   color: 0x33291f,
   roughness: 0.65,
@@ -216,7 +216,7 @@ const supabaseClient = supabase.createClient(
 });
 
     const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
-    backWall.position.set(0, 2.5, -4);
+    backWall.position.set(0, 3.2, -4);
     scene.add(backWall);
 
     const leftWall = new THREE.Mesh(backWallGeometry, wallMaterial);
@@ -235,7 +235,7 @@ const supabaseClient = supabase.createClient(
 
   textureLoader.load(imageUrl, (texture) => {
 
-    const geometry = new THREE.PlaneGeometry(1.05, 1.05);
+    const geometry = new THREE.PlaneGeometry(1.25, 1.25);
     const material = new THREE.MeshStandardMaterial({
       map: texture,
       roughness: 0.45,
@@ -262,7 +262,7 @@ const supabaseClient = supabase.createClient(
 
     scene.add(photo);
 
-    const frameGeometry = new THREE.PlaneGeometry(1.16, 1.16);
+    const frameGeometry = new THREE.PlaneGeometry(1.34, 1.34);
 
     const frameMaterial = new THREE.MeshBasicMaterial({
       color: 0xe8d7a2,
@@ -313,14 +313,14 @@ const supabaseClient = supabase.createClient(
 const imageUrl =
   `${SUPABASE_URL}/storage/v1/object/public/images/${item.image_file_name}`;
 
-  const row = Math.floor(index / 7);
-const col = index % 7;
+  const row = Math.floor(index / 9);
+const col = index % 9;
 
   createPhoto(
   imageUrl,
-  -4.2 + col * 1.15,
-  1.05 + row * 1.08,
-  -3.92,
+  -5.1 + col * 1.28,
+  1.15 + row * 1.28,
+  -3.86,
   "back"
 );
 
@@ -333,8 +333,8 @@ const col = index % 7;
 loadGalleryImages();
     
     let targetX = 0;
-    let targetY = 1.8;
-    let targetZ = 5.8;
+    let targetY = 2.3;
+let targetZ = 4.6;
     let mouseX = 0;
     let mouseY = 0;
 
@@ -346,8 +346,8 @@ loadGalleryImages();
 
     function moveCenter() {
       targetX = 0;
-      targetY = 1.8;
-      targetZ = 5.8;
+      targetY = 2.3;
+targetZ = 4.6;
     }
 
     function moveRight() {
