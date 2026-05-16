@@ -52,16 +52,31 @@ function LivePhoto({ item }) {
 
   return (
     <group position={position} rotation={rotation}>
-      {/* frame */}
-      <mesh position={[0, 0, -0.02]}>
-        <boxGeometry args={[0.52, 0.52, 0.05]} />
+      {/* photo */}
+      <mesh position={[0, 0, 0.04]}>
+        <planeGeometry args={[0.46, 0.46]} />
+        <meshBasicMaterial map={texture} toneMapped={false} />
+      </mesh>
+
+      {/* frame borders */}
+      <mesh position={[0, 0.27, 0.03]}>
+        <boxGeometry args={[0.56, 0.04, 0.04]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
-      {/* photo */}
-      <mesh>
-        <planeGeometry args={[0.46, 0.46]} />
-        <meshBasicMaterial map={texture} toneMapped={false} />
+      <mesh position={[0, -0.27, 0.03]}>
+        <boxGeometry args={[0.56, 0.04, 0.04]} />
+        <meshStandardMaterial color="#d7b56d" />
+      </mesh>
+
+      <mesh position={[-0.27, 0, 0.03]}>
+        <boxGeometry args={[0.04, 0.56, 0.04]} />
+        <meshStandardMaterial color="#d7b56d" />
+      </mesh>
+
+      <mesh position={[0.27, 0, 0.03]}>
+        <boxGeometry args={[0.04, 0.56, 0.04]} />
+        <meshStandardMaterial color="#d7b56d" />
       </mesh>
     </group>
   );
