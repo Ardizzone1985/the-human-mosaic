@@ -235,8 +235,7 @@ const supabaseClient = supabase.createClient(
 
   textureLoader.load(imageUrl, (texture) => {
 
-    const geometry = new THREE.PlaneGeometry(0.72, 0.72);
-
+    const geometry = new THREE.PlaneGeometry(1.05, 1.05);
     const material = new THREE.MeshStandardMaterial({
       map: texture,
       roughness: 0.45,
@@ -257,7 +256,7 @@ const supabaseClient = supabase.createClient(
 
     scene.add(photo);
 
-    const frameGeometry = new THREE.PlaneGeometry(0.82, 0.82);
+    const frameGeometry = new THREE.PlaneGeometry(1.16, 1.16);
 
     const frameMaterial = new THREE.MeshBasicMaterial({
       color: 0xe8d7a2,
@@ -308,16 +307,16 @@ const supabaseClient = supabase.createClient(
 const imageUrl =
   `${SUPABASE_URL}/storage/v1/object/public/images/${item.image_file_name}`;
 
-  const row = Math.floor(index / 8);
-  const col = index % 8;
+  const row = Math.floor(index / 7);
+const col = index % 7;
 
   createPhoto(
-    imageUrl,
-    -4.2 + col * 1.2,
-    1.1 + row * 0.9,
-    -3.92,
-    "back"
-  );
+  imageUrl,
+  -4.9 + col * 1.4,
+  1.15 + row * 1.25,
+  -3.92,
+  "back"
+);
 
     index++;
 
@@ -329,7 +328,7 @@ loadGalleryImages();
     
     let targetX = 0;
     let targetY = 1.8;
-    let targetZ = 7;
+    let targetZ = 5.8;
     let mouseX = 0;
     let mouseY = 0;
 
@@ -342,7 +341,7 @@ loadGalleryImages();
     function moveCenter() {
       targetX = 0;
       targetY = 1.8;
-      targetZ = 7;
+      targetZ = 5.8;
     }
 
     function moveRight() {
