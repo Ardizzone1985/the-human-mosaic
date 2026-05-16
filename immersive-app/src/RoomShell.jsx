@@ -1,11 +1,52 @@
+import * as THREE from "three";
+
+function createParquetTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 1024;
+
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "#4a2410";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const plankW = 180;
+  const plankH = 46;
+
+  for (let y = 0; y < canvas.height; y += plankH) {
+    for (let x = -plankW; x < canvas.width + plankW; x += plankW) {
+      const offset = Math.floor(y / plankH) % 2 === 0 ? 0 : plankW / 2;
+
+      const gradient = ctx.createLinearGradient(x + offset, y, x + offset + plankW, y + plankH);
+      gradient.addColorStop(0, "#5a2c12");
+      gradient.addColorStop(0.5, "#8a4a1f");
+      gradient.addColorStop(1, "#3b1b0c");
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(x + offset, y, plankW - 3, plankH - 3);
+
+      ctx.strokeStyle = "rgba(255,190,100,0.18)";
+      ctx.strokeRect(x + offset, y, plankW - 3, plankH - 3);
+    }
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(5, 5);
+  texture.anisotropy = 16;
+
+  return texture;
+}
+
 export default function RoomShell() {
   return (
     <>
-      <ambientLight intensity={0.7} color="#ffe2b8" />
-
+<ambientLight intensity={0.45} color="#ffe2b8" />
+      
       <directionalLight
-  position={[5, 8, 5]}
-  intensity={2.5}
+  position={[4, 9, 6]}
+  intensity={3.2}
   color="#ffd6a3"
   castShadow
 />
@@ -17,33 +58,19 @@ export default function RoomShell() {
         color="#ffd0a0"
       />
 
-      {/* Real parquet floor */}
-<group position={[0, -1.18, 1]}>
-  {Array.from({ length: 160 }).map((_, i) => {
-    const row = Math.floor(i / 20);
-    const col = i % 20;
-
-    const isEvenRow = row % 2 === 0;
-    const x = -9.5 + col * 1;
-    const z = -8.5 + row * 1.1;
-
-    return (
-      <mesh
-        key={`parquet-${i}`}
-        rotation={[-Math.PI / 2, 0, isEvenRow ? Math.PI / 4 : -Math.PI / 4]}
-        position={[x, 0, z]}
-        receiveShadow
-      >
-        <boxGeometry args={[1.4, 0.035, 0.42]} />
-        <meshStandardMaterial
-          color={isEvenRow ? "#7a421f" : "#5f3218"}
-          roughness={0.32}
-          metalness={0.18}
-        />
-      </mesh>
-    );
-  })}
-</group>
+      {/* Premium parquet floor */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.22, 1]}
+  receiveShadow
+>
+  <planeGeometry args={[28, 24]} />
+  <meshStandardMaterial
+    map={createParquetTexture()}
+    roughness={0.22}
+    metalness={0.18}
+  />
+</mesh>
 
       {/* Back wall */}
       <mesh position={[0, 3, -6]}>
