@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTexture } from "@react-three/drei";
 import { supabase } from "./supabaseClient.js";
 
 function parseSlotCode(slotCode) {
@@ -43,20 +44,24 @@ function slotToPosition(slotCode, wall) {
 function LivePhoto({ item }) {
   const { position, rotation } = slotToPosition(item.slot_code, item.wall);
 
-  const imageUrl = `${import.meta.env.VITE_SUPABASE_URL || ""}/storage/v1/object/public/images/${item.image_file_name}`;
+  const imageUrl =
+    "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
+    item.image_file_name;
+
+  const texture = useTexture(imageUrl);
 
   return (
     <group position={position} rotation={rotation}>
-      <mesh position={[0, 0, -0.015]}>
+      {/* frame */}
+      <mesh position={[0, 0, -0.02]}>
         <boxGeometry args={[0.34, 0.34, 0.04]} />
         <meshStandardMaterial color="#d7b56d" />
       </mesh>
 
+      {/* photo */}
       <mesh>
         <planeGeometry args={[0.28, 0.28]} />
-        <meshBasicMaterial>
-          <primitive attach="map" object={null} />
-        </meshBasicMaterial>
+        <meshBasicMaterial map={texture} toneMapped={false} />
       </mesh>
     </group>
   );
