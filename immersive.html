@@ -162,7 +162,7 @@ const supabaseClient = supabase.createClient(
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x050505);
-    scene.fog = new THREE.Fog(0x050505, 8, 26);
+    scene.fog = new THREE.Fog(0x050505, 14, 34);
 
     const camera = new THREE.PerspectiveCamera(
       65,
@@ -181,7 +181,7 @@ const supabaseClient = supabase.createClient(
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.48);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.62);
     scene.add(ambientLight);
 
     const mainLight = new THREE.PointLight(0xffddaa, 3.8, 20);
@@ -198,10 +198,10 @@ const supabaseClient = supabase.createClient(
 
     const floorGeometry = new THREE.PlaneGeometry(14, 18);
     const floorMaterial = new THREE.MeshStandardMaterial({
-  color: 0x1b1b1b,
-      roughness: 0.8,
-      metalness: 0.15
-    });
+  color: 0x2a241c,
+  roughness: 0.55,
+  metalness: 0.25
+});
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotation.x = -Math.PI / 2;
@@ -210,10 +210,10 @@ const supabaseClient = supabase.createClient(
 
     const backWallGeometry = new THREE.PlaneGeometry(12, 5);
     const wallMaterial = new THREE.MeshStandardMaterial({
-  color: 0x24201a,
-      roughness: 0.9,
-      metalness: 0.05
-    });
+  color: 0x33291f,
+  roughness: 0.65,
+  metalness: 0.12
+});
 
     const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
     backWall.position.set(0, 2.5, -4);
