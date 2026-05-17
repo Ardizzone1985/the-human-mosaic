@@ -65,7 +65,8 @@ function slotToPosition(slotCode, wall) {
 
 function Room() {
   const params = new URLSearchParams(window.location.search);
-const currentRoom = params.get("room") || "Identity";
+const currentRoom = params.get("room");
+const isLobby = !currentRoom;
   return (
     <>
       <RoomShell />
@@ -132,7 +133,7 @@ export default function App() {
   color={"#6d3b12"}
 />
 
-  <Room />
+  {isLobby ? <Lobby /> : <Room />}
 </Canvas>
          </div>
   );
