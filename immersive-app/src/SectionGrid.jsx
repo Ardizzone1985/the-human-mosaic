@@ -36,16 +36,44 @@ export default function SectionGrid({
 
   return (
     <group position={base} rotation={rotation}>
-      {/* section frame */}
-      <mesh position={[0, 0, -0.04]}>
-        <boxGeometry args={[3.1, 3.2, 0.08]} />
-        <meshStandardMaterial color="#2a160d" />
+      {/* warm back glow */}
+      <mesh position={[0, 0, -0.08]}>
+        <planeGeometry args={[3.25, 3.35]} />
+        <meshBasicMaterial
+          color="#5a2a12"
+          transparent
+          opacity={0.32}
+        />
       </mesh>
 
-      {/* section label */}
-      <mesh position={[0, 1.75, 0.03]}>
-        <boxGeometry args={[3.1, 0.08, 0.06]} />
-        <meshStandardMaterial color="#b98942" />
+      {/* dark floating section panel */}
+      <mesh position={[0, 0, -0.04]}>
+        <boxGeometry args={[3.1, 3.2, 0.09]} />
+        <meshStandardMaterial
+          color="#211008"
+          roughness={0.55}
+          metalness={0.08}
+        />
+      </mesh>
+
+      {/* top golden rail */}
+      <mesh position={[0, 1.75, 0.035]}>
+        <boxGeometry args={[3.25, 0.07, 0.08]} />
+        <meshStandardMaterial
+          color="#d7b56d"
+          roughness={0.28}
+          metalness={0.35}
+        />
+      </mesh>
+
+      {/* bottom golden rail */}
+      <mesh position={[0, -1.75, 0.035]}>
+        <boxGeometry args={[3.25, 0.06, 0.08]} />
+        <meshStandardMaterial
+          color="#b98942"
+          roughness={0.3}
+          metalness={0.28}
+        />
       </mesh>
 
       {Array.from({ length: rows * cols }).map((_, i) => {
@@ -55,13 +83,13 @@ export default function SectionGrid({
         return (
           <mesh
             key={`${section}-${i}`}
-            position={[-1.35 + col * 0.3, 1.1 - row * 0.48, 0.04]}
+            position={[-1.35 + col * 0.3, 1.1 - row * 0.48, 0.075]}
           >
-            <boxGeometry args={[0.22, 0.22, 0.035]} />
+            <boxGeometry args={[0.22, 0.22, 0.045]} />
             <meshStandardMaterial
               color={color}
-              roughness={0.45}
-              metalness={0.12}
+              roughness={0.38}
+              metalness={0.14}
             />
           </mesh>
         );
