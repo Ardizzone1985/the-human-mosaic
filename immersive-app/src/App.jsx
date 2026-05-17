@@ -68,7 +68,7 @@ function Room() {
       <RoomShell />
       <InfoWall />
       <LivePhotoWall />
-      <DynamicSectionManager />
+      <DynamicSectionManager room="Identity" />
 
       <OrbitControls
   enablePan={false}
