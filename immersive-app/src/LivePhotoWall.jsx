@@ -143,7 +143,7 @@ function LivePhoto({ item, onSelect }) {
   );
 }
 
-export default function LivePhotoWall() {
+export default function LivePhotoWall({ room = "Identity" }) {
   const [photos, setPhotos] = useState([]);
 
 const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -153,7 +153,7 @@ const [selectedPhoto, setSelectedPhoto] = useState(null);
       const { data, error } = await supabase
         .from("submissions")
         .select("*")
-        .eq("room", "Identity")
+        .eq("room", room)
         .eq("approval_status", "approved")
         .limit(200);
 
@@ -174,7 +174,7 @@ const [selectedPhoto, setSelectedPhoto] = useState(null);
     }
 
     loadPhotos();
-  }, []);
+  }, [room]);
 
 const selectedNote =
   selectedPhoto?.note ||
