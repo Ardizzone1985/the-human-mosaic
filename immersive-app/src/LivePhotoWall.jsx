@@ -77,6 +77,7 @@ function slotToTransform(item) {
 
 function LivePhoto({ item, onSelect }) {
   const { basePosition, rotation, localPosition } = slotToTransform(item);
+  const [hovered, setHovered] = useState(false);
 
   const imageUrl =
     "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
@@ -90,10 +91,24 @@ function LivePhoto({ item, onSelect }) {
 
   return (
     <group position={basePosition} rotation={rotation}>
-      <group position={localPosition} onClick={(e) => {
-  e.stopPropagation();
-  onSelect(item);
-}}>
+      <group
+  position={localPosition}
+  scale={hovered ? 1.25 : 1}
+  onPointerOver={(e) => {
+    e.stopPropagation();
+    setHovered(true);
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(e) => {
+    e.stopPropagation();
+    setHovered(false);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    onSelect(item);
+  }}
+>
         <mesh position={[0, 0, 0.04]}>
           <planeGeometry args={[size, size]} />
           <meshBasicMaterial map={texture} toneMapped={false} />
@@ -101,22 +116,22 @@ function LivePhoto({ item, onSelect }) {
 
         <mesh position={[0, half + frameThickness / 2, 0.035]}>
           <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial color="#d7b56d" />
+          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
         </mesh>
 
         <mesh position={[0, -half - frameThickness / 2, 0.035]}>
           <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial color="#d7b56d" />
+          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
         </mesh>
 
         <mesh position={[-half - frameThickness / 2, 0, 0.035]}>
           <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial color="#d7b56d" />
+          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
         </mesh>
 
         <mesh position={[half + frameThickness / 2, 0, 0.035]}>
           <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial color="#d7b56d" />
+          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
         </mesh>
       </group>
     </group>
