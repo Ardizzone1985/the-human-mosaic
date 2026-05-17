@@ -74,10 +74,13 @@ function Room() {
   enablePan={false}
   enableDamping={true}
   dampingFactor={0.08}
-  maxDistance={12}
-  minDistance={4}
-  maxPolarAngle={Math.PI / 2.1}
-  minPolarAngle={Math.PI / 3.1}
+  minDistance={2.2}
+  maxDistance={26}
+  minPolarAngle={Math.PI / 3.2}
+  maxPolarAngle={Math.PI / 1.9}
+  rotateSpeed={0.7}
+  zoomSpeed={0.9}
+  target={[0, 4.2, -2]}
 />
     </>
   );
