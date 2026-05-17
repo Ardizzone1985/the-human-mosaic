@@ -1,9 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
-import WallGrid from "./WallGrid.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
 import InfoWall from "./InfoWall.jsx";
+import SectionGrid from "./SectionGrid.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -69,9 +69,15 @@ function Room() {
       <InfoWall />
       <LivePhotoWall />
 
-      <WallGrid wall="front" color="#d9b66f" />
-<WallGrid wall="left" color="#b98a4a" />
-<WallGrid wall="right" color="#7f2d2d" />
+      <SectionGrid wall="front" section="F1" index={0} />
+<SectionGrid wall="front" section="F2" index={1} />
+<SectionGrid wall="front" section="F3" index={2} />
+
+<SectionGrid wall="left" section="L1" index={0} />
+<SectionGrid wall="left" section="L2" index={1} />
+
+<SectionGrid wall="right" section="R1" index={0} />
+<SectionGrid wall="right" section="R2" index={1} />
 
       <OrbitControls
   enablePan={false}
