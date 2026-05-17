@@ -190,7 +190,10 @@ const selectedCountry =
           }}
         >
           <img
-  src={selectedPhoto.image_url}
+  src={
+  "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
+  selectedPhoto.image_file_name
+}
   alt=""
   style={{
     width: "100%",
