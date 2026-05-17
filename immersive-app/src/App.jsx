@@ -63,12 +63,13 @@ function slotToPosition(slotCode, wall) {
 }
 
 function Room() {
+  const currentRoom = "Identity";
   return (
     <>
       <RoomShell />
-      <InfoWall room="Identity" />
-      <LivePhotoWall room="Identity" />
-      <DynamicSectionManager room="Identity" />
+      <InfoWall room={currentRoom} />
+<LivePhotoWall room={currentRoom} />
+<DynamicSectionManager room={currentRoom} />
 
       <OrbitControls
   enablePan={false}
