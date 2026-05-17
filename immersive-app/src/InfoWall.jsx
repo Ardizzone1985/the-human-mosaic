@@ -50,8 +50,7 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
 }
 
 export default function InfoWall({ room = "Identity" }) {
-  const logoTexture = useTexture("/logo-cropped.png");
-  const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
+    const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
 
   function goHome() {
     window.location.href = "/";
@@ -65,13 +64,7 @@ export default function InfoWall({ room = "Identity" }) {
         <meshStandardMaterial color="#211008" roughness={0.6} />
       </mesh>
 
-      {/* Logo */}
-      <mesh position={[-6.55, 2.2, 0.08]}>
-        <planeGeometry args={[1.35, 0.72]} />
-        <meshBasicMaterial map={logoTexture} transparent toneMapped={false} />
-      </mesh>
-
-      {/* Project title */}
+            {/* Project title */}
       <Text
         position={[-5.65, 2.28, 0.09]}
         fontSize={0.42}
