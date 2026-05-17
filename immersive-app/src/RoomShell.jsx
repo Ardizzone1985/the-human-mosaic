@@ -66,10 +66,11 @@ export default function RoomShell() {
 >
   <planeGeometry args={[30, 34]} />
   <meshStandardMaterial
-    map={createParquetTexture()}
-    roughness={0.22}
-    metalness={0.18}
-  />
+  map={createParquetTexture()}
+  roughness={0.42}
+  metalness={0.08}
+  color={"#8a3f12"}
+/>
 </mesh>
 
       {/* Back wall */}
