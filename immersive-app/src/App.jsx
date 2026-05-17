@@ -63,7 +63,8 @@ function slotToPosition(slotCode, wall) {
 }
 
 function Room() {
-  const currentRoom = "Identity";
+  const params = new URLSearchParams(window.location.search);
+const currentRoom = params.get("room") || "Identity";
   return (
     <>
       <RoomShell />
