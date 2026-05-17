@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useTexture } from "@react-three/drei";
 import { supabase } from "./supabaseClient.js";
+import { Html, useTexture } from "@react-three/drei";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -156,15 +156,74 @@ const [selectedPhoto, setSelectedPhoto] = useState(null);
     loadPhotos();
   }, []);
 
+const selectedNote =
+  selectedPhoto?.note ||
+  selectedPhoto?.notes ||
+  selectedPhoto?.optional_note ||
+  "No note added.";
+
+const selectedCountry =
+  selectedPhoto?.country || "Country not available.";
+  
   return (
-    <>
-      {photos.map((item) => (
-        <LivePhoto
-  key={item.id || item.submission_id}
-  item={item}
-  onSelect={setSelectedPhoto}
-/>
-      ))}
-    </>
-  );
+  <>
+    {photos.map((item) => (
+      <LivePhoto
+        key={item.id || item.submission_id}
+        item={item}
+        onSelect={setSelectedPhoto}
+      />
+    ))}
+
+    {selectedPhoto && (
+      <Html center>
+        <div
+          style={{
+            width: "320px",
+            padding: "22px",
+            borderRadius: "18px",
+            background: "rgba(12, 6, 3, 0.92)",
+            border: "1px solid rgba(215,181,109,0.55)",
+            color: "#fff",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.55)",
+            fontFamily: "Arial, sans-serif"
+          }}
+        >
+          <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+            COUNTRY
+          </div>
+
+          <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
+            {selectedCountry}
+          </div>
+
+          <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+            NOTE
+          </div>
+
+          <div style={{ fontSize: "15px", lineHeight: "1.5", marginTop: "8px", color: "#e8ded0" }}>
+            {selectedNote}
+          </div>
+
+          <button
+            onClick={() => setSelectedPhoto(null)}
+            style={{
+              marginTop: "22px",
+              width: "100%",
+              padding: "12px",
+              borderRadius: "999px",
+              border: "none",
+              background: "#d7b56d",
+              color: "#1b0d05",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </Html>
+    )}
+  </>
+);
 }
