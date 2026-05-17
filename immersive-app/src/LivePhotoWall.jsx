@@ -189,6 +189,18 @@ const selectedCountry =
             fontFamily: "Arial, sans-serif"
           }}
         >
+          <img
+  src={selectedPhoto.image_url}
+  alt=""
+  style={{
+    width: "100%",
+    height: "220px",
+    objectFit: "cover",
+    borderRadius: "14px",
+    marginBottom: "18px",
+    border: "1px solid rgba(215,181,109,0.25)"
+  }}
+/>
           <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
             COUNTRY
           </div>
