@@ -67,7 +67,7 @@ function Room() {
     <>
       <RoomShell />
       <InfoWall />
-      <LivePhotoWall />
+      <LivePhotoWall room="Identity" />
       <DynamicSectionManager room="Identity" />
 
       <OrbitControls
