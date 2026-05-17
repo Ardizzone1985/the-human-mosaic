@@ -22,7 +22,7 @@ function sortSections(a, b) {
   return numberA - numberB;
 }
 
-export default function DynamicSectionManager() {
+export default function DynamicSectionManager({ room = "Identity" }) {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function DynamicSectionManager() {
       const { data, error } = await supabase
         .from("slots")
         .select("room, wall, section")
-        .eq("room", "Identity");
+        .eq("room", room);
 
       if (error) {
         console.error("Error loading sections:", error);
@@ -55,7 +55,7 @@ export default function DynamicSectionManager() {
     }
 
     loadSections();
-  }, []);
+  }, [room]);
 
   const grouped = {
     front: sections.filter((s) => s.wall === "front"),
