@@ -75,7 +75,7 @@ function slotToTransform(item) {
   };
 }
 
-function LivePhoto({ item }) {
+function LivePhoto({ item, onSelect }) {
   const { basePosition, rotation, localPosition } = slotToTransform(item);
 
   const imageUrl =
@@ -90,7 +90,10 @@ function LivePhoto({ item }) {
 
   return (
     <group position={basePosition} rotation={rotation}>
-      <group position={localPosition}>
+      <group position={localPosition} onClick={(e) => {
+  e.stopPropagation();
+  onSelect(item);
+}}>
         <mesh position={[0, 0, 0.04]}>
           <planeGeometry args={[size, size]} />
           <meshBasicMaterial map={texture} toneMapped={false} />
@@ -123,6 +126,8 @@ function LivePhoto({ item }) {
 export default function LivePhotoWall() {
   const [photos, setPhotos] = useState([]);
 
+const [selectedPhoto, setSelectedPhoto] = useState(null);
+  
   useEffect(() => {
     async function loadPhotos() {
       const { data, error } = await supabase
@@ -154,7 +159,11 @@ export default function LivePhotoWall() {
   return (
     <>
       {photos.map((item) => (
-        <LivePhoto key={item.id || item.submission_id} item={item} />
+        <LivePhoto
+  key={item.id || item.submission_id}
+  item={item}
+  onSelect={setSelectedPhoto}
+/>
       ))}
     </>
   );
