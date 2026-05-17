@@ -73,13 +73,13 @@ function Room() {
       <OrbitControls
   enablePan={false}
   enableDamping={true}
-  dampingFactor={0.08}
+  dampingFactor={0.12}
   minDistance={1.1}
   maxDistance={22}
   minPolarAngle={Math.PI / 2.8}
   maxPolarAngle={Math.PI / 1.75}
-  rotateSpeed={0.7}
-  zoomSpeed={0.9}
+  rotateSpeed={0.42}
+  zoomSpeed={0.55}
   target={[0, 2.4, -2]}
 />
     </>
