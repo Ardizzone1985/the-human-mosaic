@@ -100,33 +100,34 @@ export default function App() {
 
   <ambientLight intensity={0.35} color="#ffddaa" />
 
-  <directionalLight
-    position={[0, 8, 5]}
-    intensity={1.2}
-    color="#ffe0b5"
-    castShadow
-  />
+  <ambientLight intensity={0.32} />
 
-  <pointLight
-    position={[0, 4, -2]}
-    intensity={2}
-    distance={30}
-    color="#ffb866"
-  />
+<directionalLight
+  position={[6, 8, 5]}
+  intensity={1.4}
+  color={"#ffd89b"}
+/>
 
-  <pointLight
-    position={[-8, 4, 0]}
-    intensity={1.4}
-    distance={25}
-    color="#ffcc88"
-  />
+<pointLight
+  position={[0, 4, -2]}
+  intensity={1.1}
+  distance={18}
+  color={"#ffb45e"}
+/>
 
-  <pointLight
-    position={[8, 4, 0]}
-    intensity={1.4}
-    distance={25}
-    color="#ffcc88"
-  />
+<pointLight
+  position={[-5, 3, -4]}
+  intensity={0.55}
+  distance={12}
+  color={"#6d3b12"}
+/>
+
+<pointLight
+  position={[5, 3, -4]}
+  intensity={0.55}
+  distance={12}
+  color={"#6d3b12"}
+/>
 
   <Room />
 </Canvas>
