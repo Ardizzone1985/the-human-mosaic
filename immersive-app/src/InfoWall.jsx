@@ -1,4 +1,5 @@
-import { Text, useTexture } from "@react-three/drei";
+import { useState } from "react";
+import { Text } from "@react-three/drei";
 
 const ROOM_TEXT = {
   Identity: {
@@ -51,6 +52,7 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
 
 export default function InfoWall({ room = "Identity" }) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
+  const [doorHovered, setDoorHovered] = useState(false);
 
   function goHome() {
     window.location.href = "/";
@@ -112,37 +114,69 @@ export default function InfoWall({ room = "Identity" }) {
       <AdSpace position={[2.5, -0.1, 0.08]} label="SPONSOR SPACE" />
 
       {/* Exit door */}
-      <group position={[5.7, -2.25, 0.1]} onClick={goHome}>
-        <mesh>
-          <boxGeometry args={[1.45, 2.45, 0.12]} />
-          <meshStandardMaterial color="#3b1f12" />
-        </mesh>
+<group
+  position={[5.7, -2.25, 0.1]}
+  scale={doorHovered ? 1.06 : 1}
+  onPointerOver={(e) => {
+    e.stopPropagation();
+    setDoorHovered(true);
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(e) => {
+    e.stopPropagation();
+    setDoorHovered(false);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    goHome();
+  }}
+>
+  <mesh position={[0, 0, -0.04]}>
+    <boxGeometry args={[1.75, 2.75, 0.12]} />
+    <meshStandardMaterial
+      color={doorHovered ? "#d7b56d" : "#5a3a16"}
+      emissive="#d7b56d"
+      emissiveIntensity={doorHovered ? 0.55 : 0.18}
+    />
+  </mesh>
 
-        <mesh position={[0, 1.32, 0.08]}>
-          <boxGeometry args={[1.75, 0.12, 0.12]} />
-          <meshStandardMaterial color="#d7b56d" />
-        </mesh>
+  <mesh>
+    <boxGeometry args={[1.45, 2.45, 0.14]} />
+    <meshStandardMaterial
+      color="#3b1f12"
+      roughness={0.48}
+      metalness={0.12}
+      emissive="#d7b56d"
+      emissiveIntensity={doorHovered ? 0.22 : 0.06}
+    />
+  </mesh>
 
-        <Text
-          position={[0, 1.65, 0.13]}
-          fontSize={0.15}
-          color="#f2c879"
-          anchorX="center"
-          anchorY="middle"
-        >
-          EXIT / HOME
-        </Text>
+  <mesh position={[0, 1.32, 0.08]}>
+    <boxGeometry args={[1.75, 0.12, 0.12]} />
+    <meshStandardMaterial color="#d7b56d" />
+  </mesh>
 
-        <Text
-          position={[0, 1.42, 0.13]}
-          fontSize={0.1}
-          color="#d8c7ad"
-          anchorX="center"
-          anchorY="middle"
-        >
-          Click to return
-        </Text>
-      </group>
+  <Text
+    position={[0, 1.65, 0.13]}
+    fontSize={0.15}
+    color={doorHovered ? "#ffffff" : "#f2c879"}
+    anchorX="center"
+    anchorY="middle"
+  >
+    EXIT / HOME
+  </Text>
+
+  <Text
+    position={[0, 1.42, 0.13]}
+    fontSize={0.1}
+    color={doorHovered ? "#ffffff" : "#d8c7ad"}
+    anchorX="center"
+    anchorY="middle"
+  >
+    Click to return
+  </Text>
+</group>
     </group>
   );
 }
