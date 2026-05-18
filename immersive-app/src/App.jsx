@@ -90,7 +90,7 @@ function Room({ room, theme }) {
   const currentRoom = room;
     return (
     <>
-      <RoomShell />
+      <RoomShell theme={theme} />
       <InfoWall room={currentRoom} />
 <LivePhotoWall room={currentRoom} />
 <DynamicSectionManager room={currentRoom} />
