@@ -39,24 +39,24 @@ function createParquetTexture() {
   return texture;
 }
 
-export default function RoomShell() {
+export default function RoomShell({ theme }) {
   return (
     <>
-<ambientLight intensity={0.45} color="#ffe2b8" />
+<ambientLight intensity={0.35} color={theme?.ambient || "#ffe2b8"} />
       
-      <directionalLight
+<directionalLight
   position={[4, 9, 6]}
-  intensity={3.2}
-  color="#ffd6a3"
+  intensity={2.6}
+  color={theme?.directional || "#ffd6a3"}
   castShadow
 />
 
-      <pointLight
-        position={[0, 4, 3]}
-        intensity={9}
-        distance={24}
-        color="#ffd0a0"
-      />
+<pointLight
+  position={[0, 4, 3]}
+  intensity={5}
+  distance={24}
+  color={theme?.glow || "#ffd0a0"}
+/>
 
       {/* Premium parquet floor */}
 <mesh
