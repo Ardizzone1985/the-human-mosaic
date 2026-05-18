@@ -63,9 +63,32 @@ function slotToPosition(slotCode, wall) {
   };
 }
 
-function Room({ room }) {
+const ROOM_THEMES = {
+  Identity: {
+    ambient: "#ffddaa",
+    directional: "#ffd89b",
+    glow: "#ffb45e",
+    side: "#6d3b12"
+  },
+
+  Love: {
+    ambient: "#ffd6e8",
+    directional: "#ff8fc2",
+    glow: "#ff6fa8",
+    side: "#7a2148"
+  },
+
+  Creativity: {
+    ambient: "#d6e4ff",
+    directional: "#8fb8ff",
+    glow: "#5da2ff",
+    side: "#1d3f78"
+  }
+};
+
+function Room({ room, theme }) {
   const currentRoom = room;
-  return (
+    return (
     <>
       <RoomShell />
       <InfoWall room={currentRoom} />
@@ -91,6 +114,8 @@ function Room({ room }) {
 export default function App() {
     const params = new URLSearchParams(window.location.search);
   const currentRoom = params.get("room");
+  const theme =
+  ROOM_THEMES[currentRoom] || ROOM_THEMES.Identity;
   const isLobby = !currentRoom;
   return (
     <div
@@ -103,38 +128,42 @@ export default function App() {
       <Canvas camera={{ position: [0, 2.8, 8.5], fov: 52 }} shadows>
   <fog attach="fog" args={["#050505", 14, 36]} />
 
-  <ambientLight intensity={0.35} color="#ffddaa" />
+  <ambientLight intensity={0.35} color={theme.ambient} />
 
   <ambientLight intensity={0.32} />
 
 <directionalLight
   position={[6, 8, 5]}
   intensity={1.4}
-  color={"#ffd89b"}
+  color={theme.directional}
 />
 
 <pointLight
   position={[0, 4, -2]}
   intensity={1.1}
   distance={18}
-  color={"#ffb45e"}
+  color={theme.glow}
 />
 
 <pointLight
   position={[-5, 3, -4]}
   intensity={0.55}
   distance={12}
-  color={"#6d3b12"}
+  color={theme.side}
 />
 
 <pointLight
   position={[5, 3, -4]}
   intensity={0.55}
   distance={12}
-  color={"#6d3b12"}
+  color={theme.side}
 />
 
-  {isLobby ? <Lobby /> : <Room room={currentRoom} />}
+  {isLobby ? (
+  <Lobby />
+) : (
+  <Room room={currentRoom} theme={theme} />
+)}
 </Canvas>
          </div>
   );
