@@ -1,4 +1,5 @@
 import { Text } from "@react-three/drei";
+import LobbyShell from "./LobbyShell.jsx";
 
 function RoomDoor({ position, label, room }) {
   return (
@@ -40,18 +41,8 @@ function RoomDoor({ position, label, room }) {
 export default function Lobby() {
   return (
     <>
-      {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.2, 0]}>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial color="#3a1408" />
-      </mesh>
-
-      {/* Back Wall */}
-      <mesh position={[0, 2, -8]}>
-        <boxGeometry args={[20, 8, 0.3]} />
-        <meshStandardMaterial color="#1a0703" />
-      </mesh>
-
+      <LobbyShell />
+            
       {/* Title */}
       <Text
         position={[0, 5.2, -7.7]}
