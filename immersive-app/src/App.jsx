@@ -99,17 +99,22 @@ function Room({ room, theme }) {
       <OrbitControls
   enablePan={false}
   enableDamping={true}
-  dampingFactor={0.065}
-  rotateSpeed={0.32}
-  zoomSpeed={0.42}
+  dampingFactor={0.09}
 
-  minDistance={10}
-  maxDistance={19}
+  rotateSpeed={0.22}
+  zoomSpeed={0.32}
+  touches={{
+    ONE: 0,
+    TWO: 2
+  }}
 
-  minPolarAngle={Math.PI / 2.45}
-  maxPolarAngle={Math.PI / 1.82}
+  minDistance={7}
+  maxDistance={18}
 
-  target={[0, 2.15, -2]}
+  minPolarAngle={Math.PI / 2.55}
+  maxPolarAngle={Math.PI / 1.78}
+
+  target={[0, 2.05, -2]}
 />
     </>
   );
@@ -152,7 +157,10 @@ useEffect(() => {
         background: "#050505"
       }}
     >
-      <Canvas camera={{ position: [0, 2.8, 8.5], fov: 52 }} shadows>
+      <Canvas
+  camera={{ position: [0, 2.45, 8.2], fov: 58 }}
+  shadows
+>
   <fog attach="fog" args={["#050505", 14, 36]} />
 
   <ambientLight intensity={0.35} color={theme.ambient} />
