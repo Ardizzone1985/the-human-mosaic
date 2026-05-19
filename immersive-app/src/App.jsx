@@ -150,6 +150,82 @@ useEffect(() => {
       zIndex: 9999
     }}
   />
+      {!isLobby && (
+  <div
+    style={{
+      position: "fixed",
+      top: 18,
+      left: 18,
+      right: 18,
+      zIndex: 20,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      pointerEvents: "none"
+    }}
+  >
+    <div
+      style={{
+        padding: "10px 14px",
+        borderRadius: "999px",
+        background: "rgba(0,0,0,0.45)",
+        border: "1px solid rgba(215,181,109,0.35)",
+        color: "#f2c879",
+        fontSize: "12px",
+        letterSpacing: "0.12em",
+        fontWeight: 700,
+        backdropFilter: "blur(10px)"
+      }}
+    >
+      {currentRoom?.toUpperCase()} ROOM
+    </div>
+
+    <button
+      onClick={() => {
+        window.dispatchEvent(new Event("startFadeOut"));
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 900);
+      }}
+      style={{
+        pointerEvents: "auto",
+        border: "1px solid rgba(215,181,109,0.45)",
+        background: "rgba(0,0,0,0.55)",
+        color: "#f2c879",
+        padding: "10px 14px",
+        borderRadius: "999px",
+        fontSize: "12px",
+        fontWeight: 700,
+        cursor: "pointer",
+        backdropFilter: "blur(10px)"
+      }}
+    >
+      LOBBY
+    </button>
+  </div>
+)}
+
+{!isLobby && (
+  <div
+    style={{
+      position: "fixed",
+      left: "50%",
+      bottom: 18,
+      transform: "translateX(-50%)",
+      zIndex: 20,
+      padding: "10px 14px",
+      borderRadius: "999px",
+      background: "rgba(0,0,0,0.42)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      color: "rgba(255,255,255,0.75)",
+      fontSize: "12px",
+      backdropFilter: "blur(10px)",
+      textAlign: "center"
+    }}
+  >
+    Swipe to look · Pinch to zoom · Tap a photo
+  </div>
+)}
     <div
       style={{
         width: "100vw",
