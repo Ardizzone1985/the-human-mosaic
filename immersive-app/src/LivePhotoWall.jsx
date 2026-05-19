@@ -93,7 +93,7 @@ function LivePhoto({ item, onSelect }) {
     <group position={basePosition} rotation={rotation}>
       <group
   position={localPosition}
-  scale={hovered ? 1.25 : 1}
+  scale={hovered ? 1.34 : 1}
   onPointerOver={(e) => {
     e.stopPropagation();
     setHovered(true);
@@ -122,7 +122,7 @@ function LivePhoto({ item, onSelect }) {
           <meshStandardMaterial
   map={texture}
   emissive={"#ffffff"}
-  emissiveIntensity={hovered ? 0.45 : 0.18}
+  emissiveIntensity={hovered ? 0.9 : 0.28}
   toneMapped={false}
 />
         </mesh>
