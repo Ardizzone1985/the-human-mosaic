@@ -181,6 +181,14 @@ const selectedCountry =
   
   return (
   <>
+        {photos.map((item) => (
+      <LivePhoto
+        key={item.id || item.submission_id}
+        item={item}
+        onSelect={setSelectedPhoto}
+      />
+    ))}
+    
     {selectedPhoto && (
   <Html fullscreen>
     <div
