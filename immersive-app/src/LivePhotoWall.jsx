@@ -109,6 +109,14 @@ function LivePhoto({ item, onSelect }) {
     onSelect(item);
   }}
 >
+
+        <pointLight
+  position={[0, 0, 0.12]}
+  intensity={hovered ? 0.65 : 0.18}
+  distance={1.2}
+  color={hovered ? "#ffd98a" : "#d7b56d"}
+/>
+        
         <mesh position={[0, 0, 0.04]}>
           <planeGeometry args={[size, size]} />
           <meshStandardMaterial
