@@ -254,7 +254,9 @@ const isLobby = !currentRoom;
     antialias: true
   }}
 >
-  <fog attach="fog" args={["#050505", 14, 36]} />
+  <fog attach="fog" args={["#050505", 10, 30]} />
+
+  <color attach="background" args={["#050505"]} />      
 
   <ambientLight intensity={0.35} color={theme.ambient} />
 
