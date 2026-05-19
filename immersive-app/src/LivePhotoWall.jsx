@@ -187,78 +187,87 @@ const selectedCountry =
   
   return (
   <>
-    {photos.map((item) => (
-      <LivePhoto
-        key={item.id || item.submission_id}
-        item={item}
-        onSelect={setSelectedPhoto}
-      />
-    ))}
-
     {selectedPhoto && (
-      <Html center>
-        <div
+  <Html fullscreen>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.72)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+        zIndex: 100
+      }}
+    >
+      <div
+        style={{
+          width: "min(92vw, 420px)",
+          maxHeight: "88vh",
+          overflowY: "auto",
+          padding: "18px",
+          borderRadius: "24px",
+          background: "rgba(12, 6, 3, 0.96)",
+          border: "1px solid rgba(215,181,109,0.55)",
+          color: "#fff",
+          boxShadow: "0 30px 90px rgba(0,0,0,0.75)",
+          fontFamily: "Arial, sans-serif"
+        }}
+      >
+        <img
+          src={
+            "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
+            selectedPhoto.image_file_name
+          }
+          alt=""
           style={{
-            width: "320px",
-            padding: "22px",
+            width: "100%",
+            maxHeight: "52vh",
+            objectFit: "cover",
             borderRadius: "18px",
-            background: "rgba(12, 6, 3, 0.92)",
-            border: "1px solid rgba(215,181,109,0.55)",
-            color: "#fff",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.55)",
-            fontFamily: "Arial, sans-serif"
+            marginBottom: "18px",
+            border: "1px solid rgba(215,181,109,0.3)"
+          }}
+        />
+
+        <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+          COUNTRY
+        </div>
+
+        <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
+          {selectedCountry}
+        </div>
+
+        <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+          NOTE
+        </div>
+
+        <div style={{ fontSize: "15px", lineHeight: "1.5", marginTop: "8px", color: "#e8ded0" }}>
+          {selectedNote}
+        </div>
+
+        <button
+          onClick={() => setSelectedPhoto(null)}
+          style={{
+            marginTop: "22px",
+            width: "100%",
+            padding: "13px",
+            borderRadius: "999px",
+            border: "none",
+            background: "#d7b56d",
+            color: "#1b0d05",
+            fontWeight: "700",
+            cursor: "pointer"
           }}
         >
-          <img
-  src={
-  "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
-  selectedPhoto.image_file_name
-}
-  alt=""
-  style={{
-    width: "100%",
-    height: "220px",
-    objectFit: "cover",
-    borderRadius: "14px",
-    marginBottom: "18px",
-    border: "1px solid rgba(215,181,109,0.25)"
-  }}
-/>
-          <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
-            COUNTRY
-          </div>
-
-          <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
-            {selectedCountry}
-          </div>
-
-          <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
-            NOTE
-          </div>
-
-          <div style={{ fontSize: "15px", lineHeight: "1.5", marginTop: "8px", color: "#e8ded0" }}>
-            {selectedNote}
-          </div>
-
-          <button
-            onClick={() => setSelectedPhoto(null)}
-            style={{
-              marginTop: "22px",
-              width: "100%",
-              padding: "12px",
-              borderRadius: "999px",
-              border: "none",
-              background: "#d7b56d",
-              color: "#1b0d05",
-              fontWeight: "700",
-              cursor: "pointer"
-            }}
-          >
-            Close
-          </button>
-        </div>
-      </Html>
-    )}
+          Close
+        </button>
+      </div>
+    </div>
+  </Html>
+)}
   </>
 );
 }
