@@ -198,6 +198,25 @@ export default function RoomShell({ theme }) {
   />
 </mesh>
 
+      {/* Ceiling spotlight rails */}
+<mesh position={[0, 7.6, -2]}>
+  <boxGeometry args={[16, 0.06, 0.12]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.35}
+  />
+</mesh>
+
+<mesh position={[0, 7.6, -6]}>
+  <boxGeometry args={[16, 0.06, 0.12]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.35}
+  />
+</mesh>
+
       {/* Ceiling warm frame */}
 <mesh position={[0, 7.85, -0.5]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
