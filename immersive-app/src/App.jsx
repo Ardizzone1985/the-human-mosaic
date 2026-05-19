@@ -1,4 +1,5 @@
 import { Canvas } from "@react-three/fiber";
+import { useEffect, useState } from "react";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
@@ -112,12 +113,31 @@ function Room({ room, theme }) {
 }
 
 export default function App() {
+  const [fadeIn, setFadeIn] = useState(false);
+
+useEffect(() => {
+  setTimeout(() => {
+    setFadeIn(true);
+  }, 120);
+}, []);
     const params = new URLSearchParams(window.location.search);
   const currentRoom = params.get("room");
   const theme =
   ROOM_THEMES[currentRoom] || ROOM_THEMES.Identity;
   const isLobby = !currentRoom;
   return (
+    <>
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "#000",
+      pointerEvents: "none",
+      opacity: fadeIn ? 0 : 1,
+      transition: "opacity 1.8s ease",
+      zIndex: 9999
+    }}
+  />
     <div
       style={{
         width: "100vw",
@@ -166,5 +186,6 @@ export default function App() {
 )}
 </Canvas>
          </div>
+      </>
   );
 }
