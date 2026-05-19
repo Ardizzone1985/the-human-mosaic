@@ -162,15 +162,9 @@ const [selectedPhoto, setSelectedPhoto] = useState(null);
         return;
       }
 
-      setPhotos(
-        (data || []).filter(
-          (item) =>
-            item.image_file_name &&
-            item.slot_code &&
-            item.wall &&
-            item.section
-        )
-      );
+      console.log("PHOTOS FROM SUPABASE:", data);
+
+setPhotos(data || []);
     }
 
     loadPhotos();
