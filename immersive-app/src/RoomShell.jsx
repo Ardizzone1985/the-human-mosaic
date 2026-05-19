@@ -138,13 +138,15 @@ export default function RoomShell({ theme }) {
 {[-7.5, -3.75, 0, 3.75, 7.5].map((x) => (
   <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
     <mesh>
-      <boxGeometry args={[2.7, 5.8, 0.08]} />
-      <meshStandardMaterial
-        color="#3a2418"
-        roughness={0.45}
-        metalness={0.12}
-      />
-    </mesh>
+  <boxGeometry args={[2.7, 5.8, 0.32]} />
+  <meshStandardMaterial
+    color="#3a2418"
+    roughness={0.42}
+    metalness={0.18}
+    emissive={theme?.side || "#2a1408"}
+    emissiveIntensity={0.08}
+  />
+</mesh>
 
     <mesh position={[0, 2.95, 0.06]}>
       <boxGeometry args={[2.9, 0.08, 0.08]} />
