@@ -168,6 +168,34 @@ export default function RoomShell({ theme }) {
   </group>
 ))}
 
+      {/* Cinematic wall light strips */}
+<mesh position={[-10.85, 3.4, -3]}>
+  <boxGeometry args={[0.08, 5.8, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive={theme?.glow || "#d7b56d"}
+    emissiveIntensity={0.9}
+  />
+</mesh>
+
+<mesh position={[10.85, 3.4, -3]}>
+  <boxGeometry args={[0.08, 5.8, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive={theme?.glow || "#d7b56d"}
+    emissiveIntensity={0.9}
+  />
+</mesh>
+
+<mesh position={[0, 6.95, -9.75]}>
+  <boxGeometry args={[18, 0.07, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive={theme?.glow || "#d7b56d"}
+    emissiveIntensity={0.75}
+  />
+</mesh>
+
       {/* Ceiling warm frame */}
 <mesh position={[0, 7.85, -0.5]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
