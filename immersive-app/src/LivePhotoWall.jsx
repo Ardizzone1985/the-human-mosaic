@@ -205,6 +205,8 @@ const selectedCountry =
       <div
         style={{
           width: "min(92vw, 420px)",
+          transform: "scale(1)",
+animation: "photoFocusIn 0.45s ease-out",
           maxHeight: "88vh",
           overflowY: "auto",
           padding: "18px",
@@ -223,6 +225,7 @@ const selectedCountry =
           }
           alt=""
           style={{
+            boxShadow: "0 0 45px rgba(215,181,109,0.32)",
             width: "100%",
             maxHeight: "52vh",
             objectFit: "cover",
