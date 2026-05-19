@@ -247,7 +247,12 @@ const isLobby = !currentRoom;
     >
       <Canvas
   camera={{ position: [0, 2.45, 8.2], fov: 58 }}
-  shadows
+  shadows={{
+    type: "soft"
+  }}
+  gl={{
+    antialias: true
+  }}
 >
   <fog attach="fog" args={["#050505", 14, 36]} />
 
@@ -256,9 +261,15 @@ const isLobby = !currentRoom;
   <ambientLight intensity={0.32} />
 
 <directionalLight
-  position={[6, 8, 5]}
-  intensity={1.4}
+  castShadow
+  position={[4, 8, 4]}
+  intensity={1.8}
   color={theme.directional}
+  shadow-mapSize-width={2048}
+  shadow-mapSize-height={2048}
+  shadow-camera-near={0.5}
+  shadow-camera-far={40}
+  shadow-bias={-0.00008}
 />
 
 <pointLight
@@ -281,6 +292,39 @@ const isLobby = !currentRoom;
   distance={12}
   color={theme.side}
 />
+
+  <spotLight
+  castShadow
+  position={[-6, 7, -3]}
+  angle={0.32}
+  penumbra={0.9}
+  intensity={2.2}
+  distance={24}
+  color={theme.directional}
+  target-position={[-7, 3, -9]}
+/>
+
+<spotLight
+  castShadow
+  position={[0, 7, -3]}
+  angle={0.32}
+  penumbra={0.9}
+  intensity={2.2}
+  distance={24}
+  color={theme.directional}
+  target-position={[0, 3, -9]}
+/>
+
+<spotLight
+  castShadow
+  position={[6, 7, -3]}
+  angle={0.32}
+  penumbra={0.9}
+  intensity={2.2}
+  distance={24}
+  color={theme.directional}
+  target-position={[7, 3, -9]}
+/>      
 
   {isLobby ? (
   <Lobby />
