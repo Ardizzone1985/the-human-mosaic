@@ -119,6 +119,10 @@ useEffect(() => {
   setTimeout(() => {
     setFadeIn(true);
   }, 120);
+
+  window.addEventListener("startFadeOut", () => {
+  setFadeIn(false);
+});
 }, []);
     const params = new URLSearchParams(window.location.search);
   const currentRoom = params.get("room");
