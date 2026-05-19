@@ -67,8 +67,8 @@ export default function RoomShell({ theme }) {
   <planeGeometry args={[30, 34]} />
   <meshStandardMaterial
   map={createParquetTexture()}
-  roughness={0.42}
-  metalness={0.08}
+  roughness={0.24}
+  metalness={0.22}
   color={"#8a3f12"}
 />
 </mesh>
