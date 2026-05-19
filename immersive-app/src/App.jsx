@@ -133,10 +133,22 @@ useEffect(() => {
 });
 }, []);
     const params = new URLSearchParams(window.location.search);
-  const currentRoom = params.get("room");
-  const theme =
+
+const roomParam = params.get("room");
+
+const currentRoom =
+  roomParam?.toLowerCase() === "identity"
+    ? "Identity"
+    : roomParam?.toLowerCase() === "love"
+    ? "Love"
+    : roomParam?.toLowerCase() === "creativity"
+    ? "Creativity"
+    : null;
+
+const theme =
   ROOM_THEMES[currentRoom] || ROOM_THEMES.Identity;
-  const isLobby = !currentRoom;
+
+const isLobby = !currentRoom;
   return (
     <>
   <div
