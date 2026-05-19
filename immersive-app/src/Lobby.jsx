@@ -6,8 +6,12 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
 
   function enterRoom() {
+  window.dispatchEvent(new Event("startFadeOut"));
+
+  setTimeout(() => {
     window.location.href = `/?room=${room}`;
-  }
+  }, 900);
+}
 
   return (
     <group
