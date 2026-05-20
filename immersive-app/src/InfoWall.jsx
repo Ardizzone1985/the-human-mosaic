@@ -62,14 +62,21 @@ export default function InfoWall({ room = "Identity" }) {
     <group position={[0, 2.8, 12.5]} rotation={[0, Math.PI, 0]}>
       {/* Back info wall */}
       <mesh>
-        <planeGeometry args={[18, 8]} />
-        <meshStandardMaterial color="#211008" roughness={0.6} />
+        <mesh>
+  <boxGeometry args={[18, 8, 0.28]} />
+        <meshStandardMaterial
+  color="#211008"
+  roughness={0.42}
+  metalness={0.18}
+  emissive="#2a1408"
+  emissiveIntensity={0.08}
+/>
       </mesh>
 
             {/* Project title */}
       <Text
         position={[-5.65, 2.28, 0.09]}
-        fontSize={0.42}
+        fontSize={0.58}
         color="#f2c879"
         anchorX="left"
         anchorY="middle"
