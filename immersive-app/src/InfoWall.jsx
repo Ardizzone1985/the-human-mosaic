@@ -95,7 +95,7 @@ export default function InfoWall({ room = "Identity" }) {
 
             {/* Project title */}
       <Text
-        position={[-5.65, 2.28, 0.09]}
+        position={[-5.65, 2.28, 0.22]}
         fontSize={0.58}
         color="#f2c879"
         anchorX="left"
@@ -105,7 +105,7 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       <Text
-        position={[-5.65, 1.72, 0.09]}
+        position={[-5.65, 1.72, 0.22]}
         fontSize={0.26}
         color="#ffffff"
         anchorX="left"
@@ -115,7 +115,7 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       <Text
-        position={[-5.65, 1.05, 0.09]}
+        position={[-5.65, 1.05, 0.22]}
         fontSize={0.17}
         color="#d8c7ad"
         anchorX="left"
@@ -136,13 +136,13 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       {/* Ad spaces */}
-      <AdSpace position={[2.5, 1.65, 0.08]} label="FUTURE AD SPACE" />
-      <AdSpace position={[5.9, 1.65, 0.08]} label="PARTNER SPACE" />
-      <AdSpace position={[2.5, -0.1, 0.08]} label="SPONSOR SPACE" />
+      <AdSpace position={[2.5, 1.65, 0.22]} label="FUTURE AD SPACE" />
+      <AdSpace position={[5.9, 1.65, 0.22]} label="PARTNER SPACE" />
+      <AdSpace position={[2.5, -0.1, 0.22]} label="SPONSOR SPACE" />
 
       {/* Exit door */}
 <group
-  position={[5.7, -2.25, 0.1]}
+  position={[5.7, -2.25, 0.24]}
   scale={doorHovered ? 1.06 : 1}
   onPointerOver={(e) => {
     e.stopPropagation();
