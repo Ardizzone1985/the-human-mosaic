@@ -140,10 +140,10 @@ export default function InfoWall({ room = "Identity" }) {
       <AdSpace position={[5.9, 1.65, 0.22]} label="PARTNER SPACE" />
       <AdSpace position={[2.5, -0.1, 0.22]} label="SPONSOR SPACE" />
 
-      {/* Exit door */}
+     {/* Exit door */}
 <group
   position={[5.7, -2.25, 0.24]}
-  scale={doorHovered ? 1.06 : 1}
+  scale={doorHovered ? 1.08 : 1}
   onPointerOver={(e) => {
     e.stopPropagation();
     setDoorHovered(true);
@@ -159,33 +159,51 @@ export default function InfoWall({ room = "Identity" }) {
     goHome();
   }}
 >
-  <mesh position={[0, 0, -0.04]}>
-    <boxGeometry args={[1.75, 2.75, 0.12]} />
+  <mesh position={[0, 0, -0.08]}>
+    <boxGeometry args={[1.95, 2.95, 0.16]} />
     <meshStandardMaterial
       color={doorHovered ? "#d7b56d" : "#5a3a16"}
       emissive="#d7b56d"
-      emissiveIntensity={doorHovered ? 0.55 : 0.18}
+      emissiveIntensity={doorHovered ? 0.65 : 0.2}
+      roughness={0.34}
+      metalness={0.28}
     />
   </mesh>
 
   <mesh>
-    <boxGeometry args={[1.45, 2.45, 0.14]} />
+    <boxGeometry args={[1.45, 2.45, 0.18]} />
     <meshStandardMaterial
       color="#3b1f12"
-      roughness={0.48}
-      metalness={0.12}
+      roughness={0.42}
+      metalness={0.18}
       emissive="#d7b56d"
-      emissiveIntensity={doorHovered ? 0.22 : 0.06}
+      emissiveIntensity={doorHovered ? 0.28 : 0.08}
     />
   </mesh>
 
-  <mesh position={[0, 1.32, 0.08]}>
-    <boxGeometry args={[1.75, 0.12, 0.12]} />
+  <mesh position={[0, 0, 0.12]}>
+    <boxGeometry args={[1.08, 1.95, 0.04]} />
+    <meshStandardMaterial color="#160703" roughness={0.65} />
+  </mesh>
+
+  <mesh position={[0.58, 0, 0.22]}>
+    <sphereGeometry args={[0.055, 16, 16]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={doorHovered ? 0.75 : 0.28}
+      metalness={0.8}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[0, 1.34, 0.14]}>
+    <boxGeometry args={[1.75, 0.1, 0.1]} />
     <meshStandardMaterial color="#d7b56d" />
   </mesh>
 
   <Text
-    position={[0, 1.65, 0.13]}
+    position={[0, 1.68, 0.22]}
     fontSize={0.15}
     color={doorHovered ? "#ffffff" : "#f2c879"}
     anchorX="center"
@@ -195,7 +213,7 @@ export default function InfoWall({ room = "Identity" }) {
   </Text>
 
   <Text
-    position={[0, 1.42, 0.13]}
+    position={[0, 1.44, 0.22]}
     fontSize={0.1}
     color={doorHovered ? "#ffffff" : "#d8c7ad"}
     anchorX="center"
