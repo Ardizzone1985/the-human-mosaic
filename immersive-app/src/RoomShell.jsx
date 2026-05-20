@@ -104,8 +104,8 @@ export default function RoomShell({ theme }) {
       </mesh>
 
       {/* Ceiling */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 8, 1]}>
-        <planeGeometry args={[30, 34]} />
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 9, 1]}>
+        <planeGeometry args={[34, 38]} />
         <meshStandardMaterial
           color="#221914"
           roughness={0.72}
@@ -135,7 +135,7 @@ export default function RoomShell({ theme }) {
       </mesh>
 
       {/* Museum wall panels */}
-{[-7.5, -3.75, 0, 3.75, 7.5].map((x) => (
+{[-9, -4.5, 0, 4.5, 9].map((x) => (
   <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
     <mesh>
   <boxGeometry args={[2.7, 5.8, 0.32]} />
@@ -218,22 +218,22 @@ export default function RoomShell({ theme }) {
 </mesh>
 
       {/* Ceiling warm frame */}
-<mesh position={[0, 7.85, -0.5]}>
+<mesh position={[0, 8.85, -0.5]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[0, 7.85, 7]}>
+<mesh position={[0, 8.85, 7]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[-10.8, 7.85, 3]}>
+<mesh position={[-10.8, 8.85, 3]}>
   <boxGeometry args={[0.18, 0.08, 16]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[10.8, 7.85, 3]}>
+<mesh position={[10.8, 8.85, 3]}>
   <boxGeometry args={[0.18, 0.08, 16]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
