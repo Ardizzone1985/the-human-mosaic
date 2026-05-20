@@ -99,10 +99,10 @@ function Room({ room, theme }) {
       <OrbitControls
   enablePan={false}
   enableDamping={true}
-  dampingFactor={0.09}
+  dampingFactor={0.06}
 
-  rotateSpeed={0.22}
-  zoomSpeed={0.32}
+  rotateSpeed={0.18}
+  zoomSpeed={0.26}
   touches={{
     ONE: 0,
     TWO: 2
