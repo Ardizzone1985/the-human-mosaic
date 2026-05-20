@@ -6,6 +6,7 @@ import LivePhotoWall from "./LivePhotoWall.jsx";
 import InfoWall from "./InfoWall.jsx";
 import DynamicSectionManager from "./DynamicSectionManager.jsx";
 import Lobby from "./Lobby.jsx";
+import AtmosphereParticles from "./AtmosphereParticles.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -257,6 +258,8 @@ const isLobby = !currentRoom;
   <fog attach="fog" args={["#050505", 10, 30]} />
 
   <color attach="background" args={["#050505"]} />      
+
+  <AtmosphereParticles />      
 
   <ambientLight intensity={0.35} color={theme.ambient} />
 
