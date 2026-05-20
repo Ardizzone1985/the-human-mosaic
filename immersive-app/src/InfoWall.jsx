@@ -73,6 +73,26 @@ export default function InfoWall({ room = "Identity" }) {
 />
       </mesh>
 
+        {/* Top cinematic rail */}
+<mesh position={[0, 3.95, 0.16]}>
+  <boxGeometry args={[18.2, 0.08, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+  />
+</mesh>
+
+{/* Bottom cinematic rail */}
+<mesh position={[0, -3.95, 0.16]}>
+  <boxGeometry args={[18.2, 0.08, 0.08]} />
+  <meshStandardMaterial
+    color="#b98942"
+    emissive="#8a4b12"
+    emissiveIntensity={0.25}
+  />
+</mesh>
+
             {/* Project title */}
       <Text
         position={[-5.65, 2.28, 0.09]}
