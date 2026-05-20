@@ -53,7 +53,7 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
 export default function InfoWall({ room = "Identity" }) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
   const [doorHovered, setDoorHovered] = useState(false);
-  const logoTexture = useTexture("/logo-cropped.png");
+  const logoTexture = useTexture("./logo-cropped.png");
 
   function goHome() {
     window.location.href = "/";
