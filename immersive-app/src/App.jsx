@@ -193,28 +193,6 @@ const isLobby = !currentRoom;
       {currentRoom?.toUpperCase()} ROOM
     </div>
 
-    <button
-      onClick={() => {
-        window.dispatchEvent(new Event("startFadeOut"));
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 900);
-      }}
-      style={{
-        pointerEvents: "auto",
-        border: "1px solid rgba(215,181,109,0.45)",
-        background: "rgba(0,0,0,0.55)",
-        color: "#f2c879",
-        padding: "10px 14px",
-        borderRadius: "999px",
-        fontSize: "12px",
-        fontWeight: 700,
-        cursor: "pointer",
-        backdropFilter: "blur(10px)"
-      }}
-    >
-      LOBBY
-    </button>
   </div>
 )}
 
