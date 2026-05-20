@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 
 const ROOM_TEXT = {
   Identity: {
@@ -53,6 +53,7 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
 export default function InfoWall({ room = "Identity" }) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
   const [doorHovered, setDoorHovered] = useState(false);
+  const logoTexture = useTexture("/logo-cropped.png");
 
   function goHome() {
     window.location.href = "/";
@@ -93,9 +94,15 @@ export default function InfoWall({ room = "Identity" }) {
   />
 </mesh>
 
+      {/* Official logo */}
+<mesh position={[-7.2, 2.15, 0.24]}>
+  <planeGeometry args={[2.1, 1.05]} />
+  <meshBasicMaterial map={logoTexture} transparent />
+</mesh>
+
             {/* Project title */}
       <Text
-        position={[-5.65, 2.28, 0.22]}
+        position={[-4.75, 2.28, 0.22]}
         fontSize={0.58}
         color="#f2c879"
         anchorX="left"
