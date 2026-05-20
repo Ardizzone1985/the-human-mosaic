@@ -62,7 +62,7 @@ export default function InfoWall({ room = "Identity" }) {
     <group position={[0, 2.8, 12.5]} rotation={[0, Math.PI, 0]}>
       {/* Back info wall */}
       <mesh>
-        <mesh>
+       
   <boxGeometry args={[18, 8, 0.28]} />
         <meshStandardMaterial
   color="#211008"
