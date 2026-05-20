@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, useTexture } from "@react-three/drei";
+import logoImage from "./logo-cropped.png";
 
 const ROOM_TEXT = {
   Identity: {
@@ -53,7 +54,7 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
 export default function InfoWall({ room = "Identity" }) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
   const [doorHovered, setDoorHovered] = useState(false);
-  const logoTexture = useTexture("./logo-cropped.png");
+  const logoTexture = useTexture(logoImage);
 
   function goHome() {
     window.location.href = "/";
