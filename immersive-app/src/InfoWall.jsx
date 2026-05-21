@@ -61,7 +61,7 @@ export default function InfoWall({ room = "Identity" }) {
   }
 
   return (
-    <group position={[0, 2.8, 12.5]} rotation={[0, Math.PI, 0]}>
+    <group position={[0, 3.2, 10.8]} rotation={[0, Math.PI, 0]} scale={1.18}>
       {/* Back info wall */}
       <mesh>
        
@@ -71,7 +71,7 @@ export default function InfoWall({ room = "Identity" }) {
   roughness={0.42}
   metalness={0.18}
   emissive="#2a1408"
-  emissiveIntensity={0.08}
+  emissiveIntensity={0.16}
 />
       </mesh>
 
@@ -81,7 +81,7 @@ export default function InfoWall({ room = "Identity" }) {
   <meshStandardMaterial
     color="#d7b56d"
     emissive="#d7b56d"
-    emissiveIntensity={0.45}
+    emissiveIntensity={0.85}
   />
 </mesh>
 
@@ -91,7 +91,7 @@ export default function InfoWall({ room = "Identity" }) {
   <meshStandardMaterial
     color="#b98942"
     emissive="#8a4b12"
-    emissiveIntensity={0.25}
+    emissiveIntensity={0.55}
   />
 </mesh>
 
