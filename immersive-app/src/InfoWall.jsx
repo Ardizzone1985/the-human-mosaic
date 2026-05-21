@@ -67,7 +67,7 @@ export default function InfoWall({ room = "Identity" }) {
        
   <boxGeometry args={[18, 8, 0.28]} />
         <meshStandardMaterial
-  color="#211008"
+  color="#2b1409"
   roughness={0.42}
   metalness={0.18}
   emissive="#2a1408"
