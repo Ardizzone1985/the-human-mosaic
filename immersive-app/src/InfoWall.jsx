@@ -96,24 +96,14 @@ export default function InfoWall({ room = "Identity" }) {
 </mesh>
 
       {/* Official logo */}
-<mesh position={[-7.2, 2.15, 0.24]}>
-  <planeGeometry args={[2.1, 1.05]} />
+<mesh position={[-4.8, 2.15, 0.24]}>
+  <planeGeometry args={[2.8, 1.4]} />
   <meshBasicMaterial map={logoTexture} transparent />
 </mesh>
 
-            {/* Project title */}
+            
       <Text
-        position={[-4.75, 2.28, 0.22]}
-        fontSize={0.58}
-        color="#f2c879"
-        anchorX="left"
-        anchorY="middle"
-      >
-        THE HUMAN MOSAIC
-      </Text>
-
-      <Text
-        position={[-5.65, 1.72, 0.22]}
+        position={[-4.8, 1.2, 0.22]}
         fontSize={0.26}
         color="#ffffff"
         anchorX="left"
@@ -123,7 +113,7 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       <Text
-        position={[-5.65, 1.05, 0.22]}
+        position={[-4.8, 0.65, 0.22]}
         fontSize={0.17}
         color="#d8c7ad"
         anchorX="left"
@@ -134,7 +124,7 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       <Text
-        position={[-5.65, 0.15, 0.09]}
+        position={[-4.8, -0.05, 0.09]}
         fontSize={0.15}
         color="#f2c879"
         anchorX="left"
