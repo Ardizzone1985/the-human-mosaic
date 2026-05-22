@@ -1708,7 +1708,7 @@ if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
 if (updatesCount) updatesCount.textContent = total.toLocaleString();
 
       const donationLimit = 1000;
-const donationsCompletedManual = 0;
+const donationsCompleted = Math.floor(total / donationLimit);
 
 const donationProgress = total % donationLimit;
 const donationRemaining = donationLimit - donationProgress;
@@ -1722,7 +1722,7 @@ const donationsCompletedEl = document.getElementById("donations-completed");
 if (donationProgressEl) donationProgressEl.textContent = donationProgress.toLocaleString();
 if (donationRemainingEl) donationRemainingEl.textContent = donationRemaining.toLocaleString();
 if (donationFillEl) donationFillEl.style.width = `${donationPercent}%`;
-if (donationsCompletedEl) donationsCompletedEl.textContent = donationsCompletedManual.toLocaleString();
+if (donationsCompletedEl) donationsCompletedEl.textContent = donationsCompleted.toLocaleString();
 
       const earlyLimit = 1000;
 const earlyClaimed = total;
