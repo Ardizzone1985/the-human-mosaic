@@ -931,6 +931,73 @@
   border-radius: 50%;
   margin-right: 10px;
 } 
+
+   .donation-section {
+  background: #fff;
+  padding: 70px 0;
+  border-top: 1px solid #e3e3e3;
+}
+
+.donation-box {
+  max-width: 980px;
+  margin: 0 auto;
+  border: 1px solid #e5e5e5;
+  border-radius: 28px;
+  padding: 34px;
+  background: #fbfbf8;
+  text-align: center;
+}
+
+.donation-kicker {
+  color: #b8872b;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.donation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.donation-card {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 22px;
+  padding: 24px;
+}
+
+.donation-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111;
+}
+
+.donation-bar {
+  width: 100%;
+  height: 12px;
+  background: #eee;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.donation-fill {
+  height: 100%;
+  width: 0%;
+  background: #d6b35a;
+  border-radius: 999px;
+  transition: width 1s ease;
+}
+
+@media (max-width: 768px) {
+  .donation-grid {
+    grid-template-columns: 1fr;
+  }
+} 
   
   </style>
 </head>
@@ -1046,6 +1113,48 @@ Secure payment · Cards & PayPal accepted · Instant reservation
       <a href="join.html" id="early-cta" class="btn btn-primary" style="margin-top:22px; background:white; color:#111;">
   Claim Your Early Spot
 </a>
+    </div>
+  </div>
+</section>
+
+    <section class="donation-section">
+  <div class="container">
+    <div class="donation-box">
+      <div class="donation-kicker">HUMANITY IMPACT</div>
+
+      <h2>Every 1,000 participants help create a donation milestone.</h2>
+
+      <p style="color:#555; max-width:720px; margin:0 auto 20px; line-height:1.8;">
+        For every 1,000 participants, The Human Mosaic will make a donation to WWF and Save the Children.
+        Donation milestones and public updates will be shared through our NEWS section and social channels.
+      </p>
+
+      <div class="donation-grid">
+        <div class="donation-card">
+          <div class="donation-kicker">NEXT DONATION</div>
+          <div class="donation-number">
+            <span id="donation-progress">0</span> / 1,000
+          </div>
+          <div class="donation-bar">
+            <div class="donation-fill" id="donation-fill"></div>
+          </div>
+          <p style="color:#666; margin-top:12px;">
+            <span id="donation-remaining">1,000</span> participants remaining
+          </p>
+        </div>
+
+        <div class="donation-card">
+          <div class="donation-kicker">DONATIONS COMPLETED</div>
+          <div class="donation-number" id="donations-completed">0</div>
+          <p style="color:#666; margin-top:12px;">
+            Donations will be published after each completed milestone.
+          </p>
+        </div>
+      </div>
+
+      <p style="font-size:0.86rem; color:#777; margin-top:22px;">
+        Logo usage is subject to formal authorization from the organizations.
+      </p>
     </div>
   </div>
 </section>
@@ -1550,6 +1659,23 @@ animateCount("count-creativity", creativity);
 if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
       const updatesCount = document.getElementById("updates-count");
 if (updatesCount) updatesCount.textContent = total.toLocaleString();
+
+      const donationLimit = 1000;
+const donationsCompletedManual = 0;
+
+const donationProgress = total % donationLimit;
+const donationRemaining = donationLimit - donationProgress;
+const donationPercent = Math.min((donationProgress / donationLimit) * 100, 100);
+
+const donationProgressEl = document.getElementById("donation-progress");
+const donationRemainingEl = document.getElementById("donation-remaining");
+const donationFillEl = document.getElementById("donation-fill");
+const donationsCompletedEl = document.getElementById("donations-completed");
+
+if (donationProgressEl) donationProgressEl.textContent = donationProgress.toLocaleString();
+if (donationRemainingEl) donationRemainingEl.textContent = donationRemaining.toLocaleString();
+if (donationFillEl) donationFillEl.style.width = `${donationPercent}%`;
+if (donationsCompletedEl) donationsCompletedEl.textContent = donationsCompletedManual.toLocaleString();
 
       const earlyLimit = 1000;
 const earlyClaimed = total;
