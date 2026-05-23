@@ -88,6 +88,16 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
       {label}
     </Text>
 
+    {/* Floor reflection glow */}
+<mesh position={[0, -2.58, 0.55]} rotation={[-Math.PI / 2, 0, 0]}>
+  <circleGeometry args={[1.25, 48]} />
+  <meshBasicMaterial
+    color={color}
+    transparent
+    opacity={hovered ? 0.22 : 0.09}
+  />
+</mesh>
+
     {/* Cinematic rear glow */}
 <mesh position={[0, 0, -0.55]}>
   <planeGeometry args={[2.8, 4.8]} />
