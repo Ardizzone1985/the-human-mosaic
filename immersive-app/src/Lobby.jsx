@@ -127,20 +127,20 @@ export default function Lobby() {
       <LobbyShell />
 
       <Image
-   url={logo}
-  position={[0, 4.95, -7.2]}
-scale={[3.9, 1.45, 1]}
+  url={logo}
+  position={[-3.7, 5.05, -7.2]}
+  scale={[3.5, 1.3, 1]}
   transparent
 />
 
       <Text
-        position={[0, 4.42, -7.7]}
-        fontSize={0.22}
-        color="#ffffff"
-        anchorX="center"
-      >
-        Choose Your Room
-      </Text>
+  position={[3.7, 4.95, -7.2]}
+  fontSize={0.34}
+  color="#ffffff"
+  anchorX="center"
+>
+  Choose Your Room
+</Text>
 
       <RoomDoor
         position={[-5, 1, -7.6]}
