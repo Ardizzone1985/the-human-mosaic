@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text } from "@react-three/drei";
+import { Text, Image } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
@@ -125,14 +125,12 @@ export default function Lobby() {
     <>
       <LobbyShell />
 
-      <Text
-        position={[0, 5.25, -7.7]}
-        fontSize={0.62}
-        color="#d7b56d"
-        anchorX="center"
-      >
-        THE HUMAN MOSAIC
-      </Text>
+      <Image
+  url="/logo-cropped.png"
+  position={[0, 5.15, -7.2]}
+  scale={[4.8, 1.8, 1]}
+  transparent
+/>
 
       <Text
         position={[0, 4.42, -7.7]}
