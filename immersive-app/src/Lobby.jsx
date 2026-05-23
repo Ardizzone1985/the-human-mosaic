@@ -32,8 +32,8 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
       enterRoom();
     }}
   >
-    <mesh position={[0, 0, -0.2]}>
-      <boxGeometry args={[2.85, 4.95, 0.22]} />
+    <mesh position={[0, 0, -0.28]}>
+  <boxGeometry args={[3.05, 5.15, 0.42]} />
       <meshStandardMaterial
         color={hovered ? color : "#6b4a1e"}
         emissive={color}
@@ -43,8 +43,8 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
       />
     </mesh>
 
-    <mesh position={[0, 0, 0]}>
-      <boxGeometry args={[2.12, 4.12, 0.32]} />
+    <mesh position={[0, 0, 0.02]}>
+  <boxGeometry args={[2.24, 4.28, 0.42]} />
       <meshStandardMaterial
         color="#2a1208"
         roughness={0.42}
@@ -54,8 +54,8 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
       />
     </mesh>
 
-    <mesh position={[0, 0, 0.2]}>
-      <boxGeometry args={[1.55, 3.35, 0.06]} />
+    <mesh position={[0, 0, 0.28]}>
+  <boxGeometry args={[1.62, 3.48, 0.12]} />
       <meshStandardMaterial
         color="#0b0302"
         roughness={0.7}
@@ -87,6 +87,16 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     >
       {label}
     </Text>
+
+    {/* Cinematic rear glow */}
+<mesh position={[0, 0, -0.55]}>
+  <planeGeometry args={[2.8, 4.8]} />
+  <meshBasicMaterial
+    color={color}
+    transparent
+    opacity={hovered ? 0.18 : 0.08}
+  />
+</mesh>
 
     <Text
       position={[0, -2.55, 0.28]}
