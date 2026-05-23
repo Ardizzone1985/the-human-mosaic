@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Text, Image } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
+import logo from "./logo-cropped.png";
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
@@ -126,7 +127,7 @@ export default function Lobby() {
       <LobbyShell />
 
       <Image
-  url="/logo-cropped.png"
+   url={logo}
   position={[0, 5.15, -7.2]}
   scale={[4.8, 1.8, 1]}
   transparent
