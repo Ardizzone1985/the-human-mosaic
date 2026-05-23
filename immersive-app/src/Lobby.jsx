@@ -128,8 +128,8 @@ export default function Lobby() {
 
       <Image
    url={logo}
-  position={[0, 5.15, -7.2]}
-  scale={[4.8, 1.8, 1]}
+  position={[0, 4.95, -7.2]}
+scale={[3.9, 1.45, 1]}
   transparent
 />
 
