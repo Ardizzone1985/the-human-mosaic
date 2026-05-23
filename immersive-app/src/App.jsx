@@ -310,7 +310,22 @@ const isLobby = !currentRoom;
 />      
 
   {isLobby ? (
-  <Lobby />
+  <>
+    <Lobby />
+
+    <OrbitControls
+      enablePan={false}
+      enableZoom={false}
+      enableDamping={true}
+      dampingFactor={0.06}
+      rotateSpeed={0.18}
+      minPolarAngle={Math.PI / 2.35}
+      maxPolarAngle={Math.PI / 1.9}
+      minAzimuthAngle={-0.35}
+      maxAzimuthAngle={0.35}
+      target={[0, 2.8, -7]}
+    />
+  </>
 ) : (
   <Room room={currentRoom} theme={theme} />
 )}
