@@ -2,26 +2,26 @@ export default function LobbyShell() {
   return (
     <>
       {/* Cinematic lobby lights */}
-      <ambientLight intensity={0.28} color="#ffd8a8" />
+      <ambientLight intensity={0.18} color="#ffd8a8" />
 
       <pointLight
         position={[0, 5.2, -5]}
-        intensity={5}
-        distance={18}
+        intensity={3.4}
+        distance={20}
         color="#d7b56d"
       />
 
       <pointLight
         position={[-5, 3.5, -6]}
-        intensity={2.2}
-        distance={10}
+        intensity={1.7}
+        distance={12}
         color="#d7b56d"
       />
 
       <pointLight
         position={[5, 3.5, -6]}
-        intensity={2.2}
-        distance={10}
+        intensity={1.7}
+        distance={12}
         color="#d7b56d"
       />
 
@@ -29,10 +29,12 @@ export default function LobbyShell() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.25, 0]} receiveShadow>
         <planeGeometry args={[34, 28]} />
         <meshStandardMaterial
-          color="#7a260d"
-          roughness={0.36}
-          metalness={0.16}
-        />
+  color="#8a2d10"
+  roughness={0.22}
+  metalness={0.34}
+  emissive="#2a0703"
+  emissiveIntensity={0.18}
+/>
       </mesh>
 
       {/* Back wall */}
