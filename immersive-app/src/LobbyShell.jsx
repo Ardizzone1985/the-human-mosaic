@@ -55,11 +55,64 @@ export default function LobbyShell() {
         <meshStandardMaterial color="#271008" roughness={0.65} />
       </mesh>
 
-      {/* Ceiling */}
-      <mesh position={[0, 6.9, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[34, 28]} />
-        <meshStandardMaterial color="#050202" roughness={0.82} />
-      </mesh>
+      {/* Deep cinematic ceiling */}
+<mesh position={[0, 6.95, 0]} rotation={[Math.PI / 2, 0, 0]}>
+  <planeGeometry args={[34, 28]} />
+  <meshStandardMaterial
+    color="#070202"
+    roughness={0.68}
+    metalness={0.12}
+    emissive="#120402"
+    emissiveIntensity={0.18}
+  />
+</mesh>
+
+{/* Central ceiling light panel */}
+<mesh position={[0, 6.78, -1]}>
+  <boxGeometry args={[12, 0.08, 0.22]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.75}
+    metalness={0.45}
+    roughness={0.22}
+  />
+</mesh>
+
+{/* Rear ceiling light panel */}
+<mesh position={[0, 6.78, -6.5]}>
+  <boxGeometry args={[18, 0.08, 0.22]} />
+  <meshStandardMaterial
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.55}
+    metalness={0.45}
+    roughness={0.24}
+  />
+</mesh>
+
+{/* Side ceiling light rails */}
+<mesh position={[-10.6, 6.78, -1]}>
+  <boxGeometry args={[0.18, 0.08, 12]} />
+  <meshStandardMaterial
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.45}
+    roughness={0.24}
+  />
+</mesh>
+
+<mesh position={[10.6, 6.78, -1]}>
+  <boxGeometry args={[0.18, 0.08, 12]} />
+  <meshStandardMaterial
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.45}
+    roughness={0.24}
+  />
+</mesh>
 
       {/* Back wall golden frame */}
       <mesh position={[0, 6.45, -8.75]}>
