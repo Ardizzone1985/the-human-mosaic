@@ -126,33 +126,27 @@ export default function Lobby() {
   return (
     <>
       <LobbyShell />
-
-      <Text
-  position={[-11.72, 5.25, -2.7]}
-  rotation={[0, Math.PI / 2, 0]}
-  fontSize={0.28}
-  color="#f2c879"
-  anchorX="center"
->
-  WELCOME TO
-</Text>
-
+      
 <Image
   url={logo}
-  position={[-11.72, 4.25, -2.7]}
+  position={[-11.72, 4.45, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
-  scale={[4.6, 1.7, 1]}
+  scale={[5.8, 2.1, 1]}
   transparent
 />
 
-      <lineSegments
-  position={[-11.71, 4.25, -2.7]}
+     <Text
+  position={[-11.72, 2.95, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
+  fontSize={0.22}
+  color="#bfa46a"
+  anchorX="center"
+  maxWidth={4}
+  textAlign="center"
 >
-  <edgesGeometry args={[new THREE.BoxGeometry(5.25, 2.1, 0.05)]} />
-  <lineBasicMaterial color="#d7b56d" />
-</lineSegments>
-
+  A permanent global immersive artwork
+</Text> 
+    
       <Text
   position={[0, 4.65, -7.2]}
   fontSize={0.42}
