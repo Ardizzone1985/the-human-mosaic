@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Text, Image } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
 import logo from "./logo-cropped.png";
+import * as THREE from "three";
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
@@ -144,14 +145,13 @@ export default function Lobby() {
   transparent
 />
 
-      <mesh position={[-11.71, 4.25, -2.7]} rotation={[0, Math.PI / 2, 0]}>
-  <boxGeometry args={[5.25, 2.1, 0.05]} />
-  <meshStandardMaterial
-  color="#d7b56d"
-  emissive="#8a4b12"
-  emissiveIntensity={0.25}
-/>
-</mesh>
+      <lineSegments
+  position={[-11.71, 4.25, -2.7]}
+  rotation={[0, Math.PI / 2, 0]}
+>
+  <edgesGeometry args={[new THREE.BoxGeometry(5.25, 2.1, 0.05)]} />
+  <lineBasicMaterial color="#d7b56d" />
+</lineSegments>
 
       <Text
   position={[0, 4.65, -7.2]}
