@@ -44,16 +44,16 @@ export default function LobbyShell() {
       </mesh>
 
       {/* Left wall */}
-      position={[-12, 3.25, 0]}
-<boxGeometry args={[18, 9.8, 0.35]} />
-        <meshStandardMaterial color="#271008" roughness={0.65} />
-      </mesh>
+<mesh position={[-12, 3.25, 0]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[18, 9.8, 0.35]} />
+  <meshStandardMaterial color="#271008" roughness={0.65} />
+</mesh>
 
       {/* Right wall */}
-      position={[12, 3.25, 0]}
-<boxGeometry args={[18, 9.8, 0.35]} />
-        <meshStandardMaterial color="#271008" roughness={0.65} />
-      </mesh>
+<mesh position={[12, 3.25, 0]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[18, 9.8, 0.35]} />
+  <meshStandardMaterial color="#271008" roughness={0.65} />
+</mesh>
 
       {/* Deep cinematic ceiling */}
 <mesh position={[0, 7.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
@@ -125,15 +125,15 @@ export default function LobbyShell() {
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      position={[-11.25, 3.25, -8.75]}
-<boxGeometry args={[0.08, 8.45, 0.14]} />
-        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
-      </mesh>
+      <mesh position={[-11.25, 3.25, -8.75]}>
+  <boxGeometry args={[0.08, 8.45, 0.14]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
+</mesh>
 
-      position={[11.25, 3.25, -8.75]}
-<boxGeometry args={[0.08, 8.45, 0.14]} />
-        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
-      </mesh>
+      <mesh position={[11.25, 3.25, -8.75]}>
+  <boxGeometry args={[0.08, 8.45, 0.14]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
+</mesh>
 
       {/* Golden ceiling frame */}
       <mesh position={[0, 7.52, -7]}>
