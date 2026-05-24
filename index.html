@@ -981,6 +981,7 @@
 .donation-card:hover {
   transform: translateY(-4px);
 }
+
 .donation-number {
   font-size: 2rem;
   font-weight: 800;
@@ -1010,6 +1011,7 @@
   transition: width 1.2s ease;
   box-shadow: 0 0 18px rgba(214,179,90,0.4);
 }
+
 @media (max-width: 768px) {
   .donation-grid {
     grid-template-columns: 1fr;
@@ -1146,35 +1148,6 @@ Secure payment · Cards & PayPal accepted · Instant reservation
         Donation milestones and public updates will be shared through our NEWS section and social channels.
       </p>
 
-      <div style="
-  margin-top:24px;
-  display:flex;
-  justify-content:center;
-  gap:14px;
-  flex-wrap:wrap;
-">
-  <div style="
-    padding:10px 18px;
-    border-radius:999px;
-    background:#fff;
-    border:1px solid rgba(214,179,90,0.25);
-    font-weight:700;
-    color:#111;
-  ">
-    Supporting WWF
-  </div>
-
-  <div style="
-    padding:10px 18px;
-    border-radius:999px;
-    background:#fff;
-    border:1px solid rgba(214,179,90,0.25);
-    font-weight:700;
-    color:#111;
-  ">
-    Supporting Save the Children
-  </div>
-</div>
 
       <div class="donation-grid">
         <div class="donation-card">
@@ -1708,6 +1681,7 @@ if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
 if (updatesCount) updatesCount.textContent = total.toLocaleString();
 
       const donationLimit = 1000;
+
 const donationsCompleted = Math.floor(total / donationLimit);
 
 const donationProgress = total % donationLimit;
@@ -1722,6 +1696,7 @@ const donationsCompletedEl = document.getElementById("donations-completed");
 if (donationProgressEl) donationProgressEl.textContent = donationProgress.toLocaleString();
 if (donationRemainingEl) donationRemainingEl.textContent = donationRemaining.toLocaleString();
 if (donationFillEl) donationFillEl.style.width = `${donationPercent}%`;
+
 if (donationsCompletedEl) donationsCompletedEl.textContent = donationsCompleted.toLocaleString();
 
       const earlyLimit = 1000;
