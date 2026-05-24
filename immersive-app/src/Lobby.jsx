@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Text, Image } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
-import logo from "./logo-cropped.png";
+import logoImage from "./logo-cropped.png";
 import * as THREE from "three";
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
@@ -123,17 +123,15 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 }
 
 export default function Lobby() {
+  const logoTexture = useTexture(logoImage);
   return (
     <>
       <LobbyShell />
       
-<Image
-  url={logo}
-  position={[-11.72, 4.45, -2.7]}
-  rotation={[0, Math.PI / 2, 0]}
-  scale={[5.8, 2.1, 1]}
-  transparent
-/>
+<mesh position={[-11.72, 4.45, -2.7]} rotation={[0, Math.PI / 2, 0]}>
+  <planeGeometry args={[5.8, 2.9]} />
+  <meshBasicMaterial map={logoTexture} transparent />
+</mesh>
 
      <Text
   position={[-11.72, 2.95, -2.7]}
