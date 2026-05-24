@@ -187,13 +187,90 @@ export default function Lobby() {
 </Text>
     
       <Text
-  position={[0, 4.65, -7.2]}
-  fontSize={0.42}
-  color="#f2c879"
+  position={[0, 5.05, -7.15]}
+  fontSize={0.32}
+  color="#bfa66f"
   anchorX="center"
+  letterSpacing={0.16}
 >
-  Choose Your Room
+  CHOOSE
 </Text>
+
+<Text
+  position={[0, 4.55, -7.15]}
+  fontSize={0.58}
+  color="#f8d890"
+  anchorX="center"
+  letterSpacing={0.08}
+>
+  YOUR ROOM
+</Text>
+
+<Text
+  position={[0, 4.05, -7.15]}
+  fontSize={0.16}
+  color="#c9a96b"
+  anchorX="center"
+  maxWidth={6}
+  textAlign="center"
+>
+  Explore the living museum or reserve your place in the artwork
+</Text>
+
+      <group
+  position={[8.55, 2.15, -7.45]}
+  onPointerOver={() => {
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={() => {
+    document.body.style.cursor = "default";
+  }}
+  onClick={() => {
+    window.location.href = "https://thehumanmosaic.art/join.html";
+  }}
+>
+  <mesh position={[0, 0, -0.05]}>
+    <boxGeometry args={[3.65, 1.25, 0.12]} />
+    <meshStandardMaterial
+      color="#140805"
+      emissive="#8a4b12"
+      emissiveIntensity={0.28}
+      roughness={0.32}
+      metalness={0.35}
+    />
+  </mesh>
+
+  <mesh position={[0, 0.68, 0]}>
+    <boxGeometry args={[3.7, 0.045, 0.08]} />
+    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.7} />
+  </mesh>
+
+  <mesh position={[0, -0.68, 0]}>
+    <boxGeometry args={[3.7, 0.045, 0.08]} />
+    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
+  </mesh>
+
+  <Text
+    position={[0, 0.22, 0.08]}
+    fontSize={0.22}
+    color="#f8d890"
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    JOIN THE MOSAIC
+  </Text>
+
+  <Text
+    position={[0, -0.18, 0.08]}
+    fontSize={0.115}
+    color="#c9a96b"
+    anchorX="center"
+    maxWidth={3}
+    textAlign="center"
+  >
+    Reserve your place in the permanent artwork
+  </Text>
+</group>
       
       <RoomDoor
         position={[-5, 1, -7.6]}
