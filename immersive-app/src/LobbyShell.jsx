@@ -125,13 +125,13 @@ export default function LobbyShell() {
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      <mesh position={[-11.25, 2.75, -8.75]}>
-        <boxGeometry args={[0.08, 7.45, 0.14]} />
+      position={[-11.25, 3.25, -8.75]}
+<boxGeometry args={[0.08, 8.45, 0.14]} />
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      <mesh position={[11.25, 2.75, -8.75]}>
-        <boxGeometry args={[0.08, 7.45, 0.14]} />
+      position={[11.25, 3.25, -8.75]}
+<boxGeometry args={[0.08, 8.45, 0.14]} />
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
