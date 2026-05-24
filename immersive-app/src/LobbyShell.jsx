@@ -30,12 +30,64 @@ export default function LobbyShell() {
         <planeGeometry args={[34, 28]} />
         <meshStandardMaterial
   color="#8a2d10"
-  roughness={0.22}
-  metalness={0.34}
+  roughness={0.12}
+metalness={0.48}
   emissive="#2a0703"
   emissiveIntensity={0.18}
 />
       </mesh>
+
+      {/* Central cinematic floor glow */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.22, -5.8]}
+>
+  <circleGeometry args={[5.8, 64]} />
+  <meshBasicMaterial
+    color="#ffcc88"
+    transparent
+    opacity={0.045}
+  />
+</mesh>
+
+      {/* Identity reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[-6.6, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={0.055}
+  />
+</mesh>
+
+{/* Love reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#ff9fbd"
+    transparent
+    opacity={0.05}
+  />
+</mesh>
+
+{/* Creativity reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[6.6, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#9fc3ff"
+    transparent
+    opacity={0.05}
+  />
+</mesh>
 
       {/* Back wall */}
       <mesh position={[0, 3.25, -9]}>
