@@ -95,16 +95,16 @@ export default function InfoWall({ room = "Identity" }) {
   />
 </mesh>
 
-      {/* Official logo */}
-<mesh position={[-4.8, 2.15, 0.24]}>
-  <planeGeometry args={[2.8, 1.4]} />
+      {/* Official logo - premium large */}
+<mesh position={[-4.9, 2.05, 0.24]}>
+  <planeGeometry args={[4.9, 2.45]} />
   <meshBasicMaterial map={logoTexture} transparent />
 </mesh>
 
             
       <Text
-        position={[-4.8, 1.2, 0.22]}
-        fontSize={0.26}
+        position={[-5.85, 0.55, 0.22]}
+fontSize={0.34}
         color="#ffffff"
         anchorX="left"
         anchorY="middle"
@@ -113,19 +113,19 @@ export default function InfoWall({ room = "Identity" }) {
       </Text>
 
       <Text
-        position={[-4.8, 0.65, 0.22]}
-        fontSize={0.17}
+        position={[-5.85, -0.15, 0.22]}
+fontSize={0.21}
         color="#d8c7ad"
         anchorX="left"
         anchorY="middle"
-        maxWidth={4.9}
+        maxWidth={6.3}
       >
         {roomInfo.description}
       </Text>
 
       <Text
-        position={[-4.8, -0.05, 0.09]}
-        fontSize={0.15}
+        position={[-5.85, -1.05, 0.09]}
+fontSize={0.18}
         color="#f2c879"
         anchorX="left"
         anchorY="middle"
