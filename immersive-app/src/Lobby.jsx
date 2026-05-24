@@ -128,14 +128,14 @@ export default function Lobby() {
 
       <Image
   url={logo}
-  position={[-3.9, 4.45, -7.2]}
-  scale={[3.0, 1.12, 1]}
+  position={[0, 5.15, -7.2]}
+  scale={[2.9, 1.08, 1]}
   transparent
 />
 
       <Text
-  position={[3.7, 4.45, -7.2]}
-fontSize={0.32}
+  position={[0, 4.25, -7.2]}
+  fontSize={0.28}
   color="#ffffff"
   anchorX="center"
 >
