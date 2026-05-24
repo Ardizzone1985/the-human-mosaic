@@ -241,7 +241,7 @@ export default function Lobby() {
 </Text>
 
       <group
-  position={[-11.72, 0.25, -2.7]}
+  position={[-11.72, 0.35, -2.7]}
 rotation={[0, Math.PI / 2, 0]}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
@@ -297,7 +297,7 @@ rotation={[0, Math.PI / 2, 0]}
 </group>
       
       <RoomDoor
-        position={[-5.8, 1, -7.6]}
+        position={[-6.6, 1, -7.6]}
         label="IDENTITY"
         room="Identity"
         color="#d7b56d"
@@ -311,7 +311,7 @@ rotation={[0, Math.PI / 2, 0]}
       />
 
       <RoomDoor
-        position={[5.8, 1, -7.6]}
+        position={[6.6, 1, -7.6]}
         label="CREATIVITY"
         room="Creativity"
         color="#9fc3ff"
