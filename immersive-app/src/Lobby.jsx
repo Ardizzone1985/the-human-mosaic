@@ -134,7 +134,7 @@ export default function Lobby() {
 </mesh>
 
       <Text
-  position={[-11.72, 6.15, -2.7]}
+  position={[-11.72, 6.75, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
   fontSize={0.52}
   color="#f2c879"
