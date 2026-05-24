@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Text, useTexture } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
 import logoImage from "./logo-cropped.png";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
+  const groupRef = useRef();
+
+  useFrame((state) => {
+  if (!groupRef.current) return;
+
+  const t = state.clock.elapsedTime;
+
+  // Floating cinematic movement
+  groupRef.current.position.y =
+    position[1] + Math.sin(t * 1.2 + position[0]) * 0.04;
+
+  // Smooth hover scaling
+  const targetScale = hovered ? 1.12 : 1;
+
+  groupRef.current.scale.lerp(
+    new THREE.Vector3(targetScale, targetScale, targetScale),
+    0.08
+  );
+});
 
   function enterRoom() {
   window.dispatchEvent(new Event("startFadeOut"));
@@ -17,6 +37,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 
   return (
   <group
+  ref={groupRef}
     position={position}
     scale={hovered ? 1.08 : 1}
     onPointerOver={(e) => {
@@ -39,7 +60,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
       <meshStandardMaterial
         color={hovered ? color : "#6b4a1e"}
         emissive={color}
-        emissiveIntensity={hovered ? 0.8 : 0.25}
+        emissiveIntensity={hovered ? 1.4 : 0.45}
         roughness={0.34}
         metalness={0.28}
       />
@@ -107,6 +128,16 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     color={color}
     transparent
     opacity={hovered ? 0.18 : 0.08}
+  />
+</mesh>
+
+    {/* Vertical cinematic halo */}
+<mesh position={[0, 0, -0.7]}>
+  <planeGeometry args={[3.8, 6.4]} />
+  <meshBasicMaterial
+    color={color}
+    transparent
+    opacity={hovered ? 0.12 : 0.05}
   />
 </mesh>
 
