@@ -103,7 +103,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <Text
-      position={[0, 2.78, 0.28]}
+      position={[0, 3.08, 0.28]}
       fontSize={0.28}
       color={hovered ? "#ffffff" : color}
       anchorX="center"
@@ -138,6 +138,29 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     color={color}
     transparent
     opacity={hovered ? 0.12 : 0.05}
+  />
+</mesh>
+
+    {/* Portal wall glow */}
+<mesh position={[0, 0.2, -1.05]}>
+  <planeGeometry args={[5.2, 7.4]} />
+  <meshBasicMaterial
+    color={color}
+    transparent
+    opacity={hovered ? 0.14 : 0.06}
+  />
+</mesh>
+
+{/* Floor cinematic spill */}
+<mesh
+  position={[0, -2.92, 1.25]}
+  rotation={[-Math.PI / 2, 0, 0]}
+>
+  <planeGeometry args={[3.8, 4.8]} />
+  <meshBasicMaterial
+    color={color}
+    transparent
+    opacity={hovered ? 0.11 : 0.045}
   />
 </mesh>
 
