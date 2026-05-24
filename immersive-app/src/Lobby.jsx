@@ -128,22 +128,32 @@ export default function Lobby() {
     <>
       <LobbyShell />
       
-<mesh position={[-11.72, 4.45, -2.7]} rotation={[0, Math.PI / 2, 0]}>
-  <planeGeometry args={[5.8, 2.9]} />
+<mesh position={[-11.72, 4.2, -2.7]} rotation={[0, Math.PI / 2, 0]}>
+  <planeGeometry args={[7.4, 3.7]} />
   <meshBasicMaterial map={logoTexture} transparent />
 </mesh>
 
-     <Text
-  position={[-11.72, 2.95, -2.7]}
+      <Text
+  position={[-11.72, 6.15, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
-  fontSize={0.22}
-  color="#bfa46a"
+  fontSize={0.52}
+  color="#f2c879"
   anchorX="center"
-  maxWidth={4}
+>
+  WELCOME TO
+</Text>
+
+     <Text
+  position={[-11.72, 1.55, -2.7]}
+  rotation={[0, Math.PI / 2, 0]}
+  fontSize={0.24}
+  color="#c9a96b"
+  anchorX="center"
+  maxWidth={6}
   textAlign="center"
 >
   A permanent global immersive artwork
-</Text> 
+</Text>
     
       <Text
   position={[0, 4.65, -7.2]}
