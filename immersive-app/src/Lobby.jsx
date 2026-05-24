@@ -147,11 +147,10 @@ export default function Lobby() {
       <mesh position={[-11.71, 4.25, -2.7]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[5.25, 2.1, 0.05]} />
   <meshStandardMaterial
-    color="#d7b56d"
-    emissive="#8a4b12"
-    emissiveIntensity={0.25}
-    wireframe
-  />
+  color="#d7b56d"
+  emissive="#8a4b12"
+  emissiveIntensity={0.25}
+/>
 </mesh>
 
       <Text
