@@ -225,7 +225,7 @@ const isLobby = !currentRoom;
       }}
     >
       <Canvas
-  camera={{ position: [0, 2.45, 8.2], fov: 58 }}
+  camera={{ position: [0, 1.75, 8.8], fov: 58 }}
   shadows={{
     type: "soft"
   }}
@@ -323,7 +323,7 @@ const isLobby = !currentRoom;
       maxPolarAngle={Math.PI / 1.9}
       minAzimuthAngle={-0.35}
       maxAzimuthAngle={0.35}
-      target={[0, 2.8, -7]}
+      target={[0, 2.0, -7]}
     />
   </>
 ) : (
