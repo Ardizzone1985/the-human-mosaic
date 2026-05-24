@@ -210,7 +210,7 @@ export default function Lobby() {
 </Text>
     
       <Text
- position={[0, 5.85, -7.15]}
+ position={[0, 6.15, -7.15]}
   fontSize={0.32}
   color="#bfa66f"
   anchorX="center"
@@ -220,7 +220,7 @@ export default function Lobby() {
 </Text>
 
 <Text
-  position={[0, 5.35, -7.15]}
+  position={[0, 5.65, -7.15]}
   fontSize={0.58}
   color="#f8d890"
   anchorX="center"
@@ -230,7 +230,7 @@ export default function Lobby() {
 </Text>
 
 <Text
-  position={[0, 4.82, -7.15]}
+  position={[0, 5.08, -7.15]}
   fontSize={0.16}
   color="#c9a96b"
   anchorX="center"
