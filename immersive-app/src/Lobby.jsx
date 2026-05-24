@@ -127,10 +127,10 @@ export default function Lobby() {
       <LobbyShell />
 
       <Text
-  position={[-11.72, 5.05, -2.2]}
+  position={[-11.72, 5.25, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
-  fontSize={0.32}
-  color="#d7b56d"
+  fontSize={0.28}
+  color="#f2c879"
   anchorX="center"
 >
   WELCOME TO
@@ -138,11 +138,21 @@ export default function Lobby() {
 
 <Image
   url={logo}
-  position={[-11.72, 4.2, -2.2]}
+  position={[-11.72, 4.25, -2.7]}
   rotation={[0, Math.PI / 2, 0]}
-  scale={[4.2, 1.55, 1]}
+  scale={[4.6, 1.7, 1]}
   transparent
 />
+
+      <mesh position={[-11.71, 4.25, -2.7]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[5.25, 2.1, 0.05]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#8a4b12"
+    emissiveIntensity={0.25}
+    wireframe
+  />
+</mesh>
 
       <Text
   position={[0, 4.65, -7.2]}
