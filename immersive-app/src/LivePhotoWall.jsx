@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
-import { useTexture } from "@react-three/drei";
-import { createPortal } from "react-dom";
+import { Html, useTexture } from "@react-three/drei";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -198,8 +197,8 @@ const selectedCountry =
       />
     ))}
     
-    {selectedPhoto &&
-  createPortal(
+    {selectedPhoto && (
+  <Html fullscreen prepend zIndexRange={[99999, 0]}>
     <div
       style={{
         position: "fixed",
@@ -280,9 +279,9 @@ const selectedCountry =
           Close
         </button>
       </div>
-    </div>,
-    document.body
-  )}
+        </div>
+  </Html>
+)}
   </>
 );
 }
