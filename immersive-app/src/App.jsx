@@ -503,17 +503,22 @@ const isLobby = !currentRoom;
     <Lobby />
 
     <OrbitControls
-      enablePan={false}
-      enableZoom={false}
-      enableDamping={true}
-      dampingFactor={0.06}
-      rotateSpeed={0.18}
-      minPolarAngle={Math.PI / 2.35}
-      maxPolarAngle={Math.PI / 1.9}
-      minAzimuthAngle={-0.85}
-      maxAzimuthAngle={0.85}
-      target={[0, 2.0, -7]}
-    />
+  enablePan={false}
+  enableZoom={true}
+  enableDamping={true}
+  dampingFactor={0.06}
+  rotateSpeed={0.32}
+  zoomSpeed={0.55}
+  touches={{
+    ONE: 0,
+    TWO: 2
+  }}
+  minDistance={5.2}
+  maxDistance={11}
+  minPolarAngle={Math.PI / 2.55}
+  maxPolarAngle={Math.PI / 1.82}
+  target={[0, 2.2, -7]}
+/>
   </>
 ) : (
   <Room room={currentRoom} theme={theme} onPhotoSelect={setSelectedPhoto} />
