@@ -275,12 +275,15 @@ export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [joystick, setJoystick] = useState({ x: 0, y: 0 });
+  const [lookJoystick, setLookJoystick] = useState({ x: 0, y: 0 });
   window.mobileJoystick = joystick;
+  window.mobileLookJoystick = lookJoystick;
 
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
   const joystickRef = useRef(null);
+  const lookJoystickRef = useRef(null);
 
 useEffect(() => {
   setTimeout(() => {
@@ -422,6 +425,56 @@ const isLobby = !currentRoom;
         borderRadius: "50%",
         background: "rgba(215,181,109,0.82)",
         transform: `translate(calc(-50% + ${joystick.x * 28}px), calc(-50% + ${joystick.y * 28}px))`,
+        boxShadow: "0 0 22px rgba(215,181,109,0.45)"
+      }}
+    />
+  </div>
+)}
+
+      {isMobile && (
+  <div
+    ref={lookJoystickRef}
+    onTouchMove={(e) => {
+      const touch = e.touches[0];
+      const rect = lookJoystickRef.current.getBoundingClientRect();
+
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      let dx = (touch.clientX - centerX) / 40;
+      let dy = (touch.clientY - centerY) / 40;
+
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+
+      setLookJoystick({ x: dx, y: dy });
+    }}
+    onTouchEnd={() => {
+      setLookJoystick({ x: 0, y: 0 });
+    }}
+    style={{
+      position: "fixed",
+      right: 24,
+      bottom: 34,
+      width: 96,
+      height: 96,
+      borderRadius: "50%",
+      background: "rgba(0,0,0,0.32)",
+      border: "1px solid rgba(215,181,109,0.35)",
+      zIndex: 30,
+      touchAction: "none"
+    }}
+  >
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: 38,
+        height: 38,
+        borderRadius: "50%",
+        background: "rgba(215,181,109,0.82)",
+        transform: `translate(calc(-50% + ${lookJoystick.x * 28}px), calc(-50% + ${lookJoystick.y * 28}px))`,
         boxShadow: "0 0 22px rgba(215,181,109,0.45)"
       }}
     />
