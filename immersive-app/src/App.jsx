@@ -200,8 +200,8 @@ function Room({ room, theme, onPhotoSelect }) {
     enablePan={false}
     enableDamping={true}
     dampingFactor={0.06}
-    rotateSpeed={0.18}
-    zoomSpeed={0.26}
+    rotateSpeed={0.35}
+    zoomSpeed={0.55}
     touches={{
       ONE: 0,
       TWO: 2
@@ -510,8 +510,8 @@ const isLobby = !currentRoom;
       rotateSpeed={0.18}
       minPolarAngle={Math.PI / 2.35}
       maxPolarAngle={Math.PI / 1.9}
-      minAzimuthAngle={-0.35}
-      maxAzimuthAngle={0.35}
+      minAzimuthAngle={-0.85}
+      maxAzimuthAngle={0.85}
       target={[0, 2.0, -7]}
     />
   </>
