@@ -175,15 +175,6 @@ setPhotos(data || []);
 
     loadPhotos();
   }, [room]);
-
-const selectedNote =
-  selectedPhoto?.note ||
-  selectedPhoto?.notes ||
-  selectedPhoto?.optional_note ||
-  "No note added.";
-
-const selectedCountry =
-  selectedPhoto?.country || "Country not available.";
   
   return (
   <>
