@@ -214,14 +214,6 @@ function Room({ room, theme, onPhotoSelect }) {
   />
 )}
 
-  minDistance={0.25}
-maxDistance={18}
-
-  minPolarAngle={Math.PI / 2.55}
-  maxPolarAngle={Math.PI / 1.78}
-
-  target={[0, 2.05, -2]}
-/>
     </>
   );
 }
