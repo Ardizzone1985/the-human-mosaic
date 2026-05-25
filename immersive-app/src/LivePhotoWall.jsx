@@ -42,7 +42,7 @@ function slotToTransform(item) {
   const sectionGap = 3.4;
 
   const localX = -1.35 + col * 0.08;
-const localY = 1.0 - row * 0.28;
+const localY = 1.25 - row * 0.24;
 
   if (wall === "front") {
     return {
@@ -85,7 +85,7 @@ function LivePhoto({ item, onSelect }) {
 
   const texture = useTexture(imageUrl);
 
-  const size = 0.24;
+  const size = 0.32;
   const frameThickness = 0.02;
   const half = size / 2;
 
@@ -198,19 +198,31 @@ const selectedCountry =
     ))}
     
     {selectedPhoto && (
-  <Html fullscreen zIndexRange={[9999, 0]}>
+  <Html
+  fullscreen
+  transform={false}
+  zIndexRange={[99999, 0]}
+  style={{
+    width: "100vw",
+    height: "100vh",
+    pointerEvents: "auto"
+  }}
+>
     <div
       style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.72)",
-        backdropFilter: "blur(10px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        zIndex: 9999
-      }}
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  background: "rgba(0,0,0,0.72)",
+  backdropFilter: "blur(10px)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "20px",
+  zIndex: 99999
+}}
     >
       <div
         style={{
