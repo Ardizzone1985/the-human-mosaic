@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
@@ -101,8 +101,91 @@ camera.position.z = THREE.MathUtils.clamp(camera.position.z, -9.95, 10.25);
   return null;
 }
 
+function MuseumWalkControls() {
+  const { camera, gl } = useThree();
+  const keys = useRef({});
+  const yaw = useRef(0);
+  const pitch = useRef(0);
+
+  useEffect(() => {
+    camera.position.set(0, 2.05, 8.4);
+    camera.rotation.order = "YXZ";
+
+    function onKeyDown(e) {
+      keys.current[e.code] = true;
+    }
+
+    function onKeyUp(e) {
+      keys.current[e.code] = false;
+    }
+
+    function onClick() {
+      gl.domElement.requestPointerLock?.();
+    }
+
+    function onMouseMove(e) {
+      if (document.pointerLockElement !== gl.domElement) return;
+
+      yaw.current -= e.movementX * 0.0022;
+      pitch.current -= e.movementY * 0.0022;
+
+      pitch.current = THREE.MathUtils.clamp(
+        pitch.current,
+        -Math.PI / 3,
+        Math.PI / 3
+      );
+
+      camera.rotation.y = yaw.current;
+      camera.rotation.x = pitch.current;
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    gl.domElement.addEventListener("click", onClick);
+    window.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      gl.domElement.removeEventListener("click", onClick);
+      window.removeEventListener("mousemove", onMouseMove);
+    };
+  }, [camera, gl]);
+
+  useFrame((state, delta) => {
+    const speed = keys.current.ShiftLeft ? 1.2 : 3.0;
+
+    const forward = new THREE.Vector3(
+      -Math.sin(camera.rotation.y),
+      0,
+      -Math.cos(camera.rotation.y)
+    );
+
+    const right = new THREE.Vector3(
+      Math.cos(camera.rotation.y),
+      0,
+      -Math.sin(camera.rotation.y)
+    );
+
+    if (keys.current.KeyW) camera.position.addScaledVector(forward, speed * delta);
+    if (keys.current.KeyS) camera.position.addScaledVector(forward, -speed * delta);
+    if (keys.current.KeyA) camera.position.addScaledVector(right, -speed * delta);
+    if (keys.current.KeyD) camera.position.addScaledVector(right, speed * delta);
+
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.65, 10.65);
+    camera.position.z = THREE.MathUtils.clamp(camera.position.z, -9.75, 10.1);
+    camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.6, 3.2);
+  });
+
+  return null;
+}
+
 function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
+  const isDesktop =
+  typeof window !== "undefined" &&
+  window.matchMedia("(pointer: fine)").matches;
+  
     return (
     <>
       <RoomShell theme={theme} />
@@ -110,18 +193,26 @@ function Room({ room, theme, onPhotoSelect }) {
 <LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
+      {isDesktop && <MuseumWalkControls />}
 
-      <OrbitControls
-  enablePan={false}
-  enableDamping={true}
-  dampingFactor={0.06}
-
-  rotateSpeed={0.18}
-  zoomSpeed={0.26}
-  touches={{
-    ONE: 0,
-    TWO: 2
-  }}
+     {!isDesktop && (
+  <OrbitControls
+    enablePan={false}
+    enableDamping={true}
+    dampingFactor={0.06}
+    rotateSpeed={0.18}
+    zoomSpeed={0.26}
+    touches={{
+      ONE: 0,
+      TWO: 2
+    }}
+    minDistance={0.25}
+    maxDistance={18}
+    minPolarAngle={Math.PI / 2.55}
+    maxPolarAngle={Math.PI / 1.78}
+    target={[0, 2.05, -2]}
+  />
+)}
 
   minDistance={0.25}
 maxDistance={18}
