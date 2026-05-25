@@ -180,11 +180,27 @@ function MuseumWalkControls() {
   return null;
 }
 
-function MobileJoystickMovement({ joystick }) {
+function MobileJoystickMovement({ joystick, lookJoystick }) {
   const { camera } = useThree();
+  const yaw = useRef(0);
+  const pitch = useRef(0);
 
   useFrame((state, delta) => {
-    const speed = 3.2;
+    const moveSpeed = 3.0;
+    const lookSpeed = 1.8;
+
+    yaw.current -= lookJoystick.x * lookSpeed * delta;
+    pitch.current -= lookJoystick.y * lookSpeed * delta;
+
+    pitch.current = THREE.MathUtils.clamp(
+      pitch.current,
+      -Math.PI / 3.8,
+      Math.PI / 3.8
+    );
+
+    camera.rotation.order = "YXZ";
+    camera.rotation.y = yaw.current;
+    camera.rotation.x = pitch.current;
 
     const forward = new THREE.Vector3(
       -Math.sin(camera.rotation.y),
@@ -198,33 +214,12 @@ function MobileJoystickMovement({ joystick }) {
       -Math.sin(camera.rotation.y)
     );
 
-    camera.position.addScaledVector(
-      forward,
-      -joystick.y * speed * delta
-    );
+    camera.position.addScaledVector(forward, -joystick.y * moveSpeed * delta);
+    camera.position.addScaledVector(right, joystick.x * moveSpeed * delta);
 
-    camera.position.addScaledVector(
-      right,
-      joystick.x * speed * delta
-    );
-
-    camera.position.x = THREE.MathUtils.clamp(
-      camera.position.x,
-      -10.65,
-      10.65
-    );
-
-    camera.position.z = THREE.MathUtils.clamp(
-      camera.position.z,
-      -9.75,
-      10.1
-    );
-
-    camera.position.y = THREE.MathUtils.clamp(
-      camera.position.y,
-      1.6,
-      3.2
-    );
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.65, 10.65);
+    camera.position.z = THREE.MathUtils.clamp(camera.position.z, -9.75, 10.1);
+    camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.75, 3.1);
   });
 
   return null;
@@ -244,27 +239,12 @@ function Room({ room, theme, onPhotoSelect }) {
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
       {isDesktop && <MuseumWalkControls />}
-
-     {!isDesktop && (
-  <OrbitControls
-    enablePan={false}
-    enableDamping={true}
-    dampingFactor={0.06}
-    rotateSpeed={0.35}
-    zoomSpeed={0.55}
-    touches={{
-      ONE: 0,
-      TWO: 2
-    }}
-    minDistance={0.25}
-    maxDistance={18}
-    minPolarAngle={Math.PI / 2.55}
-    maxPolarAngle={Math.PI / 1.78}
-    target={[0, 2.05, -2]}
-  />
-)}
+     
       {!isDesktop && (
-  <MobileJoystickMovement joystick={window.mobileJoystick || { x: 0, y: 0 }} />
+  <MobileJoystickMovement
+  joystick={window.mobileJoystick || { x: 0, y: 0 }}
+  lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
+/>
 )}
 
     </>
