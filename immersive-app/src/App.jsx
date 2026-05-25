@@ -101,13 +101,13 @@ camera.position.z = THREE.MathUtils.clamp(camera.position.z, -9.95, 10.25);
   return null;
 }
 
-function Room({ room, theme }) {
+function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
     return (
     <>
       <RoomShell theme={theme} />
       <InfoWall room={currentRoom} />
-<LivePhotoWall room={currentRoom} />
+<LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
 
@@ -137,6 +137,7 @@ maxDistance={18}
 
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
 useEffect(() => {
   setTimeout(() => {
@@ -231,6 +232,88 @@ const isLobby = !currentRoom;
     Swipe to look · Pinch to zoom · Tap a photo
   </div>
 )}
+
+      {selectedPhoto && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.72)",
+      backdropFilter: "blur(10px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+      zIndex: 999999,
+      boxSizing: "border-box"
+    }}
+  >
+    <div
+      style={{
+        width: "min(92vw, 420px)",
+        maxHeight: "88vh",
+        overflowY: "auto",
+        padding: "18px",
+        borderRadius: "24px",
+        background: "rgba(12, 6, 3, 0.96)",
+        border: "1px solid rgba(215,181,109,0.55)",
+        color: "#fff",
+        boxShadow: "0 30px 90px rgba(0,0,0,0.75)",
+        fontFamily: "Arial, sans-serif"
+      }}
+    >
+      <img
+        src={
+          "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
+          selectedPhoto.image_file_name
+        }
+        alt=""
+        style={{
+          width: "100%",
+          maxHeight: "52vh",
+          objectFit: "cover",
+          borderRadius: "18px",
+          marginBottom: "18px",
+          border: "1px solid rgba(215,181,109,0.3)"
+        }}
+      />
+
+      <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+        COUNTRY
+      </div>
+
+      <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
+        {selectedPhoto?.country || "Country not available."}
+      </div>
+
+      <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
+        NOTE
+      </div>
+
+      <div style={{ fontSize: "15px", lineHeight: "1.5", marginTop: "8px", color: "#e8ded0" }}>
+        {selectedPhoto?.note || selectedPhoto?.notes || selectedPhoto?.optional_note || "No note added."}
+      </div>
+
+      <button
+        onClick={() => setSelectedPhoto(null)}
+        style={{
+          marginTop: "22px",
+          width: "100%",
+          padding: "13px",
+          borderRadius: "999px",
+          border: "none",
+          background: "#d7b56d",
+          color: "#1b0d05",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+      
     <div
       style={{
         width: "100vw",
@@ -341,7 +424,7 @@ const isLobby = !currentRoom;
     />
   </>
 ) : (
-  <Room room={currentRoom} theme={theme} />
+  <Room room={currentRoom} theme={theme} onPhotoSelect={setSelectedPhoto} />
 )}
 </Canvas>
          </div>
