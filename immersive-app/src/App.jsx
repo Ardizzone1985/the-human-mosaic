@@ -226,6 +226,7 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
+  const joystickRef = useRef(null);
 
 useEffect(() => {
   setTimeout(() => {
@@ -323,7 +324,28 @@ const isLobby = !currentRoom;
 
       {isMobile && (
   <div
-    style={{
+  ref={joystickRef}
+  onTouchMove={(e) => {
+    const touch = e.touches[0];
+    const rect = joystickRef.current.getBoundingClientRect();
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    let dx = (touch.clientX - centerX) / 40;
+    let dy = (touch.clientY - centerY) / 40;
+
+    dx = Math.max(-1, Math.min(1, dx));
+    dy = Math.max(-1, Math.min(1, dy));
+
+    setJoystick({ x: dx, y: dy });
+  }}
+
+  onTouchEnd={() => {
+    setJoystick({ x: 0, y: 0 });
+  }}
+
+  style={{
       position: "fixed",
       left: 24,
       bottom: 34,
