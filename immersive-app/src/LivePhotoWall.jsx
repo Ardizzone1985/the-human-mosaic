@@ -198,7 +198,7 @@ const selectedCountry =
     ))}
     
     {selectedPhoto && (
-  <Html fullscreen prepend zIndexRange={[99999, 0]}>
+  <Html fullscreen zIndexRange={[99999, 0]}>
     <div
       style={{
         position: "fixed",
