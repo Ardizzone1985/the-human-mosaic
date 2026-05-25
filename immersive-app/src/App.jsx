@@ -187,7 +187,7 @@ function MobileJoystickMovement({ joystick, lookJoystick }) {
 
   useFrame((state, delta) => {
     const moveSpeed = 3.0;
-    const lookSpeed = 1.8;
+    const lookSpeed = 0.85;
 
     yaw.current -= lookJoystick.x * lookSpeed * delta;
     pitch.current -= lookJoystick.y * lookSpeed * delta;
@@ -639,23 +639,30 @@ const isLobby = !currentRoom;
   <>
     <Lobby />
 
-    <OrbitControls
-  enablePan={false}
-  enableZoom={true}
-  enableDamping={true}
-  dampingFactor={0.06}
-  rotateSpeed={0.32}
-  zoomSpeed={0.55}
-  touches={{
-    ONE: 0,
-    TWO: 2
-  }}
-  minDistance={5.2}
-  maxDistance={11}
-  minPolarAngle={Math.PI / 2.55}
-  maxPolarAngle={Math.PI / 1.82}
-  target={[0, 2.2, -7]}
-/>
+{isMobile ? (
+  <MobileJoystickMovement
+    joystick={window.mobileJoystick || { x: 0, y: 0 }}
+    lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
+  />
+) : (
+  <OrbitControls
+    enablePan={false}
+    enableZoom={true}
+    enableDamping={true}
+    dampingFactor={0.06}
+    rotateSpeed={0.32}
+    zoomSpeed={0.55}
+    touches={{
+      ONE: 0,
+      TWO: 2
+    }}
+    minDistance={5.2}
+    maxDistance={11}
+    minPolarAngle={Math.PI / 2.55}
+    maxPolarAngle={Math.PI / 1.82}
+    target={[0, 2.2, -7]}
+  />
+)}
   </>
 ) : (
   <Room room={currentRoom} theme={theme} onPhotoSelect={setSelectedPhoto} />
