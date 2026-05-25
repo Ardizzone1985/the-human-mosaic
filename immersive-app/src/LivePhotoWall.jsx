@@ -41,8 +41,8 @@ function slotToTransform(item) {
 
   const sectionGap = 3.4;
 
-  const localX = -1.35 + col * 0.05;
-  const localY = 1.0 - row * 0.22;
+  const localX = -1.35 + col * 0.08;
+const localY = 1.0 - row * 0.28;
 
   if (wall === "front") {
     return {
@@ -85,7 +85,7 @@ function LivePhoto({ item, onSelect }) {
 
   const texture = useTexture(imageUrl);
 
-  const size = 0.16;
+  const size = 0.24;
   const frameThickness = 0.02;
   const half = size / 2;
 
