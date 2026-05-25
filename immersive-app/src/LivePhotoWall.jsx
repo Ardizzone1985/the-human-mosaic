@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
-import { Html, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
+import { createPortal } from "react-dom";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -197,38 +198,28 @@ const selectedCountry =
       />
     ))}
     
-    {selectedPhoto && (
-  <Html
-  fullscreen
-  transform={false}
-  zIndexRange={[99999, 0]}
-  style={{
-    width: "100vw",
-    height: "100vh",
-    pointerEvents: "auto"
-  }}
->
+    {selectedPhoto &&
+  createPortal(
     <div
       style={{
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  background: "rgba(0,0,0,0.72)",
-  backdropFilter: "blur(10px)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "20px",
-  zIndex: 99999
-}}
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(0,0,0,0.72)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
+        zIndex: 999999,
+        boxSizing: "border-box"
+      }}
     >
       <div
         style={{
           width: "min(92vw, 420px)",
-          transform: "scale(1)",
-animation: "photoFocusIn 0.45s ease-out",
           maxHeight: "88vh",
           overflowY: "auto",
           padding: "18px",
@@ -247,7 +238,6 @@ animation: "photoFocusIn 0.45s ease-out",
           }
           alt=""
           style={{
-            boxShadow: "0 0 45px rgba(215,181,109,0.32)",
             width: "100%",
             maxHeight: "52vh",
             objectFit: "cover",
@@ -290,9 +280,9 @@ animation: "photoFocusIn 0.45s ease-out",
           Close
         </button>
       </div>
-    </div>
-  </Html>
-)}
+    </div>,
+    document.body
+  )}
   </>
 );
 }
