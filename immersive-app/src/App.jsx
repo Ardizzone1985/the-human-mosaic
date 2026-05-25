@@ -180,6 +180,56 @@ function MuseumWalkControls() {
   return null;
 }
 
+function MobileJoystickMovement({ joystick }) {
+  const { camera } = useThree();
+
+  useFrame((state, delta) => {
+    const speed = 3.2;
+
+    const forward = new THREE.Vector3(
+      -Math.sin(camera.rotation.y),
+      0,
+      -Math.cos(camera.rotation.y)
+    );
+
+    const right = new THREE.Vector3(
+      Math.cos(camera.rotation.y),
+      0,
+      -Math.sin(camera.rotation.y)
+    );
+
+    camera.position.addScaledVector(
+      forward,
+      -joystick.y * speed * delta
+    );
+
+    camera.position.addScaledVector(
+      right,
+      joystick.x * speed * delta
+    );
+
+    camera.position.x = THREE.MathUtils.clamp(
+      camera.position.x,
+      -10.65,
+      10.65
+    );
+
+    camera.position.z = THREE.MathUtils.clamp(
+      camera.position.z,
+      -9.75,
+      10.1
+    );
+
+    camera.position.y = THREE.MathUtils.clamp(
+      camera.position.y,
+      1.6,
+      3.2
+    );
+  });
+
+  return null;
+}
+
 function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
   const isDesktop =
@@ -213,6 +263,9 @@ function Room({ room, theme, onPhotoSelect }) {
     target={[0, 2.05, -2]}
   />
 )}
+      {!isDesktop && (
+  <MobileJoystickMovement joystick={window.mobileJoystick || { x: 0, y: 0 }} />
+)}
 
     </>
   );
@@ -222,6 +275,7 @@ export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [joystick, setJoystick] = useState({ x: 0, y: 0 });
+  window.mobileJoystick = joystick;
 
   const isMobile =
   typeof window !== "undefined" &&
