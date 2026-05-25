@@ -7,6 +7,7 @@ import InfoWall from "./InfoWall.jsx";
 import DynamicSectionManager from "./DynamicSectionManager.jsx";
 import Lobby from "./Lobby.jsx";
 import AtmosphereParticles from "./AtmosphereParticles.jsx";
+import * as THREE from "three";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
