@@ -198,7 +198,7 @@ const selectedCountry =
     ))}
     
     {selectedPhoto && (
-  <Html fullscreen>
+  <Html fullscreen zIndexRange={[9999, 0]}>
     <div
       style={{
         position: "fixed",
@@ -209,7 +209,7 @@ const selectedCountry =
         alignItems: "center",
         justifyContent: "center",
         padding: "20px",
-        zIndex: 100
+        zIndex: 9999
       }}
     >
       <div
