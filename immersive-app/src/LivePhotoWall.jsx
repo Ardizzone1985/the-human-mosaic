@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
-import { Html, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -151,11 +151,9 @@ function LivePhoto({ item, onSelect }) {
   );
 }
 
-export default function LivePhotoWall({ room = "Identity" }) {
+export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
   const [photos, setPhotos] = useState([]);
-
-const [selectedPhoto, setSelectedPhoto] = useState(null);
-  
+ 
   useEffect(() => {
     async function loadPhotos() {
       const { data, error } = await supabase
@@ -193,95 +191,10 @@ const selectedCountry =
       <LivePhoto
         key={item.id || item.submission_id}
         item={item}
-        onSelect={setSelectedPhoto}
+        onSelect={onPhotoSelect}
       />
     ))}
-    
-    {selectedPhoto && (
-  <Html fullscreen zIndexRange={[99999, 0]}>
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        background: "rgba(0,0,0,0.72)",
-        backdropFilter: "blur(10px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        zIndex: 999999,
-        boxSizing: "border-box"
-      }}
-    >
-      <div
-        style={{
-          width: "min(92vw, 420px)",
-          maxHeight: "88vh",
-          overflowY: "auto",
-          padding: "18px",
-          borderRadius: "24px",
-          background: "rgba(12, 6, 3, 0.96)",
-          border: "1px solid rgba(215,181,109,0.55)",
-          color: "#fff",
-          boxShadow: "0 30px 90px rgba(0,0,0,0.75)",
-          fontFamily: "Arial, sans-serif"
-        }}
-      >
-        <img
-          src={
-            "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
-            selectedPhoto.image_file_name
-          }
-          alt=""
-          style={{
-            width: "100%",
-            maxHeight: "52vh",
-            objectFit: "cover",
-            borderRadius: "18px",
-            marginBottom: "18px",
-            border: "1px solid rgba(215,181,109,0.3)"
-          }}
-        />
-
-        <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
-          COUNTRY
-        </div>
-
-        <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
-          {selectedCountry}
-        </div>
-
-        <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
-          NOTE
-        </div>
-
-        <div style={{ fontSize: "15px", lineHeight: "1.5", marginTop: "8px", color: "#e8ded0" }}>
-          {selectedNote}
-        </div>
-
-        <button
-          onClick={() => setSelectedPhoto(null)}
-          style={{
-            marginTop: "22px",
-            width: "100%",
-            padding: "13px",
-            borderRadius: "999px",
-            border: "none",
-            background: "#d7b56d",
-            color: "#1b0d05",
-            fontWeight: "700",
-            cursor: "pointer"
-          }}
-        >
-          Close
-        </button>
-      </div>
-        </div>
-  </Html>
-)}
+        
   </>
 );
 }
