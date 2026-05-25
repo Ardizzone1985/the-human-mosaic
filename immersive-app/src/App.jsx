@@ -341,8 +341,8 @@ const isLobby = !currentRoom;
   >
     <div
       style={{
-        width: "min(92vw, 420px)",
-        maxHeight: "88vh",
+        width: "min(94vw, 460px)",
+        maxHeight: "82vh",
         overflowY: "auto",
         padding: "18px",
         borderRadius: "24px",
@@ -361,8 +361,9 @@ const isLobby = !currentRoom;
         alt=""
         style={{
           width: "100%",
-          maxHeight: "52vh",
-          objectFit: "cover",
+          maxHeight: "46vh",
+          objectFit: "contain",
+          background: "#000",
           borderRadius: "18px",
           marginBottom: "18px",
           border: "1px solid rgba(215,181,109,0.3)"
@@ -390,7 +391,7 @@ const isLobby = !currentRoom;
         style={{
           marginTop: "22px",
           width: "100%",
-          padding: "13px",
+          padding: "15px",
           borderRadius: "999px",
           border: "none",
           background: "#d7b56d",
