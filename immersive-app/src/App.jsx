@@ -221,6 +221,11 @@ function Room({ room, theme, onPhotoSelect }) {
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [joystick, setJoystick] = useState({ x: 0, y: 0 });
+
+  const isMobile =
+  typeof window !== "undefined" &&
+  !window.matchMedia("(pointer: fine)").matches;
 
 useEffect(() => {
   setTimeout(() => {
@@ -313,6 +318,37 @@ const isLobby = !currentRoom;
     }}
   >
     Swipe to look · Pinch to zoom · Tap a photo
+  </div>
+)}
+
+      {isMobile && (
+  <div
+    style={{
+      position: "fixed",
+      left: 24,
+      bottom: 34,
+      width: 96,
+      height: 96,
+      borderRadius: "50%",
+      background: "rgba(0,0,0,0.32)",
+      border: "1px solid rgba(215,181,109,0.35)",
+      zIndex: 30,
+      touchAction: "none"
+    }}
+  >
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: 38,
+        height: 38,
+        borderRadius: "50%",
+        background: "rgba(215,181,109,0.82)",
+        transform: `translate(calc(-50% + ${joystick.x * 28}px), calc(-50% + ${joystick.y * 28}px))`,
+        boxShadow: "0 0 22px rgba(215,181,109,0.45)"
+      }}
+    />
   </div>
 )}
 
