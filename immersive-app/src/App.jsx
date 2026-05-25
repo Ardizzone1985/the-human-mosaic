@@ -93,8 +93,8 @@ function RoomCameraBounds() {
   const { camera } = useThree();
 
   useFrame(() => {
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -9.4, 9.4);
-    camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.8, 8.6);
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.25, 10.25);
+camera.position.z = THREE.MathUtils.clamp(camera.position.z, -9.85, 9.4);
     camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.25, 6.2);
   });
 
@@ -123,7 +123,7 @@ function Room({ room, theme }) {
     TWO: 2
   }}
 
-  minDistance={2.2}
+  minDistance={0.9}
 maxDistance={18}
 
   minPolarAngle={Math.PI / 2.55}
