@@ -182,7 +182,7 @@ export default function Lobby() {
     <>
       <LobbyShell />
       
-<mesh position={[0, 4.2, 10.55]} rotation={[0, Math.PI, 0]}
+<mesh position={[0, 4.2, 10.55]} rotation={[0, Math.PI, 0]}>
   <planeGeometry args={[7.4, 3.7]} />
   <meshBasicMaterial map={logoTexture} transparent />
 </mesh>
