@@ -295,6 +295,48 @@ rotation={[0, Math.PI, 0]}
     Reserve your place in the permanent artwork
   </Text>
 </group>
+
+    <group position={[11.72, 2.15, -1.2]} rotation={[0, -Math.PI / 2, 0]}>
+  <Text
+    position={[0, 2.85, 0.18]}
+    fontSize={0.28}
+    color="#f2c879"
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    WORK IN PROGRESS
+  </Text>
+
+  <mesh position={[0, 0, 0]}>
+    <boxGeometry args={[2.35, 3.8, 0.18]} />
+    <meshStandardMaterial
+      color="#3b1f12"
+      roughness={0.42}
+      metalness={0.18}
+      emissive="#d7b56d"
+      emissiveIntensity={0.12}
+    />
+  </mesh>
+
+  <mesh position={[0, 0, 0.12]}>
+    <boxGeometry args={[1.7, 2.9, 0.08]} />
+    <meshStandardMaterial color="#120603" roughness={0.7} />
+  </mesh>
+
+  <mesh position={[0, 2.02, 0.16]}>
+    <boxGeometry args={[2.55, 0.08, 0.08]} />
+    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
+  </mesh>
+
+  <Text
+    position={[0, -2.25, 0.18]}
+    fontSize={0.13}
+    color="#c9a96b"
+    anchorX="center"
+  >
+    Future project room
+  </Text>
+</group>
       
       <RoomDoor
         position={[-6.6, 1, -7.6]}
