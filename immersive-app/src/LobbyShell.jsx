@@ -96,15 +96,21 @@ metalness={0.48}
       </mesh>
 
       {/* Left wall */}
-<mesh position={[-12, 3.25, 0]} rotation={[0, Math.PI / 2, 0]}>
-  <boxGeometry args={[18, 9.8, 0.35]} />
+<mesh position={[-12, 3.25, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 9.8, 0.35]} />
   <meshStandardMaterial color="#271008" roughness={0.65} />
 </mesh>
 
-      {/* Right wall */}
-<mesh position={[12, 3.25, 0]} rotation={[0, Math.PI / 2, 0]}>
-  <boxGeometry args={[18, 9.8, 0.35]} />
+{/* Right wall */}
+<mesh position={[12, 3.25, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 9.8, 0.35]} />
   <meshStandardMaterial color="#271008" roughness={0.65} />
+</mesh>
+
+      {/* Entrance / branding wall */}
+<mesh position={[0, 3.25, 10.8]}>
+  <boxGeometry args={[24, 9.8, 0.35]} />
+  <meshStandardMaterial color="#1b0904" roughness={0.62} />
 </mesh>
 
       {/* Deep cinematic ceiling */}
