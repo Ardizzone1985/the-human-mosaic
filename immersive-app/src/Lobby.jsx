@@ -182,14 +182,14 @@ export default function Lobby() {
     <>
       <LobbyShell />
       
-<mesh position={[-11.72, 4.2, -2.7]} rotation={[0, Math.PI / 2, 0]}>
+<mesh position={[0, 4.2, 10.55]} rotation={[0, Math.PI, 0]}
   <planeGeometry args={[7.4, 3.7]} />
   <meshBasicMaterial map={logoTexture} transparent />
 </mesh>
 
       <Text
-  position={[-11.72, 6.75, -2.7]}
-  rotation={[0, Math.PI / 2, 0]}
+  position={[0, 6.75, 10.55]}
+rotation={[0, Math.PI, 0]}
   fontSize={0.52}
   color="#f2c879"
   anchorX="center"
@@ -198,8 +198,8 @@ export default function Lobby() {
 </Text>
 
      <Text
-  position={[-11.72, 1.55, -2.7]}
-  rotation={[0, Math.PI / 2, 0]}
+  position={[0, 1.55, 10.55]}
+rotation={[0, Math.PI, 0]}
   fontSize={0.24}
   color="#c9a96b"
   anchorX="center"
@@ -241,8 +241,8 @@ export default function Lobby() {
 </Text>
 
       <group
-  position={[-11.72, 0.35, -2.7]}
-rotation={[0, Math.PI / 2, 0]}
+  position={[0, 0.35, 10.55]}
+rotation={[0, Math.PI, 0]}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
   }}
