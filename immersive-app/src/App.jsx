@@ -184,6 +184,7 @@ function MobileJoystickMovement({ joystick, lookJoystick }) {
   const { camera } = useThree();
   const yaw = useRef(0);
   const pitch = useRef(0);
+  const velocity = useRef(new THREE.Vector3(0, 0, 0));
 
   useFrame((state, delta) => {
     const moveSpeed = 3.0;
@@ -214,8 +215,14 @@ function MobileJoystickMovement({ joystick, lookJoystick }) {
       -Math.sin(camera.rotation.y)
     );
 
-    camera.position.addScaledVector(forward, -joystick.y * moveSpeed * delta);
-    camera.position.addScaledVector(right, joystick.x * moveSpeed * delta);
+    const targetVelocity = new THREE.Vector3(0, 0, 0);
+
+targetVelocity.addScaledVector(forward, -joystick.y * moveSpeed);
+targetVelocity.addScaledVector(right, joystick.x * moveSpeed);
+
+velocity.current.lerp(targetVelocity, 0.08);
+
+camera.position.addScaledVector(velocity.current, delta);
 
     camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.8, 10.8);
 camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
