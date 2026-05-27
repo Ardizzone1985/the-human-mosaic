@@ -106,6 +106,7 @@ function MuseumWalkControls() {
   const keys = useRef({});
   const yaw = useRef(0);
   const pitch = useRef(0);
+  const velocity = useRef(new THREE.Vector3(0, 0, 0));
 
   useEffect(() => {
     camera.position.set(0, 2.05, 8.4);
@@ -167,10 +168,16 @@ function MuseumWalkControls() {
       -Math.sin(camera.rotation.y)
     );
 
-    if (keys.current.KeyW) camera.position.addScaledVector(forward, speed * delta);
-    if (keys.current.KeyS) camera.position.addScaledVector(forward, -speed * delta);
-    if (keys.current.KeyA) camera.position.addScaledVector(right, -speed * delta);
-    if (keys.current.KeyD) camera.position.addScaledVector(right, speed * delta);
+    const targetVelocity = new THREE.Vector3(0, 0, 0);
+
+if (keys.current.KeyW) targetVelocity.addScaledVector(forward, speed);
+if (keys.current.KeyS) targetVelocity.addScaledVector(forward, -speed);
+if (keys.current.KeyA) targetVelocity.addScaledVector(right, -speed);
+if (keys.current.KeyD) targetVelocity.addScaledVector(right, speed);
+
+velocity.current.lerp(targetVelocity, 0.08);
+
+camera.position.addScaledVector(velocity.current, delta);
 
     camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.8, 10.8);
 camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
