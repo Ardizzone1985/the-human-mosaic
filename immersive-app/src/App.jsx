@@ -89,6 +89,24 @@ const ROOM_THEMES = {
   }
 };
 
+const LOBBY_BOUNDS = {
+  minX: -10.8,
+  maxX: 10.8,
+  minZ: -8.6,
+  maxZ: 9.6,
+  minY: 1.75,
+  maxY: 3.1
+};
+
+const ROOM_BOUNDS = {
+  minX: -10.8,
+  maxX: 10.8,
+  minZ: -9.95,
+  maxZ: 10.25,
+  minY: 1.75,
+  maxY: 3.1
+};
+
 function RoomCameraBounds() {
   const { camera } = useThree();
 
@@ -187,7 +205,7 @@ camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
   return null;
 }
 
-function MobileJoystickMovement({ joystick, lookJoystick }) {
+function MobileJoystickMovement({ joystick, lookJoystick, bounds = ROOM_BOUNDS }) {
   const { camera } = useThree();
   const yaw = useRef(0);
   const pitch = useRef(0);
@@ -236,9 +254,9 @@ velocity.current.lerp(targetVelocity, 0.08);
 
 camera.position.addScaledVector(velocity.current, delta);
 
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.8, 10.8);
-camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
-    camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.75, 3.1);
+    camera.position.x = THREE.MathUtils.clamp(camera.position.x, bounds.minX, bounds.maxX);
+camera.position.z = THREE.MathUtils.clamp(camera.position.z, bounds.minZ, bounds.maxZ);
+camera.position.y = THREE.MathUtils.clamp(camera.position.y, bounds.minY, bounds.maxY);
   });
 
   return null;
@@ -263,6 +281,7 @@ function Room({ room, theme, onPhotoSelect }) {
   <MobileJoystickMovement
   joystick={window.mobileJoystick || { x: 0, y: 0 }}
   lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
+  bounds={ROOM_BOUNDS}
 />
 )}
 
@@ -660,9 +679,10 @@ const isLobby = !currentRoom;
 
 {isMobile ? (
   <MobileJoystickMovement
-    joystick={window.mobileJoystick || { x: 0, y: 0 }}
-    lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
-  />
+  joystick={window.mobileJoystick || { x: 0, y: 0 }}
+  lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
+  bounds={LOBBY_BOUNDS}
+/>
 ) : (
   <OrbitControls
     enablePan={false}
