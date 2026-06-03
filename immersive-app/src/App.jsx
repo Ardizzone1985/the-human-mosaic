@@ -90,19 +90,19 @@ const ROOM_THEMES = {
 };
 
 const LOBBY_BOUNDS = {
-  minX: -10.8,
-  maxX: 10.8,
-  minZ: -8.6,
-  maxZ: 9.6,
+  minX: -10.45,
+  maxX: 10.45,
+  minZ: -8.25,
+  maxZ: 9.25,
   minY: 1.75,
   maxY: 3.1
 };
 
 const ROOM_BOUNDS = {
-  minX: -10.8,
-  maxX: 10.8,
-  minZ: -9.95,
-  maxZ: 10.25,
+  minX: -10.45,
+  maxX: 10.45,
+  minZ: -9.55,
+  maxZ: 10.05,
   minY: 1.75,
   maxY: 3.1
 };
