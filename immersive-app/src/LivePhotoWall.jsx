@@ -96,7 +96,7 @@ function LivePhoto({ item, onSelect }) {
     <group position={basePosition} rotation={rotation}>
       <group
   position={localPosition}
-  scale={hovered ? 1.55 : 1}
+  scale={hovered ? 1.18 : 1}
   onPointerOver={(e) => {
     e.stopPropagation();
     setHovered(true);
@@ -125,7 +125,7 @@ function LivePhoto({ item, onSelect }) {
   <meshStandardMaterial
     map={texture}
     emissive={"#ffffff"}
-    emissiveIntensity={hovered ? 1.35 : 0.38}
+    emissiveIntensity={hovered ? 0.45 : 0.08}
     roughness={0.28}
     metalness={0.08}
     toneMapped={false}
@@ -138,7 +138,7 @@ function LivePhoto({ item, onSelect }) {
     <meshBasicMaterial
       color="#ffd98a"
       transparent
-      opacity={0.22}
+      opacity={0.08}
       depthWrite={false}
     />
   </mesh>
