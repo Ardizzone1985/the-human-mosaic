@@ -41,7 +41,10 @@ function slotToTransform(item) {
 
   const sectionGap = 3.4;
 
-  const localX = -1.35 + col * 0.08;
+  const columnsPerSection = 10;
+const localCol = col % columnsPerSection;
+
+const localX = -1.35 + localCol * 0.16;
 const localY = 1.25 - row * 0.24;
 
   if (wall === "front") {
