@@ -292,6 +292,7 @@ function Room({ room, theme, onPhotoSelect }) {
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [showMobileTutorial, setShowMobileTutorial] = useState(true);
   const [joystick, setJoystick] = useState({ x: 0, y: 0 });
   const [lookJoystick, setLookJoystick] = useState({ x: 0, y: 0 });
   window.mobileJoystick = joystick;
@@ -394,6 +395,72 @@ const isLobby = !currentRoom;
     }}
   >
     Swipe to look · Pinch to zoom · Tap a photo
+  </div>
+)}
+
+      {isMobile && showMobileTutorial && (
+  <div
+    onClick={() => setShowMobileTutorial(false)}
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 999998,
+      background: "rgba(0,0,0,0.72)",
+      backdropFilter: "blur(10px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px",
+      boxSizing: "border-box"
+    }}
+  >
+    <div
+      style={{
+        width: "min(92vw, 420px)",
+        padding: "26px 22px",
+        borderRadius: "26px",
+        background: "rgba(18, 8, 4, 0.96)",
+        border: "1px solid rgba(215,181,109,0.55)",
+        color: "#fff",
+        textAlign: "center",
+        fontFamily: "Arial, sans-serif",
+        boxShadow: "0 30px 90px rgba(0,0,0,0.75)"
+      }}
+    >
+      <div
+        style={{
+          color: "#f2c879",
+          fontSize: "18px",
+          fontWeight: 800,
+          letterSpacing: "0.12em",
+          marginBottom: "18px"
+        }}
+      >
+        THE HUMAN MOSAIC
+      </div>
+
+      <div style={{ color: "#d8c7ad", fontSize: "15px", lineHeight: 1.7 }}>
+        <strong>Left joystick</strong><br />
+        Move through the museum<br /><br />
+
+        <strong>Right joystick</strong><br />
+        Look around<br /><br />
+
+        <strong>Tap a photo</strong><br />
+        Open participant details
+      </div>
+
+      <div
+        style={{
+          marginTop: "22px",
+          color: "#f2c879",
+          fontSize: "13px",
+          letterSpacing: "0.08em"
+        }}
+      >
+        TAP TO START
+      </div>
+    </div>
   </div>
 )}
 
