@@ -96,7 +96,7 @@ function LivePhoto({ item, onSelect }) {
     <group position={basePosition} rotation={rotation}>
       <group
   position={localPosition}
-  scale={hovered ? 1.18 : 1}
+  scale={hovered ? 1.12 : 1}
   onPointerOver={(e) => {
     e.stopPropagation();
     setHovered(true);
@@ -114,10 +114,10 @@ function LivePhoto({ item, onSelect }) {
 >
 
         <pointLight
-  position={[0, 0, 0.12]}
-  intensity={hovered ? 0.65 : 0.18}
-  distance={1.2}
-  color={hovered ? "#ffd98a" : "#d7b56d"}
+  position={[0, 0, 0.16]}
+  intensity={hovered ? 0.32 : 0.06}
+  distance={0.85}
+  color="#d7b56d"
 />
         
         <mesh position={[0, 0, 0.05]}>
@@ -125,7 +125,7 @@ function LivePhoto({ item, onSelect }) {
   <meshStandardMaterial
     map={texture}
     emissive={"#ffffff"}
-    emissiveIntensity={hovered ? 0.18 : 0.04}
+    emissiveIntensity={hovered ? 0.06 : 0.03}
     roughness={0.28}
     metalness={0.08}
     toneMapped={false}
@@ -146,22 +146,38 @@ function LivePhoto({ item, onSelect }) {
 
         <mesh position={[0, half + frameThickness / 2, 0.035]}>
           <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
+          <meshStandardMaterial
+  color={hovered ? "#f2c879" : "#d7b56d"}
+  emissive="#d7b56d"
+  emissiveIntensity={hovered ? 0.28 : 0.05}
+/>
         </mesh>
 
         <mesh position={[0, -half - frameThickness / 2, 0.035]}>
           <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
+          <meshStandardMaterial
+  color={hovered ? "#f2c879" : "#d7b56d"}
+  emissive="#d7b56d"
+  emissiveIntensity={hovered ? 0.28 : 0.05}
+/>
         </mesh>
 
         <mesh position={[-half - frameThickness / 2, 0, 0.035]}>
           <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
+          <meshStandardMaterial
+  color={hovered ? "#f2c879" : "#d7b56d"}
+  emissive="#d7b56d"
+  emissiveIntensity={hovered ? 0.28 : 0.05}
+/>
         </mesh>
 
         <mesh position={[half + frameThickness / 2, 0, 0.035]}>
           <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial color={hovered ? "#ffd98a" : "#d7b56d"} />
+          <meshStandardMaterial
+  color={hovered ? "#f2c879" : "#d7b56d"}
+  emissive="#d7b56d"
+  emissiveIntensity={hovered ? 0.28 : 0.05}
+/>
         </mesh>
       </group>
     </group>
