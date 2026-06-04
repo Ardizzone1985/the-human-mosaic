@@ -125,7 +125,7 @@ function LivePhoto({ item, onSelect }) {
   <meshStandardMaterial
     map={texture}
     emissive={"#ffffff"}
-    emissiveIntensity={hovered ? 0.45 : 0.08}
+    emissiveIntensity={hovered ? 0.18 : 0.04}
     roughness={0.28}
     metalness={0.08}
     toneMapped={false}
@@ -138,7 +138,7 @@ function LivePhoto({ item, onSelect }) {
     <meshBasicMaterial
       color="#ffd98a"
       transparent
-      opacity={0.08}
+      opacity={0.035}
       depthWrite={false}
     />
   </mesh>
