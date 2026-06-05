@@ -127,11 +127,29 @@ function applyCameraBounds(camera, bounds) {
   );
 }
 
+function applyInfoWallCollision(camera) {
+  const wallMinX = -3.8;
+  const wallMaxX = 3.8;
+
+  const wallMinZ = -10.2;
+  const wallMaxZ = -8.7;
+
+  if (
+    camera.position.x > wallMinX &&
+    camera.position.x < wallMaxX &&
+    camera.position.z > wallMinZ &&
+    camera.position.z < wallMaxZ
+  ) {
+    camera.position.z = wallMaxZ;
+  }
+}
+
 function RoomCameraBounds() {
   const { camera } = useThree();
 
   useFrame(() => {
     applyCameraBounds(camera, ROOM_BOUNDS);
+    applyInfoWallCollision(camera);
   });
 
   return null;
@@ -216,6 +234,7 @@ velocity.current.lerp(targetVelocity, 0.08);
 camera.position.addScaledVector(velocity.current, delta);
 
     applyCameraBounds(camera, ROOM_BOUNDS);
+    applyInfoWallCollision(camera);
   });
 
   return null;
