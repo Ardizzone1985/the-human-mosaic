@@ -144,12 +144,33 @@ function applyInfoWallCollision(camera) {
   }
 }
 
+function applyCornerCollisions(camera) {
+  const margin = 0.55;
+
+  if (camera.position.x < ROOM_BOUNDS.minX + margin) {
+    camera.position.x = ROOM_BOUNDS.minX + margin;
+  }
+
+  if (camera.position.x > ROOM_BOUNDS.maxX - margin) {
+    camera.position.x = ROOM_BOUNDS.maxX - margin;
+  }
+
+  if (camera.position.z < ROOM_BOUNDS.minZ + margin) {
+    camera.position.z = ROOM_BOUNDS.minZ + margin;
+  }
+
+  if (camera.position.z > ROOM_BOUNDS.maxZ - margin) {
+    camera.position.z = ROOM_BOUNDS.maxZ - margin;
+  }
+}
+
 function RoomCameraBounds() {
   const { camera } = useThree();
 
   useFrame(() => {
     applyCameraBounds(camera, ROOM_BOUNDS);
     applyInfoWallCollision(camera);
+    applyCornerCollisions(camera);
   });
 
   return null;
@@ -235,6 +256,7 @@ camera.position.addScaledVector(velocity.current, delta);
 
     applyCameraBounds(camera, ROOM_BOUNDS);
     applyInfoWallCollision(camera);
+    applyCornerCollisions(camera);
   });
 
   return null;
