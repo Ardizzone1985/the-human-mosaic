@@ -131,9 +131,7 @@ function RoomCameraBounds() {
   const { camera } = useThree();
 
   useFrame(() => {
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.8, 10.8);
-camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
-    camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.25, 6.2);
+    applyCameraBounds(camera, ROOM_BOUNDS);
   });
 
   return null;
@@ -217,9 +215,7 @@ velocity.current.lerp(targetVelocity, 0.08);
 
 camera.position.addScaledVector(velocity.current, delta);
 
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, -10.8, 10.8);
-camera.position.z = THREE.MathUtils.clamp(camera.position.z, -8.6, 9.6);
-    camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.6, 3.2);
+    applyCameraBounds(camera, ROOM_BOUNDS);
   });
 
   return null;
