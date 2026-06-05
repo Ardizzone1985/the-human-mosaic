@@ -349,7 +349,9 @@ function Room({ room, theme, onPhotoSelect }) {
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [showMobileTutorial, setShowMobileTutorial] = useState(true);
+  const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
+  return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
+});
   const [joystick, setJoystick] = useState({ x: 0, y: 0 });
   const [lookJoystick, setLookJoystick] = useState({ x: 0, y: 0 });
   window.mobileJoystick = joystick;
@@ -433,31 +435,12 @@ const isLobby = !currentRoom;
   </div>
 )}
 
-{!isLobby && (
-  <div
-    style={{
-      position: "fixed",
-      left: "50%",
-      bottom: 18,
-      transform: "translateX(-50%)",
-      zIndex: 20,
-      padding: "10px 14px",
-      borderRadius: "999px",
-      background: "rgba(0,0,0,0.42)",
-      border: "1px solid rgba(255,255,255,0.12)",
-      color: "rgba(255,255,255,0.75)",
-      fontSize: "12px",
-      backdropFilter: "blur(10px)",
-      textAlign: "center"
-    }}
-  >
-    Swipe to look · Pinch to zoom · Tap a photo
-  </div>
-)}
-
       {isMobile && showMobileTutorial && (
   <div
-    onClick={() => setShowMobileTutorial(false)}
+    onClick={() => {
+  localStorage.setItem("humanMosaicMobileTutorialSeen", "true");
+  setShowMobileTutorial(false);
+}}
     style={{
       position: "fixed",
       inset: 0,
