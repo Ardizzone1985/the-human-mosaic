@@ -107,6 +107,26 @@ const ROOM_BOUNDS = {
   maxY: 3.1
 };
 
+function applyCameraBounds(camera, bounds) {
+  camera.position.x = THREE.MathUtils.clamp(
+    camera.position.x,
+    bounds.minX,
+    bounds.maxX
+  );
+
+  camera.position.z = THREE.MathUtils.clamp(
+    camera.position.z,
+    bounds.minZ,
+    bounds.maxZ
+  );
+
+  camera.position.y = THREE.MathUtils.clamp(
+    camera.position.y,
+    bounds.minY,
+    bounds.maxY
+  );
+}
+
 function RoomCameraBounds() {
   const { camera } = useThree();
 
