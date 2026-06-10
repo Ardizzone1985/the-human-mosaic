@@ -42,33 +42,33 @@ function createParquetTexture() {
 export default function RoomShell({ theme }) {
   return (
     <>
-<ambientLight intensity={0.22} color={theme?.ambient || "#ffe2b8"} />
+<ambientLight intensity={0.16} color={theme?.ambient || "#ffe2b8"} />
       
 <directionalLight
   position={[4, 9, 6]}
-  intensity={1.6}
+  intensity={1.25}
   color={theme?.directional || "#ffd6a3"}
   castShadow
 />
 
 <pointLight
   position={[0, 5.8, -2]}
-  intensity={3.2}
-  distance={18}
+  intensity={2.15}
+distance={16}
   color={theme?.glow || "#ffd0a0"}
 />
 
 <pointLight
   position={[-7, 4.2, -7]}
-  intensity={1.6}
-  distance={10}
+  intensity={1.05}
+distance={9}
   color={theme?.glow || "#ffd0a0"}
 />
 
 <pointLight
   position={[7, 4.2, -7]}
-  intensity={1.6}
-  distance={10}
+  intensity={1.05}
+distance={9}
   color={theme?.glow || "#ffd0a0"}
 />
 
