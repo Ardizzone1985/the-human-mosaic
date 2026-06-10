@@ -88,8 +88,8 @@ distance={9}
 </mesh>
 
       {/* Back wall */}
-      <mesh position={[0, 3, -10]}>
-        <planeGeometry args={[22, 10]} />
+      <mesh position={[0, 4, -10]}>
+        <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           color="#6a533f"
           roughness={0.48}
@@ -98,8 +98,8 @@ distance={9}
       </mesh>
 
       {/* Left wall */}
-      <mesh rotation={[0, Math.PI / 2, 0]} position={[-11, 3, 1]}>
-        <planeGeometry args={[22, 10]} />
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[-11, 4, 1]}>
+        <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           color="#4a3729"
           roughness={0.55}
@@ -108,8 +108,8 @@ distance={9}
       </mesh>
 
       {/* Right wall */}
-      <mesh rotation={[0, -Math.PI / 2, 0]} position={[11, 3, 1]}>
-        <planeGeometry args={[22, 10]} />
+      <mesh rotation={[0, -Math.PI / 2, 0]} position={[11, 4, 1]}>
+        <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           color="#4a3729"
           roughness={0.55}
@@ -118,7 +118,7 @@ distance={9}
       </mesh>
 
       {/* Ceiling */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 9, 1]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10.4, 1]}>
         <planeGeometry args={[34, 38]} />
         <meshStandardMaterial
           color="#221914"
@@ -232,22 +232,22 @@ distance={9}
 </mesh>
 
       {/* Ceiling warm frame */}
-<mesh position={[0, 8.85, -0.5]}>
+<mesh position={[0, 10.2, -0.5]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[0, 8.85, 7]}>
+<mesh position={[0, 10.2, 7]}>
   <boxGeometry args={[22, 0.08, 0.18]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[-10.8, 8.85, 3]}>
+<mesh position={[-10.8, 10.2, 3]}>
   <boxGeometry args={[0.18, 0.08, 16]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
 
-<mesh position={[10.8, 8.85, 3]}>
+<mesh position={[10.8, 10.2, 3]}>
   <boxGeometry args={[0.18, 0.08, 16]} />
   <meshStandardMaterial color="#d7a64c" emissive="#8a4b12" emissiveIntensity={0.6} />
 </mesh>
