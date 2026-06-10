@@ -152,11 +152,11 @@ distance={9}
 {[-9, -4.5, 0, 4.5, 9].map((x) => (
   <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
     <mesh>
-  <boxGeometry args={[2.7, 5.8, 0.32]} />
+  <boxGeometry args={[2.7, 5.8, 0.48]} />
   <meshStandardMaterial
     color="#3a2418"
-    roughness={0.42}
-    metalness={0.18}
+    roughness={0.32}
+    metalness={0.22}
     emissive={theme?.side || "#2a1408"}
     emissiveIntensity={0.08}
   />
