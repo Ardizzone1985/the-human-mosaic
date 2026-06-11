@@ -1072,26 +1072,35 @@ Secure payment · Cards & PayPal accepted · Instant reservation
   <div class="live-updates-panel">
     <div class="live-updates-kicker">LIVE PROJECT UPDATES</div>
 
-    <div class="live-update-item">
+<div id="projectNewsList" style="max-height:220px; overflow-y:auto; padding-right:8px; margin-bottom:22px;">
+  <div class="live-update-item">
+    <span class="live-dot"></span>
+    Loading latest project news...
+  </div>
+</div>
+
+<div class="live-updates-kicker" style="margin-top:18px;">PROJECT MILESTONES</div>
+
+<div class="live-update-item">
   <span class="live-dot"></span>
   New: approved participants can now share their official Human Mosaic contribution cards online.
 </div>
 
-    <div class="live-update-item">
-      <span class="live-dot"></span>Early Access is now live.
-    </div>
+<div class="live-update-item">
+  <span class="live-dot"></span>Early Access is now live.
+</div>
 
-    <div class="live-update-item">
-      <span class="live-dot"></span><span id="updates-count">14</span> participants already joined.
-    </div>
+<div class="live-update-item">
+  <span class="live-dot"></span><span id="updates-count">14</span> participants already joined.
+</div>
 
-    <div class="live-update-item">
-      <span class="live-dot"></span>Premium App in development.
-    </div>
+<div class="live-update-item">
+  <span class="live-dot"></span>Premium App in development.
+</div>
 
-    <div class="live-update-item">
-      <span class="live-dot"></span>Immersive gallery experience coming soon.
-    </div>
+<div class="live-update-item">
+  <span class="live-dot"></span>Immersive gallery experience coming soon.
+</div>
   </div>
 </section>
 
@@ -1820,8 +1829,44 @@ document.getElementById("label-creativity").textContent =
   }
 }
 
+  async function loadProjectNews() {
+  const newsList = document.getElementById("projectNewsList");
+  if (!newsList) return;
+
+  const { data, error } = await supabaseClient
+    .from("project_news")
+    .select("title, message, created_at")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error || !data || data.length === 0) {
+    newsList.innerHTML = `
+      <div class="live-update-item">
+        <span class="live-dot"></span>
+        Project updates will appear here.
+      </div>
+    `;
+    return;
+  }
+
+  newsList.innerHTML = data.map(item => {
+    const date = new Date(item.created_at).toLocaleString();
+
+    return `
+      <div class="live-update-item" style="margin-bottom:16px;">
+        <span class="live-dot"></span>
+        <strong>${item.title}</strong><br>
+        <span style="font-size:0.86rem; color:#777;">${date}</span><br>
+        <span>${item.message}</span>
+      </div>
+    `;
+  }).join("");
+}
+
   loadStats();
   loadLiveActivity();
+  loadProjectNews();
 </script>
     <script>
   if ("serviceWorker" in navigator) {
