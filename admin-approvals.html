@@ -347,6 +347,11 @@
 </button>
 </div>
 
+    <div class="admin-stat-card" style="margin-bottom:24px;">
+  <div class="admin-stat-label">Published News</div>
+  <div id="publishedNewsList" style="display:grid; gap:12px;"></div>
+</div>
+
     <div id="status" class="status">Loading submissions...</div>
 
     <div class="status-filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
@@ -442,6 +447,77 @@
 
   loadPublishedNews();
 }
+
+    async function loadPublishedNews() {
+  const list = document.getElementById("publishedNewsList");
+  if (!list) return;
+
+  list.innerHTML = "Loading news...";
+
+  const { data, error } = await supabaseClient
+    .from("project_news")
+    .select("id, title, message, created_at")
+    .order("created_at", { ascending: false })
+    .limit(30);
+
+  if (error) {
+    console.error(error);
+    list.innerHTML = "Error loading news.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.innerHTML = "No news published yet.";
+    return;
+  }
+
+  list.innerHTML = data.map(item => `
+    <div style="border:1px solid #ddd; border-radius:14px; padding:14px; background:#fcfcfb;">
+      <strong>${item.title}</strong>
+      <div style="font-size:0.82rem; color:#777; margin:6px 0;">
+        ${new Date(item.created_at).toLocaleString()}
+      </div>
+      <div style="color:#555; margin-bottom:12px;">${item.message}</div>
+
+      <button class="filter-btn" onclick="editProjectNews('${item.id}', \`${item.title.replace(/`/g, "\\`")}\`, \`${item.message.replace(/`/g, "\\`")}\`)">
+        Edit
+      </button>
+
+      <button class="delete-btn" onclick="deleteProjectNews('${item.id}')">
+        Delete
+      </button>
+    </div>
+  `).join("");
+}
+
+function editProjectNews(id, title, message) {
+  document.getElementById("editingNewsId").value = id;
+  document.getElementById("newsTitle").value = title;
+  document.getElementById("newsMessage").value = message;
+  document.getElementById("newsSubmitBtn").innerText = "Update News";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function deleteProjectNews(id) {
+  const ok = confirm("Delete this news?");
+  if (!ok) return;
+
+  const { error } = await supabaseClient
+    .from("project_news")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("Error deleting news.");
+    return;
+  }
+
+  alert("News deleted ✅");
+  loadPublishedNews();
+}
+    
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
 
@@ -931,6 +1007,7 @@ window.resendCertificate = resendCertificate;
     
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
+    loadPublishedNews();
   </script>
 </body>
 </html>
