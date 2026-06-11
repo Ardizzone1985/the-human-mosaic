@@ -72,6 +72,37 @@ distance={9}
   color={theme?.glow || "#ffd0a0"}
 />
 
+      {/* Cinematic photo wall spotlights */}
+<spotLight
+  position={[-6.5, 8.8, -4.2]}
+  angle={0.34}
+  penumbra={0.92}
+  intensity={1.05}
+  distance={13}
+  color={theme?.directional || "#ffd6a3"}
+  target-position={[-6.5, 3.4, -9.6]}
+/>
+
+<spotLight
+  position={[0, 8.8, -4.2]}
+  angle={0.36}
+  penumbra={0.94}
+  intensity={1.15}
+  distance={14}
+  color={theme?.directional || "#ffd6a3"}
+  target-position={[0, 3.4, -9.6]}
+/>
+
+<spotLight
+  position={[6.5, 8.8, -4.2]}
+  angle={0.34}
+  penumbra={0.92}
+  intensity={1.05}
+  distance={13}
+  color={theme?.directional || "#ffd6a3"}
+  target-position={[6.5, 3.4, -9.6]}
+/>
+
       {/* Premium parquet floor */}
 <mesh
   rotation={[-Math.PI / 2, 0, 0]}
