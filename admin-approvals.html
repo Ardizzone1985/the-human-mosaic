@@ -332,11 +332,19 @@
     <div class="admin-stat-card" style="margin-bottom:24px;">
   <div class="admin-stat-label">Publish Project News</div>
 
+  <input type="hidden" id="editingNewsId">
+
   <input id="newsTitle" placeholder="News title" style="width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:12px;">
 
   <textarea id="newsMessage" placeholder="Write the update..." rows="4" style="width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:12px;"></textarea>
 
-  <button class="approve-btn" onclick="publishProjectNews()">Publish News</button>
+  <button
+  class="approve-btn"
+  id="newsSubmitBtn"
+  onclick="saveProjectNews()"
+>
+  Publish News
+</button>
 </div>
 
     <div id="status" class="status">Loading submissions...</div>
@@ -370,31 +378,70 @@
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function publishProjectNews() {
-  const title = document.getElementById("newsTitle").value.trim();
-  const message = document.getElementById("newsMessage").value.trim();
+    async function saveProjectNews() {
+
+  const newsId =
+    document.getElementById("editingNewsId").value;
+
+  const title =
+    document.getElementById("newsTitle").value.trim();
+
+  const message =
+    document.getElementById("newsMessage").value.trim();
 
   if (!title || !message) {
     alert("Please write both title and message.");
     return;
   }
 
-  const { error } = await supabaseClient
-    .from("project_news")
-    .insert([{ title, message, is_published: true }]);
+  if (newsId) {
 
-  if (error) {
-    console.error(error);
-    alert("Error publishing news.");
-    return;
+    const { error } = await supabaseClient
+      .from("project_news")
+      .update({
+        title,
+        message
+      })
+      .eq("id", newsId);
+
+    if (error) {
+      console.error(error);
+      alert("Error updating news.");
+      return;
+    }
+
+    alert("News updated successfully ✅");
+
+  } else {
+
+    const { error } = await supabaseClient
+      .from("project_news")
+      .insert([
+        {
+          title,
+          message,
+          is_published: true
+        }
+      ]);
+
+    if (error) {
+      console.error(error);
+      alert("Error publishing news.");
+      return;
+    }
+
+    alert("News published successfully ✅");
   }
 
+  document.getElementById("editingNewsId").value = "";
   document.getElementById("newsTitle").value = "";
   document.getElementById("newsMessage").value = "";
 
-  alert("News published successfully ✅");
-}
+  document.getElementById("newsSubmitBtn").innerText =
+    "Publish News";
 
+  loadPublishedNews();
+}
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
 
