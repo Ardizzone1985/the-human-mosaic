@@ -329,6 +329,16 @@
       </div>
     </div>
 
+    <div class="admin-stat-card" style="margin-bottom:24px;">
+  <div class="admin-stat-label">Publish Project News</div>
+
+  <input id="newsTitle" placeholder="News title" style="width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:12px;">
+
+  <textarea id="newsMessage" placeholder="Write the update..." rows="4" style="width:100%; padding:12px; margin:8px 0; border:1px solid #ddd; border-radius:12px;"></textarea>
+
+  <button class="approve-btn" onclick="publishProjectNews()">Publish News</button>
+</div>
+
     <div id="status" class="status">Loading submissions...</div>
 
     <div class="status-filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
@@ -359,6 +369,31 @@
     const BUCKET = "images";
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function publishProjectNews() {
+  const title = document.getElementById("newsTitle").value.trim();
+  const message = document.getElementById("newsMessage").value.trim();
+
+  if (!title || !message) {
+    alert("Please write both title and message.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("project_news")
+    .insert([{ title, message, is_published: true }]);
+
+  if (error) {
+    console.error(error);
+    alert("Error publishing news.");
+    return;
+  }
+
+  document.getElementById("newsTitle").value = "";
+  document.getElementById("newsMessage").value = "";
+
+  alert("News published successfully ✅");
+}
 
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
