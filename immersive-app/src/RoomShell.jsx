@@ -74,23 +74,23 @@ distance={9}
 
 {/* Premium photo wall ambient highlights */}
 <pointLight
-  position={[-5.2, 6.6, -8.4]}
-  intensity={0.72}
-  distance={7.5}
+  position={[-5.2, 5.2, -7.2]}
+  intensity={0.28}
+  distance={5.5}
   color={theme?.directional || "#ffd6a3"}
 />
 
 <pointLight
-  position={[0, 6.8, -8.4]}
-  intensity={0.88}
-  distance={8}
+  position={[0, 5.4, -7.2]}
+  intensity={0.34}
+  distance={6}
   color={theme?.directional || "#ffd6a3"}
 />
 
 <pointLight
-  position={[5.2, 6.6, -8.4]}
-  intensity={0.72}
-  distance={7.5}
+  position={[5.2, 5.2, -7.2]}
+  intensity={0.28}
+  distance={5.5}
   color={theme?.directional || "#ffd6a3"}
 />
 
