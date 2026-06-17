@@ -204,6 +204,30 @@ export default function RoomShell({ theme }) {
   color="#fff0d0"
 />
 
+      {/* Museum spotlight left */}
+<pointLight
+  position={[-5, 8, -8]}
+  intensity={2.2}
+  distance={10}
+  color="#fff6e5"
+/>
+
+{/* Museum spotlight center */}
+<pointLight
+  position={[0, 8, -8]}
+  intensity={2.5}
+  distance={10}
+  color="#fff6e5"
+/>
+
+{/* Museum spotlight right */}
+<pointLight
+  position={[5, 8, -8]}
+  intensity={2.2}
+  distance={10}
+  color="#fff6e5"
+/>
+
       {/* Premium brighter parquet floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.22, 1]} receiveShadow>
         <planeGeometry args={[30, 34]} />
