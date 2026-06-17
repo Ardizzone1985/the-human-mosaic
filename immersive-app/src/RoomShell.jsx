@@ -7,7 +7,7 @@ function createParquetTexture() {
 
   const ctx = canvas.getContext("2d");
 
-  ctx.fillStyle = "#4a2410";
+  ctx.fillStyle = "#7a4a24";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const plankW = 180;
@@ -17,24 +17,18 @@ function createParquetTexture() {
     for (let x = -plankW; x < canvas.width + plankW; x += plankW) {
       const offset = Math.floor(y / plankH) % 2 === 0 ? 0 : plankW / 2;
 
-      const gradient = ctx.createLinearGradient(
-        x + offset,
-        y,
-        x + offset + plankW,
-        y + plankH
-      );
-
-      gradient.addColorStop(0, "#4b210d");
-      gradient.addColorStop(0.45, "#9a5726");
-      gradient.addColorStop(1, "#321305");
+      const gradient = ctx.createLinearGradient(x + offset, y, x + offset + plankW, y + plankH);
+      gradient.addColorStop(0, "#8a5428");
+      gradient.addColorStop(0.45, "#c48748");
+      gradient.addColorStop(1, "#5a2e14");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(x + offset, y, plankW - 3, plankH - 3);
 
-      ctx.strokeStyle = "rgba(255,210,130,0.16)";
+      ctx.strokeStyle = "rgba(255,225,170,0.2)";
       ctx.strokeRect(x + offset, y, plankW - 3, plankH - 3);
 
-      ctx.fillStyle = "rgba(255,255,255,0.018)";
+      ctx.fillStyle = "rgba(255,255,255,0.035)";
       ctx.fillRect(x + offset + 12, y + 8, plankW * 0.55, 2);
     }
   }
@@ -48,7 +42,7 @@ function createParquetTexture() {
   return texture;
 }
 
-function createMuseumWallTexture(base = "#5a4638", accent = "#8a735f") {
+function createMuseumWallTexture(base = "#8a735f") {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
   canvas.height = 1024;
@@ -58,39 +52,36 @@ function createMuseumWallTexture(base = "#5a4638", accent = "#8a735f") {
   ctx.fillStyle = base;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < 5200; i++) {
+  for (let i = 0; i < 8500; i++) {
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height;
-    const r = Math.random() * 1.7;
+    const r = Math.random() * 2.2;
 
     ctx.fillStyle =
       Math.random() > 0.5
-        ? "rgba(255,255,255,0.035)"
-        : "rgba(0,0,0,0.045)";
+        ? "rgba(255,255,255,0.055)"
+        : "rgba(0,0,0,0.055)";
 
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 55; i++) {
     const y = Math.random() * canvas.height;
-    const gradient = ctx.createLinearGradient(0, y, canvas.width, y + 80);
+    const gradient = ctx.createLinearGradient(0, y, canvas.width, y + 100);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.5, "rgba(255,255,255,0.035)");
+    gradient.addColorStop(0.5, "rgba(255,255,255,0.055)");
     gradient.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, y, canvas.width, 80);
+    ctx.fillRect(0, y, canvas.width, 100);
   }
-
-  ctx.fillStyle = "rgba(255,255,255,0.025)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(1.8, 1.2);
+  texture.repeat.set(1.5, 1.1);
   texture.anisotropy = 16;
 
   return texture;
@@ -103,27 +94,27 @@ function createCeilingTexture() {
 
   const ctx = canvas.getContext("2d");
 
-  ctx.fillStyle = "#17100d";
+  ctx.fillStyle = "#3a2f29";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < 3000; i++) {
+  for (let i = 0; i < 5000; i++) {
     ctx.fillStyle =
       Math.random() > 0.5
-        ? "rgba(255,210,150,0.025)"
-        : "rgba(0,0,0,0.05)";
+        ? "rgba(255,230,190,0.04)"
+        : "rgba(0,0,0,0.045)";
 
     ctx.fillRect(
       Math.random() * canvas.width,
       Math.random() * canvas.height,
-      Math.random() * 2.2,
-      Math.random() * 2.2
+      Math.random() * 2.4,
+      Math.random() * 2.4
     );
   }
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2.4, 2.4);
+  texture.repeat.set(2.2, 2.2);
   texture.anisotropy = 16;
 
   return texture;
@@ -131,80 +122,80 @@ function createCeilingTexture() {
 
 const goldMaterial = (
   <meshStandardMaterial
-    color="#c99b4c"
-    metalness={0.72}
-    roughness={0.22}
-    emissive="#4a2506"
-    emissiveIntensity={0.28}
+    color="#e0b866"
+    metalness={0.62}
+    roughness={0.18}
+    emissive="#8a4b12"
+    emissiveIntensity={0.38}
   />
 );
 
 export default function RoomShell({ theme }) {
-  const backWallTexture = createMuseumWallTexture("#66513f", "#8a735f");
-  const sideWallTexture = createMuseumWallTexture("#443226", "#6b5443");
+  const backWallTexture = createMuseumWallTexture("#9a8068");
+  const sideWallTexture = createMuseumWallTexture("#7c6250");
   const ceilingTexture = createCeilingTexture();
 
   return (
     <>
-      <ambientLight intensity={0.14} color={theme?.ambient || "#ffe2b8"} />
+      <ambientLight intensity={0.32} color={theme?.ambient || "#ffe6c8"} />
 
       <directionalLight
         position={[4, 9, 6]}
-        intensity={1.18}
-        color={theme?.directional || "#ffd6a3"}
+        intensity={1.55}
+        color={theme?.directional || "#ffe0b3"}
         castShadow
       />
 
       <pointLight
         position={[0, 5.8, -2]}
-        intensity={2.05}
-        distance={16}
-        color={theme?.glow || "#ffd0a0"}
+        intensity={2.65}
+        distance={18}
+        color={theme?.glow || "#ffd8a8"}
       />
 
       <pointLight
         position={[-7, 4.2, -7]}
-        intensity={1}
-        distance={9}
-        color={theme?.glow || "#ffd0a0"}
+        intensity={1.35}
+        distance={10}
+        color={theme?.glow || "#ffd8a8"}
       />
 
       <pointLight
         position={[7, 4.2, -7]}
-        intensity={1}
-        distance={9}
-        color={theme?.glow || "#ffd0a0"}
+        intensity={1.35}
+        distance={10}
+        color={theme?.glow || "#ffd8a8"}
       />
 
       <pointLight
         position={[-5.2, 5.2, -7.2]}
-        intensity={0.28}
-        distance={5.5}
-        color={theme?.directional || "#ffd6a3"}
+        intensity={0.45}
+        distance={6}
+        color={theme?.directional || "#ffe0b3"}
       />
 
       <pointLight
         position={[0, 5.4, -7.2]}
-        intensity={0.34}
-        distance={6}
-        color={theme?.directional || "#ffd6a3"}
+        intensity={0.55}
+        distance={7}
+        color={theme?.directional || "#ffe0b3"}
       />
 
       <pointLight
         position={[5.2, 5.2, -7.2]}
-        intensity={0.28}
-        distance={5.5}
-        color={theme?.directional || "#ffd6a3"}
+        intensity={0.45}
+        distance={6}
+        color={theme?.directional || "#ffe0b3"}
       />
 
-      {/* Premium parquet floor */}
+      {/* Premium brighter parquet floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.22, 1]} receiveShadow>
         <planeGeometry args={[30, 34]} />
         <meshStandardMaterial
           map={createParquetTexture()}
-          roughness={0.2}
-          metalness={0.26}
-          color="#8a4218"
+          roughness={0.18}
+          metalness={0.22}
+          color="#b36b32"
         />
       </mesh>
 
@@ -213,9 +204,9 @@ export default function RoomShell({ theme }) {
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={backWallTexture}
-          color="#6a533f"
-          roughness={0.62}
-          metalness={0.08}
+          color="#a4876d"
+          roughness={0.58}
+          metalness={0.04}
         />
       </mesh>
 
@@ -224,9 +215,9 @@ export default function RoomShell({ theme }) {
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={sideWallTexture}
-          color="#4a3729"
-          roughness={0.66}
-          metalness={0.06}
+          color="#806350"
+          roughness={0.6}
+          metalness={0.04}
         />
       </mesh>
 
@@ -235,22 +226,22 @@ export default function RoomShell({ theme }) {
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={sideWallTexture}
-          color="#4a3729"
-          roughness={0.66}
-          metalness={0.06}
+          color="#806350"
+          roughness={0.6}
+          metalness={0.04}
         />
       </mesh>
 
-      {/* Ceiling */}
+      {/* Brighter ceiling */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10.4, 1]}>
         <planeGeometry args={[34, 38]} />
         <meshStandardMaterial
           map={ceilingTexture}
-          color="#221914"
-          roughness={0.82}
-          metalness={0.04}
-          emissive="#080302"
-          emissiveIntensity={0.08}
+          color="#4a3d35"
+          roughness={0.74}
+          metalness={0.05}
+          emissive="#120907"
+          emissiveIntensity={0.1}
         />
       </mesh>
 
@@ -281,11 +272,11 @@ export default function RoomShell({ theme }) {
           <mesh>
             <boxGeometry args={[2.7, 5.8, 0.48]} />
             <meshStandardMaterial
-              color="#3a2418"
-              roughness={0.38}
-              metalness={0.16}
-              emissive={theme?.side || "#2a1408"}
-              emissiveIntensity={0.07}
+              color="#604333"
+              roughness={0.42}
+              metalness={0.12}
+              emissive={theme?.side || "#3a1b10"}
+              emissiveIntensity={0.09}
             />
           </mesh>
 
@@ -315,33 +306,33 @@ export default function RoomShell({ theme }) {
       <mesh position={[-10.85, 3.4, -3]}>
         <boxGeometry args={[0.08, 5.8, 0.08]} />
         <meshStandardMaterial
-          color="#d7b56d"
-          emissive={theme?.glow || "#d7b56d"}
-          emissiveIntensity={0.82}
+          color="#f0c778"
+          emissive={theme?.glow || "#f0c778"}
+          emissiveIntensity={1.15}
           metalness={0.55}
-          roughness={0.2}
+          roughness={0.18}
         />
       </mesh>
 
       <mesh position={[10.85, 3.4, -3]}>
         <boxGeometry args={[0.08, 5.8, 0.08]} />
         <meshStandardMaterial
-          color="#d7b56d"
-          emissive={theme?.glow || "#d7b56d"}
-          emissiveIntensity={0.82}
+          color="#f0c778"
+          emissive={theme?.glow || "#f0c778"}
+          emissiveIntensity={1.15}
           metalness={0.55}
-          roughness={0.2}
+          roughness={0.18}
         />
       </mesh>
 
       <mesh position={[0, 6.95, -9.75]}>
         <boxGeometry args={[18, 0.07, 0.08]} />
         <meshStandardMaterial
-          color="#d7b56d"
-          emissive={theme?.glow || "#d7b56d"}
-          emissiveIntensity={0.7}
+          color="#f0c778"
+          emissive={theme?.glow || "#f0c778"}
+          emissiveIntensity={1}
           metalness={0.55}
-          roughness={0.22}
+          roughness={0.2}
         />
       </mesh>
 
