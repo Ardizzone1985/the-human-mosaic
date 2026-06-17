@@ -137,11 +137,11 @@ export default function RoomShell({ theme }) {
 
   return (
     <>
-      <ambientLight intensity={0.32} color={theme?.ambient || "#ffe6c8"} />
+      <ambientLight intensity={0.45} color={theme?.ambient || "#ffe6c8"} />
 
       <directionalLight
         position={[4, 9, 6]}
-        intensity={1.55}
+        intensity={1.9}
         color={theme?.directional || "#ffe0b3"}
         castShadow
       />
