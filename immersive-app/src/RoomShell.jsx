@@ -188,6 +188,22 @@ export default function RoomShell({ theme }) {
         color={theme?.directional || "#ffe0b3"}
       />
 
+      {/* Central ceiling museum light */}
+<pointLight
+  position={[0, 8.5, -2]}
+  intensity={2.4}
+  distance={28}
+  color="#fff3dd"
+/>
+
+{/* InfoWall museum light */}
+<pointLight
+  position={[0, 5.5, 8]}
+  intensity={1.8}
+  distance={18}
+  color="#fff0d0"
+/>
+
       {/* Premium brighter parquet floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.22, 1]} receiveShadow>
         <planeGeometry args={[30, 34]} />
