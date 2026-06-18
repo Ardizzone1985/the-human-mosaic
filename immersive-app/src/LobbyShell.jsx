@@ -173,7 +173,7 @@ metalness={0.48}
 </mesh>
 
       {/* Back wall golden frame */}
-      <mesh position={[0, 7.15, -8.75]}>
+      <mesh position={[0, 9.15, -8.75]}>
         <boxGeometry args={[22.5, 0.08, 0.14]} />
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.5} />
       </mesh>
@@ -183,13 +183,13 @@ metalness={0.48}
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      <mesh position={[-11.25, 3.25, -8.75]}>
-  <boxGeometry args={[0.08, 8.45, 0.14]} />
+      <mesh position={[-11.25, 4.25, -8.75]}>
+  <boxGeometry args={[0.08, 10.45, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
-      <mesh position={[11.25, 3.25, -8.75]}>
-  <boxGeometry args={[0.08, 8.45, 0.14]} />
+      <mesh position={[11.25, 4.25, -8.75]}>
+  <boxGeometry args={[0.08, 10.45, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
