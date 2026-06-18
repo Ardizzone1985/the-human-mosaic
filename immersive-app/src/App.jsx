@@ -708,7 +708,7 @@ const isLobby = !currentRoom;
 
   <color attach="background" args={["#050505"]} />      
 
-  <AtmosphereParticles />      
+  {/* <AtmosphereParticles /> */}
 
   <ambientLight intensity={0.35} color={theme.ambient} />
 
