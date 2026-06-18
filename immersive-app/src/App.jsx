@@ -362,6 +362,8 @@ export default function App() {
   !window.matchMedia("(pointer: fine)").matches;
   const joystickRef = useRef(null);
   const lookJoystickRef = useRef(null);
+  const joystickTouchId = useRef(null);
+const lookJoystickTouchId = useRef(null);
 
 useEffect(() => {
   setTimeout(() => {
@@ -507,8 +509,17 @@ const isLobby = !currentRoom;
       {isMobile && (
   <div
   ref={joystickRef}
-  onTouchMove={(e) => {
-    const touch = e.touches[0];
+  onTouchStart={(e) => {
+  const touch = e.changedTouches[0];
+  joystickTouchId.current = touch.identifier;
+}}
+
+onTouchMove={(e) => {
+  const touch = Array.from(e.touches).find(
+    (t) => t.identifier === joystickTouchId.current
+  );
+
+  if (!touch) return;
     const rect = joystickRef.current.getBoundingClientRect();
 
     const centerX = rect.left + rect.width / 2;
@@ -523,9 +534,16 @@ const isLobby = !currentRoom;
     setJoystick({ x: dx, y: dy });
   }}
 
-  onTouchEnd={() => {
+  onTouchEnd={(e) => {
+  const ended = Array.from(e.changedTouches).some(
+    (t) => t.identifier === joystickTouchId.current
+  );
+
+  if (ended) {
+    joystickTouchId.current = null;
     setJoystick({ x: 0, y: 0 });
-  }}
+  }
+}}
 
   style={{
       position: "fixed",
@@ -559,8 +577,17 @@ const isLobby = !currentRoom;
       {isMobile && (
   <div
     ref={lookJoystickRef}
-    onTouchMove={(e) => {
-      const touch = e.touches[0];
+    onTouchStart={(e) => {
+  const touch = e.changedTouches[0];
+  lookJoystickTouchId.current = touch.identifier;
+}}
+
+onTouchMove={(e) => {
+  const touch = Array.from(e.touches).find(
+    (t) => t.identifier === lookJoystickTouchId.current
+  );
+
+  if (!touch) return;
       const rect = lookJoystickRef.current.getBoundingClientRect();
 
       const centerX = rect.left + rect.width / 2;
@@ -574,9 +601,16 @@ const isLobby = !currentRoom;
 
       setLookJoystick({ x: dx, y: dy });
     }}
-    onTouchEnd={() => {
-      setLookJoystick({ x: 0, y: 0 });
-    }}
+    onTouchEnd={(e) => {
+  const ended = Array.from(e.changedTouches).some(
+    (t) => t.identifier === lookJoystickTouchId.current
+  );
+
+  if (ended) {
+    lookJoystickTouchId.current = null;
+    setLookJoystick({ x: 0, y: 0 });
+  }
+}}
     style={{
       position: "fixed",
       right: 24,
