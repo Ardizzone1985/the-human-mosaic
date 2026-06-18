@@ -748,8 +748,7 @@ const isLobby = !currentRoom;
 />
 
   <spotLight
-  castShadow
-  position={[-6, 7, -3]}
+    position={[-6, 7, -3]}
   angle={0.32}
   penumbra={0.9}
   intensity={2.2}
@@ -759,8 +758,7 @@ const isLobby = !currentRoom;
 />
 
 <spotLight
-  castShadow
-  position={[0, 7, -3]}
+    position={[0, 7, -3]}
   angle={0.32}
   penumbra={0.9}
   intensity={2.2}
@@ -770,8 +768,7 @@ const isLobby = !currentRoom;
 />
 
 <spotLight
-  castShadow
-  position={[6, 7, -3]}
+    position={[6, 7, -3]}
   angle={0.32}
   penumbra={0.9}
   intensity={2.2}
