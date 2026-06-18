@@ -271,7 +271,7 @@ function MobileJoystickMovement({ joystick, lookJoystick, bounds = ROOM_BOUNDS }
 const targetPitch = useRef(0);
 
   useFrame((state, delta) => {
-    const moveSpeed = 3.0;
+    const moveSpeed = 4.5;
     const lookSpeed = 0.85;
 
     targetYaw.current -= lookJoystick.x * lookSpeed * delta;
@@ -330,7 +330,7 @@ function Room({ room, theme, onPhotoSelect }) {
       <RoomShell theme={theme} />
       <InfoWall room={currentRoom} />
 <LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
-{/* <DynamicSectionManager room={currentRoom} /> */}
+<DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
       {isDesktop && <MuseumWalkControls />}
      
@@ -715,8 +715,7 @@ const isLobby = !currentRoom;
   <ambientLight intensity={0.32} />
 
 <directionalLight
-  castShadow
-  position={[4, 8, 4]}
+    position={[4, 8, 4]}
   intensity={1.8}
   color={theme.directional}
   shadow-mapSize-width={2048}
