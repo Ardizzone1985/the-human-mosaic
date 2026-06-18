@@ -113,13 +113,11 @@ function LivePhoto({ item, onSelect }) {
   }}
 >
 
-        <pointLight
-  position={[0, 0, 0.16]}
-  intensity={hovered ? 0.32 : 0.06}
-  distance={0.85}
-  color="#d7b56d"
-/>
-        
+        <mesh position={[0, 0, 0.035]}>
+  <planeGeometry args={[size + 0.08, size + 0.08]} />
+  <meshBasicMaterial color="#d7b56d" />
+</mesh>
+                
         <mesh position={[0, 0, 0.05]}>
   <planeGeometry args={[size, size]} />
   <meshStandardMaterial
@@ -143,42 +141,7 @@ function LivePhoto({ item, onSelect }) {
     />
   </mesh>
 )}
-
-        <mesh position={[0, half + frameThickness / 2, 0.035]}>
-          <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial
-  color={hovered ? "#f2c879" : "#d7b56d"}
-  emissive="#d7b56d"
-  emissiveIntensity={hovered ? 0.28 : 0.05}
-/>
-        </mesh>
-
-        <mesh position={[0, -half - frameThickness / 2, 0.035]}>
-          <boxGeometry args={[size + frameThickness * 2, frameThickness, 0.025]} />
-          <meshStandardMaterial
-  color={hovered ? "#f2c879" : "#d7b56d"}
-  emissive="#d7b56d"
-  emissiveIntensity={hovered ? 0.28 : 0.05}
-/>
-        </mesh>
-
-        <mesh position={[-half - frameThickness / 2, 0, 0.035]}>
-          <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial
-  color={hovered ? "#f2c879" : "#d7b56d"}
-  emissive="#d7b56d"
-  emissiveIntensity={hovered ? 0.28 : 0.05}
-/>
-        </mesh>
-
-        <mesh position={[half + frameThickness / 2, 0, 0.035]}>
-          <boxGeometry args={[frameThickness, size + frameThickness * 2, 0.025]} />
-          <meshStandardMaterial
-  color={hovered ? "#f2c879" : "#d7b56d"}
-  emissive="#d7b56d"
-  emissiveIntensity={hovered ? 0.28 : 0.05}
-/>
-        </mesh>
+        
       </group>
     </group>
   );
@@ -194,7 +157,7 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
         .select("*")
         .eq("room", room)
         .eq("approval_status", "approved")
-        .limit(200);
+        .limit(80);
 
       if (error) {
         console.error("Supabase error:", error);
