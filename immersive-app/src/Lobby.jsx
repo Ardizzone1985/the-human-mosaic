@@ -56,7 +56,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     }}
   >
     <mesh position={[0, 0, -0.28]}>
-  <boxGeometry args={[3.05, 5.15, 0.42]} />
+  <boxGeometry args={[3.45, 5.55, 0.52]} />
       <meshStandardMaterial
         color={hovered ? color : "#6b4a1e"}
         emissive={color}
@@ -67,7 +67,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <mesh position={[0, 0, 0.02]}>
-  <boxGeometry args={[2.24, 4.28, 0.42]} />
+  <boxGeometry args={[2.65, 4.75, 0.46]} />
       <meshStandardMaterial
         color="#2a1208"
         roughness={0.42}
@@ -78,7 +78,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <mesh position={[0, 0, 0.28]}>
-  <boxGeometry args={[1.62, 3.48, 0.12]} />
+  <boxGeometry args={[1.95, 3.95, 0.16]} />
       <meshStandardMaterial
         color="#0b0302"
         roughness={0.7}
@@ -103,7 +103,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <Text
-      position={[0, 3.08, 0.28]}
+      position={[0, 3.45, 0.28]}
       fontSize={0.28}
       color={hovered ? "#ffffff" : color}
       anchorX="center"
@@ -143,11 +143,11 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 
     {/* Portal wall glow */}
 <mesh position={[0, 0.2, -1.05]}>
-  <planeGeometry args={[5.2, 7.4]} />
+  <planeGeometry args={[6.8, 8.8]} />
   <meshBasicMaterial
     color={color}
     transparent
-    opacity={hovered ? 0.14 : 0.06}
+    opacity={hovered ? 0.22 : 0.10}
   />
 </mesh>
 
@@ -165,7 +165,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 </mesh>
 
     <Text
-      position={[0, -2.55, 0.28]}
+      position={[0, -2.85, 0.28]}
       fontSize={0.12}
       color={hovered ? "#ffffff" : "#d8c7ad"}
       anchorX="center"
