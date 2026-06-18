@@ -1,9 +1,83 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Text, useTexture } from "@react-three/drei";
 import LobbyShell from "./LobbyShell.jsx";
 import logoImage from "./logo-cropped.png";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { supabase } from "./supabaseClient.js";
+
+function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    async function loadFeaturedPhoto() {
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("image_file_name")
+        .eq("room", room)
+        .eq("approval_status", "approved")
+        .limit(1);
+
+      if (error) {
+        console.error("Featured photo error:", error);
+        return;
+      }
+
+      if (data?.[0]?.image_file_name) {
+        setImageUrl(
+          "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
+            data[0].image_file_name
+        );
+      }
+    }
+
+    loadFeaturedPhoto();
+  }, [room]);
+
+  const texture = useTexture(imageUrl || logoImage);
+
+  return (
+    <group position={position}>
+      <Text
+        position={[0, 1.25, 0.08]}
+        fontSize={0.16}
+        color={color}
+        anchorX="center"
+        letterSpacing={0.08}
+      >
+        FEATURED PHOTO
+      </Text>
+
+      <mesh position={[0, 0.35, 0.03]}>
+        <planeGeometry args={[1.45, 1.05]} />
+        <meshStandardMaterial
+          map={texture}
+          roughness={0.22}
+          metalness={0.05}
+          emissive="#ffffff"
+          emissiveIntensity={0.05}
+          toneMapped={false}
+        />
+      </mesh>
+
+      <mesh position={[0, 0.35, 0]}>
+        <boxGeometry args={[1.7, 1.3, 0.05]} />
+        <meshStandardMaterial
+          color="#120806"
+          emissive={color}
+          emissiveIntensity={0.12}
+          roughness={0.35}
+          metalness={0.22}
+        />
+      </mesh>
+
+      <mesh position={[0, 0.35, -0.04]}>
+        <planeGeometry args={[2.1, 1.65]} />
+        <meshBasicMaterial color={color} transparent opacity={0.08} />
+      </mesh>
+    </group>
+  );
+}
 
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
@@ -337,6 +411,24 @@ rotation={[0, Math.PI, 0]}
     Future project room
   </Text>
 </group>
+
+      <FeaturedRoomPhoto
+  position={[-6.6, 5.05, -7.35]}
+  room="Identity"
+  color="#d7b56d"
+/>
+
+<FeaturedRoomPhoto
+  position={[0, 5.05, -7.35]}
+  room="Love"
+  color="#ff9fbd"
+/>
+
+<FeaturedRoomPhoto
+  position={[6.6, 5.05, -7.35]}
+  room="Creativity"
+  color="#9fc3ff"
+/>
       
       <RoomDoor
         position={[-6.6, 1, -7.6]}
