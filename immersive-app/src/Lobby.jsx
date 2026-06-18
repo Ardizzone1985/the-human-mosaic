@@ -38,16 +38,7 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
 
   return (
     <group position={position}>
-      <Text
-        position={[0, 1.25, 0.08]}
-        fontSize={0.16}
-        color={color}
-        anchorX="center"
-        letterSpacing={0.08}
-      >
-        FEATURED PHOTO
-      </Text>
-
+      
       <mesh position={[0, 0.35, 0.03]}>
         <planeGeometry args={[1.45, 1.05]} />
         <meshStandardMaterial
@@ -284,7 +275,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
     
       <Text
- position={[0, 6.15, -7.15]}
+ position={[0, 7.45, -7.15]}
   fontSize={0.32}
   color="#bfa66f"
   anchorX="center"
@@ -294,7 +285,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
 
 <Text
-  position={[0, 5.65, -7.15]}
+  position={[0, 6.95, -7.15]}
   fontSize={0.58}
   color="#f8d890"
   anchorX="center"
@@ -304,7 +295,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
 
 <Text
-  position={[0, 5.08, -7.15]}
+  position={[0, 6.35, -7.15]}
   fontSize={0.16}
   color="#c9a96b"
   anchorX="center"
@@ -413,19 +404,19 @@ rotation={[0, Math.PI, 0]}
 </group>
 
       <FeaturedRoomPhoto
-  position={[-6.6, 5.05, -7.35]}
+  position={[-6.6, 5.55, -7.35]}
   room="Identity"
   color="#d7b56d"
 />
 
 <FeaturedRoomPhoto
-  position={[0, 5.05, -7.35]}
+  position={[0, 5.55, -7.35]}
   room="Love"
   color="#ff9fbd"
 />
 
 <FeaturedRoomPhoto
-  position={[6.6, 5.05, -7.35]}
+  position={[6.6, 5.55, -7.35]}
   room="Creativity"
   color="#9fc3ff"
 />
