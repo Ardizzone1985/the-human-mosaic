@@ -329,7 +329,7 @@ function Room({ room, theme, onPhotoSelect }) {
     <>
       <RoomShell theme={theme} />
       <InfoWall room={currentRoom} />
-<LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
+{/* <LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} /> */}
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
       {isDesktop && <MuseumWalkControls />}
