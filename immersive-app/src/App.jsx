@@ -697,12 +697,12 @@ const isLobby = !currentRoom;
     >
       <Canvas
   camera={{ position: [0, 1.75, 8.8], fov: 58 }}
-  shadows={{
-    type: "soft"
-  }}
+  shadows={false}
   gl={{
-    antialias: true
+    antialias: false,
+    powerPreference: "high-performance"
   }}
+  dpr={[1, 1.5]}
 >
   <fog attach="fog" args={["#050505", 10, 30]} />
 
