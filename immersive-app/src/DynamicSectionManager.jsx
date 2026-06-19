@@ -65,7 +65,7 @@ export default function DynamicSectionManager({ room = "Identity" }) {
 
   return (
     <>
-      {grouped.front.map((item, index) => (
+      {grouped.front.slice(0, 3).map((item, index) => (
         <SectionGrid
           key={item.key}
           wall="front"
@@ -74,7 +74,7 @@ export default function DynamicSectionManager({ room = "Identity" }) {
         />
       ))}
 
-      {grouped.left.map((item, index) => (
+      {grouped.left.slice(0, 2).map((item, index) => (
         <SectionGrid
           key={item.key}
           wall="left"
@@ -83,7 +83,7 @@ export default function DynamicSectionManager({ room = "Identity" }) {
         />
       ))}
 
-      {grouped.right.map((item, index) => (
+      {grouped.right.slice(0, 2).map((item, index) => (
         <SectionGrid
           key={item.key}
           wall="right"
