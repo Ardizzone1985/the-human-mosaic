@@ -107,6 +107,18 @@ const ROOM_BOUNDS = {
   maxY: 3.1
 };
 
+const ROOM_VIEWPOINTS = [
+  { id: "center", position: [0, 2.05, 1.2] },
+  { id: "front", position: [0, 2.05, -5.6] },
+  { id: "back", position: [0, 2.05, 6.8] },
+  { id: "left", position: [-6.8, 2.05, 1.2] },
+  { id: "right", position: [6.8, 2.05, 1.2] },
+  { id: "frontLeft", position: [-5.6, 2.05, -5.2] },
+  { id: "frontRight", position: [5.6, 2.05, -5.2] },
+  { id: "backLeft", position: [-5.6, 2.05, 5.8] },
+  { id: "backRight", position: [5.6, 2.05, 5.8] }
+];
+
 function applyCameraBounds(camera, bounds) {
   camera.position.x = THREE.MathUtils.clamp(
     camera.position.x,
