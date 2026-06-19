@@ -4,8 +4,8 @@ export default function SectionGrid({
   index = 0,
   color = "#3a2418"
 }) {
-  const rows = 5;
-  const cols = 10;
+  const rows = 3;
+  const cols = 6;
 
   function getBasePosition() {
     const gap = 3.4;
