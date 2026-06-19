@@ -157,7 +157,7 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
         .select("*")
         .eq("room", room)
         .eq("approval_status", "approved")
-        .limit(80);
+        .limit(50);
 
       if (error) {
         console.error("Supabase error:", error);
