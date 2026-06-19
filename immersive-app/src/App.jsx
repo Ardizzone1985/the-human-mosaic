@@ -331,6 +331,30 @@ camera.position.y = THREE.MathUtils.clamp(camera.position.y, bounds.minY, bounds
   return null;
 }
 
+function StreetViewControls({ currentPointId, targetPointId }) {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    const startPoint = ROOM_VIEWPOINTS.find((p) => p.id === currentPointId);
+    if (!startPoint) return;
+
+    camera.position.set(...startPoint.position);
+    camera.rotation.order = "YXZ";
+  }, [camera, currentPointId]);
+
+  useFrame(() => {
+    const targetPoint = ROOM_VIEWPOINTS.find((p) => p.id === targetPointId);
+    if (!targetPoint) return;
+
+    camera.position.lerp(
+      new THREE.Vector3(...targetPoint.position),
+      0.06
+    );
+  });
+
+  return null;
+}
+
 function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
   const isDesktop =
