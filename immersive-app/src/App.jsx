@@ -327,7 +327,7 @@ function Room({ room, theme, onPhotoSelect }) {
   
     return (
     <>
-      <RoomShell theme={theme} />
+      {/* <RoomShell theme={theme} /> */}
       <InfoWall room={currentRoom} />
 <LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
 <DynamicSectionManager room={currentRoom} />
