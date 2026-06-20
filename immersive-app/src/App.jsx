@@ -355,6 +355,29 @@ function StreetViewControls({ currentPointId, targetPointId }) {
   return null;
 }
 
+function FloorArrow({ point, onMove }) {
+  return (
+    <group
+      position={[point.position[0], 0.02, point.position[2]]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      onClick={(e) => {
+        e.stopPropagation();
+        onMove(point.id);
+      }}
+    >
+      <mesh>
+        <circleGeometry args={[0.42, 32]} />
+        <meshBasicMaterial color="#d7b56d" transparent opacity={0.55} />
+      </mesh>
+
+      <mesh position={[0, 0.18, 0.01]}>
+        <coneGeometry args={[0.18, 0.38, 3]} />
+        <meshBasicMaterial color="#fff0c0" />
+      </mesh>
+    </group>
+  );
+}
+
 function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
   const [currentPointId, setCurrentPointId] = useState("center");
@@ -374,6 +397,16 @@ const [targetPointId, setTargetPointId] = useState("center");
   currentPointId={currentPointId}
   targetPointId={targetPointId}
 />
+{ROOM_VIEWPOINTS.map((point) => (
+  <FloorArrow
+    key={point.id}
+    point={point}
+    onMove={(id) => {
+            setTargetPointId(id);
+    }}
+  />
+))}
+      
       {isDesktop && <MuseumWalkControls />}
      
       {!isDesktop && (
