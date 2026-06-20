@@ -27,7 +27,7 @@ export default function LobbyShell() {
 
       {/* Premium lobby floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.25, 0]} receiveShadow>
-        <planeGeometry args={[34, 28]} />
+        <planeGeometry args={[40, 30]} />
         <meshStandardMaterial
   color="#8a2d10"
   roughness={0.12}
@@ -91,31 +91,31 @@ metalness={0.48}
 
       {/* Back wall */}
       <mesh position={[0, 4.25, -9]}>
-  <boxGeometry args={[24, 11.8, 0.35]} />
+  <boxGeometry args={[30, 13.2, 0.35]} />
         <meshStandardMaterial color="#1b0904" roughness={0.62} />
       </mesh>
 
       {/* Left wall */}
-<mesh position={[-12, 4.25, 0.9]} rotation={[0, Math.PI / 2, 0]}>
-  <boxGeometry args={[20, 11.8, 0.35]} />
+<mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial color="#271008" roughness={0.65} />
 </mesh>
 
 {/* Right wall */}
-<mesh position={[12, 4.25, 0.9]} rotation={[0, Math.PI / 2, 0]}>
-  <boxGeometry args={[20, 11.8, 0.35]} />
+<mesh position={[15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial color="#271008" roughness={0.65} />
 </mesh>
 
       {/* Entrance / branding wall */}
 <mesh position={[0, 4.25, 10.8]}>
-  <boxGeometry args={[24, 11.8, 0.35]} />
+  <boxGeometry args={[30, 13.2, 0.35]} />
   <meshStandardMaterial color="#1b0904" roughness={0.62} />
 </mesh>
 
       {/* Deep cinematic ceiling */}
 <mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
-  <planeGeometry args={[34, 28]} />
+  <planeGeometry args={[40, 30]} />
   <meshStandardMaterial
     color="#070202"
     roughness={0.68}
@@ -174,22 +174,22 @@ metalness={0.48}
 
       {/* Back wall golden frame */}
       <mesh position={[0, 9.15, -8.75]}>
-        <boxGeometry args={[22.5, 0.08, 0.14]} />
+        <boxGeometry args={[28.5, 0.08, 0.14]} />
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.5} />
       </mesh>
 
       <mesh position={[0, -0.95, -8.75]}>
-        <boxGeometry args={[22.5, 0.08, 0.14]} />
+        <boxGeometry args={[28.5, 0.08, 0.14]} />
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      <mesh position={[-11.25, 4.25, -8.75]}>
-  <boxGeometry args={[0.08, 10.45, 0.14]} />
+      <mesh position={[-14.25, 4.9, -8.75]}
+  <boxGeometry args={[0.08, 11.8, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
-      <mesh position={[11.25, 4.25, -8.75]}>
-  <boxGeometry args={[0.08, 10.45, 0.14]} />
+      <mesh position={[14.25, 4.9, -8.75]}
+  <boxGeometry args={[0.08, 11.8, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
