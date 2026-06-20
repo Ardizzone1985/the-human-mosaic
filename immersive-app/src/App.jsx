@@ -499,10 +499,10 @@ const isLobby = !currentRoom;
       </div>
 
       <div style={{ color: "#d8c7ad", fontSize: "15px", lineHeight: 1.7 }}>
-        <strong>Left joystick</strong><br />
+        <strong>Tap the floor arrows</strong><br />
         Move through the museum<br /><br />
 
-        <strong>Right joystick</strong><br />
+        <strong>Drag the screen</strong><br />
         Look around<br /><br />
 
         <strong>Tap a photo</strong><br />
