@@ -119,6 +119,20 @@ const ROOM_VIEWPOINTS = [
   { id: "backRight", position: [5.6, 2.05, 5.8] }
 ];
 
+const LOBBY_VIEWPOINTS = [
+  { id: "center", position: [0, 2.05, 1.8] },
+
+  { id: "identityDoor", position: [-5.5, 2.05, -5.8] },
+  { id: "loveDoor", position: [0, 2.05, -5.8] },
+  { id: "creativityDoor", position: [5.5, 2.05, -5.8] },
+
+  { id: "welcomeWall", position: [0, 2.05, 7.2] },
+
+  { id: "infoWall", position: [-7.2, 2.05, 0] },
+
+  { id: "futureWall", position: [7.2, 2.05, 0] }
+];
+
 function applyCameraBounds(camera, bounds) {
   camera.position.x = THREE.MathUtils.clamp(
     camera.position.x,
@@ -331,11 +345,11 @@ camera.position.y = THREE.MathUtils.clamp(camera.position.y, bounds.minY, bounds
   return null;
 }
 
-function StreetViewControls({ currentPointId, targetPointId }) {
+function StreetViewControls({ currentPointId, targetPointId, points = ROOM_VIEWPOINTS }) {
   const { camera } = useThree();
 
   useEffect(() => {
-    const startPoint = ROOM_VIEWPOINTS.find((p) => p.id === currentPointId);
+    const startPoint = points.find((p) => p.id === currentPointId);
     if (!startPoint) return;
 
     camera.position.set(...startPoint.position);
@@ -343,7 +357,7 @@ function StreetViewControls({ currentPointId, targetPointId }) {
   }, [camera, currentPointId]);
 
   useFrame(() => {
-    const targetPoint = ROOM_VIEWPOINTS.find((p) => p.id === targetPointId);
+    const targetPoint = points.find((p) => p.id === targetPointId);
     if (!targetPoint) return;
 
     camera.position.lerp(
