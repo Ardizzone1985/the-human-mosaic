@@ -1,12 +1,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useState, useRef } from "react";
-import { OrbitControls } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
 import InfoWall from "./InfoWall.jsx";
 import DynamicSectionManager from "./DynamicSectionManager.jsx";
 import Lobby from "./Lobby.jsx";
-import AtmosphereParticles from "./AtmosphereParticles.jsx";
 import * as THREE from "three";
 
 function parseSlotCode(slotCode) {
@@ -198,149 +196,6 @@ function RoomCameraBounds() {
   return null;
 }
 
-function MuseumWalkControls() {
-  const { camera, gl } = useThree();
-  const keys = useRef({});
-  const yaw = useRef(0);
-  const pitch = useRef(0);
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
-
-  useEffect(() => {
-    camera.position.set(0, 2.05, 8.4);
-    camera.rotation.order = "YXZ";
-
-    function onKeyDown(e) {
-      keys.current[e.code] = true;
-    }
-
-    function onKeyUp(e) {
-      keys.current[e.code] = false;
-    }
-
-    function onClick() {
-      gl.domElement.requestPointerLock?.();
-    }
-
-    function onMouseMove(e) {
-      if (document.pointerLockElement !== gl.domElement) return;
-
-      yaw.current -= e.movementX * 0.0022;
-      pitch.current -= e.movementY * 0.0022;
-
-      pitch.current = THREE.MathUtils.clamp(
-        pitch.current,
-        -Math.PI / 3,
-        Math.PI / 3
-      );
-
-      camera.rotation.y = yaw.current;
-      camera.rotation.x = pitch.current;
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
-    gl.domElement.addEventListener("click", onClick);
-    window.addEventListener("mousemove", onMouseMove);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
-      gl.domElement.removeEventListener("click", onClick);
-      window.removeEventListener("mousemove", onMouseMove);
-    };
-  }, [camera, gl]);
-
-  useFrame((state, delta) => {
-    const speed = keys.current.ShiftLeft ? 1.2 : 3.0;
-
-    const forward = new THREE.Vector3(
-      -Math.sin(camera.rotation.y),
-      0,
-      -Math.cos(camera.rotation.y)
-    );
-
-    const right = new THREE.Vector3(
-      Math.cos(camera.rotation.y),
-      0,
-      -Math.sin(camera.rotation.y)
-    );
-
-    const targetVelocity = new THREE.Vector3(0, 0, 0);
-
-if (keys.current.KeyW) targetVelocity.addScaledVector(forward, speed);
-if (keys.current.KeyS) targetVelocity.addScaledVector(forward, -speed);
-if (keys.current.KeyA) targetVelocity.addScaledVector(right, -speed);
-if (keys.current.KeyD) targetVelocity.addScaledVector(right, speed);
-
-velocity.current.lerp(targetVelocity, 0.08);
-
-camera.position.addScaledVector(velocity.current, delta);
-
-    applyCameraBounds(camera, ROOM_BOUNDS);
-    applyInfoWallCollision(camera);
-    applyCornerCollisions(camera);
-  });
-
-  return null;
-}
-
-function MobileJoystickMovement({ joystick, lookJoystick, bounds = ROOM_BOUNDS }) {
-  const { camera } = useThree();
-  const yaw = useRef(0);
-  const pitch = useRef(0);
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
-  const targetYaw = useRef(0);
-const targetPitch = useRef(0);
-
-  useFrame((state, delta) => {
-    const moveSpeed = 4.5;
-    const lookSpeed = 0.85;
-
-    targetYaw.current -= lookJoystick.x * lookSpeed * delta;
-targetPitch.current -= lookJoystick.y * lookSpeed * delta;
-
-targetPitch.current = THREE.MathUtils.clamp(
-  targetPitch.current,
-  -Math.PI / 3.8,
-  Math.PI / 3.8
-);
-
-yaw.current = THREE.MathUtils.lerp(yaw.current, targetYaw.current, 0.12);
-pitch.current = THREE.MathUtils.lerp(pitch.current, targetPitch.current, 0.12);
-
-camera.rotation.order = "YXZ";
-camera.rotation.y = yaw.current;
-camera.rotation.x = pitch.current;
-    
-    const forward = new THREE.Vector3(
-      -Math.sin(camera.rotation.y),
-      0,
-      -Math.cos(camera.rotation.y)
-    );
-
-    const right = new THREE.Vector3(
-      Math.cos(camera.rotation.y),
-      0,
-      -Math.sin(camera.rotation.y)
-    );
-
-    const targetVelocity = new THREE.Vector3(0, 0, 0);
-
-targetVelocity.addScaledVector(forward, -joystick.y * moveSpeed);
-targetVelocity.addScaledVector(right, joystick.x * moveSpeed);
-
-velocity.current.lerp(targetVelocity, 0.08);
-
-camera.position.addScaledVector(velocity.current, delta);
-
-    camera.position.x = THREE.MathUtils.clamp(camera.position.x, bounds.minX, bounds.maxX);
-camera.position.z = THREE.MathUtils.clamp(camera.position.z, bounds.minZ, bounds.maxZ);
-camera.position.y = THREE.MathUtils.clamp(camera.position.y, bounds.minY, bounds.maxY);
-  });
-
-  return null;
-}
-
 function StreetViewControls({ currentPointId, targetPointId, points = ROOM_VIEWPOINTS }) {
   const { camera } = useThree();
 
@@ -510,17 +365,7 @@ const [targetPointId, setTargetPointId] = useState("center");
     }}
   />
 ))}
-      
-      {false && <MuseumWalkControls />}
-           
-      {false && (
-  <MobileJoystickMovement
-  joystick={window.mobileJoystick || { x: 0, y: 0 }}
-  lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
-  bounds={ROOM_BOUNDS}
-/>
-)}     
-
+   
     </>
   );
 }
@@ -532,19 +377,11 @@ export default function App() {
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
-  const [joystick, setJoystick] = useState({ x: 0, y: 0 });
-  const [lookJoystick, setLookJoystick] = useState({ x: 0, y: 0 });
-  window.mobileJoystick = joystick;
-  window.mobileLookJoystick = lookJoystick;
-
+  
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
-  const joystickRef = useRef(null);
-  const lookJoystickRef = useRef(null);
-  const joystickTouchId = useRef(null);
-const lookJoystickTouchId = useRef(null);
-
+  
 useEffect(() => {
   setTimeout(() => {
     setFadeIn(true);
@@ -685,141 +522,7 @@ const isLobby = !currentRoom;
     </div>
   </div>
 )}
-      
-      {false && isMobile && (
-  <div
-  ref={joystickRef}
-  onTouchStart={(e) => {
-  const touch = e.changedTouches[0];
-  joystickTouchId.current = touch.identifier;
-}}
-
-onTouchMove={(e) => {
-  const touch = Array.from(e.touches).find(
-    (t) => t.identifier === joystickTouchId.current
-  );
-
-  if (!touch) return;
-    const rect = joystickRef.current.getBoundingClientRect();
-
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    let dx = (touch.clientX - centerX) / 40;
-    let dy = (touch.clientY - centerY) / 40;
-
-    dx = Math.max(-1, Math.min(1, dx));
-    dy = Math.max(-1, Math.min(1, dy));
-
-    setJoystick({ x: dx, y: dy });
-  }}
-
-  onTouchEnd={(e) => {
-  const ended = Array.from(e.changedTouches).some(
-    (t) => t.identifier === joystickTouchId.current
-  );
-
-  if (ended) {
-    joystickTouchId.current = null;
-    setJoystick({ x: 0, y: 0 });
-  }
-}}
-
-  style={{
-      position: "fixed",
-      left: 24,
-      bottom: 34,
-      width: 96,
-      height: 96,
-      borderRadius: "50%",
-      background: "rgba(0,0,0,0.32)",
-      border: "1px solid rgba(215,181,109,0.35)",
-      zIndex: 30,
-      touchAction: "none"
-    }}
-  >
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        width: 38,
-        height: 38,
-        borderRadius: "50%",
-        background: "rgba(215,181,109,0.82)",
-        transform: `translate(calc(-50% + ${joystick.x * 28}px), calc(-50% + ${joystick.y * 28}px))`,
-        boxShadow: "0 0 22px rgba(215,181,109,0.45)"
-      }}
-    />
-  </div>
-)}
-      
-      {false && isMobile && (
-  <div
-    ref={lookJoystickRef}
-    onTouchStart={(e) => {
-  const touch = e.changedTouches[0];
-  lookJoystickTouchId.current = touch.identifier;
-}}
-
-onTouchMove={(e) => {
-  const touch = Array.from(e.touches).find(
-    (t) => t.identifier === lookJoystickTouchId.current
-  );
-
-  if (!touch) return;
-      const rect = lookJoystickRef.current.getBoundingClientRect();
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      let dx = (touch.clientX - centerX) / 40;
-      let dy = (touch.clientY - centerY) / 40;
-
-      dx = Math.max(-1, Math.min(1, dx));
-      dy = Math.max(-1, Math.min(1, dy));
-
-      setLookJoystick({ x: dx, y: dy });
-    }}
-    onTouchEnd={(e) => {
-  const ended = Array.from(e.changedTouches).some(
-    (t) => t.identifier === lookJoystickTouchId.current
-  );
-
-  if (ended) {
-    lookJoystickTouchId.current = null;
-    setLookJoystick({ x: 0, y: 0 });
-  }
-}}
-    style={{
-      position: "fixed",
-      right: 24,
-      bottom: 34,
-      width: 96,
-      height: 96,
-      borderRadius: "50%",
-      background: "rgba(0,0,0,0.32)",
-      border: "1px solid rgba(215,181,109,0.35)",
-      zIndex: 30,
-      touchAction: "none"
-    }}
-  >
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        width: 38,
-        height: 38,
-        borderRadius: "50%",
-        background: "rgba(215,181,109,0.82)",
-        transform: `translate(calc(-50% + ${lookJoystick.x * 28}px), calc(-50% + ${lookJoystick.y * 28}px))`,
-        boxShadow: "0 0 22px rgba(215,181,109,0.45)"
-      }}
-    />
-  </div>
-)}
-
+           
       {selectedPhoto && (
   <div
     style={{
@@ -1012,33 +715,6 @@ onTouchMove={(e) => {
   />
 ))}
 
-{false && isMobile && (
-  <MobileJoystickMovement
-    joystick={window.mobileJoystick || { x: 0, y: 0 }}
-    lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
-    bounds={LOBBY_BOUNDS}
-  />
-)}
-
-{false && !isMobile && (
-  <OrbitControls
-    enablePan={false}
-    enableZoom={true}
-    enableDamping={true}
-    dampingFactor={0.06}
-    rotateSpeed={0.32}
-    zoomSpeed={0.55}
-    touches={{
-      ONE: 0,
-      TWO: 2
-    }}
-    minDistance={5.2}
-    maxDistance={11}
-    minPolarAngle={Math.PI / 2.55}
-    maxPolarAngle={Math.PI / 1.82}
-    target={[0, 2.2, -7]}
-  />
-)}
   </>
 ) : (
   <Room room={currentRoom} theme={theme} onPhotoSelect={setSelectedPhoto} />
