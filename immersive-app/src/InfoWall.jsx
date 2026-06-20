@@ -207,7 +207,7 @@ fontSize={0.18}
     anchorX="center"
     anchorY="middle"
   >
-    EXIT / HOME
+    HOME
   </Text>
 
   <Text
@@ -217,7 +217,7 @@ fontSize={0.18}
     anchorX="center"
     anchorY="middle"
   >
-    Click to return
+    Return to Lobby
   </Text>
 </group>
     </group>
