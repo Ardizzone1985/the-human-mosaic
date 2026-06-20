@@ -183,12 +183,12 @@ metalness={0.48}
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
       </mesh>
 
-      <mesh position={[-14.25, 4.9, -8.75]}
+      <mesh position={[-14.25, 4.9, -8.75]}>
   <boxGeometry args={[0.08, 11.8, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
-      <mesh position={[14.25, 4.9, -8.75]}
+      <mesh position={[14.25, 4.9, -8.75]}>
   <boxGeometry args={[0.08, 11.8, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
