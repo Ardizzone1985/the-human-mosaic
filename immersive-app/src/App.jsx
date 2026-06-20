@@ -406,9 +406,10 @@ const [targetPointId, setTargetPointId] = useState("center");
     }}
   />
 ))}
-      
+      /*
       {isDesktop && <MuseumWalkControls />}
-     
+     */
+      /*
       {!isDesktop && (
   <MobileJoystickMovement
   joystick={window.mobileJoystick || { x: 0, y: 0 }}
@@ -416,6 +417,7 @@ const [targetPointId, setTargetPointId] = useState("center");
   bounds={ROOM_BOUNDS}
 />
 )}
+      */
 
     </>
   );
@@ -580,7 +582,8 @@ const isLobby = !currentRoom;
     </div>
   </div>
 )}
-
+      
+/*
       {isMobile && (
   <div
   ref={joystickRef}
@@ -648,7 +651,8 @@ onTouchMove={(e) => {
     />
   </div>
 )}
-
+      */
+/*
       {isMobile && (
   <div
     ref={lookJoystickRef}
@@ -714,7 +718,7 @@ onTouchMove={(e) => {
     />
   </div>
 )}
-
+*/
       {selectedPhoto && (
   <div
     style={{
