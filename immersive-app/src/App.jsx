@@ -997,6 +997,14 @@ onTouchMove={(e) => {
   <>
     <Lobby />
 
+    <StreetViewControls
+  currentPointId="center"
+  targetPointId="center"
+  points={LOBBY_VIEWPOINTS}
+/>
+
+<StreetViewLookControls />
+
 {isMobile ? (
   <MobileJoystickMovement
   joystick={window.mobileJoystick || { x: 0, y: 0 }}
