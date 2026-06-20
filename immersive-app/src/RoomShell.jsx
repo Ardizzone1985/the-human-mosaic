@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import * as THREE from "three";
 
 function createParquetTexture() {
@@ -131,9 +132,10 @@ const goldMaterial = (
 );
 
 export default function RoomShell({ theme }) {
-  const backWallTexture = createMuseumWallTexture("#9a8068");
-  const sideWallTexture = createMuseumWallTexture("#7c6250");
-  const ceilingTexture = createCeilingTexture();
+  const backWallTexture = useMemo(() => createMuseumWallTexture("#9a8068"), []);
+const sideWallTexture = useMemo(() => createMuseumWallTexture("#7c6250"), []);
+const ceilingTexture = useMemo(() => createCeilingTexture(), []);
+const parquetTexture = useMemo(() => createParquetTexture(), []);
 
   return (
     <>
@@ -232,7 +234,7 @@ export default function RoomShell({ theme }) {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.22, 1]} receiveShadow>
         <planeGeometry args={[30, 34]} />
         <meshStandardMaterial
-          map={createParquetTexture()}
+          map={parquetTexture}
           roughness={0.18}
           metalness={0.22}
           color="#b36b32"
