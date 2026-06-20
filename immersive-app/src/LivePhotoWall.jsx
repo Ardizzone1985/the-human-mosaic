@@ -115,7 +115,13 @@ function LivePhoto({ item, onSelect }) {
 
         <mesh position={[0, 0, 0.035]}>
   <planeGeometry args={[size + 0.08, size + 0.08]} />
-  <meshBasicMaterial color="#d7b56d" />
+ <meshStandardMaterial
+  color="#d7b56d"
+  roughness={0.28}
+  metalness={0.45}
+  emissive="#8a4b12"
+  emissiveIntensity={hovered ? 0.18 : 0.07}
+/>
 </mesh>
                 
         <mesh position={[0, 0, 0.05]}>
@@ -123,7 +129,7 @@ function LivePhoto({ item, onSelect }) {
   <meshStandardMaterial
     map={texture}
     emissive={"#ffffff"}
-    emissiveIntensity={hovered ? 0.06 : 0.03}
+    emissiveIntensity={hovered ? 0.09 : 0.045}
     roughness={0.28}
     metalness={0.08}
     toneMapped={false}
