@@ -38,6 +38,22 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
 
   return (
     <group position={position}>
+
+      <Text
+  position={[0, 1.25, 0.08]}
+  fontSize={0.13}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.12}
+>
+  FEATURED MEMORY
+</Text>
+
+      <mesh position={[0, 0.35, -0.08]}>
+  <planeGeometry args={[2.25, 1.75]} />
+  <meshBasicMaterial color={color} transparent opacity={0.12} />
+</mesh>
       
       <mesh position={[0, 0.35, 0.03]}>
         <planeGeometry args={[1.45, 1.05]} />
@@ -52,11 +68,11 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
       </mesh>
 
       <mesh position={[0, 0.35, 0]}>
-        <boxGeometry args={[1.7, 1.3, 0.05]} />
+        <boxGeometry args={[1.82, 1.42, 0.06]} />
         <meshStandardMaterial
           color="#120806"
           emissive={color}
-          emissiveIntensity={0.12}
+          emissiveIntensity={0.22}
           roughness={0.35}
           metalness={0.22}
         />
