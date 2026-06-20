@@ -273,6 +273,65 @@ rotation={[0, Math.PI, 0]}
 >
   A permanent global immersive artwork
 </Text>
+
+      <group
+  position={[-8.2, 1.25, 10.55]}
+  rotation={[0, Math.PI, 0]}
+  onPointerOver={() => {
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={() => {
+    document.body.style.cursor = "default";
+  }}
+  onClick={() => {
+    window.dispatchEvent(new Event("startFadeOut"));
+
+    setTimeout(() => {
+      window.location.href = "https://thehumanmosaic.art";
+    }, 700);
+  }}
+>
+  <mesh position={[0, 0, -0.04]}>
+    <boxGeometry args={[1.55, 2.35, 0.14]} />
+    <meshStandardMaterial
+      color="#3a2418"
+      emissive="#8a4b12"
+      emissiveIntensity={0.16}
+      roughness={0.42}
+      metalness={0.18}
+    />
+  </mesh>
+
+  <mesh position={[0, 0, 0.08]}>
+    <boxGeometry args={[1.12, 1.85, 0.08]} />
+    <meshStandardMaterial
+      color="#140805"
+      roughness={0.62}
+      metalness={0.12}
+    />
+  </mesh>
+
+  <mesh position={[0.48, 0, 0.16]}>
+    <sphereGeometry args={[0.045, 16, 16]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.35}
+      metalness={0.7}
+      roughness={0.25}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 1.35, 0.18]}
+    fontSize={0.13}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+  >
+    EXIT
+  </Text>
+</group>
     
       <Text
  position={[0, 7.45, -7.15]}
