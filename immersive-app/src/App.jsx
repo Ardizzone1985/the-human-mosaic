@@ -532,6 +532,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
@@ -999,11 +1000,21 @@ onTouchMove={(e) => {
 
     <StreetViewControls
   currentPointId="center"
-  targetPointId="center"
+  targetPointId={lobbyTargetPointId}
   points={LOBBY_VIEWPOINTS}
 />
 
 <StreetViewLookControls />
+
+    {LOBBY_VIEWPOINTS.map((point) => (
+  <FloorArrow
+    key={point.id}
+    point={point}
+    onMove={(id) => {
+      setLobbyTargetPointId(id);
+    }}
+  />
+))}
 
 {false && isMobile && (
   <MobileJoystickMovement
