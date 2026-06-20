@@ -122,10 +122,6 @@ const ROOM_VIEWPOINTS = [
 const LOBBY_VIEWPOINTS = [
   { id: "center", position: [0, 2.05, 1.8] },
 
-  { id: "identityDoor", position: [-5.5, 2.05, -5.8] },
-  { id: "loveDoor", position: [0, 2.05, -5.8] },
-  { id: "creativityDoor", position: [5.5, 2.05, -5.8] },
-
   { id: "welcomeWall", position: [0, 2.05, 7.2] },
 
   { id: "infoWall", position: [-7.2, 2.05, 0] },
