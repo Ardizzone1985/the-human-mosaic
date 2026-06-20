@@ -52,7 +52,12 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
 
       <mesh position={[0, 0.35, -0.08]}>
   <planeGeometry args={[2.25, 1.75]} />
-  <meshBasicMaterial color={color} transparent opacity={0.12} />
+  <meshBasicMaterial
+  color={color}
+  transparent
+  opacity={0.05}
+  depthWrite={false}
+/>
 </mesh>
       
       <mesh position={[0, 0.35, 0.03]}>
