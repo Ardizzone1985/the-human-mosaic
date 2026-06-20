@@ -60,7 +60,7 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
 />
 </mesh>
       
-      <mesh position={[0, 0.35, 0.03]}>
+      <mesh position={[0, 0.35, 0.09]}>
         <planeGeometry args={[1.45, 1.05]} />
         <meshStandardMaterial
           map={texture}
