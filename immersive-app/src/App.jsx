@@ -357,6 +357,8 @@ function StreetViewControls({ currentPointId, targetPointId }) {
 
 function Room({ room, theme, onPhotoSelect }) {
   const currentRoom = room;
+  const [currentPointId, setCurrentPointId] = useState("center");
+const [targetPointId, setTargetPointId] = useState("center");
   const isDesktop =
   typeof window !== "undefined" &&
   window.matchMedia("(pointer: fine)").matches;
@@ -368,6 +370,10 @@ function Room({ room, theme, onPhotoSelect }) {
 <LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
+      <StreetViewControls
+  currentPointId={currentPointId}
+  targetPointId={targetPointId}
+/>
       {isDesktop && <MuseumWalkControls />}
      
       {!isDesktop && (
