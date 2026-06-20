@@ -822,7 +822,7 @@ onTouchMove={(e) => {
     />
   </div>
 )}
-*/
+
       {selectedPhoto && (
   <div
     style={{
@@ -1005,13 +1005,15 @@ onTouchMove={(e) => {
 
 <StreetViewLookControls />
 
-{isMobile ? (
+{false && isMobile && (
   <MobileJoystickMovement
-  joystick={window.mobileJoystick || { x: 0, y: 0 }}
-  lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
-  bounds={LOBBY_BOUNDS}
-/>
-) : (
+    joystick={window.mobileJoystick || { x: 0, y: 0 }}
+    lookJoystick={window.mobileLookJoystick || { x: 0, y: 0 }}
+    bounds={LOBBY_BOUNDS}
+  />
+)}
+
+{false && !isMobile && (
   <OrbitControls
     enablePan={false}
     enableZoom={true}
