@@ -377,6 +377,9 @@ export default function App() {
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
+  const [showLobbyIntro, setShowLobbyIntro] = useState(() => {
+  return localStorage.getItem("humanMosaicLobbyIntroSeen") !== "true";
+});
   
   const isMobile =
   typeof window !== "undefined" &&
@@ -518,6 +521,58 @@ const isLobby = !currentRoom;
         }}
       >
         TAP TO START
+      </div>
+    </div>
+  </div>
+)}
+
+      {isLobby && showLobbyIntro && !showMobileTutorial && (
+  <div
+    onClick={() => {
+      localStorage.setItem("humanMosaicLobbyIntroSeen", "true");
+      setShowLobbyIntro(false);
+    }}
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 999997,
+      background: "rgba(0,0,0,0.72)",
+      backdropFilter: "blur(10px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "24px",
+      boxSizing: "border-box"
+    }}
+  >
+    <div
+      style={{
+        width: "min(92vw, 460px)",
+        padding: "30px 24px",
+        borderRadius: "28px",
+        background: "rgba(18, 8, 4, 0.96)",
+        border: "1px solid rgba(215,181,109,0.6)",
+        color: "#fff",
+        textAlign: "center",
+        fontFamily: "Arial, sans-serif",
+        boxShadow: "0 30px 90px rgba(0,0,0,0.78)"
+      }}
+    >
+      <div style={{ color: "#f2c879", fontSize: "13px", letterSpacing: "0.22em", marginBottom: "12px" }}>
+        THE HUMAN MOSAIC
+      </div>
+
+      <div style={{ color: "#ffffff", fontSize: "32px", fontWeight: 800, letterSpacing: "0.08em", marginBottom: "14px" }}>
+        CHOOSE YOUR ROOM
+      </div>
+
+      <div style={{ color: "#d8c7ad", fontSize: "15px", lineHeight: 1.75 }}>
+        Enter <strong>Identity</strong>, <strong>Love</strong> or <strong>Creativity</strong>.<br /><br />
+        Explore memories from around the world inside a living global artwork.
+      </div>
+
+      <div style={{ marginTop: "24px", color: "#f2c879", fontSize: "13px", letterSpacing: "0.08em" }}>
+        TAP TO ENTER THE MUSEUM
       </div>
     </div>
   </div>
