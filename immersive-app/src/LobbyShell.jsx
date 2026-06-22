@@ -95,6 +95,66 @@ metalness={0.48}
         <meshStandardMaterial color="#1b0904" roughness={0.62} />
       </mesh>
 
+      {/* Premium door wall architectural panels */}
+{[-8, 0, 8].map((x) => (
+  <group key={`door-wall-panel-${x}`} position={[x, 3.35, -8.72]}>
+    <mesh>
+      <boxGeometry args={[5.6, 6.4, 0.08]} />
+      <meshStandardMaterial
+        color="#241008"
+        roughness={0.52}
+        metalness={0.08}
+        emissive="#120603"
+        emissiveIntensity={0.12}
+      />
+    </mesh>
+
+    <mesh position={[0, 3.25, 0.08]}>
+      <boxGeometry args={[5.7, 0.055, 0.08]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#8a4b12"
+        emissiveIntensity={0.45}
+        metalness={0.35}
+        roughness={0.22}
+      />
+    </mesh>
+
+    <mesh position={[0, -3.25, 0.08]}>
+      <boxGeometry args={[5.7, 0.045, 0.08]} />
+      <meshStandardMaterial
+        color="#8a4b12"
+        emissive="#8a4b12"
+        emissiveIntensity={0.25}
+        metalness={0.25}
+        roughness={0.28}
+      />
+    </mesh>
+
+    <mesh position={[-2.85, 0, 0.08]}>
+      <boxGeometry args={[0.055, 6.5, 0.08]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#8a4b12"
+        emissiveIntensity={0.32}
+        metalness={0.35}
+        roughness={0.25}
+      />
+    </mesh>
+
+    <mesh position={[2.85, 0, 0.08]}>
+      <boxGeometry args={[0.055, 6.5, 0.08]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#8a4b12"
+        emissiveIntensity={0.32}
+        metalness={0.35}
+        roughness={0.25}
+      />
+    </mesh>
+  </group>
+))}
+
       {/* Left wall */}
 <mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
