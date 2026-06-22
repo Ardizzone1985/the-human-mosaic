@@ -218,22 +218,22 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 </mesh>
 
     {/* Vertical cinematic halo */}
-<mesh position={[0, 0, -0.7]}>
-  <planeGeometry args={[3.8, 6.4]} />
+<mesh position={[0, 0.35, -0.7]}>
+  <planeGeometry args={[3.4, 5.8]} />
   <meshBasicMaterial
     color={color}
     transparent
-    opacity={hovered ? 0.12 : 0.05}
+    opacity={hovered ? 0.10 : 0.035}
   />
 </mesh>
 
     {/* Portal wall glow */}
-<mesh position={[0, 0.2, -1.05]}>
-  <planeGeometry args={[6.8, 8.8]} />
+<mesh position={[0, 0.55, -1.05]}>
+  <planeGeometry args={[5.2, 7.2]} />
   <meshBasicMaterial
     color={color}
     transparent
-    opacity={hovered ? 0.22 : 0.10}
+    opacity={hovered ? 0.16 : 0.055}
   />
 </mesh>
 
