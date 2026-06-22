@@ -353,38 +353,7 @@ rotation={[0, Math.PI, 0]}
     EXIT
   </Text>
 </group>
-    
-      <Text
- position={[0, 8.05, -7.15]}
-  fontSize={0.32}
-  color="#bfa66f"
-  anchorX="center"
-  letterSpacing={0.16}
->
-  CHOOSE
-</Text>
-
-<Text
-  position={[0, 7.55, -7.15]}
-  fontSize={0.58}
-  color="#f8d890"
-  anchorX="center"
-  letterSpacing={0.08}
->
-  YOUR ROOM
-</Text>
-
-<Text
-  position={[0, 6.9, -7.15]}
-  fontSize={0.16}
-  color="#c9a96b"
-  anchorX="center"
-  maxWidth={6}
-  textAlign="center"
->
-  Explore the living museum or reserve your place in the artwork
-</Text>
-
+        
       <group
   position={[0, 0.35, 10.55]}
 rotation={[0, Math.PI, 0]}
