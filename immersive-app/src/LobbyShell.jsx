@@ -173,6 +173,70 @@ metalness={0.48}
   <meshStandardMaterial color="#1b0904" roughness={0.62} />
 </mesh>
 
+      {/* Welcome wall architectural panels */}
+
+<group position={[-6.5, 4.4, 10.58]}>
+  <mesh>
+    <boxGeometry args={[4.5, 8.2, 0.08]} />
+    <meshStandardMaterial
+      color="#241008"
+      roughness={0.52}
+      metalness={0.08}
+      emissive="#120603"
+      emissiveIntensity={0.10}
+    />
+  </mesh>
+
+  <mesh position={[0, 4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#8a4b12"
+      emissiveIntensity={0.35}
+    />
+  </mesh>
+
+  <mesh position={[0, -4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#8a4b12"
+      emissive="#8a4b12"
+      emissiveIntensity={0.18}
+    />
+  </mesh>
+</group>
+
+<group position={[6.5, 4.4, 10.58]}>
+  <mesh>
+    <boxGeometry args={[4.5, 8.2, 0.08]} />
+    <meshStandardMaterial
+      color="#241008"
+      roughness={0.52}
+      metalness={0.08}
+      emissive="#120603"
+      emissiveIntensity={0.10}
+    />
+  </mesh>
+
+  <mesh position={[0, 4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#8a4b12"
+      emissiveIntensity={0.35}
+    />
+  </mesh>
+
+  <mesh position={[0, -4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#8a4b12"
+      emissive="#8a4b12"
+      emissiveIntensity={0.18}
+    />
+  </mesh>
+</group>
+
       {/* Deep cinematic ceiling */}
 <mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
   <planeGeometry args={[40, 30]} />
