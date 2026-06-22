@@ -179,11 +179,11 @@ metalness={0.48}
   <mesh>
     <boxGeometry args={[4.5, 8.2, 0.08]} />
     <meshStandardMaterial
-      color="#241008"
+      color="#2f150b"
       roughness={0.52}
       metalness={0.08}
       emissive="#120603"
-      emissiveIntensity={0.10}
+      emissiveIntensity={0.18}
     />
   </mesh>
 
