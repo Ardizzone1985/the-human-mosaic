@@ -355,7 +355,7 @@ rotation={[0, Math.PI, 0]}
 </group>
     
       <Text
- position={[0, 7.45, -7.15]}
+ position={[0, 8.05, -7.15]}
   fontSize={0.32}
   color="#bfa66f"
   anchorX="center"
@@ -365,7 +365,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
 
 <Text
-  position={[0, 6.95, -7.15]}
+  position={[0, 7.55, -7.15]}
   fontSize={0.58}
   color="#f8d890"
   anchorX="center"
@@ -375,7 +375,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
 
 <Text
-  position={[0, 6.35, -7.15]}
+  position={[0, 6.9, -7.15]}
   fontSize={0.16}
   color="#c9a96b"
   anchorX="center"
@@ -484,39 +484,39 @@ rotation={[0, Math.PI, 0]}
 </group>
 
       <FeaturedRoomPhoto
-  position={[-6.6, 5.55, -7.35]}
+  position={[-8, 6.15, -7.35]}
   room="Identity"
   color="#d7b56d"
 />
 
 <FeaturedRoomPhoto
-  position={[0, 5.55, -7.35]}
+  position={[0, 6.15, -7.35]}
   room="Love"
   color="#ff9fbd"
 />
 
 <FeaturedRoomPhoto
-  position={[6.6, 5.55, -7.35]}
+  position={[8, 6.15, -7.35]}
   room="Creativity"
   color="#9fc3ff"
 />
       
       <RoomDoor
-        position={[-6.6, 1, -7.6]}
+        position={[-8, 1.25, -7.6]}
         label="IDENTITY"
         room="Identity"
         color="#d7b56d"
       />
 
       <RoomDoor
-        position={[0, 1, -7.6]}
+        position={[0, 1.25, -7.6]}
         label="LOVE"
         room="Love"
         color="#ff9fbd"
       />
 
       <RoomDoor
-        position={[6.6, 1, -7.6]}
+        position={[8, 1.25, -7.6]}
         label="CREATIVITY"
         room="Creativity"
         color="#9fc3ff"
