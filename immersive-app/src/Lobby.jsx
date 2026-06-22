@@ -142,7 +142,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     }}
   >
     <mesh position={[0, 0, -0.28]}>
-  <boxGeometry args={[3.45, 5.55, 0.52]} />
+  <boxGeometry args={[3.8, 6.1, 0.52]} />
       <meshStandardMaterial
         color={hovered ? color : "#6b4a1e"}
         emissive={color}
@@ -153,7 +153,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <mesh position={[0, 0, 0.02]}>
-  <boxGeometry args={[2.65, 4.75, 0.46]} />
+  <boxGeometry args={[2.95, 5.25, 0.46]} />
       <meshStandardMaterial
         color="#2a1208"
         roughness={0.42}
@@ -164,7 +164,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
     </mesh>
 
     <mesh position={[0, 0, 0.28]}>
-  <boxGeometry args={[1.95, 3.95, 0.16]} />
+  <boxGeometry args={[2.2, 4.4, 0.16]} />
       <meshStandardMaterial
         color="#0b0302"
         roughness={0.7}
@@ -502,21 +502,21 @@ rotation={[0, Math.PI, 0]}
 />
       
       <RoomDoor
-        position={[-8, 1.25, -7.6]}
+        position={[-8, 1.45, -7.6]}
         label="IDENTITY"
         room="Identity"
         color="#d7b56d"
       />
 
       <RoomDoor
-        position={[0, 1.25, -7.6]}
+        position={[0, 1.45, -7.6]}
         label="LOVE"
         room="Love"
         color="#ff9fbd"
       />
 
       <RoomDoor
-        position={[8, 1.25, -7.6]}
+        position={[8, 1.45, -7.6]}
         label="CREATIVITY"
         room="Creativity"
         color="#9fc3ff"
