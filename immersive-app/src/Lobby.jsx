@@ -313,7 +313,7 @@ color="#6b5a3f"
   }}
 >
   <mesh position={[0, 0, -0.04]}>
-    <boxGeometry args={[1.9, 2.8, 0.14]} />
+    <boxGeometry args={[2.4, 3.8, 0.14]} />
     <meshStandardMaterial
       color="#3a2418"
       emissive="#8a4b12"
@@ -324,7 +324,7 @@ color="#6b5a3f"
   </mesh>
 
   <mesh position={[0, 0, 0.08]}>
-    <boxGeometry args={[1.35, 2.2, 0.08]} />
+    <boxGeometry args={[1.8, 3.0, 0.08]} />
     <meshStandardMaterial
       color="#140805"
       roughness={0.62}
@@ -344,7 +344,7 @@ color="#6b5a3f"
   </mesh>
 
   <Text
-    position={[0, 1.35, 0.18]}
+    position={[0, 2.0, 0.18]}
     fontSize={0.13}
     color="#f2c879"
     anchorX="center"
