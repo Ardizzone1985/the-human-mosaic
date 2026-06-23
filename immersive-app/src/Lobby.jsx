@@ -410,46 +410,62 @@ rotation={[0, Math.PI, 0]}
   </Text>
 </group>
 
-    <group position={[11.72, 2.15, -1.2]} rotation={[0, -Math.PI / 2, 0]}>
-  <Text
-    position={[0, 2.85, 0.18]}
-    fontSize={0.28}
-    color="#f2c879"
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    WORK IN PROGRESS
-  </Text>
+    <group position={[11.72, 3.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
+  {/* Left sponsor */}
+  <group position={[-4.2, 0, 0]}>
+    <mesh>
+      <boxGeometry args={[2.6, 4.2, 0.16]} />
+      <meshStandardMaterial color="#1b0904" emissive="#8a4b12" emissiveIntensity={0.08} roughness={0.5} />
+    </mesh>
 
-  <mesh position={[0, 0, 0]}>
-    <boxGeometry args={[2.35, 3.8, 0.18]} />
-    <meshStandardMaterial
-      color="#3b1f12"
-      roughness={0.42}
-      metalness={0.18}
-      emissive="#d7b56d"
-      emissiveIntensity={0.12}
-    />
-  </mesh>
+    <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
+      PARTNER SPACE
+    </Text>
 
-  <mesh position={[0, 0, 0.12]}>
-    <boxGeometry args={[1.7, 2.9, 0.08]} />
-    <meshStandardMaterial color="#120603" roughness={0.7} />
-  </mesh>
+    <Text position={[0, 0.55, 0.12]} fontSize={0.12} color="#c9a96b" anchorX="center" maxWidth={2.1} textAlign="center">
+      Future sponsor / partner area
+    </Text>
+  </group>
 
-  <mesh position={[0, 2.02, 0.16]}>
-    <boxGeometry args={[2.55, 0.08, 0.08]} />
-    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
-  </mesh>
+  {/* Community wall */}
+  <group position={[0, 0.15, 0]}>
+    <mesh>
+      <boxGeometry args={[4.4, 5.2, 0.18]} />
+      <meshStandardMaterial color="#241008" emissive="#d7b56d" emissiveIntensity={0.1} roughness={0.46} />
+    </mesh>
 
-  <Text
-    position={[0, -2.25, 0.18]}
-    fontSize={0.13}
-    color="#c9a96b"
-    anchorX="center"
-  >
-    Future project room
-  </Text>
+    <Text position={[0, 1.85, 0.14]} fontSize={0.26} color="#f2c879" anchorX="center" letterSpacing={0.08}>
+      COMMUNITY WALL
+    </Text>
+
+    <Text position={[0, 0.75, 0.14]} fontSize={0.14} color="#d8c7ad" anchorX="center" maxWidth={3.4} textAlign="center">
+      Messages from participants around the world
+    </Text>
+
+    <Text position={[0, -0.25, 0.14]} fontSize={0.13} color="#c9a96b" anchorX="center" maxWidth={3.5} textAlign="center">
+      “Every memory becomes part of humanity.”
+    </Text>
+
+    <Text position={[0, -1.0, 0.14]} fontSize={0.12} color="#9f8b6a" anchorX="center">
+      Coming soon
+    </Text>
+  </group>
+
+  {/* Right sponsor */}
+  <group position={[4.2, 0, 0]}>
+    <mesh>
+      <boxGeometry args={[2.6, 4.2, 0.16]} />
+      <meshStandardMaterial color="#1b0904" emissive="#8a4b12" emissiveIntensity={0.08} roughness={0.5} />
+    </mesh>
+
+    <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
+      PARTNER SPACE
+    </Text>
+
+    <Text position={[0, 0.55, 0.12]} fontSize={0.12} color="#c9a96b" anchorX="center" maxWidth={2.1} textAlign="center">
+      Future sponsor / partner area
+    </Text>
+  </group>
 </group>
 
       <FeaturedRoomPhoto
