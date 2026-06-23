@@ -281,12 +281,12 @@ export default function LobbyShell() {
 <mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
   <planeGeometry args={[40, 30]} />
   <meshStandardMaterial
-    color="#070202"
-    roughness={0.68}
-    metalness={0.12}
-    emissive="#120402"
-    emissiveIntensity={0.18}
-  />
+  color="#1f1f1f"
+  roughness={0.62}
+  metalness={0.10}
+  emissive="#2b2b2b"
+  emissiveIntensity={0.05}
+/>
 </mesh>
 
 {/* Central ceiling light panel */}
