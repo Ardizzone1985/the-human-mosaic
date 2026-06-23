@@ -2,25 +2,25 @@ export default function LobbyShell() {
   return (
     <>
       {/* Cinematic lobby lights */}
-      <ambientLight intensity={0.18} color="#ffd8a8" />
+      <ambientLight intensity={0.45} color="#fff4dc" />
 
       <pointLight
         position={[0, 5.2, -5]}
-        intensity={3.4}
+        intensity={5.5}
         distance={20}
         color="#d7b56d"
       />
 
       <pointLight
         position={[-5, 3.5, -6]}
-        intensity={1.7}
+        intensity={3}
         distance={12}
         color="#d7b56d"
       />
 
       <pointLight
         position={[5, 3.5, -6]}
-        intensity={1.7}
+        intensity={3}
         distance={12}
         color="#d7b56d"
       />
