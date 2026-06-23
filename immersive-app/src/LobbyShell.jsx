@@ -106,11 +106,11 @@ emissiveIntensity={0.015}
     <mesh>
       <boxGeometry args={[5.6, 6.4, 0.08]} />
       <meshStandardMaterial
-        color="#241008"
+        color="#7d786f"
         roughness={0.52}
         metalness={0.08}
-        emissive="#120603"
-        emissiveIntensity={0.12}
+        emissive="#d7c7a0"
+emissiveIntensity={0.04}
       />
     </mesh>
 
@@ -199,11 +199,11 @@ emissiveIntensity={0.015}
   <mesh>
     <boxGeometry args={[4.5, 8.2, 0.08]} />
     <meshStandardMaterial
-      color="#3f1f10"
+      color="#8b857c"
       roughness={0.52}
       metalness={0.08}
-      emissive="#120603"
-      emissiveIntensity={0.28}
+      emissive="#d7c7a0"
+emissiveIntensity={0.03}
     />
   </mesh>
 
@@ -240,11 +240,11 @@ emissiveIntensity={0.015}
   <mesh>
     <boxGeometry args={[4.5, 8.2, 0.08]} />
     <meshStandardMaterial
-      color="#3f1f10"
+      color="#8b857c"
       roughness={0.52}
       metalness={0.08}
-      emissive="#120603"
-      emissiveIntensity={0.28}
+      emissive="#d7c7a0"
+emissiveIntensity={0.03}
     />
   </mesh>
 
