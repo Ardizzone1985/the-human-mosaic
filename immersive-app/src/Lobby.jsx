@@ -286,8 +286,8 @@ rotation={[0, Math.PI, 0]}
      <Text
   position={[0, 1.55, 10.55]}
 rotation={[0, Math.PI, 0]}
-  fontSize={0.24}
-  color="#c9a96b"
+  fontSize={0.28}
+color="#6b5a3f"
   anchorX="center"
   maxWidth={6}
   textAlign="center"
@@ -296,7 +296,7 @@ rotation={[0, Math.PI, 0]}
 </Text>
 
       <group
-  position={[-8.2, 1.25, 10.55]}
+  position={[-11.2, 1.35, 10.55]}
   rotation={[0, Math.PI, 0]}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
@@ -313,7 +313,7 @@ rotation={[0, Math.PI, 0]}
   }}
 >
   <mesh position={[0, 0, -0.04]}>
-    <boxGeometry args={[1.55, 2.35, 0.14]} />
+    <boxGeometry args={[1.9, 2.8, 0.14]} />
     <meshStandardMaterial
       color="#3a2418"
       emissive="#8a4b12"
@@ -324,7 +324,7 @@ rotation={[0, Math.PI, 0]}
   </mesh>
 
   <mesh position={[0, 0, 0.08]}>
-    <boxGeometry args={[1.12, 1.85, 0.08]} />
+    <boxGeometry args={[1.35, 2.2, 0.08]} />
     <meshStandardMaterial
       color="#140805"
       roughness={0.62}
