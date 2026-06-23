@@ -281,11 +281,11 @@ emissiveIntensity={0.015}
 <mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
   <planeGeometry args={[40, 30]} />
   <meshStandardMaterial
-  color="#1f1f1f"
-  roughness={0.62}
-  metalness={0.10}
-  emissive="#2b2b2b"
-  emissiveIntensity={0.05}
+  color="#f7f6f2"
+  roughness={0.92}
+  metalness={0.02}
+  emissive="#ffffff"
+  emissiveIntensity={0.02}
 />
 </mesh>
 
