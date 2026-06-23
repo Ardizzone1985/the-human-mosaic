@@ -296,7 +296,7 @@ color="#6b5a3f"
 </Text>
 
       <group
-  position={[-11.2, 1.35, 10.55]}
+  position={[-12.7, 1.7, 10.55]}
   rotation={[0, Math.PI, 0]}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
