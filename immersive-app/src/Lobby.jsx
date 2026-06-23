@@ -416,7 +416,7 @@ rotation={[0, Math.PI, 0]}
   <group position={[-4.2, 0, 0]}>
     <mesh>
       <boxGeometry args={[2.6, 4.2, 0.16]} />
-      <meshStandardMaterial color="#1b0904" emissive="#8a4b12" emissiveIntensity={0.08} roughness={0.5} />
+      <meshStandardMaterial color="#7f7a72" emissive="#d7c7a0" emissiveIntensity={0.03} roughness={0.5} />
     </mesh>
 
     <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
@@ -432,7 +432,7 @@ rotation={[0, Math.PI, 0]}
   <group position={[0, 0.15, 0]}>
     <mesh>
       <boxGeometry args={[4.4, 5.2, 0.18]} />
-      <meshStandardMaterial color="#241008" emissive="#d7b56d" emissiveIntensity={0.1} roughness={0.46} />
+      <meshStandardMaterial color="#8d877f" emissive="#d7c7a0" emissiveIntensity={0.4} roughness={0.46} />
     </mesh>
 
     <Text position={[0, 1.85, 0.14]} fontSize={0.26} color="#f2c879" anchorX="center" letterSpacing={0.08}>
@@ -456,7 +456,7 @@ rotation={[0, Math.PI, 0]}
   <group position={[4.2, 0, 0]}>
     <mesh>
       <boxGeometry args={[2.6, 4.2, 0.16]} />
-      <meshStandardMaterial color="#1b0904" emissive="#8a4b12" emissiveIntensity={0.08} roughness={0.5} />
+      <meshStandardMaterial color="#7f7a72" emissive="#d7c7a0" emissiveIntensity={0.03} roughness={0.5} />
     </mesh>
 
     <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
