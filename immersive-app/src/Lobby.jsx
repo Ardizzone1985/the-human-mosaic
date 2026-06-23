@@ -344,14 +344,15 @@ color="#6b5a3f"
   </mesh>
 
   <Text
-    position={[0, 2.0, 0.18]}
-    fontSize={0.13}
-    color="#f2c879"
-    anchorX="center"
-    anchorY="middle"
-  >
-    EXIT
-  </Text>
+  position={[0, 2.25, 0.18]}
+  fontSize={0.22}
+  color="#5b4630"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.08}
+>
+  EXIT
+</Text>
 </group>
         
       <group
