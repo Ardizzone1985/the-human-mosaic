@@ -93,10 +93,10 @@ export default function LobbyShell() {
       <mesh position={[0, 4.25, -9]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
         <meshStandardMaterial
-  color="#2a1208"
-  roughness={0.58}
-  emissive="#3a1b0f"
-  emissiveIntensity={0.08}
+  color="#f2efe8"
+  roughness={0.78}
+  emissive="#f2efe8"
+emissiveIntensity={0.015}
 />
       </mesh>
 
@@ -164,10 +164,10 @@ export default function LobbyShell() {
 <mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#32170c"
-  roughness={0.6}
-  emissive="#3a1b0f"
-  emissiveIntensity={0.07}
+  color="#f2efe8"
+  roughness={0.78}
+  emissive="#f2efe8"
+emissiveIntensity={0.015}
 />
 </mesh>
 
@@ -175,10 +175,10 @@ export default function LobbyShell() {
 <mesh position={[15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#32170c"
-  roughness={0.6}
-  emissive="#3a1b0f"
-  emissiveIntensity={0.07}
+  color="#f2efe8"
+  roughness={0.78}
+  emissive="#f2efe8"
+emissiveIntensity={0.015}
 />
 </mesh>
 
@@ -186,10 +186,10 @@ export default function LobbyShell() {
 <mesh position={[0, 4.25, 10.8]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#2a1208"
-  roughness={0.58}
-  emissive="#3a1b0f"
-  emissiveIntensity={0.08}
+  color="#f2efe8"
+  roughness={0.78}
+  emissive="#f2efe8"
+emissiveIntensity={0.015}
 />
 </mesh>
 
