@@ -29,11 +29,11 @@ export default function LobbyShell() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.25, 0]} receiveShadow>
         <planeGeometry args={[40, 30]} />
         <meshStandardMaterial
-  color="#8a2d10"
-  roughness={0.12}
-metalness={0.48}
-  emissive="#2a0703"
-  emissiveIntensity={0.18}
+  color="#d8c39a"
+  roughness={0.72}
+  metalness={0.08}
+  emissive="#3a2a12"
+  emissiveIntensity={0.06}
 />
       </mesh>
 
