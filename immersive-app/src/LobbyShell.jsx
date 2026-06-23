@@ -92,7 +92,12 @@ export default function LobbyShell() {
       {/* Back wall */}
       <mesh position={[0, 4.25, -9]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
-        <meshStandardMaterial color="#1b0904" roughness={0.62} />
+        <meshStandardMaterial
+  color="#2a1208"
+  roughness={0.58}
+  emissive="#3a1b0f"
+  emissiveIntensity={0.08}
+/>
       </mesh>
 
       {/* Premium door wall architectural panels */}
@@ -158,19 +163,34 @@ export default function LobbyShell() {
       {/* Left wall */}
 <mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
-  <meshStandardMaterial color="#271008" roughness={0.65} />
+  <meshStandardMaterial
+  color="#32170c"
+  roughness={0.6}
+  emissive="#3a1b0f"
+  emissiveIntensity={0.07}
+/>
 </mesh>
 
 {/* Right wall */}
 <mesh position={[15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
-  <meshStandardMaterial color="#271008" roughness={0.65} />
+  <meshStandardMaterial
+  color="#32170c"
+  roughness={0.6}
+  emissive="#3a1b0f"
+  emissiveIntensity={0.07}
+/>
 </mesh>
 
       {/* Entrance / branding wall */}
 <mesh position={[0, 4.25, 10.8]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
-  <meshStandardMaterial color="#1b0904" roughness={0.62} />
+  <meshStandardMaterial
+  color="#2a1208"
+  roughness={0.58}
+  emissive="#3a1b0f"
+  emissiveIntensity={0.08}
+/>
 </mesh>
 
       {/* Welcome wall architectural panels */}
