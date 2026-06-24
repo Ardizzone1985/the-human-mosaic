@@ -263,6 +263,42 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
 }
 
 export default function Lobby() {
+    const [roomCounts, setRoomCounts] = useState({
+    Identity: 0,
+    Love: 0,
+    Creativity: 0,
+  });
+
+  useEffect(() => {
+    async function loadRoomCounts() {
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("room, approval_status");
+
+      if (error) {
+        console.error("Lobby stats error:", error);
+        return;
+      }
+
+      let counts = {
+        Identity: 0,
+        Love: 0,
+        Creativity: 0,
+      };
+
+      data.forEach((item) => {
+        if (item.approval_status !== "approved") return;
+
+        if (item.room === "Identity") counts.Identity++;
+        if (item.room === "Love") counts.Love++;
+        if (item.room === "Creativity") counts.Creativity++;
+      });
+
+      setRoomCounts(counts);
+    }
+
+    loadRoomCounts();
+  }, []);
   const logoTexture = useTexture(logoImage);
   return (
     <>
@@ -430,7 +466,7 @@ color="#6b5a3f"
     color="#d7b56d"
     anchorX="center"
   >
-    IDENTITY: —
+    {`IDENTITY: ${roomCounts.Identity.toLocaleString()}`}
   </Text>
 
   <Text
@@ -439,7 +475,7 @@ color="#6b5a3f"
     color="#c9829b"
     anchorX="center"
   >
-    LOVE: —
+    {`LOVE: ${roomCounts.Love.toLocaleString()}`}
   </Text>
 
   <Text
@@ -448,7 +484,7 @@ color="#6b5a3f"
     color="#8fa8d8"
     anchorX="center"
   >
-    CREATIVITY: —
+    {`CREATIVITY: ${roomCounts.Creativity.toLocaleString()}`}
   </Text>
 
   <Text
