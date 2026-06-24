@@ -354,6 +354,114 @@ color="#6b5a3f"
   EXIT
 </Text>
 </group>
+
+      {/* Welcome Wall - Project News Panel */}
+<group position={[-6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
+  <Text
+    position={[0, 2.55, 0.12]}
+    fontSize={0.28}
+    color="#5b4630"
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    PROJECT NEWS
+  </Text>
+
+  <Text
+    position={[0, 1.85, 0.12]}
+    fontSize={0.16}
+    color="#6b5a3f"
+    anchorX="center"
+    maxWidth={3.8}
+    textAlign="center"
+  >
+    Latest updates from The Human Mosaic
+  </Text>
+
+  <Text
+    position={[0, 0.7, 0.12]}
+    fontSize={0.18}
+    color="#4f4638"
+    anchorX="center"
+    maxWidth={3.6}
+    textAlign="center"
+  >
+    News will appear here soon
+  </Text>
+
+  <Text
+    position={[0, -1.95, 0.12]}
+    fontSize={0.13}
+    color="#8a7758"
+    anchorX="center"
+    maxWidth={3.4}
+    textAlign="center"
+  >
+    Updated from the official admin area
+  </Text>
+</group>
+
+{/* Welcome Wall - Live Participation Panel */}
+<group position={[6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
+  <Text
+    position={[0, 2.55, 0.12]}
+    fontSize={0.28}
+    color="#5b4630"
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    LIVE PARTICIPATION
+  </Text>
+
+  <Text
+    position={[0, 1.85, 0.12]}
+    fontSize={0.16}
+    color="#6b5a3f"
+    anchorX="center"
+    maxWidth={3.8}
+    textAlign="center"
+  >
+    Real-time growth of the artwork
+  </Text>
+
+  <Text
+    position={[0, 0.75, 0.12]}
+    fontSize={0.22}
+    color="#d7b56d"
+    anchorX="center"
+  >
+    IDENTITY: —
+  </Text>
+
+  <Text
+    position={[0, 0.2, 0.12]}
+    fontSize={0.22}
+    color="#c9829b"
+    anchorX="center"
+  >
+    LOVE: —
+  </Text>
+
+  <Text
+    position={[0, -0.35, 0.12]}
+    fontSize={0.22}
+    color="#8fa8d8"
+    anchorX="center"
+  >
+    CREATIVITY: —
+  </Text>
+
+  <Text
+    position={[0, -1.95, 0.12]}
+    fontSize={0.13}
+    color="#8a7758"
+    anchorX="center"
+    maxWidth={3.4}
+    textAlign="center"
+  >
+    Connected to approved submissions
+  </Text>
+</group>
         
       <group
   position={[0, 0.35, 10.55]}
