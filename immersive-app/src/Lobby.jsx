@@ -269,7 +269,27 @@ export default function Lobby() {
     Creativity: 0,
   });
 
+  const [news, setNews] = useState([]);
+
   useEffect(() => {
+async function loadNews() {
+  const { data, error } = await supabase
+    .from("project_news")
+    .select("title, message, created_at")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("News error:", error);
+    return;
+  }
+
+  setNews(data || []);
+}
+
+    loadNews();
+    
     async function loadRoomCounts() {
       const { data, error } = await supabase
         .from("submissions")
