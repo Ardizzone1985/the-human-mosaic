@@ -269,6 +269,11 @@ export default function Lobby() {
     Creativity: 0,
   });
 
+  const totalMosaic =
+  roomCounts.Identity +
+  roomCounts.Love +
+  roomCounts.Creativity;
+
   const [news, setNews] = useState([]);
 
   useEffect(() => {
@@ -437,6 +442,14 @@ color="#6b5a3f"
   {news.length > 0 ? (
   <>
     <Text
+  position={[0, 1.25, 0.12]}
+  fontSize={0.13}
+  color="#8a7758"
+  anchorX="center"
+>
+  {new Date(news[0].created_at).toLocaleDateString()}
+</Text>
+    <Text
       position={[0, 0.95, 0.12]}
       fontSize={0.18}
       color="#4f4638"
@@ -444,7 +457,7 @@ color="#6b5a3f"
       maxWidth={3.6}
       textAlign="center"
     >
-      {news[0].title}
+      {news[0].title}      
     </Text>
 
     <Text
@@ -512,7 +525,7 @@ color="#6b5a3f"
     color="#d7b56d"
     anchorX="center"
   >
-    {`IDENTITY: ${roomCounts.Identity.toLocaleString()}`}
+    {`IDENTITY: ${roomCounts.Identity.toLocaleString()} / 1,000,000`}
   </Text>
 
   <Text
@@ -521,7 +534,7 @@ color="#6b5a3f"
     color="#c9829b"
     anchorX="center"
   >
-    {`LOVE: ${roomCounts.Love.toLocaleString()}`}
+    {`LOVE: ${roomCounts.Love.toLocaleString()} / 1,000,000`}
   </Text>
 
   <Text
@@ -530,8 +543,17 @@ color="#6b5a3f"
     color="#8fa8d8"
     anchorX="center"
   >
-    {`CREATIVITY: ${roomCounts.Creativity.toLocaleString()}`}
+    {`CREATIVITY: ${roomCounts.Creativity.toLocaleString()} / 1,000,000`}
   </Text>
+
+  <Text
+  position={[0, -1.05, 0.12]}
+  fontSize={0.18}
+  color="#d7b56d"
+  anchorX="center"
+>
+  {`TOTAL MOSAIC: ${totalMosaic.toLocaleString()} / 3,000,000`}
+</Text>
 
   <Text
     position={[0, -1.95, 0.12]}
