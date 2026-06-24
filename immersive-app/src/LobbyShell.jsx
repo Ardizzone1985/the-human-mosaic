@@ -117,10 +117,10 @@ emissiveIntensity={0.04}
     <mesh position={[0, 0, -0.08]}>
   <boxGeometry args={[6.9, 7.7, 0.12]} />
   <meshStandardMaterial
-    color="#ece7de"
-    roughness={0.85}
-    metalness={0.02}
-  />
+  color="#ddd5c8"
+  roughness={0.88}
+  metalness={0.02}
+/>
 </mesh>
 
     <mesh position={[0, 3.25, 0.08]}>
