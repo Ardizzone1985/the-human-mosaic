@@ -206,7 +206,7 @@ emissiveIntensity={0.015}
 
 <group position={[-6.5, 4.4, 10.58]}>
   <mesh>
-    <boxGeometry args={[4.5, 8.2, 0.08]} />
+    <boxGeometry args={[4.6, 8.35, 0.16]} />
     <meshStandardMaterial
       color="#8b857c"
       roughness={0.52}
@@ -215,6 +215,15 @@ emissiveIntensity={0.015}
 emissiveIntensity={0.03}
     />
   </mesh>
+
+  <mesh position={[0, 0, -0.08]}>
+  <boxGeometry args={[5.1, 8.8, 0.12]} />
+  <meshStandardMaterial
+    color="#ddd5c8"
+    roughness={0.88}
+    metalness={0.02}
+  />
+</mesh>
 
   <mesh position={[0, 4.1, 0.08]}>
     <boxGeometry args={[4.6, 0.05, 0.08]} />
@@ -247,7 +256,7 @@ emissiveIntensity={0.03}
 
 <group position={[6.5, 4.4, 10.58]}>
   <mesh>
-    <boxGeometry args={[4.5, 8.2, 0.08]} />
+    <boxGeometry args={[4.6, 8.35, 0.16]} />
     <meshStandardMaterial
       color="#8b857c"
       roughness={0.52}
@@ -256,6 +265,15 @@ emissiveIntensity={0.03}
 emissiveIntensity={0.03}
     />
   </mesh>
+
+  <mesh position={[0, 0, -0.08]}>
+  <boxGeometry args={[5.1, 8.8, 0.12]} />
+  <meshStandardMaterial
+    color="#ddd5c8"
+    roughness={0.88}
+    metalness={0.02}
+  />
+</mesh>
 
   <mesh position={[0, 4.1, 0.08]}>
     <boxGeometry args={[4.6, 0.05, 0.08]} />
