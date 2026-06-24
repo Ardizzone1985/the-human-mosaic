@@ -104,7 +104,7 @@ emissiveIntensity={0.015}
 {[-8, 0, 8].map((x) => (
   <group key={`door-wall-panel-${x}`} position={[x, 3.35, -8.72]}>
     <mesh>
-      <boxGeometry args={[5.6, 6.4, 0.08]} />
+      <boxGeometry args={[6.3, 7.1, 0.18]} />
       <meshStandardMaterial
         color="#7d786f"
         roughness={0.52}
@@ -113,6 +113,15 @@ emissiveIntensity={0.015}
 emissiveIntensity={0.04}
       />
     </mesh>
+
+    <mesh position={[0, 0, -0.08]}>
+  <boxGeometry args={[6.9, 7.7, 0.12]} />
+  <meshStandardMaterial
+    color="#ece7de"
+    roughness={0.85}
+    metalness={0.02}
+  />
+</mesh>
 
     <mesh position={[0, 3.25, 0.08]}>
       <boxGeometry args={[5.7, 0.055, 0.08]} />
