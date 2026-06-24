@@ -359,7 +359,7 @@ color="#6b5a3f"
 <group position={[-6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
   <Text
     position={[0, 2.55, 0.12]}
-    fontSize={0.28}
+    fontSize={0.36}
     color="#5b4630"
     anchorX="center"
     letterSpacing={0.08}
@@ -392,7 +392,7 @@ color="#6b5a3f"
   <Text
     position={[0, -1.95, 0.12]}
     fontSize={0.13}
-    color="#8a7758"
+    color="#5b4630"
     anchorX="center"
     maxWidth={3.4}
     textAlign="center"
@@ -405,7 +405,7 @@ color="#6b5a3f"
 <group position={[6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
   <Text
     position={[0, 2.55, 0.12]}
-    fontSize={0.28}
+    fontSize={0.36}
     color="#5b4630"
     anchorX="center"
     letterSpacing={0.08}
@@ -454,7 +454,7 @@ color="#6b5a3f"
   <Text
     position={[0, -1.95, 0.12]}
     fontSize={0.13}
-    color="#8a7758"
+    color="#5b4630"
     anchorX="center"
     maxWidth={3.4}
     textAlign="center"
