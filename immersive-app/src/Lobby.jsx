@@ -434,6 +434,31 @@ color="#6b5a3f"
     Latest updates from The Human Mosaic
   </Text>
 
+  {news.length > 0 ? (
+  <>
+    <Text
+      position={[0, 0.95, 0.12]}
+      fontSize={0.18}
+      color="#4f4638"
+      anchorX="center"
+      maxWidth={3.6}
+      textAlign="center"
+    >
+      {news[0].title}
+    </Text>
+
+    <Text
+      position={[0, 0.25, 0.12]}
+      fontSize={0.13}
+      color="#6b5a3f"
+      anchorX="center"
+      maxWidth={3.8}
+      textAlign="center"
+    >
+      {news[0].message}
+    </Text>
+  </>
+) : (
   <Text
     position={[0, 0.7, 0.12]}
     fontSize={0.18}
@@ -442,8 +467,9 @@ color="#6b5a3f"
     maxWidth={3.6}
     textAlign="center"
   >
-    News will appear here soon
+    No news available
   </Text>
+)}
 
   <Text
     position={[0, -1.95, 0.12]}
