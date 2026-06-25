@@ -67,11 +67,11 @@ export default function InfoWall({ room = "Identity" }) {
        
   <boxGeometry args={[18, 8, 0.28]} />
         <meshStandardMaterial
-  color="#2b1409"
-  roughness={0.42}
-  metalness={0.18}
-  emissive="#2a1408"
-  emissiveIntensity={0.16}
+  color="#ddd4c8"
+  roughness={0.78}
+  metalness={0.04}
+  emissive="#f2efe8"
+  emissiveIntensity={0.025}
 />
       </mesh>
 
@@ -105,7 +105,7 @@ export default function InfoWall({ room = "Identity" }) {
       <Text
         position={[-5.85, 0.55, 0.22]}
 fontSize={0.34}
-        color="#ffffff"
+        color="#4f4638"
         anchorX="left"
         anchorY="middle"
       >
@@ -115,7 +115,7 @@ fontSize={0.34}
       <Text
         position={[-5.85, -0.15, 0.22]}
 fontSize={0.21}
-        color="#d8c7ad"
+        color="#6b5a3f"
         anchorX="left"
         anchorY="middle"
         maxWidth={6.3}
@@ -126,7 +126,7 @@ fontSize={0.21}
       <Text
         position={[-5.85, -1.05, 0.09]}
 fontSize={0.18}
-        color="#f2c879"
+        color="#8a6a2f"
         anchorX="left"
         anchorY="middle"
       >
