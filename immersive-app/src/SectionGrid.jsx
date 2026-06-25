@@ -40,22 +40,24 @@ export default function SectionGrid({
       <mesh position={[0, 0, -0.08]}>
         <planeGeometry args={[3.25, 3.35]} />
         <meshBasicMaterial
-          color="#5a2a12"
+          color="#f2efe8"
           transparent
-          opacity={0.32}
+          opacity={0.18}
         />
       </mesh>
 
-      {/* dark floating section panel */}
-      <mesh position={[0, 0, -0.04]}>
-        <boxGeometry args={[3.1, 3.2, 0.09]} />
-        <meshStandardMaterial
-          color="#211008"
-          roughness={0.55}
-          metalness={0.08}
-        />
-      </mesh>
-
+      {/* premium floating section panel */}
+<mesh position={[0, 0, -0.04]}>
+  <boxGeometry args={[3.1, 3.2, 0.09]} />
+  <meshStandardMaterial
+    color="#f2efe8"
+    roughness={0.82}
+    metalness={0.02}
+    emissive="#ffffff"
+    emissiveIntensity={0.015}
+  />
+</mesh>
+      
       {/* top golden rail */}
       <mesh position={[0, 1.75, 0.035]}>
         <boxGeometry args={[3.25, 0.07, 0.08]} />
