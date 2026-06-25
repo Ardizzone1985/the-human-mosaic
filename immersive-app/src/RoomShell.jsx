@@ -8,7 +8,7 @@ function createParquetTexture() {
 
   const ctx = canvas.getContext("2d");
 
-  ctx.fillStyle = "#5b3218";
+  ctx.fillStyle = "#d9c3a0";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const plankW = 180;
@@ -19,9 +19,9 @@ function createParquetTexture() {
       const offset = Math.floor(y / plankH) % 2 === 0 ? 0 : plankW / 2;
 
       const gradient = ctx.createLinearGradient(x + offset, y, x + offset + plankW, y + plankH);
-      gradient.addColorStop(0, "#6a3a1c");
-gradient.addColorStop(0.45, "#a66b36");
-gradient.addColorStop(1, "#3f1f0f");
+      gradient.addColorStop(0, "#c9aa7e");
+gradient.addColorStop(0.45, "#ead6b8");
+gradient.addColorStop(1, "#b79263");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(x + offset, y, plankW - 3, plankH - 3);
@@ -235,11 +235,11 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
         <planeGeometry args={[30, 34]} />
         <meshStandardMaterial
   map={parquetTexture}
-  roughness={0.24}
-  metalness={0.16}
-  color="#d9c3a0"
-  emissive="#1a0702"
-  emissiveIntensity={0.08}
+  roughness={0.42}
+  metalness={0.08}
+  color="#ead8b8"
+  emissive="#f1dfbd"
+  emissiveIntensity={0.025}
 />
       </mesh>
 
