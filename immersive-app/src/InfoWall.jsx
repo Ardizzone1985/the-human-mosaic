@@ -25,23 +25,23 @@ function AdSpace({ position, label = "FUTURE AD SPACE" }) {
     <group position={position}>
       <mesh>
         <planeGeometry args={[3.4, 1.35]} />
-        <meshStandardMaterial color="#3a2418" roughness={0.45} />
+        <meshStandardMaterial color="#cfc5b8" roughness={0.65} />
       </mesh>
 
       <mesh position={[0, 0, 0.04]}>
         <planeGeometry args={[3.55, 1.5]} />
-        <meshStandardMaterial color="#d7b56d" roughness={0.35} />
+        <meshStandardMaterial color="#b8872b" roughness={0.35} />
       </mesh>
 
       <mesh position={[0, 0, 0.08]}>
         <planeGeometry args={[3.25, 1.22]} />
-        <meshStandardMaterial color="#2a1208" roughness={0.55} />
+        <meshStandardMaterial color="#f2efe8" roughness={0.72} />
       </mesh>
 
       <Text
         position={[0, 0, 0.14]}
         fontSize={0.15}
-        color="#d7b56d"
+        color="#5b4630"
         anchorX="center"
         anchorY="middle"
       >
