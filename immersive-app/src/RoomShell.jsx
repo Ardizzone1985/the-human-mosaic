@@ -132,18 +132,18 @@ const goldMaterial = (
 );
 
 export default function RoomShell({ theme }) {
-  const backWallTexture = useMemo(() => createMuseumWallTexture("#9a8068"), []);
-const sideWallTexture = useMemo(() => createMuseumWallTexture("#7c6250"), []);
+  const backWallTexture = useMemo(() => createMuseumWallTexture("#d8d0c3"), []);
+const sideWallTexture = useMemo(() => createMuseumWallTexture("#d1c8bb"), []);
 const ceilingTexture = useMemo(() => createCeilingTexture(), []);
 const parquetTexture = useMemo(() => createParquetTexture(), []);
 
   return (
     <>
-      <ambientLight intensity={0.45} color={theme?.ambient || "#ffe6c8"} />
+      <ambientLight intensity={0.60} color={theme?.ambient || "#ffe6c8"} />
 
       <directionalLight
         position={[4, 9, 6]}
-        intensity={1.9}
+        intensity={2.25}
         color={theme?.directional || "#ffe0b3"}
         castShadow
       />
@@ -237,7 +237,7 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
   map={parquetTexture}
   roughness={0.24}
   metalness={0.16}
-  color="#9f5a2b"
+  color="#d9c3a0"
   emissive="#1a0702"
   emissiveIntensity={0.08}
 />
@@ -248,7 +248,7 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={backWallTexture}
-          color="#a4876d"
+          color="#e3ddd2"
           roughness={0.58}
           metalness={0.04}
         />
@@ -259,7 +259,7 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={sideWallTexture}
-          color="#806350"
+          color="#ddd4c8"
           roughness={0.6}
           metalness={0.04}
         />
@@ -270,7 +270,7 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
           map={sideWallTexture}
-          color="#806350"
+          color="#ddd4c8"
           roughness={0.6}
           metalness={0.04}
         />
@@ -281,7 +281,7 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
         <planeGeometry args={[34, 38]} />
         <meshStandardMaterial
           map={ceilingTexture}
-          color="#4a3d35"
+          color="#ece7df"
           roughness={0.74}
           metalness={0.05}
           emissive="#120907"
