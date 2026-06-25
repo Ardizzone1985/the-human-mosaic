@@ -38,7 +38,7 @@ export default function SectionGrid({
     <group position={base} rotation={rotation}>
       {/* warm back glow */}
       <mesh position={[0, 0, -0.08]}>
-        <planeGeometry args={[3.25, 3.35]} />
+        <planeGeometry args={[4.15, 4.85]} />
         <meshBasicMaterial
           color="#f2efe8"
           transparent
@@ -48,7 +48,7 @@ export default function SectionGrid({
 
       {/* premium floating section panel */}
 <mesh position={[0, 0, -0.04]}>
-  <boxGeometry args={[3.1, 3.2, 0.09]} />
+  <boxGeometry args={[4.0, 4.7, 0.09]} />
   <meshStandardMaterial
     color="#f2efe8"
     roughness={0.82}
@@ -60,7 +60,7 @@ export default function SectionGrid({
       
       {/* top golden rail */}
       <mesh position={[0, 1.75, 0.035]}>
-        <boxGeometry args={[3.25, 0.07, 0.08]} />
+        <boxGeometry args={[4.15, 0.07, 0.08]} />
         <meshStandardMaterial
           color="#d7b56d"
           roughness={0.28}
@@ -70,7 +70,7 @@ export default function SectionGrid({
 
       {/* bottom golden rail */}
       <mesh position={[0, -1.75, 0.035]}>
-        <boxGeometry args={[3.25, 0.06, 0.08]} />
+        <boxGeometry args={[4.15, 0.07, 0.08]} />
         <meshStandardMaterial
           color="#b98942"
           roughness={0.3}
