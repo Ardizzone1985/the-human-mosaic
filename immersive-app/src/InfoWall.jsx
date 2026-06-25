@@ -105,6 +105,15 @@ export default function InfoWall({ room = "Identity" }) {
   />
 </mesh>
 
+      {/* Upper architectural molding */}
+<mesh position={[0, 3.55, 0.18]}>
+  <boxGeometry args={[18.2, 0.18, 0.12]} />
+  <meshStandardMaterial
+    color="#ece3d6"
+    roughness={0.45}
+  />
+</mesh>
+
 {/* Bottom cinematic rail */}
 <mesh position={[0, -3.95, 0.16]}>
   <boxGeometry args={[18.2, 0.08, 0.08]} />
@@ -112,6 +121,15 @@ export default function InfoWall({ room = "Identity" }) {
     color="#b98942"
     emissive="#8a4b12"
     emissiveIntensity={0.55}
+  />
+</mesh>
+
+      {/* Base architectural plinth */}
+<mesh position={[0, -3.75, 0.22]}>
+  <boxGeometry args={[18.2, 0.35, 0.18]} />
+  <meshStandardMaterial
+    color="#e7ddd0"
+    roughness={0.55}
   />
 </mesh>
 
