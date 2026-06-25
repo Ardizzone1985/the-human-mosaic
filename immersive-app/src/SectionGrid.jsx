@@ -8,7 +8,7 @@ export default function SectionGrid({
   const cols = 6;
 
   function getBasePosition() {
-    const gap = 3.4;
+    const gap = 3.05;
 
     if (wall === "front") {
       return [-7.2 + index * gap, 3.2, -9.55];
