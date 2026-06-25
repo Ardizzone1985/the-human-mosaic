@@ -314,13 +314,11 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
       {[-9, -4.5, 0, 4.5, 9].map((x) => (
         <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
           <mesh>
-            <boxGeometry args={[2.7, 5.8, 0.48]} />
+            <boxGeometry args={[2.7, 5.8, 0.08]} />
             <meshStandardMaterial
-  color="#e8dfd4"
-  roughness={0.82}
-  metalness={0.02}
-  emissive={theme?.glow || "#ffffff"}
-  emissiveIntensity={0.025}
+  color="#f7f6f3"
+  roughness={0.55}
+  metalness={0.02}  
 />
           </mesh>
 
