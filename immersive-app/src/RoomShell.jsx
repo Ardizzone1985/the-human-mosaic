@@ -316,12 +316,12 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
           <mesh>
             <boxGeometry args={[2.7, 5.8, 0.48]} />
             <meshStandardMaterial
-              color="#604333"
-              roughness={0.42}
-              metalness={0.12}
-              emissive={theme?.side || "#3a1b10"}
-              emissiveIntensity={0.09}
-            />
+  color="#e8dfd4"
+  roughness={0.82}
+  metalness={0.02}
+  emissive={theme?.glow || "#ffffff"}
+  emissiveIntensity={0.025}
+/>
           </mesh>
 
           <mesh position={[0, 2.95, 0.06]}>
