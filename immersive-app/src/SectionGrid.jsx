@@ -36,48 +36,26 @@ export default function SectionGrid({
 
   return (
     <group position={base} rotation={rotation}>
-      {/* warm back glow */}
-      <mesh position={[0, 0, -0.08]}>
-        <planeGeometry args={[4.15, 4.85]} />
-        <meshBasicMaterial
-          color="#f2efe8"
-          transparent
-          opacity={0.18}
-        />
-      </mesh>
-
-      {/* premium floating section panel */}
-<mesh position={[0, 0, -0.04]}>
-  <boxGeometry args={[4.0, 4.7, 0.09]} />
-  <meshStandardMaterial
-    color="#f2efe8"
-    roughness={0.82}
-    metalness={0.02}
-    emissive="#ffffff"
-    emissiveIntensity={0.015}
+      {/* subtle wall integration glow */}
+<mesh position={[0, 0, -0.08]}>
+  <planeGeometry args={[4.35, 4.95]} />
+  <meshBasicMaterial
+    color="#ffffff"
+    transparent
+    opacity={0.06}
   />
 </mesh>
-      
-      {/* top golden rail */}
-      <mesh position={[0, 1.75, 0.035]}>
-        <boxGeometry args={[4.15, 0.07, 0.08]} />
-        <meshStandardMaterial
-          color="#d7b56d"
-          roughness={0.28}
-          metalness={0.35}
-        />
-      </mesh>
 
-      {/* bottom golden rail */}
-      <mesh position={[0, -1.75, 0.035]}>
-        <boxGeometry args={[4.15, 0.07, 0.08]} />
-        <meshStandardMaterial
-          color="#b98942"
-          roughness={0.3}
-          metalness={0.28}
-        />
-      </mesh>
-
+      {/* seamless mosaic wall section */}
+<mesh position={[0, 0, -0.04]}>
+  <boxGeometry args={[4.15, 4.8, 0.04]} />
+  <meshStandardMaterial
+    color="#edf2f8"
+    roughness={0.78}
+    metalness={0.02}
+  />
+</mesh>
+            
       {Array.from({ length: rows * cols }).map((_, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
