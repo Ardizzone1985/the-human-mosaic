@@ -85,7 +85,7 @@ export default function SectionGrid({
         return (
           <mesh
             key={`${section}-${i}`}
-            position={[-1.35 + col * 0.3, 1.1 - row * 0.48, 0.075]}
+            position={[-1.55 + col * 0.34, 1.35 - row * 0.5, 0.075]}
           >
             <boxGeometry args={[0.22, 0.22, 0.045]} />
             <meshStandardMaterial
