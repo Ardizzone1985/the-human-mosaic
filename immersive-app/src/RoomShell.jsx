@@ -95,7 +95,7 @@ function createCeilingTexture() {
 
   const ctx = canvas.getContext("2d");
 
-  ctx.fillStyle = "#3a2f29";
+  ctx.fillStyle = "#ece7df";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < 5000; i++) {
@@ -280,13 +280,13 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 10.4, 1]}>
         <planeGeometry args={[34, 38]} />
         <meshStandardMaterial
-          map={ceilingTexture}
-          color="#ece7df"
-          roughness={0.74}
-          metalness={0.05}
-          emissive="#120907"
-          emissiveIntensity={0.1}
-        />
+  map={ceilingTexture}
+  color="#f3eee6"
+  roughness={0.88}
+  metalness={0.02}
+  emissive="#ffffff"
+  emissiveIntensity={0.015}
+/>
       </mesh>
 
       {/* Back wall frame */}
