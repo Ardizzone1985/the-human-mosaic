@@ -441,16 +441,20 @@ color="#6b5a3f"
 
   {news.length > 0 ? (
   <>
-    <Text
+   <Text
   position={[0, 1.25, 0.12]}
   fontSize={0.13}
   color="#8a7758"
   anchorX="center"
 >
-  {new Date(news[0].created_at).toLocaleDateString()}
+  {new Date(news[0].created_at).toLocaleDateString("en-GB", {
+    year: "numeric",
+  month: "long",
+  day: "numeric",
+  })}
 </Text>
     <Text
-      position={[0, 0.95, 0.12]}
+      position={[0, 0.85, 0.12]}
       fontSize={0.18}
       color="#4f4638"
       anchorX="center"
@@ -461,7 +465,7 @@ color="#6b5a3f"
     </Text>
 
     <Text
-      position={[0, 0.25, 0.12]}
+      position={[0, 0.10, 0.12]}
       fontSize={0.13}
       color="#6b5a3f"
       anchorX="center"
