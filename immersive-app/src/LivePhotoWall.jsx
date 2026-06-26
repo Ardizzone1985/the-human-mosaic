@@ -51,7 +51,7 @@ const localY = 1.25 - row * 0.24;
     return {
       basePosition: [-7.2 + sectionIndex * sectionGap, 3.2, -9.55],
       rotation: [0, 0, 0],
-      localPosition: [localX, localY, 0.12]
+      localPosition: [localX, localY, 0.18]
     };
   }
 
@@ -59,7 +59,7 @@ const localY = 1.25 - row * 0.24;
     return {
       basePosition: [-10.55, 3.2, -5.8 + sectionIndex * sectionGap],
       rotation: [0, Math.PI / 2, 0],
-      localPosition: [localX, localY, 0.12]
+      localPosition: [localX, localY, 0.18]
     };
   }
 
@@ -67,7 +67,7 @@ const localY = 1.25 - row * 0.24;
     return {
       basePosition: [10.55, 3.2, -5.8 + sectionIndex * sectionGap],
       rotation: [0, -Math.PI / 2, 0],
-      localPosition: [localX, localY, 0.12]
+      localPosition: [localX, localY, 0.18]
     };
   }
 
@@ -88,7 +88,7 @@ function LivePhoto({ item, onSelect }) {
 
   const texture = useTexture(imageUrl);
 
-  const size = 0.32;
+  const size = 0.38;
   const frameThickness = 0.02;
   const half = size / 2;
 
@@ -116,24 +116,23 @@ function LivePhoto({ item, onSelect }) {
         <mesh position={[0, 0, 0.035]}>
   <planeGeometry args={[size + 0.08, size + 0.08]} />
  <meshStandardMaterial
-  color="#d7b56d"
-  roughness={0.28}
-  metalness={0.45}
-  emissive="#8a4b12"
-  emissiveIntensity={hovered ? 0.18 : 0.07}
+  color="#d8b36d"
+  roughness={0.22}
+  metalness={0.55}
+  emissive="#d8b36d"
+  emissiveIntensity={hovered ? 0.16 : 0.045}
 />
-</mesh>
                 
         <mesh position={[0, 0, 0.05]}>
   <planeGeometry args={[size, size]} />
   <meshStandardMaterial
-    map={texture}
-    emissive={"#ffffff"}
-    emissiveIntensity={hovered ? 0.09 : 0.045}
-    roughness={0.28}
-    metalness={0.08}
-    toneMapped={false}
-  />
+  map={texture}
+  emissive="#ffffff"
+  emissiveIntensity={hovered ? 0.07 : 0.025}
+  roughness={0.18}
+  metalness={0.04}
+  toneMapped={false}
+/>
 </mesh>
 
 {hovered && (
