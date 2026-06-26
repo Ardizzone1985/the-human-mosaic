@@ -44,8 +44,8 @@ function slotToTransform(item) {
   const columnsPerSection = 10;
 const localCol = col % columnsPerSection;
 
-const localX = -1.35 + localCol * 0.16;
-const localY = 1.25 - row * 0.24;
+const localX = -1.05 + localCol * 0.20;
+const localY = 1.15 - row * 0.26;
 
   if (wall === "front") {
     return {
