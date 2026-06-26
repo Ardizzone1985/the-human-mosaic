@@ -122,6 +122,7 @@ function LivePhoto({ item, onSelect }) {
   emissive="#d8b36d"
   emissiveIntensity={hovered ? 0.16 : 0.045}
 />
+         </mesh> 
                 
         <mesh position={[0, 0, 0.05]}>
   <planeGeometry args={[size, size]} />
