@@ -682,13 +682,13 @@ const isLobby = !currentRoom;
 
   {/* <AtmosphereParticles /> */}
 
-  <ambientLight intensity={0.35} color={theme.ambient} />
+  <ambientLight intensity={0.55} color={theme.ambient} />
 
-  <ambientLight intensity={0.32} />
+<ambientLight intensity={0.45} color="#ffffff" />
 
 <directionalLight
     position={[4, 8, 4]}
-  intensity={1.8}
+  intensity={2.4}
   color={theme.directional}
   shadow-mapSize-width={2048}
   shadow-mapSize-height={2048}
