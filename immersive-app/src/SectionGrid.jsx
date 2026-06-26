@@ -36,25 +36,7 @@ export default function SectionGrid({
 
   return (
     <group position={base} rotation={rotation}>
-                  
-      {Array.from({ length: rows * cols }).map((_, i) => {
-        const col = i % cols;
-        const row = Math.floor(i / cols);
-
-        return (
-          <mesh
-            key={`${section}-${i}`}
-            position={[-1.55 + col * 0.34, 1.35 - row * 0.5, 0.075]}
-          >
-            <boxGeometry args={[0.22, 0.22, 0.045]} />
-            <meshStandardMaterial
-              color={color}
-              roughness={0.38}
-              metalness={0.14}
-            />
-          </mesh>
-        );
-      })}
-    </group>
+                 
+          </group>
   );
 }
