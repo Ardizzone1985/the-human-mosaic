@@ -720,31 +720,31 @@ const isLobby = !currentRoom;
 
   <spotLight
     position={[-6, 7, -3]}
-  angle={0.32}
-  penumbra={0.9}
-  intensity={2.2}
-  distance={24}
-  color={theme.directional}
+  angle={0.42}
+  penumbra={1}
+  intensity={2.8}
+  distance={28}
+  color="#fff6e8"
   target-position={[-7, 3, -9]}
 />
 
 <spotLight
     position={[0, 7, -3]}
-  angle={0.32}
-  penumbra={0.9}
-  intensity={2.2}
-  distance={24}
-  color={theme.directional}
+  angle={0.42}
+  penumbra={1}
+  intensity={2.8}
+  distance={28}
+  color="#fff6e8"
   target-position={[0, 3, -9]}
 />
 
 <spotLight
     position={[6, 7, -3]}
-  angle={0.32}
-  penumbra={0.9}
-  intensity={2.2}
-  distance={24}
-  color={theme.directional}
+  angle={0.42}
+  penumbra={1}
+  intensity={2.8}
+  distance={28}
+  color="#fff6e8"
   target-position={[7, 3, -9]}
 />      
 
