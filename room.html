@@ -165,6 +165,36 @@
   margin-bottom: 8px;
 }
 
+    .position-guide-content {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 28px;
+  align-items: center;
+}
+
+.position-guide-text p {
+  margin-bottom: 10px;
+}
+
+.position-guide-image img {
+  width: 100%;
+  max-width: 420px;
+  display: block;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 900px) {
+  .position-guide-content {
+    grid-template-columns: 1fr;
+  }
+
+  .position-guide-image img {
+    max-width: 100%;
+  }
+}
+
     .grid-wrap {
       background: linear-gradient(180deg, #fcfcfb 0%, #f4f4f1 100%);
       border: 1px solid #ececec;
@@ -442,14 +472,22 @@
         </div>
 
         <div class="position-guide">
-  <strong>How to choose your position</strong>
-  Your photo will be placed on a wall inside the selected room.
+  <div class="position-guide-content">
+    <div class="position-guide-text">
+      <strong>How to choose your position</strong>
+      <p>Your photo will be placed on a wall inside the selected room.</p>
 
-  <ul>
-    <li><strong>Wall:</strong> choose where your photo will appear. The Front Wall is the wall facing the main entrance.</li>
-    <li><strong>Section:</strong> imagine each wall divided into vertical sections, like panels inside the mosaic.</li>
-    <li><strong>Spot:</strong> each square is one real position. Spots in the first rows are placed higher on the wall.</li>
-  </ul>
+      <ul>
+        <li><strong>Wall:</strong> choose where your photo will appear. The Front Wall is the wall facing the main entrance.</li>
+        <li><strong>Section:</strong> imagine each wall divided into vertical sections, like panels inside the mosaic.</li>
+        <li><strong>Spot:</strong> each square is one real position. Spots in the first rows are placed higher on the wall.</li>
+      </ul>
+    </div>
+
+    <div class="position-guide-image">
+      <img src="wall-example.png" alt="Example of wall, sections and spots">
+    </div>
+  </div>
 </div>
 
         <div class="wall-tabs">
