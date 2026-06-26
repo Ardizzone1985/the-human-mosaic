@@ -705,17 +705,17 @@ const isLobby = !currentRoom;
 />
 
 <pointLight
-  position={[-5, 3, -4]}
-  intensity={0.55}
-  distance={12}
-  color={theme.side}
+  position={[-7, 4.2, -2]}
+  intensity={0.85}
+  distance={18}
+  color="#ffffff"
 />
 
 <pointLight
-  position={[5, 3, -4]}
-  intensity={0.55}
-  distance={12}
-  color={theme.side}
+  position={[7, 4.2, -2]}
+  intensity={0.85}
+  distance={18}
+  color="#ffffff"
 />
 
   <spotLight
