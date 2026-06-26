@@ -36,26 +36,7 @@ export default function SectionGrid({
 
   return (
     <group position={base} rotation={rotation}>
-      {/* subtle wall integration glow */}
-<mesh position={[0, 0, -0.08]}>
-  <planeGeometry args={[4.35, 4.95]} />
-  <meshBasicMaterial
-    color="#ffffff"
-    transparent
-    opacity={0.06}
-  />
-</mesh>
-
-      {/* seamless mosaic wall section */}
-<mesh position={[0, 0, -0.04]}>
-  <boxGeometry args={[4.15, 4.8, 0.04]} />
-  <meshStandardMaterial
-    color="#edf2f8"
-    roughness={0.78}
-    metalness={0.02}
-  />
-</mesh>
-            
+                  
       {Array.from({ length: rows * cols }).map((_, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
