@@ -678,7 +678,7 @@ const isLobby = !currentRoom;
 >
   <fog attach="fog" args={["#050505", 10, 30]} />
 
-  <color attach="background" args={["#050505"]} />      
+  <color attach="background" args={["#1a1714"]} />      
 
   {/* <AtmosphereParticles /> */}
 
@@ -698,10 +698,10 @@ const isLobby = !currentRoom;
 />
 
 <pointLight
-  position={[0, 4, -2]}
-  intensity={1.1}
-  distance={18}
-  color={theme.glow}
+  position={[0, 5.2, -1]}
+  intensity={1.6}
+  distance={22}
+  color="#fff8ef"
 />
 
 <pointLight
