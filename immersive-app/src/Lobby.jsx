@@ -13,10 +13,11 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
     async function loadFeaturedPhoto() {
       const { data, error } = await supabase
         .from("submissions")
-        .select("image_file_name")
-        .eq("room", room)
-        .eq("approval_status", "approved")
-        .limit(1);
+        .select("image_file_name, likes_count")
+.eq("room", room)
+.eq("approval_status", "approved")
+.order("likes_count", { ascending: false })
+.limit(1);
 
       if (error) {
         console.error("Featured photo error:", error);
@@ -47,7 +48,7 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
   anchorY="middle"
   letterSpacing={0.12}
 >
-  FEATURED MEMORY
+  MOST LOVED MEMORY
 </Text>
 
       <mesh position={[0, 0.35, -0.08]}>
