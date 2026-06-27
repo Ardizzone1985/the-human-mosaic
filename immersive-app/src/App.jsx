@@ -698,6 +698,24 @@ const isLobby = !currentRoom;
       </div>
 
       <button
+  onClick={handleLike}
+  style={{
+    width: "100%",
+    padding: "14px",
+    marginBottom: "12px",
+    borderRadius: "14px",
+    border: "none",
+    background: "#d7b56d",
+    color: "#111",
+    fontWeight: 700,
+    fontSize: "16px",
+    cursor: "pointer"
+  }}
+>
+    ❤️ Like this memory
+</button>
+
+      <button
         onClick={() => setSelectedPhoto(null)}
         style={{
           marginTop: "22px",
