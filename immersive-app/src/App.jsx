@@ -624,6 +624,63 @@ const isLobby = !currentRoom;
         }}
       />
 
+      <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "10px",
+    marginBottom: "18px"
+  }}
+>
+  <div
+    style={{
+      flex: 1,
+      padding: "10px",
+      borderRadius: "14px",
+      background: "rgba(215,181,109,0.10)",
+      border: "1px solid rgba(215,181,109,0.22)",
+      textAlign: "center",
+      fontSize: "13px",
+      color: "#f6d98a",
+      fontWeight: 700
+    }}
+  >
+    ❤️ {selectedPhoto?.likes_count ?? 0}
+  </div>
+
+  <div
+    style={{
+      flex: 1,
+      padding: "10px",
+      borderRadius: "14px",
+      background: "rgba(255,255,255,0.06)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      textAlign: "center",
+      fontSize: "13px",
+      color: "#e8ded0",
+      fontWeight: 700
+    }}
+  >
+    👁 {selectedPhoto?.views_count ?? 0}
+  </div>
+
+  <div
+    style={{
+      flex: 1,
+      padding: "10px",
+      borderRadius: "14px",
+      background: "rgba(255,255,255,0.06)",
+      border: "1px solid rgba(255,255,255,0.12)",
+      textAlign: "center",
+      fontSize: "13px",
+      color: "#e8ded0",
+      fontWeight: 700
+    }}
+  >
+    💬 {selectedPhoto?.comments_count ?? 0}
+  </div>
+</div>
+
       <div style={{ color: "#d7b56d", fontSize: "12px", letterSpacing: "0.12em" }}>
         COUNTRY
       </div>
