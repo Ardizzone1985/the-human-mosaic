@@ -6,6 +6,7 @@ import InfoWall from "./InfoWall.jsx";
 import DynamicSectionManager from "./DynamicSectionManager.jsx";
 import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
+import { supabase } from "./supabaseClient.js";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -384,6 +385,27 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
+
+  async function handleLike() {
+  if (!selectedPhoto?.id) return;
+
+  const newLikesCount = (selectedPhoto.likes_count || 0) + 1;
+
+  const { error } = await supabase
+    .from("submissions")
+    .update({ likes_count: newLikesCount })
+    .eq("id", selectedPhoto.id);
+
+  if (error) {
+    console.error("Like error:", error);
+    return;
+  }
+
+  setSelectedPhoto({
+    ...selectedPhoto,
+    likes_count: newLikesCount
+  });
+}
   
 useEffect(() => {
   setTimeout(() => {
