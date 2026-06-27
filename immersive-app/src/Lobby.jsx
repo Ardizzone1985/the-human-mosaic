@@ -7,8 +7,11 @@ import { useFrame } from "@react-three/fiber";
 import { supabase } from "./supabaseClient.js";
 
 function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
-  const [imageUrl, setImageUrl] = useState(null);
-
+  const [featuredPhoto, setFeaturedPhoto] = useState(null);
+const imageUrl = featuredPhoto?.image_file_name
+  ? "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" + featuredPhoto.image_file_name
+  : null;
+  
   useEffect(() => {
     async function loadFeaturedPhoto() {
       const { data, error } = await supabase
@@ -24,12 +27,7 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
         return;
       }
 
-      if (data?.[0]?.image_file_name) {
-        setImageUrl(
-          "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
-            data[0].image_file_name
-        );
-      }
+      setFeaturedPhoto(data?.[0] || null);
     }
 
     loadFeaturedPhoto();
@@ -49,6 +47,16 @@ function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
   letterSpacing={0.12}
 >
   MOST LOVED MEMORY
+</Text>
+
+      <Text
+  position={[0, 1.02, 0.08]}
+  fontSize={0.09}
+  color="#ffffff"
+  anchorX="center"
+  anchorY="middle"
+>
+  {`❤️ ${featuredPhoto?.likes_count ?? 0} Likes`}
 </Text>
 
       <mesh position={[0, 0.35, -0.08]}>
