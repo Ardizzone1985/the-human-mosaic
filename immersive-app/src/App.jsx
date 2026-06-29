@@ -373,6 +373,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
@@ -385,6 +386,26 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
+
+  useEffect(() => {
+  async function loadUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    setCurrentUser(user);
+  }
+
+  loadUser();
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((_event, session) => {
+    setCurrentUser(session?.user ?? null);
+  });
+
+  return () => subscription.unsubscribe();
+}, []);
 
   async function handleLike() {
   if (!selectedPhoto?.id) return;
