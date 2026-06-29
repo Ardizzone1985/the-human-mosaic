@@ -43,7 +43,7 @@ setActiveIndex(0);
 
   const interval = setInterval(() => {
     setActiveIndex((current) => (current + 1) % featuredPhotos.length);
-  }, 5000);
+  }, 10000);
 
   return () => clearInterval(interval);
 }, [featuredPhotos.length]);
@@ -54,20 +54,20 @@ setActiveIndex(0);
     <group position={position}>
 
       <Text
-  position={[0, 1.25, 0.08]}
+  position={[0, 1.42, 0.08]}
   fontSize={0.13}
-  color="#f2c879"
+  color="#4b3522"
   anchorX="center"
   anchorY="middle"
   letterSpacing={0.12}
 >
-  MOST LOVED MEMORY
+  👑 COMMUNITY FAVORITE
 </Text>
 
       <Text
   position={[0, 1.02, 0.08]}
-  fontSize={0.09}
-  color="#ffffff"
+  fontSize={0.105}
+  color="#4b3522"
   anchorX="center"
   anchorY="middle"
 >
