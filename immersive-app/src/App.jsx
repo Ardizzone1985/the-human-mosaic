@@ -389,6 +389,13 @@ export default function App() {
   async function handleLike() {
   if (!selectedPhoto?.id) return;
 
+  const likeKey = `humanMosaicLiked_${selectedPhoto.id}`;
+
+  if (localStorage.getItem(likeKey) === "true") {
+    alert("You have already liked this memory.");
+    return;
+  }
+
   const newLikesCount = (selectedPhoto.likes_count || 0) + 1;
 
   const { error } = await supabase
@@ -400,6 +407,8 @@ export default function App() {
     console.error("Like error:", error);
     return;
   }
+
+  localStorage.setItem(likeKey, "true");
 
   setSelectedPhoto({
     ...selectedPhoto,
