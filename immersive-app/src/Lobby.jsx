@@ -65,8 +65,8 @@ setActiveIndex(0);
 </Text>
 
       <Text
-  position={[0, 1.02, 0.08]}
-  fontSize={0.105}
+  position={[0, 1.12, 0.08]}
+  fontSize={0.13}
   color="#4b3522"
   anchorX="center"
   anchorY="middle"
