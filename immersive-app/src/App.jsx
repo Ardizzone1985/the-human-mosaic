@@ -407,33 +407,58 @@ export default function App() {
   return () => subscription.unsubscribe();
 }, []);
 
-  async function handleLike() {
+async function handleLike() {
   if (!selectedPhoto?.id) return;
 
-  const likeKey = `humanMosaicLiked_${selectedPhoto.id}`;
+  if (!currentUser) {
+    alert("Please sign in to like this memory.");
+    return;
+  }
 
-  if (localStorage.getItem(likeKey) === "true") {
+  const { data: existingLike, error: checkError } = await supabase
+    .from("photo_likes")
+    .select("id")
+    .eq("submission_id", selectedPhoto.id)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (checkError) {
+    console.error("Check like error:", checkError);
+    return;
+  }
+
+  if (existingLike) {
     alert("You have already liked this memory.");
+    return;
+  }
+
+  const { error: insertError } = await supabase
+    .from("photo_likes")
+    .insert({
+      submission_id: selectedPhoto.id,
+      user_id: currentUser.id,
+    });
+
+  if (insertError) {
+    console.error("Insert like error:", insertError);
     return;
   }
 
   const newLikesCount = (selectedPhoto.likes_count || 0) + 1;
 
-  const { error } = await supabase
+  const { error: updateError } = await supabase
     .from("submissions")
     .update({ likes_count: newLikesCount })
     .eq("id", selectedPhoto.id);
 
-  if (error) {
-    console.error("Like error:", error);
+  if (updateError) {
+    console.error("Update likes_count error:", updateError);
     return;
   }
 
-  localStorage.setItem(likeKey, "true");
-
   setSelectedPhoto({
     ...selectedPhoto,
-    likes_count: newLikesCount
+    likes_count: newLikesCount,
   });
 }
   
