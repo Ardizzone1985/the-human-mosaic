@@ -20,7 +20,7 @@ const imageUrl = featuredPhoto?.image_file_name
     async function loadFeaturedPhoto() {
       const { data, error } = await supabase
         .from("submissions")
-        .select("image_file_name, likes_count")
+        .select("image_file_name, likes_count, views_count, comments_count")
 .eq("room", room)
 .eq("approval_status", "approved")
 .order("likes_count", { ascending: false })
@@ -71,7 +71,7 @@ setActiveIndex(0);
   anchorX="center"
   anchorY="middle"
 >
-  {`❤️ ${featuredPhoto?.likes_count ?? 0} Likes`}
+  {`❤️ ${featuredPhoto?.likes_count ?? 0}   💬 ${featuredPhoto?.comments_count ?? 0}   👁 ${featuredPhoto?.views_count ?? 0}`}
 </Text>
 
       <mesh position={[0, 0.35, -0.08]}>
