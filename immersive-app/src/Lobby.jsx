@@ -7,7 +7,11 @@ import { useFrame } from "@react-three/fiber";
 import { supabase } from "./supabaseClient.js";
 
 function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
-  const [featuredPhoto, setFeaturedPhoto] = useState(null);
+  const [featuredPhotos, setFeaturedPhotos] = useState([]);
+const [activeIndex, setActiveIndex] = useState(0);
+
+const featuredPhoto = featuredPhotos[activeIndex];
+
 const imageUrl = featuredPhoto?.image_file_name
   ? "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" + featuredPhoto.image_file_name
   : null;
@@ -20,18 +24,29 @@ const imageUrl = featuredPhoto?.image_file_name
 .eq("room", room)
 .eq("approval_status", "approved")
 .order("likes_count", { ascending: false })
-.limit(1);
+.limit(3);
 
       if (error) {
         console.error("Featured photo error:", error);
         return;
       }
 
-      setFeaturedPhoto(data?.[0] || null);
+      setFeaturedPhotos(data || []);
+setActiveIndex(0);
     }
 
     loadFeaturedPhoto();
   }, [room]);
+
+  useEffect(() => {
+  if (featuredPhotos.length <= 1) return;
+
+  const interval = setInterval(() => {
+    setActiveIndex((current) => (current + 1) % featuredPhotos.length);
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, [featuredPhotos.length]);
 
   const texture = useTexture(imageUrl || logoImage);
 
