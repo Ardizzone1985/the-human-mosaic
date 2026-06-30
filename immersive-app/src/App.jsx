@@ -439,12 +439,23 @@ export default function App() {
     // Conta una visualizzazione ogni 30 minuti per dispositivo
     if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
 
-    const newViewsCount = (selectedPhoto.views_count || 0) + 1;
+    const { data: freshPhoto, error: fetchError } = await supabase
+  .from("submissions")
+  .select("views_count")
+  .eq("id", selectedPhoto.id)
+  .single();
 
-    const { error } = await supabase
-      .from("submissions")
-      .update({ views_count: newViewsCount })
-      .eq("id", selectedPhoto.id);
+if (fetchError) {
+  console.error("Fetch views error:", fetchError);
+  return;
+}
+
+const newViewsCount = (freshPhoto?.views_count || 0) + 1;
+
+const { error } = await supabase
+  .from("submissions")
+  .update({ views_count: newViewsCount })
+  .eq("id", selectedPhoto.id);
 
     if (error) {
       console.error("View error:", error);
