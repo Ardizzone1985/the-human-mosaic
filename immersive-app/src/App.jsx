@@ -375,6 +375,7 @@ export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [userLikedPhoto, setUserLikedPhoto] = useState(false);
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
@@ -406,6 +407,26 @@ export default function App() {
 
   return () => subscription.unsubscribe();
 }, []);
+
+  useEffect(() => {
+  async function checkUserLike() {
+    if (!currentUser || !selectedPhoto?.id) {
+      setUserLikedPhoto(false);
+      return;
+    }
+
+    const { data } = await supabase
+      .from("photo_likes")
+      .select("id")
+      .eq("submission_id", selectedPhoto.id)
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+    setUserLikedPhoto(!!data);
+  }
+
+  checkUserLike();
+}, [currentUser, selectedPhoto?.id]);
 
 async function handleLike() {
   if (!selectedPhoto?.id) return;
@@ -789,7 +810,11 @@ const isLobby = !currentRoom;
     cursor: "pointer"
   }}
 >
-    ❤️ Like this memory
+    {
+  userLikedPhoto
+    ? "❤️ You liked this memory"
+    : "❤️ Like this memory"
+}
 </button>
 
       <button
