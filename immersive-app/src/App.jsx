@@ -424,9 +424,43 @@ export default function App() {
 
     setUserLikedPhoto(!!data);
   }
-
+    
   checkUserLike();
 }, [currentUser, selectedPhoto?.id]);
+
+  useEffect(() => {
+  async function registerView() {
+    if (!selectedPhoto?.id) return;
+
+    const viewKey = `humanMosaicViewed_${selectedPhoto.id}`;
+    const lastView = localStorage.getItem(viewKey);
+    const now = Date.now();
+
+    // Conta una visualizzazione ogni 30 minuti per dispositivo
+    if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
+
+    const newViewsCount = (selectedPhoto.views_count || 0) + 1;
+
+    const { error } = await supabase
+      .from("submissions")
+      .update({ views_count: newViewsCount })
+      .eq("id", selectedPhoto.id);
+
+    if (error) {
+      console.error("View error:", error);
+      return;
+    }
+
+    localStorage.setItem(viewKey, String(now));
+
+    setSelectedPhoto({
+      ...selectedPhoto,
+      views_count: newViewsCount,
+    });
+  }
+
+  registerView();
+}, [selectedPhoto?.id]);
 
 async function handleLike() {
   if (!selectedPhoto?.id) return;
