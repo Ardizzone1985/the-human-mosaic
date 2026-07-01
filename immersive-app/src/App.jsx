@@ -398,27 +398,7 @@ export default function App() {
   
   const isMobile =
   typeof window !== "undefined" &&
-  !window.matchMedia("(pointer: fine)").matches;
-  
-  useEffect(() => {
-  async function checkUserLike() {
-    if (!currentUser || !selectedPhoto?.id) {
-      setUserLikedPhoto(false);
-      return;
-    }
-
-    const { data } = await supabase
-      .from("photo_likes")
-      .select("id")
-      .eq("submission_id", selectedPhoto.id)
-      .eq("user_id", currentUser.id)
-      .maybeSingle();
-
-    setUserLikedPhoto(!!data);
-  }
-    
-  checkUserLike();
-}, [currentUser, selectedPhoto?.id]);
+  !window.matchMedia("(pointer: fine)").matches;  
 
   useEffect(() => {
   async function registerView() {
