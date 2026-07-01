@@ -862,6 +862,59 @@ const isLobby = !currentRoom;
 }
 </button>
 
+      <div
+  style={{
+    marginTop: "12px",
+    padding: "14px",
+    borderRadius: "16px",
+    background: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.12)"
+  }}
+>
+  <div
+    style={{
+      color: "#d7b56d",
+      fontSize: "12px",
+      letterSpacing: "0.12em",
+      marginBottom: "10px"
+    }}
+  >
+    COMMENTS
+  </div>
+
+  <textarea
+    placeholder="Write a comment..."
+    style={{
+      width: "100%",
+      minHeight: "72px",
+      borderRadius: "12px",
+      border: "1px solid rgba(215,181,109,0.28)",
+      background: "rgba(0,0,0,0.28)",
+      color: "#fff",
+      padding: "12px",
+      resize: "vertical",
+      boxSizing: "border-box",
+      fontFamily: "Arial, sans-serif"
+    }}
+  />
+
+  <button
+    style={{
+      marginTop: "10px",
+      width: "100%",
+      padding: "12px",
+      borderRadius: "999px",
+      border: "none",
+      background: "#f2c879",
+      color: "#1b0d05",
+      fontWeight: "700",
+      cursor: "pointer"
+    }}
+  >
+    Send comment
+  </button>
+</div>
+
       <button
         onClick={() => setSelectedPhoto(null)}
         style={{
