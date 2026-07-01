@@ -8,6 +8,7 @@ import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
+import usePhotoSocial from "./usePhotoSocial.js";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -373,16 +374,20 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
-  const [fadeIn, setFadeIn] = useState(false);
-  const [newComment, setNewComment] = useState("");
-  const [photoComments, setPhotoComments] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [userLikedPhoto, setUserLikedPhoto] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);   
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
+  const {
+  newComment,
+  setNewComment,
+  photoComments,
+  setPhotoComments,
+  currentUser,
+  userLikedPhoto,
+  setUserLikedPhoto,
+} = usePhotoSocial(selectedPhoto, setSelectedPhoto);
   const [showLobbyIntro, setShowLobbyIntro] = useState(() => {
   return localStorage.getItem("humanMosaicLobbyIntroSeen") !== "true";
 });
@@ -390,27 +395,7 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;
-
-  useEffect(() => {
-  async function loadUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    setCurrentUser(user);
-  }
-
-  loadUser();
-
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((_event, session) => {
-    setCurrentUser(session?.user ?? null);
-  });
-
-  return () => subscription.unsubscribe();
-}, []);
-
+  
   useEffect(() => {
   async function checkUserLike() {
     if (!currentUser || !selectedPhoto?.id) {
