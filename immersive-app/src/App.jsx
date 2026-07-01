@@ -568,13 +568,15 @@ async function handleLike() {
     return;
   }
 
-  const { error } = await supabase
-    .from("photo_comments")
-    .insert({
-      submission_id: selectedPhoto.id,
-      user_id: currentUser.id,
-      comment: newComment.trim(),
-    });
+  const { data: insertedComment, error } = await supabase
+  .from("photo_comments")
+  .insert({
+    submission_id: selectedPhoto.id,
+    user_id: currentUser.id,
+    comment: newComment.trim(),
+  })
+  .select("id, comment, created_at, user_id")
+  .single();
 
   if (error) {
     console.error(error);
@@ -597,6 +599,7 @@ async function handleLike() {
   });
 
   setNewComment("");
+    setPhotoComments((current) => [insertedComment, ...current]);
 
   alert("Comment published!");
 }
