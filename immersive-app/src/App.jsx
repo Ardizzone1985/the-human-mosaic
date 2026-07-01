@@ -374,11 +374,9 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
-  const [fadeIn, setFadeIn] = useState(false);   
-  const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
-  const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
-  return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
-});
+  const [fadeIn, setFadeIn] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  
   const {
   newComment,
   setNewComment,
@@ -388,6 +386,12 @@ export default function App() {
   userLikedPhoto,
   setUserLikedPhoto,
 } = usePhotoSocial(selectedPhoto, setSelectedPhoto);
+  
+  const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
+  const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
+  return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
+});
+ 
   const [showLobbyIntro, setShowLobbyIntro] = useState(() => {
   return localStorage.getItem("humanMosaicLobbyIntroSeen") !== "true";
 });
