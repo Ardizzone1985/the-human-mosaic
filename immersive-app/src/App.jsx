@@ -374,6 +374,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [photoComments, setPhotoComments] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
@@ -472,6 +473,31 @@ const { error } = await supabase
   }
 
   registerView();
+}, [selectedPhoto?.id]);
+
+  useEffect(() => {
+  async function loadComments() {
+    if (!selectedPhoto?.id) {
+      setPhotoComments([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("photo_comments")
+      .select("id, comment, created_at, user_id")
+      .eq("submission_id", selectedPhoto.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error("Load comments error:", error);
+      return;
+    }
+
+    setPhotoComments(data || []);
+  }
+
+  loadComments();
 }, [selectedPhoto?.id]);
 
 async function handleLike() {
@@ -929,6 +955,27 @@ const isLobby = !currentRoom;
     COMMENTS
   </div>
 
+        {photoComments.length > 0 && (
+  <div style={{ marginBottom: "12px" }}>
+    {photoComments.map((comment) => (
+      <div
+        key={comment.id}
+        style={{
+          padding: "10px",
+          marginBottom: "8px",
+          borderRadius: "12px",
+          background: "rgba(0,0,0,0.22)",
+          color: "#e8ded0",
+          fontSize: "13px",
+          lineHeight: 1.4
+        }}
+      >
+        {comment.comment}
+      </div>
+    ))}
+  </div>
+)}
+        
   <textarea
     value={newComment}
 onChange={(e) => setNewComment(e.target.value)}
