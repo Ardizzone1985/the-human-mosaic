@@ -373,6 +373,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
+  const [newComment, setNewComment] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
@@ -883,6 +884,8 @@ const isLobby = !currentRoom;
   </div>
 
   <textarea
+    value={newComment}
+onChange={(e) => setNewComment(e.target.value)}
     placeholder="Write a comment..."
     style={{
       width: "100%",
@@ -899,6 +902,7 @@ const isLobby = !currentRoom;
   />
 
   <button
+    onClick={handleSendComment}
     style={{
       marginTop: "10px",
       width: "100%",
