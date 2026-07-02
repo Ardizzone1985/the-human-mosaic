@@ -83,11 +83,22 @@ useEffect(() => {
     if (!selectedPhoto?.id) return;
 
     const visitorStorageKey = "humanMosaicVisitorKey";
-    let visitorKey = localStorage.getItem(visitorStorageKey);
+    let visitorId = localStorage.getItem(visitorStorageKey);
 
-    if (!visitorKey) {
-      visitorKey = crypto.randomUUID();
-      localStorage.setItem(visitorStorageKey, visitorKey);
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem(visitorStorageKey, visitorId);
+    }
+
+    const thirtyMinutes = 30 * 60 * 1000;
+    const timeBucket = Math.floor(Date.now() / thirtyMinutes);
+    const visitorKey = `${visitorId}_${timeBucket}`;
+
+    const localViewKey = `humanMosaicViewed_${selectedPhoto.id}_${timeBucket}`;
+
+    if (localStorage.getItem(localViewKey)) {
+      await refreshSelectedPhoto(selectedPhoto.id);
+      return;
     }
 
     const { error } = await supabase.from("photo_views").insert({
@@ -95,11 +106,19 @@ useEffect(() => {
       visitor_key: visitorKey,
     });
 
-    if (error && error.code !== "23505" && error.status !== 409) {
-  console.error("View insert error:", error);
-  return;
-}
+    if (error) {
+      const isDuplicate =
+        error.code === "23505" ||
+        error.status === 409 ||
+        error.message?.toLowerCase().includes("duplicate");
 
+      if (!isDuplicate) {
+        console.error("View insert error:", error);
+        return;
+      }
+    }
+
+    localStorage.setItem(localViewKey, "true");
     await refreshSelectedPhoto(selectedPhoto.id);
   }
 
