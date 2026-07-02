@@ -11,6 +11,7 @@ import PhotoModal from "./PhotoModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
 import WelcomeGate from "./WelcomeGate.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
+import { useAuth } from "./auth/AuthProvider.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -376,6 +377,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
+  const { user } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -407,6 +409,13 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;  
+
+  useEffect(() => {
+  if (user) {
+    localStorage.setItem("humanMosaicWelcomeSeen", "true");
+    setShowWelcomeGate(false);
+  }
+}, [user]);
   
 useEffect(() => {
   setTimeout(() => {
