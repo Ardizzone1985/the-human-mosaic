@@ -78,26 +78,16 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
     checkUserLike();
   }, [currentUser, selectedPhoto?.id]);
 
-  useEffect(() => {
-    async function registerView() {
-      if (!selectedPhoto?.id) return;
-
-      const viewKey = `humanMosaicViewed_${selectedPhoto.id}`;
-      const lastView = localStorage.getItem(viewKey);
-      const now = Date.now();
-
-      if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
-
-      useEffect(() => {
+useEffect(() => {
   async function registerView() {
     if (!selectedPhoto?.id) return;
 
-    const viewKey = `humanMosaicVisitor_${selectedPhoto.id}`;
-    let visitorKey = localStorage.getItem(viewKey);
+    const visitorStorageKey = "humanMosaicVisitorKey";
+    let visitorKey = localStorage.getItem(visitorStorageKey);
 
     if (!visitorKey) {
       visitorKey = crypto.randomUUID();
-      localStorage.setItem(viewKey, visitorKey);
+      localStorage.setItem(visitorStorageKey, visitorKey);
     }
 
     const { error } = await supabase.from("photo_views").insert({
@@ -115,18 +105,6 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
 
   registerView();
 }, [selectedPhoto?.id]);
-
-      if (error) {
-        console.error("View error:", error);
-        return;
-      }
-
-      localStorage.setItem(viewKey, String(now));
-      await refreshSelectedPhoto(selectedPhoto.id);
-    }
-
-    registerView();
-  }, [selectedPhoto?.id]);
 
   useEffect(() => {
     async function loadComments() {
