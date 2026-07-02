@@ -7,206 +7,204 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
 
+  async function refreshSelectedPhoto(photoId) {
+    if (!photoId) return;
+
+    const { data, error } = await supabase
+      .from("submissions")
+      .select("id, likes_count, views_count, comments_count")
+      .eq("id", photoId)
+      .single();
+
+    if (error) {
+      console.error("Refresh photo error:", error);
+      return;
+    }
+
+    setSelectedPhoto((current) => {
+      if (!current || current.id !== photoId) return current;
+      return {
+        ...current,
+        likes_count: data.likes_count ?? 0,
+        views_count: data.views_count ?? 0,
+        comments_count: data.comments_count ?? 0,
+      };
+    });
+  }
+
   useEffect(() => {
     async function loadUser() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       setCurrentUser(user);
     }
 
     loadUser();
 
-    const { data: { subscription } } =
-      supabase.auth.onAuthStateChange((_event, session) => {
-        setCurrentUser(session?.user ?? null);
-      });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentUser(session?.user ?? null);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-  async function checkUserLike() {
-    if (!currentUser || !selectedPhoto?.id) {
-      setUserLikedPhoto(false);
+    async function checkUserLike() {
+      if (!currentUser || !selectedPhoto?.id) {
+        setUserLikedPhoto(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("photo_likes")
+        .select("id")
+        .eq("submission_id", selectedPhoto.id)
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Check like error:", error);
+        setUserLikedPhoto(false);
+        return;
+      }
+
+      setUserLikedPhoto(!!data);
+    }
+
+    checkUserLike();
+  }, [currentUser, selectedPhoto?.id]);
+
+  useEffect(() => {
+    async function registerView() {
+      if (!selectedPhoto?.id) return;
+
+      const viewKey = `humanMosaicViewed_${selectedPhoto.id}`;
+      const lastView = localStorage.getItem(viewKey);
+      const now = Date.now();
+
+      if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
+
+      const newViewsCount = (selectedPhoto.views_count || 0) + 1;
+
+      const { error } = await supabase
+        .from("submissions")
+        .update({ views_count: newViewsCount })
+        .eq("id", selectedPhoto.id);
+
+      if (error) {
+        console.error("View error:", error);
+        return;
+      }
+
+      localStorage.setItem(viewKey, String(now));
+      await refreshSelectedPhoto(selectedPhoto.id);
+    }
+
+    registerView();
+  }, [selectedPhoto?.id]);
+
+  useEffect(() => {
+    async function loadComments() {
+      if (!selectedPhoto?.id) {
+        setPhotoComments([]);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("photo_comments")
+        .select("id, comment, created_at, user_id")
+        .eq("submission_id", selectedPhoto.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      if (error) {
+        console.error("Load comments error:", error);
+        return;
+      }
+
+      setPhotoComments(data || []);
+    }
+
+    loadComments();
+  }, [selectedPhoto?.id]);
+
+  async function handleLike() {
+    if (!selectedPhoto?.id) return;
+
+    if (!currentUser) {
+      alert("Please sign in to like this memory.");
       return;
     }
 
-    const { data } = await supabase
+    const { data: existingLike, error: checkError } = await supabase
       .from("photo_likes")
       .select("id")
       .eq("submission_id", selectedPhoto.id)
       .eq("user_id", currentUser.id)
       .maybeSingle();
 
-    setUserLikedPhoto(!!data);
-  }
-
-  checkUserLike();
-}, [currentUser, selectedPhoto?.id]);
-
-  useEffect(() => {
-  async function registerView() {
-    if (!selectedPhoto?.id) return;
-
-    const viewKey = `humanMosaicViewed_${selectedPhoto.id}`;
-    const lastView = localStorage.getItem(viewKey);
-    const now = Date.now();
-
-    // Conta una visualizzazione ogni 30 minuti per dispositivo
-    if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
-
-    const newViewsCount = (selectedPhoto.views_count || 0) + 1;
-
-    const { error } = await supabase
-      .from("submissions")
-      .update({ views_count: newViewsCount })
-      .eq("id", selectedPhoto.id);
-
-    if (error) {
-      console.error("View error:", error);
+    if (checkError) {
+      console.error("Check like error:", checkError);
       return;
     }
 
-    localStorage.setItem(viewKey, String(now));
-
-    setSelectedPhoto({
-      ...selectedPhoto,
-      views_count: newViewsCount,
-    });
-  }
-
-  registerView();
-}, [selectedPhoto?.id]);
-
-  useEffect(() => {
-  async function loadComments() {
-    if (!selectedPhoto?.id) {
-      setPhotoComments([]);
+    if (existingLike) {
+      alert("You have already liked this memory.");
       return;
     }
 
-    const { data, error } = await supabase
-      .from("photo_comments")
-      .select("id, comment, created_at, user_id")
-      .eq("submission_id", selectedPhoto.id)
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (error) {
-      console.error("Load comments error:", error);
-      return;
-    }
-
-    setPhotoComments(data || []);
-  }
-
-  loadComments();
-}, [selectedPhoto?.id]);
-
-  async function handleLike() {
-  if (!selectedPhoto?.id) return;
-
-  if (!currentUser) {
-    alert("Please sign in to like this memory.");
-    return;
-  }
-
-  const { data: existingLike, error: checkError } = await supabase
-    .from("photo_likes")
-    .select("id")
-    .eq("submission_id", selectedPhoto.id)
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  if (checkError) {
-    console.error("Check like error:", checkError);
-    return;
-  }
-
-  if (existingLike) {
-    alert("You have already liked this memory.");
-    return;
-  }
-
-  const { error: insertError } = await supabase
-    .from("photo_likes")
-    .insert({
+    const { error: insertError } = await supabase.from("photo_likes").insert({
       submission_id: selectedPhoto.id,
       user_id: currentUser.id,
     });
 
-  if (insertError) {
-    console.error("Insert like error:", insertError);
-    return;
+    if (insertError) {
+      console.error("Insert like error:", insertError);
+      return;
+    }
+
+    setUserLikedPhoto(true);
+    await refreshSelectedPhoto(selectedPhoto.id);
   }
 
-  const newLikesCount = (selectedPhoto.likes_count || 0) + 1;
+  async function handleSendComment() {
+    if (!currentUser) {
+      alert("Please sign in to comment.");
+      return;
+    }
 
-  const { error: updateError } = await supabase
-    .from("submissions")
-    .update({ likes_count: newLikesCount })
-    .eq("id", selectedPhoto.id);
+    if (!selectedPhoto?.id) return;
 
-  if (updateError) {
-    console.error("Update likes_count error:", updateError);
-    return;
-  }
+    if (!newComment.trim()) {
+      alert("Write a comment first.");
+      return;
+    }
 
-  setSelectedPhoto({
-    ...selectedPhoto,
-    likes_count: newLikesCount,
-  });
+    const { data: insertedComment, error } = await supabase
+      .from("photo_comments")
+      .insert({
+        submission_id: selectedPhoto.id,
+        user_id: currentUser.id,
+        comment: newComment.trim(),
+      })
+      .select("id, comment, created_at, user_id")
+      .single();
 
-  setUserLikedPhoto(true);
-}
+    if (error) {
+      console.error("Send comment error:", error);
+      alert("Unable to send comment.");
+      return;
+    }
 
-    async function handleSendComment() {
-  if (!currentUser) {
-    alert("Please sign in to comment.");
-    return;
-  }
-
-  if (!selectedPhoto?.id) return;
-
-  if (!newComment.trim()) {
-    alert("Write a comment first.");
-    return;
-  }
-
-  const { data: insertedComment, error } = await supabase
-  .from("photo_comments")
-  .insert({
-    submission_id: selectedPhoto.id,
-    user_id: currentUser.id,
-    comment: newComment.trim(),
-  })
-  .select("id, comment, created_at, user_id")
-  .single();
-
-  if (error) {
-    console.error(error);
-    alert("Unable to send comment.");
-    return;
-  }
-
-  const newCommentsCount = (selectedPhoto.comments_count || 0) + 1;
-
-  await supabase
-    .from("submissions")
-    .update({
-      comments_count: newCommentsCount,
-    })
-    .eq("id", selectedPhoto.id);
-
-  setSelectedPhoto({
-    ...selectedPhoto,
-    comments_count: newCommentsCount,
-  });
-
-  setNewComment("");
+    setNewComment("");
     setPhotoComments((current) => [insertedComment, ...current]);
 
-  alert("Comment published!");
-}
+    await refreshSelectedPhoto(selectedPhoto.id);
+  }
 
   return {
     newComment,
