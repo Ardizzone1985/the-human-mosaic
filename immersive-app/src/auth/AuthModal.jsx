@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AuthModal({ mode, onClose }) {
   const [currentMode, setCurrentMode] = useState(mode ?? "login");
+
+useEffect(() => {
+  setCurrentMode(mode ?? "login");
+}, [mode]);
 
   if (!mode) return null;
 
