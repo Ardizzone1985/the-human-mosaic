@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm.jsx";
+import RegisterForm from "./RegisterForm.jsx";
 
 export default function AuthModal({ mode, onClose }) {
   const [currentMode, setCurrentMode] = useState(mode ?? "login");
@@ -32,6 +33,14 @@ useEffect(() => {
   <LoginForm
     onSuccess={() => {
       onClose();
+    }}
+  />
+)}
+
+          {currentMode === "register" && (
+  <RegisterForm
+    onSuccess={() => {
+      setCurrentMode("login");
     }}
   />
 )}
