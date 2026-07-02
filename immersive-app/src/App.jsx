@@ -385,6 +385,7 @@ export default function App() {
   currentUser,
   userLikedPhoto,
   setUserLikedPhoto,
+    handleLike,
 } = usePhotoSocial(selectedPhoto, setSelectedPhoto);
   
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
