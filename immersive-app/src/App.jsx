@@ -386,6 +386,7 @@ export default function App() {
   userLikedPhoto,
   setUserLikedPhoto,
     handleLike,
+    handleSendComment,
 } = usePhotoSocial(selectedPhoto, setSelectedPhoto);
   
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
@@ -400,55 +401,6 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;  
-
-  async function handleSendComment() {
-  if (!currentUser) {
-    alert("Please sign in to comment.");
-    return;
-  }
-
-  if (!selectedPhoto?.id) return;
-
-  if (!newComment.trim()) {
-    alert("Write a comment first.");
-    return;
-  }
-
-  const { data: insertedComment, error } = await supabase
-  .from("photo_comments")
-  .insert({
-    submission_id: selectedPhoto.id,
-    user_id: currentUser.id,
-    comment: newComment.trim(),
-  })
-  .select("id, comment, created_at, user_id")
-  .single();
-
-  if (error) {
-    console.error(error);
-    alert("Unable to send comment.");
-    return;
-  }
-
-  const newCommentsCount = (selectedPhoto.comments_count || 0) + 1;
-
-  await supabase
-    .from("submissions")
-    .update({
-      comments_count: newCommentsCount,
-    })
-    .eq("id", selectedPhoto.id);
-
-  setSelectedPhoto({
-    ...selectedPhoto,
-    comments_count: newCommentsCount,
-  });
-
-  setNewComment("");
-    setPhotoComments((current) => [insertedComment, ...current]);
-
-  alert("Comment published!");
-}
   
 useEffect(() => {
   setTimeout(() => {
