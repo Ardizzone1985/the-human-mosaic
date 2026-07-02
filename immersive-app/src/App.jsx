@@ -399,31 +399,6 @@ export default function App() {
   const isMobile =
   typeof window !== "undefined" &&
   !window.matchMedia("(pointer: fine)").matches;  
- 
-  useEffect(() => {
-  async function loadComments() {
-    if (!selectedPhoto?.id) {
-      setPhotoComments([]);
-      return;
-    }
-
-    const { data, error } = await supabase
-      .from("photo_comments")
-      .select("id, comment, created_at, user_id")
-      .eq("submission_id", selectedPhoto.id)
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (error) {
-      console.error("Load comments error:", error);
-      return;
-    }
-
-    setPhotoComments(data || []);
-  }
-
-  loadComments();
-}, [selectedPhoto?.id]);
 
 async function handleLike() {
   if (!selectedPhoto?.id) return;
