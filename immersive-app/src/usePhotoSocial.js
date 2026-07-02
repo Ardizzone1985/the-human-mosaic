@@ -95,10 +95,10 @@ useEffect(() => {
       visitor_key: visitorKey,
     });
 
-    if (error && error.code !== "23505") {
-      console.error("View insert error:", error);
-      return;
-    }
+    if (error && error.code !== "23505" && error.status !== 409) {
+  console.error("View insert error:", error);
+  return;
+}
 
     await refreshSelectedPhoto(selectedPhoto.id);
   }
