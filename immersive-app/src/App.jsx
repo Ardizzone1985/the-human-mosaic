@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
+import WelcomeGate from "./WelcomeGate.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -376,6 +377,9 @@ const [targetPointId, setTargetPointId] = useState("center");
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
+  return localStorage.getItem("humanMosaicWelcomeSeen") !== "true";
+});
   
   const {
   newComment,
@@ -441,6 +445,22 @@ const isLobby = !currentRoom;
       zIndex: 9999
     }}
   />
+
+      {showWelcomeGate && (
+  <WelcomeGate
+    onEnterGuest={() => {
+      localStorage.setItem("humanMosaicWelcomeSeen", "true");
+      setShowWelcomeGate(false);
+    }}
+    onLogin={() => {
+      alert("Login system coming soon.");
+    }}
+    onRegister={() => {
+      alert("Registration system coming soon.");
+    }}
+  />
+)}
+      
       {!isLobby && (
   <div
     style={{
