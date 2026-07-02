@@ -13,45 +13,79 @@ export default function WelcomeGate({ onEnterGuest, onLogin, onRegister }) {
           THE HUMAN MOSAIC
         </h1>
 
+        <div style={tagline}>One Humanity. Millions of Memories. One Mosaic.</div>
+
         <p style={intro}>
           Explore a permanent global immersive artwork made of real people,
           real memories and real stories from around the world.
         </p>
 
+        <div style={freeNotice}>
+          Browsing the museum is completely free. Registration is only required
+          to like, comment, upload memories and become part of the artwork.
+        </div>
+
+        <div style={sectionTitle}>HOW TO EXPLORE</div>
+
         <div style={guideGrid}>
-          <Info title="Move" text="Click the floor arrows to move through the museum." />
-          <Info title="Look around" text="Click and drag to explore the space around you." />
-          <Info title="View photos" text="Click any photo to open its story, country and details." />
+          <Info icon="➤" title="Move" text="Click the floor arrows to move through the museum." />
+          <Info icon="🖱" title="Look around" text="Click and drag to explore the space around you." />
+          <Info icon="🖼" title="View photos" text="Click any photo to open its story, country and details." />
         </div>
 
         <div style={accountBox}>
-          <strong>Free account benefits</strong>
-          <p>
-            Register for free to like memories, leave comments, upload your photo,
-            appear as a Community Favorite and join the global mosaic.
-          </p>
+          <div style={accountTitle}>WHY CREATE A FREE ACCOUNT?</div>
+
+          <div style={benefitGrid}>
+            <Benefit text="Like memories you love" />
+            <Benefit text="Leave comments" />
+            <Benefit text="Upload your own photo" />
+            <Benefit text="Become a Community Favorite" />
+            <Benefit text="Create your personal profile" />
+          </div>
         </div>
+
+        <div style={journeyText}>Choose how you'd like to begin your journey.</div>
 
         <div style={buttons}>
           <button style={primaryButton} onClick={onLogin}>LOGIN</button>
           <button style={outlineButton} onClick={onRegister}>REGISTER FOR FREE</button>
-          <button style={guestButton} onClick={onEnterGuest}>ENTER AS GUEST</button>
+          <button style={guestButton} onClick={onEnterGuest}>ENTER MUSEUM AS GUEST</button>
         </div>
 
         <div style={terms}>
-          By continuing, you agree to our <span>Terms of Service</span>,{" "}
-          <span>Privacy Policy</span> and <span>Community Guidelines</span>.
+          By continuing, you agree to our <span style={link}>Terms of Service</span>,{" "}
+          <span style={link}>Privacy Policy</span> and{" "}
+          <span style={link}>Community Guidelines</span>.
+        </div>
+
+        <div style={footerLinks}>
+          <span>Terms</span>
+          <span>Privacy</span>
+          <span>Community Guidelines</span>
+          <span>Licenses</span>
+          <span>Contact</span>
         </div>
       </div>
     </div>
   );
 }
 
-function Info({ title, text }) {
+function Info({ icon, title, text }) {
   return (
     <div style={infoCard}>
+      <div style={infoIcon}>{icon}</div>
       <div style={infoTitle}>{title}</div>
       <div style={infoText}>{text}</div>
+    </div>
+  );
+}
+
+function Benefit({ text }) {
+  return (
+    <div style={benefitItem}>
+      <span style={check}>✓</span>
+      <span>{text}</span>
     </div>
   );
 }
@@ -61,7 +95,7 @@ const overlay = {
   inset: 0,
   zIndex: 1000000,
   background:
-    "radial-gradient(circle at top, rgba(215,181,109,0.22), rgba(5,5,5,0.96) 55%)",
+    "radial-gradient(circle at top, rgba(215,181,109,0.24), rgba(5,5,5,0.97) 58%)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -70,60 +104,94 @@ const overlay = {
 };
 
 const card = {
-  width: "min(94vw, 760px)",
+  width: "min(94vw, 820px)",
   maxHeight: "92vh",
   overflowY: "auto",
-  padding: "34px 28px",
+  padding: "30px 28px",
   borderRadius: "30px",
-  background: "rgba(14, 8, 4, 0.96)",
-  border: "1px solid rgba(215,181,109,0.55)",
-  boxShadow: "0 40px 120px rgba(0,0,0,0.75)",
+  background: "linear-gradient(180deg, rgba(18,10,5,0.98), rgba(8,6,4,0.98))",
+  border: "1px solid rgba(215,181,109,0.58)",
+  boxShadow: "0 40px 120px rgba(0,0,0,0.78)",
   color: "#fff",
   textAlign: "center",
   fontFamily: "Arial, sans-serif",
 };
 
 const logo = {
-  width: "180px",
-  maxWidth: "70%",
-  marginBottom: "18px",
+  width: "150px",
+  maxWidth: "66%",
+  marginBottom: "14px",
 };
 
 const eyebrow = {
   color: "#d7b56d",
   fontSize: "12px",
-  letterSpacing: "0.22em",
-  fontWeight: 700,
-  marginBottom: "12px",
+  letterSpacing: "0.24em",
+  fontWeight: 800,
+  marginBottom: "10px",
 };
 
 const title = {
   margin: 0,
-  fontSize: "clamp(34px, 6vw, 64px)",
-  lineHeight: 1.02,
+  fontSize: "clamp(30px, 5vw, 52px)",
+  lineHeight: 1.05,
   letterSpacing: "0.08em",
 };
 
+const tagline = {
+  marginTop: "14px",
+  color: "#f2c879",
+  fontSize: "15px",
+  letterSpacing: "0.08em",
+  fontWeight: 700,
+};
+
 const intro = {
-  maxWidth: "600px",
-  margin: "20px auto 28px",
+  maxWidth: "610px",
+  margin: "18px auto 18px",
   color: "#e8ded0",
-  fontSize: "16px",
-  lineHeight: 1.7,
+  fontSize: "15px",
+  lineHeight: 1.65,
+};
+
+const freeNotice = {
+  maxWidth: "680px",
+  margin: "0 auto 22px",
+  padding: "14px 16px",
+  borderRadius: "18px",
+  background: "rgba(215,181,109,0.10)",
+  border: "1px solid rgba(215,181,109,0.25)",
+  color: "#f2e6cf",
+  fontSize: "14px",
+  lineHeight: 1.55,
+};
+
+const sectionTitle = {
+  color: "#d7b56d",
+  fontSize: "12px",
+  letterSpacing: "0.2em",
+  fontWeight: 800,
+  margin: "8px 0 14px",
 };
 
 const guideGrid = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
   gap: "12px",
-  marginBottom: "18px",
+  marginBottom: "16px",
 };
 
 const infoCard = {
   padding: "16px",
   borderRadius: "18px",
-  background: "rgba(255,255,255,0.06)",
+  background: "rgba(255,255,255,0.055)",
   border: "1px solid rgba(215,181,109,0.22)",
+};
+
+const infoIcon = {
+  color: "#f2c879",
+  fontSize: "24px",
+  marginBottom: "8px",
 };
 
 const infoTitle = {
@@ -140,20 +208,61 @@ const infoText = {
 };
 
 const accountBox = {
-  margin: "18px 0",
+  margin: "16px 0",
   padding: "18px",
   borderRadius: "20px",
-  background: "rgba(215,181,109,0.10)",
-  border: "1px solid rgba(215,181,109,0.28)",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(215,181,109,0.25)",
+};
+
+const accountTitle = {
+  color: "#f2c879",
+  fontSize: "13px",
+  letterSpacing: "0.16em",
+  fontWeight: 800,
+  marginBottom: "12px",
+};
+
+const benefitGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+  gap: "10px",
+  textAlign: "left",
+};
+
+const benefitItem = {
+  display: "flex",
+  gap: "10px",
+  alignItems: "center",
   color: "#e8ded0",
-  lineHeight: 1.6,
+  fontSize: "14px",
+};
+
+const check = {
+  width: "22px",
+  height: "22px",
+  borderRadius: "999px",
+  background: "#d7b56d",
+  color: "#111",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 900,
+  flexShrink: 0,
+};
+
+const journeyText = {
+  marginTop: "18px",
+  color: "#f2c879",
+  fontSize: "14px",
+  letterSpacing: "0.08em",
 };
 
 const buttons = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
   gap: "12px",
-  marginTop: "18px",
+  marginTop: "14px",
 };
 
 const primaryButton = {
@@ -162,8 +271,9 @@ const primaryButton = {
   border: "none",
   background: "#d7b56d",
   color: "#111",
-  fontWeight: 800,
+  fontWeight: 900,
   cursor: "pointer",
+  letterSpacing: "0.03em",
 };
 
 const outlineButton = {
@@ -177,7 +287,7 @@ const guestButton = {
   ...primaryButton,
   background: "rgba(255,255,255,0.08)",
   color: "#fff",
-  border: "1px solid rgba(255,255,255,0.18)",
+  border: "1px solid rgba(255,255,255,0.20)",
 };
 
 const terms = {
@@ -187,4 +297,18 @@ const terms = {
   lineHeight: 1.6,
 };
 
-terms.span = {};
+const link = {
+  color: "#d7b56d",
+  textDecoration: "underline",
+  cursor: "pointer",
+};
+
+const footerLinks = {
+  marginTop: "12px",
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  gap: "14px",
+  color: "#817568",
+  fontSize: "12px",
+};
