@@ -10,6 +10,7 @@ import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
 import WelcomeGate from "./WelcomeGate.jsx";
+import AuthModal from "./auth/AuthModal.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -377,6 +378,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [authMode, setAuthMode] = useState(null);
   const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
   return localStorage.getItem("humanMosaicWelcomeSeen") !== "true";
 });
@@ -453,13 +455,19 @@ const isLobby = !currentRoom;
       setShowWelcomeGate(false);
     }}
     onLogin={() => {
-      alert("Login system coming soon.");
-    }}
-    onRegister={() => {
-      alert("Registration system coming soon.");
-    }}
+  setAuthMode("login");
+}}
+
+onRegister={() => {
+  setAuthMode("register");
+}}
   />
 )}
+
+      <AuthModal
+  mode={authMode}
+  onClose={() => setAuthMode(null)}
+/>
       
       {!isLobby && (
   <div
