@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import LoginForm from "./LoginForm.jsx";
 
 export default function AuthModal({ mode, onClose }) {
   const [currentMode, setCurrentMode] = useState(mode ?? "login");
@@ -26,6 +27,14 @@ useEffect(() => {
         </p>
 
         <div style={{ marginTop: 30 }}>
+
+          {currentMode === "login" && (
+  <LoginForm
+    onSuccess={() => {
+      onClose();
+    }}
+  />
+)}
 
           {currentMode === "login" ? (
 
