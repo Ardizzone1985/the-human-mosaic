@@ -88,12 +88,33 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
 
       if (lastView && now - Number(lastView) < 30 * 60 * 1000) return;
 
-      const newViewsCount = (selectedPhoto.views_count || 0) + 1;
+      useEffect(() => {
+  async function registerView() {
+    if (!selectedPhoto?.id) return;
 
-      const { error } = await supabase
-        .from("submissions")
-        .update({ views_count: newViewsCount })
-        .eq("id", selectedPhoto.id);
+    const viewKey = `humanMosaicVisitor_${selectedPhoto.id}`;
+    let visitorKey = localStorage.getItem(viewKey);
+
+    if (!visitorKey) {
+      visitorKey = crypto.randomUUID();
+      localStorage.setItem(viewKey, visitorKey);
+    }
+
+    const { error } = await supabase.from("photo_views").insert({
+      submission_id: selectedPhoto.id,
+      visitor_key: visitorKey,
+    });
+
+    if (error && error.code !== "23505") {
+      console.error("View insert error:", error);
+      return;
+    }
+
+    await refreshSelectedPhoto(selectedPhoto.id);
+  }
+
+  registerView();
+}, [selectedPhoto?.id]);
 
       if (error) {
         console.error("View error:", error);
