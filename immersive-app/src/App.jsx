@@ -479,6 +479,20 @@ const isLobby = !currentRoom;
   </div>
 )}
 
+      {!user && !showWelcomeGate && (
+  <div style={guestBar}>
+    <span>Guest Mode</span>
+
+    <button style={guestActionButton} onClick={() => setAuthMode("login")}>
+      Login
+    </button>
+
+    <button style={guestActionButton} onClick={() => setAuthMode("register")}>
+      Register
+    </button>
+  </div>
+)}
+
       {showWelcomeGate && (
   <WelcomeGate
     onEnterGuest={() => {
@@ -806,6 +820,36 @@ const userBar = {
 };
 
 const logoutButton = {
+  border: "none",
+  borderRadius: "999px",
+  padding: "7px 12px",
+  background: "#d7b56d",
+  color: "#111",
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
+const guestBar = {
+  position: "fixed",
+  top: 18,
+  right: 18,
+  zIndex: 1000002,
+  pointerEvents: "auto",
+  display: "flex",
+  gap: "10px",
+  alignItems: "center",
+  padding: "10px 14px",
+  borderRadius: "999px",
+  background: "rgba(0,0,0,0.58)",
+  border: "1px solid rgba(215,181,109,0.45)",
+  color: "#f2c879",
+  fontFamily: "Arial, sans-serif",
+  fontSize: "13px",
+  fontWeight: 700,
+  backdropFilter: "blur(10px)",
+};
+
+const guestActionButton = {
   border: "none",
   borderRadius: "999px",
   padding: "7px 12px",
