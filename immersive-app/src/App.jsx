@@ -464,6 +464,7 @@ const isLobby = !currentRoom;
     </span>
 
     <button
+       type="button"
       style={logoutButton}
       onClick={async () => {
         await logout();
@@ -787,6 +788,7 @@ const userBar = {
   top: 18,
   right: 18,
   zIndex: 1000002,
+  pointerEvents: "auto",
   display: "flex",
   gap: "12px",
   alignItems: "center",
