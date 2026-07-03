@@ -77,8 +77,9 @@ export default function InfoWall({ room = "Identity" }) {
   const logoTexture = useTexture(logoImage);
 
   function goHome() {
-    window.location.href = "/";
-  }
+  window.history.pushState({}, "", "/");
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
 
   return (
     <group position={[0, 3.2, 10.8]} rotation={[0, Math.PI, 0]} scale={1.18}>
