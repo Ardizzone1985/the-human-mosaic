@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
     setLoadingAuth(false);
   }
 
-  async function logout() {
+async function logout() {
   setLoadingAuth(true);
 
   try {
@@ -55,6 +55,12 @@ export function AuthProvider({ children }) {
   } catch (error) {
     console.error("Logout error:", error);
   }
+
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("sb-")) {
+      localStorage.removeItem(key);
+    }
+  });
 
   setUser(null);
   setProfile(null);
