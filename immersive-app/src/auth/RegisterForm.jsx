@@ -4,6 +4,8 @@ import { supabase } from "../supabaseClient.js";
 export default function RegisterForm({ onSuccess }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [country, setCountry] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +37,9 @@ export default function RegisterForm({ onSuccess }) {
         data: {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
+          nickname: nickname.trim(),
           birth_date: birthDate,
+          country: country.trim(),
           accepted_terms: true,
         },
       },
@@ -56,6 +60,8 @@ export default function RegisterForm({ onSuccess }) {
     <form onSubmit={handleRegister} style={{ display: "grid", gap: 12 }}>
       <input placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} style={input} required />
       <input placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} style={input} required />
+      <input placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} style={input} required />
+      <input placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} style={input} required />
       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} style={input} required />
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} required />
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={input} required minLength={6} />
