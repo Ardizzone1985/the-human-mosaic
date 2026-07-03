@@ -141,7 +141,8 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   window.dispatchEvent(new Event("startFadeOut"));
 
   setTimeout(() => {
-    window.location.href = `/?room=${room}`;
+    window.history.pushState({}, "", `/?room=${room}`);
+window.dispatchEvent(new PopStateEvent("popstate"));
   }, 900);
 }
 
