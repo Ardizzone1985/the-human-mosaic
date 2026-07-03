@@ -77,8 +77,12 @@ export default function InfoWall({ room = "Identity" }) {
   const logoTexture = useTexture(logoImage);
 
   function goHome() {
-  window.history.pushState({}, "", "/");
-  window.dispatchEvent(new PopStateEvent("popstate"));
+  window.dispatchEvent(new Event("startFadeOut"));
+
+  setTimeout(() => {
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, 450);
 }
 
   return (
