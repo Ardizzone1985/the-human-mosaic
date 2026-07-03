@@ -466,21 +466,19 @@ const isLobby = !currentRoom;
     <button
        type="button"
       style={logoutButton}
-      onClick={async (e) => {
+      onClick={(e) => {
   e.preventDefault();
   e.stopPropagation();
 
   console.log("LOG OUT CLICKED");
 
-  try {
-    await supabase.auth.signOut({ scope: "local" });
-  } catch (error) {
-    console.error("Logout error:", error);
-  }
+  supabase.auth.signOut({ scope: "local" });
 
   localStorage.removeItem("humanMosaicWelcomeSeen");
 
-  window.location.reload();
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 300);
 }}
     >
       Log out
