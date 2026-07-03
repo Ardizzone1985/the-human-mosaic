@@ -377,7 +377,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
-  const { user, profile, logout } = useAuth();
+  const { user, profile, logout, loadingAuth } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -457,7 +457,7 @@ const isLobby = !currentRoom;
     }}
   />
 
-      {user && (
+      {!loadingAuth && user && (
   <div style={userBar}>
     <span>
       Welcome, {profile?.nickname || profile?.first_name || "Visitor"}
@@ -466,19 +466,17 @@ const isLobby = !currentRoom;
     <button
        type="button"
       style={logoutButton}
-      onClick={(e) => {
+      onClick={async (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  Object.keys(localStorage).forEach((key) => {
-    if (key.startsWith("sb-")) {
-      localStorage.removeItem(key);
-    }
-  });
+  await logout();
 
   localStorage.removeItem("humanMosaicWelcomeSeen");
+  setAuthMode(null);
+  setShowWelcomeGate(true);
 
-  window.location.href = "/";
+  window.history.replaceState({}, "", "/");
 }}
     >
       Log out
@@ -486,7 +484,7 @@ const isLobby = !currentRoom;
   </div>
 )}
 
-      {!user && !showWelcomeGate && (
+      {!loadingAuth && !user && !showWelcomeGate && (
   <div style={guestBar}>
     <span>Guest Mode</span>
 
