@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
+import { useAuth } from "./auth/AuthProvider.jsx";
 
 export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
+  const { user } = useAuth();
   const [newComment, setNewComment] = useState("");
-  const [photoComments, setPhotoComments] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [photoComments, setPhotoComments] = useState([]);  
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
 
   async function refreshSelectedPhoto(photoId) {
@@ -33,28 +34,8 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
   }
 
   useEffect(() => {
-    async function loadUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setCurrentUser(user);
-    }
-
-    loadUser();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
     async function checkUserLike() {
-      if (!currentUser || !selectedPhoto?.id) {
+      if (!user || !selectedPhoto?.id) {
         setUserLikedPhoto(false);
         return;
       }
@@ -63,7 +44,7 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
         .from("photo_likes")
         .select("id")
         .eq("submission_id", selectedPhoto.id)
-        .eq("user_id", currentUser.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (error) {
@@ -76,7 +57,7 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
     }
 
     checkUserLike();
-  }, [currentUser, selectedPhoto?.id]);
+  }, [user, selectedPhoto?.id]);
 
 useEffect(() => {
   async function registerView() {
@@ -162,7 +143,7 @@ useEffect(() => {
       .from("photo_likes")
       .select("id")
       .eq("submission_id", selectedPhoto.id)
-      .eq("user_id", currentUser.id)
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (checkError) {
@@ -177,7 +158,7 @@ useEffect(() => {
 
     const { error: insertError } = await supabase.from("photo_likes").insert({
       submission_id: selectedPhoto.id,
-      user_id: currentUser.id,
+      user_id: user.id,
     });
 
     if (insertError) {
@@ -190,7 +171,7 @@ useEffect(() => {
   }
 
   async function handleSendComment() {
-    if (!currentUser) {
+    if (!user) {
       alert("Please sign in to comment.");
       return;
     }
@@ -206,7 +187,7 @@ useEffect(() => {
       .from("photo_comments")
       .insert({
         submission_id: selectedPhoto.id,
-        user_id: currentUser.id,
+        user_id: user.id,
         comment: newComment.trim(),
       })
       .select("id, comment, created_at, user_id")
@@ -229,7 +210,7 @@ useEffect(() => {
     setNewComment,
     photoComments,
     setPhotoComments,
-    currentUser,
+    currentUser: user,
     userLikedPhoto,
     setUserLikedPhoto,
     handleLike,
