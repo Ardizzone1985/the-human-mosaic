@@ -472,15 +472,15 @@ const isLobby = !currentRoom;
 
   console.log("LOG OUT CLICKED");
 
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
+  try {
+    await supabase.auth.signOut({ scope: "local" });
+  } catch (error) {
     console.error("Logout error:", error);
-    return;
   }
 
   localStorage.removeItem("humanMosaicWelcomeSeen");
-  window.location.href = "/";
+
+  window.location.reload();
 }}
     >
       Log out
