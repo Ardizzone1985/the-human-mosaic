@@ -134,7 +134,7 @@ useEffect(() => {
   async function handleLike() {
     if (!selectedPhoto?.id) return;
 
-    if (!currentUser) {
+    if (!user) {
       alert("Please sign in to like this memory.");
       return;
     }
