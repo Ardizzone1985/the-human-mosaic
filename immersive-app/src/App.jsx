@@ -426,9 +426,18 @@ useEffect(() => {
   setFadeIn(false);
 });
 }, []);
-    const params = new URLSearchParams(window.location.search);
+    const [roomParam, setRoomParam] = useState(() => {
+  return new URLSearchParams(window.location.search).get("room");
+});
 
-const roomParam = params.get("room");
+useEffect(() => {
+  function handleRouteChange() {
+    setRoomParam(new URLSearchParams(window.location.search).get("room"));
+  }
+
+  window.addEventListener("popstate", handleRouteChange);
+  return () => window.removeEventListener("popstate", handleRouteChange);
+}, []);
 
 const currentRoom =
   roomParam?.toLowerCase() === "identity"
