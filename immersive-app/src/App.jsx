@@ -439,6 +439,14 @@ useEffect(() => {
   return () => window.removeEventListener("popstate", handleRouteChange);
 }, []);
 
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setFadeIn(true);
+  }, 180);
+
+  return () => clearTimeout(timer);
+}, [roomParam]);
+
 const currentRoom =
   roomParam?.toLowerCase() === "identity"
     ? "Identity"
