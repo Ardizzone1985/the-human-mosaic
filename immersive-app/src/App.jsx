@@ -460,7 +460,7 @@ const isLobby = !currentRoom;
       {user && (
   <div style={userBar}>
     <span>
-      Bentornato {profile?.nickname || profile?.first_name || "Visitor"}
+      Welcome, {profile?.nickname || profile?.first_name || "Visitor"}
     </span>
 
     <button
@@ -472,7 +472,7 @@ const isLobby = !currentRoom;
         setShowWelcomeGate(true);
       }}
     >
-      Logoff
+      Log out
     </button>
   </div>
 )}
