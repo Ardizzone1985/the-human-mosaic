@@ -48,10 +48,18 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
+  setLoadingAuth(true);
+
+  try {
+    await supabase.auth.signOut({ scope: "local" });
+  } catch (error) {
+    console.error("Logout error:", error);
   }
+
+  setUser(null);
+  setProfile(null);
+  setLoadingAuth(false);
+}
 
   useEffect(() => {
     refreshAuth();
