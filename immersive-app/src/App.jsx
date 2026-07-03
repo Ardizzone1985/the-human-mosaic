@@ -377,7 +377,7 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
-  const { user } = useAuth();
+  const { user, profile, logout } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -456,6 +456,25 @@ const isLobby = !currentRoom;
       zIndex: 9999
     }}
   />
+
+      {user && (
+  <div style={userBar}>
+    <span>
+      Bentornato {profile?.nickname || profile?.first_name || "Visitor"}
+    </span>
+
+    <button
+      style={logoutButton}
+      onClick={async () => {
+        await logout();
+        localStorage.removeItem("humanMosaicWelcomeSeen");
+        setShowWelcomeGate(true);
+      }}
+    >
+      Logoff
+    </button>
+  </div>
+)}
 
       {showWelcomeGate && (
   <WelcomeGate
@@ -762,3 +781,32 @@ onRegister={() => {
       </>
   );
 }
+
+const userBar = {
+  position: "fixed",
+  top: 18,
+  right: 18,
+  zIndex: 1000002,
+  display: "flex",
+  gap: "12px",
+  alignItems: "center",
+  padding: "10px 14px",
+  borderRadius: "999px",
+  background: "rgba(0,0,0,0.58)",
+  border: "1px solid rgba(215,181,109,0.45)",
+  color: "#f2c879",
+  fontFamily: "Arial, sans-serif",
+  fontSize: "13px",
+  fontWeight: 700,
+  backdropFilter: "blur(10px)",
+};
+
+const logoutButton = {
+  border: "none",
+  borderRadius: "999px",
+  padding: "7px 12px",
+  background: "#d7b56d",
+  color: "#111",
+  fontWeight: 800,
+  cursor: "pointer",
+};
