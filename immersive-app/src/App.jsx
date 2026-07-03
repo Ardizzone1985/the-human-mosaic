@@ -466,12 +466,19 @@ const isLobby = !currentRoom;
     <button
        type="button"
       style={logoutButton}
-      onClick={async (e) => {
+      onClick={(e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  await logout();
-  setShowWelcomeGate(true);
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("sb-")) {
+      localStorage.removeItem(key);
+    }
+  });
+
+  localStorage.removeItem("humanMosaicWelcomeSeen");
+
+  window.location.href = "/";
 }}
     >
       Log out
