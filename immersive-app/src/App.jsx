@@ -805,7 +805,12 @@ onRegister={() => {
 
   </>
 ) : (
-  <Room room={currentRoom} theme={theme} onPhotoSelect={setSelectedPhoto} />
+  <Room
+  key={currentRoom}
+  room={currentRoom}
+  theme={theme}
+  onPhotoSelect={setSelectedPhoto}
+/>
 )}
 </Canvas>
          </div>
