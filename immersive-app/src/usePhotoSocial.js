@@ -23,7 +23,7 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
     }
 
     setSelectedPhoto((current) => {
-      if (!current || current.id !== photoId) return current;
+      if (!current || String(current.id) !== String(photoId)) return current;
       return {
         ...current,
         likes_count: data.likes_count ?? 0,
@@ -169,7 +169,7 @@ useEffect(() => {
     setUserLikedPhoto(true);
 
 setSelectedPhoto((current) => {
-  if (!current || current.id !== selectedPhoto.id) return current;
+  if (!current || String(current.id) !== String(selectedPhoto.id)) return current;
 
   return {
     ...current,
