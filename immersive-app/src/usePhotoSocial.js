@@ -205,15 +205,16 @@ setTimeout(() => {
       return;
     }
 
-    const { data: insertedComment, error } = await supabase
-      .from("photo_comments")
-      .insert({
-        submission_id: selectedPhoto.id,
-        user_id: user.id,
-        comment: newComment.trim(),
-      })
-      .select("id, comment, created_at, user_id")
-      .single();
+    const { data, error } = await supabase
+  .from("photo_comments")
+  .insert({
+    submission_id: selectedPhoto.id,
+    user_id: user.id,
+    comment: newComment.trim(),
+  })
+  .select("id, comment, created_at, user_id");
+
+const insertedComment = data?.[0];
 
     if (error) {
       console.error("Send comment error:", error);
