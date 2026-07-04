@@ -167,7 +167,19 @@ useEffect(() => {
     }
 
     setUserLikedPhoto(true);
-    await refreshSelectedPhoto(selectedPhoto.id);
+
+setSelectedPhoto((current) => {
+  if (!current || current.id !== selectedPhoto.id) return current;
+
+  return {
+    ...current,
+    likes_count: (current.likes_count || 0) + 1,
+  };
+});
+
+setTimeout(() => {
+  refreshSelectedPhoto(selectedPhoto.id);
+}, 400);
   }
 
   async function handleSendComment() {
