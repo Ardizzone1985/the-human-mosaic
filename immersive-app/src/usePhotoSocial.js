@@ -132,6 +132,10 @@ useEffect(() => {
   }, [selectedPhoto?.id]);
 
   async function handleLike() {
+    console.log("LIKE CLICKED", {
+  selectedPhoto,
+  user,
+});
     if (!selectedPhoto?.id) return;
 
     if (!user) {
