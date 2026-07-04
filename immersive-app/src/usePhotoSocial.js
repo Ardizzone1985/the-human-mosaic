@@ -173,17 +173,17 @@ useEffect(() => {
     setUserLikedPhoto(true);
 
 setSelectedPhoto((current) => {
-  if (!current || String(current.id) !== String(selectedPhoto.id)) return current;
+  if (!current) return current;
 
   return {
     ...current,
-    likes_count: (current.likes_count || 0) + 1,
+    likes_count: Number(current.likes_count || 0) + 1,
   };
 });
 
 setTimeout(() => {
   refreshSelectedPhoto(selectedPhoto.id);
-}, 400);
+}, 1000);
   }
 
   async function handleSendComment() {
