@@ -228,9 +228,24 @@ const insertedComment = data?.[0];
     }
 
     setNewComment("");
-    setPhotoComments((current) => [insertedComment, ...current]);
 
-    await refreshSelectedPhoto(selectedPhoto.id);
+setPhotoComments((current) => [
+  insertedComment,
+  ...current,
+]);
+
+setSelectedPhoto((current) => {
+  if (!current) return current;
+
+  return {
+    ...current,
+    comments_count: Number(current.comments_count || 0) + 1,
+  };
+});
+
+setTimeout(() => {
+  refreshSelectedPhoto(selectedPhoto.id);
+}, 1000);
   }
 
   return {
