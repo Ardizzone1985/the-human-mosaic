@@ -215,6 +215,11 @@ setTimeout(() => {
   .select("id, comment, created_at, user_id");
 
 const insertedComment = data?.[0];
+    console.log("COMMENT INSERT RESULT", {
+  data,
+  insertedComment,
+  error,
+});
 
     if (error) {
       console.error("Send comment error:", error);
