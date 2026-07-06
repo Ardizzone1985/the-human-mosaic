@@ -187,11 +187,11 @@ setTimeout(() => {
   }
 
   async function handleSendComment() {
-    console.log("COMMENT CLICKED", {
-  selectedPhoto,
-  user,
-  newComment,
-});
+    console.log("SELECTED PHOTO");
+console.log(selectedPhoto);
+console.log("PHOTO ID =", selectedPhoto?.id);
+console.log("SUBMISSION ID =", selectedPhoto?.submission_id);
+console.log("USER =", user);
     
     if (!user) {
       alert("Please sign in to comment.");
