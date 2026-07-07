@@ -158,8 +158,9 @@ function LivePhoto({ item, onSelect }) {
   );
 }
 
+const photoCacheByRoom = {};
 export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState(() => photoCacheByRoom[room] || []);
  
   useEffect(() => {
     async function loadPhotos() {
@@ -178,9 +179,18 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
       console.log("PHOTOS FROM SUPABASE:", data);
 
 if (data && data.length > 0) {
+  if (error) {
+  console.error("Supabase error:", error);
+  setPhotos(photoCacheByRoom[room] || []);
+  return;
+}
+
+if (data && data.length > 0) {
+  photoCacheByRoom[room] = data;
   setPhotos(data);
 } else {
-  console.warn("No photos returned, keeping previous photos", { room, data });
+  console.warn("No photos returned, using cache", { room });
+  setPhotos(photoCacheByRoom[room] || []);
 }
     }
 
