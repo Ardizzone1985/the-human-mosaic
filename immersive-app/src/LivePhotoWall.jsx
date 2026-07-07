@@ -177,7 +177,11 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
 
       console.log("PHOTOS FROM SUPABASE:", data);
 
-setPhotos(data || []);
+if (data && data.length > 0) {
+  setPhotos(data);
+} else {
+  console.warn("No photos returned, keeping previous photos", { room, data });
+}
     }
 
     loadPhotos();
