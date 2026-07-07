@@ -79,6 +79,11 @@ const localY = 1.35 - row * 0.22;
 }
 
 function LivePhoto({ item, onSelect }) {
+  console.log("RENDER PHOTO", {
+  id: item.id,
+  room: item.room,
+  image: item.image_file_name,
+});
   const { basePosition, rotation, localPosition } = slotToTransform(item);
   const [hovered, setHovered] = useState(false);
 
@@ -177,6 +182,11 @@ setPhotos(data || []);
 
     loadPhotos();
   }, [room]);
+
+  console.log("LIVE PHOTO WALL RENDER", {
+  room,
+  photosCount: photos.length,
+});
   
   return (
   <>
