@@ -48,23 +48,25 @@ export function AuthProvider({ children }) {
   }
 
 async function logout() {
-  setLoadingAuth(true);
-
   try {
     await supabase.auth.signOut({ scope: "local" });
   } catch (error) {
     console.error("Logout error:", error);
+  } finally {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("sb-")) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    localStorage.removeItem("humanMosaicWelcomeSeen");
+
+    setUser(null);
+    setProfile(null);
+    setLoadingAuth(false);
+
+    window.location.href = "/";
   }
-
-  Object.keys(localStorage).forEach((key) => {
-    if (key.startsWith("sb-")) {
-      localStorage.removeItem(key);
-    }
-  });
-
-  setUser(null);
-  setProfile(null);
-  setLoadingAuth(false);
 }
 
   useEffect(() => {
