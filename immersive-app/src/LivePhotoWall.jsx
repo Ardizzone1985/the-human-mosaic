@@ -87,6 +87,14 @@ function LivePhoto({ item, onSelect }) {
     item.image_file_name;
 
   const texture = useTexture(imageUrl);
+  
+  useEffect(() => {
+  return () => {
+    if (texture) {
+      texture.dispose();
+    }
+  };
+}, [texture]);
 
   const size = 0.38;
   const frameThickness = 0.02;
