@@ -178,21 +178,15 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
 
       console.log("PHOTOS FROM SUPABASE:", data);
 
-if (data && data.length > 0) {
-  if (error) {
-  console.error("Supabase error:", error);
-  setPhotos(photoCacheByRoom[room] || []);
-  return;
-}
-
-if (data && data.length > 0) {
-  photoCacheByRoom[room] = data;
-  setPhotos(data);
-} else {
-  console.warn("No photos returned, using cache", { room });
-  setPhotos(photoCacheByRoom[room] || []);
-}
+      if (data && data.length > 0) {
+        photoCacheByRoom[room] = data;
+        setPhotos(data);
+      } else {
+        console.warn("No photos returned, using cache", { room });
+        setPhotos(photoCacheByRoom[room] || []);
+      }
     }
+
 
     loadPhotos();
   }, [room]);
