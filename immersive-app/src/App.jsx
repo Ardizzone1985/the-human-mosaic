@@ -354,7 +354,11 @@ const [targetPointId, setTargetPointId] = useState("center");
     <>
       <RoomShell theme={theme} />
       <InfoWall room={currentRoom} />
-<LivePhotoWall room={currentRoom} onPhotoSelect={onPhotoSelect} />
+<LivePhotoWall
+  key={`photo-wall-${currentRoom}`}
+  room={currentRoom}
+  onPhotoSelect={onPhotoSelect}
+/>
 <DynamicSectionManager room={currentRoom} />
       <RoomCameraBounds />
       <StreetViewControls
