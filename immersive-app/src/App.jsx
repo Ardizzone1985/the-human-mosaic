@@ -820,7 +820,7 @@ onRegister={() => {
   </>
 ) : (
   <Room
-  key={`${currentRoom}-${selectedPhoto ? "modal" : "clean"}`}
+   key={currentRoom}
   room={currentRoom}
   theme={theme}
   onPhotoSelect={setSelectedPhoto}
