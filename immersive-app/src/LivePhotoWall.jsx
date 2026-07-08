@@ -90,28 +90,38 @@ function LivePhoto({ item, onSelect }) {
   useEffect(() => {
     let active = true;
 
-    const loader = new THREE.TextureLoader();
-    loader.setCrossOrigin("anonymous");
+    const img = new Image();
+img.crossOrigin = "anonymous";
 
-    loader.load(
-      imageUrl,
-      (loadedTexture) => {
-        if (!active) {
-          loadedTexture.dispose();
-          return;
-        }
+img.onload = () => {
+  if (!active) return;
 
-        loadedTexture.colorSpace = THREE.SRGBColorSpace;
-        setTexture(loadedTexture);
-      },
-      undefined,
-      (error) => {
-        console.error("Texture load error:", imageUrl, error);
-      }
-    );
+  const maxSize = 512;
+  const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(img.width * scale));
+  canvas.height = Math.max(1, Math.round(img.height * scale));
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  const canvasTexture = new THREE.CanvasTexture(canvas);
+  canvasTexture.colorSpace = THREE.SRGBColorSpace;
+  canvasTexture.needsUpdate = true;
+
+  setTexture(canvasTexture);
+};
+
+img.onerror = (error) => {
+  console.error("Image load error:", imageUrl, error);
+};
+
+img.src = imageUrl;
 
     return () => {
       active = false;
+      
     };
   }, [imageUrl]);
 
