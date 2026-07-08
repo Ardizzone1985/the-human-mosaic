@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
-import { useTexture } from "@react-three/drei";
+import * as THREE from "three";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -79,75 +79,87 @@ const localY = 1.35 - row * 0.22;
 }
 
 function LivePhoto({ item, onSelect }) {
-    const { basePosition, rotation, localPosition } = slotToTransform(item);
+  const { basePosition, rotation, localPosition } = slotToTransform(item);
   const [hovered, setHovered] = useState(false);
+  const [texture, setTexture] = useState(null);
 
   const imageUrl =
     "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" +
     item.image_file_name;
 
-  const texture = useTexture(imageUrl);
-    
+  useEffect(() => {
+    let active = true;
+
+    const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+
+    loader.load(
+      imageUrl,
+      (loadedTexture) => {
+        if (!active) {
+          loadedTexture.dispose();
+          return;
+        }
+
+        loadedTexture.colorSpace = THREE.SRGBColorSpace;
+        setTexture(loadedTexture);
+      },
+      undefined,
+      (error) => {
+        console.error("Texture load error:", imageUrl, error);
+      }
+    );
+
+    return () => {
+      active = false;
+    };
+  }, [imageUrl]);
+
   const size = 0.38;
-  const frameThickness = 0.02;
-  const half = size / 2;
 
   return (
     <group position={basePosition} rotation={rotation}>
       <group
-  position={localPosition}
-  scale={hovered ? 1.12 : 1}
-  onPointerOver={(e) => {
-    e.stopPropagation();
-    setHovered(true);
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(e) => {
-    e.stopPropagation();
-    setHovered(false);
-    document.body.style.cursor = "default";
-  }}
-  onClick={(e) => {
-    e.stopPropagation();
-    onSelect(item);
-  }}
->
-
+        position={localPosition}
+        scale={hovered ? 1.12 : 1}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          setHovered(false);
+          document.body.style.cursor = "default";
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(item);
+        }}
+      >
         <mesh position={[0, 0, 0.035]}>
-  <planeGeometry args={[size + 0.08, size + 0.08]} />
- <meshStandardMaterial
-  color="#d8b36d"
-  roughness={0.22}
-  metalness={0.55}
-  emissive="#d8b36d"
-  emissiveIntensity={hovered ? 0.16 : 0.045}
-/>
-         </mesh> 
-                
-        <mesh position={[0, 0, 0.05]}>
-  <planeGeometry args={[size, size]} />
-  <meshStandardMaterial
-  map={texture}
-  emissive="#ffffff"
-  emissiveIntensity={hovered ? 0.07 : 0.025}
-  roughness={0.18}
-  metalness={0.04}
-  toneMapped={false}
-/>
-</mesh>
+          <planeGeometry args={[size + 0.08, size + 0.08]} />
+          <meshStandardMaterial
+            color="#d8b36d"
+            roughness={0.22}
+            metalness={0.55}
+            emissive="#d8b36d"
+            emissiveIntensity={hovered ? 0.16 : 0.045}
+          />
+        </mesh>
 
-{hovered && (
-  <mesh position={[0, 0, 0.035]}>
-    <planeGeometry args={[size + 0.18, size + 0.18]} />
-    <meshBasicMaterial
-      color="#ffd98a"
-      transparent
-      opacity={0.035}
-      depthWrite={false}
-    />
-  </mesh>
-)}
-        
+        <mesh position={[0, 0, 0.05]}>
+          <planeGeometry args={[size, size]} />
+          <meshStandardMaterial
+            map={texture}
+            color={texture ? "#ffffff" : "#2b1a10"}
+            emissive="#ffffff"
+            emissiveIntensity={hovered ? 0.07 : 0.025}
+            roughness={0.18}
+            metalness={0.04}
+            toneMapped={false}
+          />
+        </mesh>
       </group>
     </group>
   );
