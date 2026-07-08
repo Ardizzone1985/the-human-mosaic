@@ -79,12 +79,7 @@ const localY = 1.35 - row * 0.22;
 }
 
 function LivePhoto({ item, onSelect }) {
-  console.log("RENDER PHOTO", {
-  id: item.id,
-  room: item.room,
-  image: item.image_file_name,
-});
-  const { basePosition, rotation, localPosition } = slotToTransform(item);
+    const { basePosition, rotation, localPosition } = slotToTransform(item);
   const [hovered, setHovered] = useState(false);
 
   const imageUrl =
@@ -175,9 +170,7 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
         console.error("Supabase error:", error);
         return;
       }
-
-      console.log("PHOTOS FROM SUPABASE:", data);
-
+     
       if (data && data.length > 0) {
         photoCacheByRoom[room] = data;
         setPhotos(data);
@@ -190,12 +183,7 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
 
     loadPhotos();
   }, [room]);
-
-  console.log("LIVE PHOTO WALL RENDER", {
-  room,
-  photosCount: photos.length,
-});
-  
+    
   return (
   <>
         {photos.map((item) => (
