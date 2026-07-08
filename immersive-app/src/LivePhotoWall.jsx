@@ -167,9 +167,10 @@ export default function LivePhotoWall({ room = "Identity", onPhotoSelect }) {
         .limit(50);
 
       if (error) {
-        console.error("Supabase error:", error);
-        return;
-      }
+  console.error("Supabase error:", error);
+  setPhotos(photoCacheByRoom[room] || []);
+  return;
+}
      
       if (data && data.length > 0) {
         photoCacheByRoom[room] = data;
