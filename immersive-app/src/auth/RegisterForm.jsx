@@ -65,7 +65,7 @@ export default function RegisterForm({ onSuccess }) {
       <select
   value={country}
   onChange={(e) => setCountry(e.target.value)}
-  style={input}
+  style={selectInput}
   required
 >
   <option value="">Select your country</option>
@@ -103,6 +103,7 @@ const input = {
   color: "#fff",
   boxSizing: "border-box",
   fontSize: "18px",
+  colorScheme: "dark",
 };
 
 const checkboxRow = {
@@ -127,4 +128,10 @@ const submitButton = {
 const messageStyle = {
   color: "#f2c879",
   fontSize: 13,
+};
+
+const selectInput = {
+  ...input,
+  color: "#fff",
+  backgroundColor: "#24211d",
 };
