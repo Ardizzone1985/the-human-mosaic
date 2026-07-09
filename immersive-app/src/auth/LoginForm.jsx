@@ -6,6 +6,7 @@ export default function LoginForm({ onSuccess }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -39,14 +40,24 @@ export default function LoginForm({ onSuccess }) {
         required
       />
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={input}
-        required
-      />
+      <div style={passwordWrap}>
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    style={{ ...input, paddingRight: "48px" }}
+    required
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword((v) => !v)}
+    style={eyeButton}
+  >
+    {showPassword ? "🙈" : "👁"}
+  </button>
+</div>
 
       {message && <div style={messageStyle}>{message}</div>}
 
@@ -65,6 +76,7 @@ const input = {
   background: "rgba(255,255,255,0.08)",
   color: "#fff",
   boxSizing: "border-box",
+  fontSize: "16px",
 };
 
 const submitButton = {
@@ -80,4 +92,21 @@ const submitButton = {
 const messageStyle = {
   color: "#f2c879",
   fontSize: 13,
+};
+
+const passwordWrap = {
+  position: "relative",
+  width: "100%",
+};
+
+const eyeButton = {
+  position: "absolute",
+  right: "12px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  border: "none",
+  background: "transparent",
+  color: "#f2c879",
+  cursor: "pointer",
+  fontSize: "18px",
 };
