@@ -71,8 +71,15 @@ useEffect(() => {
       visitorId = crypto.randomUUID();
       localStorage.setItem(visitorStorageKey, visitorId);
     }
+
+    let sessionId = sessionStorage.getItem("humanMosaicSessionId");
+
+if (!sessionId) {
+  sessionId = crypto.randomUUID();
+  sessionStorage.setItem("humanMosaicSessionId", sessionId);
+}
     
-    const visitorKey = visitorId;
+    const visitorKey = `${visitorId}_${sessionId}_${selectedPhoto.id}`;
 
 const localViewKey = `humanMosaicViewed_${selectedPhoto.id}`;
 
