@@ -168,18 +168,15 @@ img.src = imageUrl;
           />
         </mesh>
 
-        <mesh position={[0, 0, 0.05]}>
-          <planeGeometry args={[size, size]} />
-          <meshStandardMaterial
-            map={texture}
-            color={texture ? "#ffffff" : "#2b1a10"}
-            emissive="#ffffff"
-            emissiveIntensity={hovered ? 0.07 : 0.025}
-            roughness={0.18}
-            metalness={0.04}
-            toneMapped={false}
-          />
-        </mesh>
+        {texture && (
+  <mesh position={[0, 0, 0.05]}>
+    <planeGeometry args={[size, size]} />
+    <meshBasicMaterial
+      map={texture}
+      toneMapped={false}
+    />
+  </mesh>
+)}
       </group>
     </group>
   );
