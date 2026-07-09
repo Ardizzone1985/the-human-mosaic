@@ -108,7 +108,19 @@ useEffect(() => {
     }
 
     localStorage.setItem(localViewKey, "true");
-    await refreshSelectedPhoto(selectedPhoto.id);
+
+setSelectedPhoto((current) => {
+  if (!current) return current;
+
+  return {
+    ...current,
+    views_count: Number(current.views_count || 0) + 1,
+  };
+});
+
+setTimeout(() => {
+  refreshSelectedPhoto(selectedPhoto.id);
+}, 1000);
   }
 
   registerView();
