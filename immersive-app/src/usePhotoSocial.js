@@ -61,9 +61,7 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
 
 useEffect(() => {
   async function registerView() {
-    console.log("VIEW START", {
-  photoId: selectedPhoto?.id,
-});
+    
     if (!selectedPhoto?.id) return;
 
     const visitorStorageKey = "humanMosaicVisitorKey";
@@ -73,14 +71,12 @@ useEffect(() => {
       visitorId = crypto.randomUUID();
       localStorage.setItem(visitorStorageKey, visitorId);
     }
+    
+    const visitorKey = visitorId;
 
-    const thirtyMinutes = 10 * 1000;
-    const timeBucket = Math.floor(Date.now() / thirtyMinutes);
-    const visitorKey = `${visitorId}_${timeBucket}`;
+const localViewKey = `humanMosaicViewed_${selectedPhoto.id}`;
 
-    const localViewKey = `humanMosaicViewed_${selectedPhoto.id}_${timeBucket}`;
-
-    if (localStorage.getItem(localViewKey)) {
+    if (sessionStorage.getItem(localViewKey)) {
       await refreshSelectedPhoto(selectedPhoto.id);
       return;
     }
@@ -89,12 +85,7 @@ useEffect(() => {
       submission_id: selectedPhoto.id,
       visitor_key: visitorKey,
     });
-    console.log("VIEW INSERT RESULT", {
-  error,
-  visitorKey,
-  submissionId: selectedPhoto.id,
-});
-
+    
     if (error) {
       const isDuplicate =
         error.code === "23505" ||
@@ -107,7 +98,7 @@ useEffect(() => {
       }
     }
 
-    localStorage.setItem(localViewKey, "true");
+    sessionStorage.setItem(localViewKey, "true");
 
 setSelectedPhoto((current) => {
   if (!current) return current;
