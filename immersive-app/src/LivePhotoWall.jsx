@@ -78,6 +78,8 @@ const localY = 1.35 - row * 0.22;
   };
 }
 
+const textureCache = {};
+
 function LivePhoto({ item, onSelect }) {
   const { basePosition, rotation, localPosition } = slotToTransform(item);
   const [hovered, setHovered] = useState(false);
@@ -89,6 +91,13 @@ function LivePhoto({ item, onSelect }) {
 
   useEffect(() => {
     let active = true;
+
+    if (textureCache[imageUrl]) {
+  setTexture(textureCache[imageUrl]);
+  return () => {
+    active = false;
+  };
+}
 
     const img = new Image();
 img.crossOrigin = "anonymous";
@@ -110,7 +119,8 @@ img.onload = () => {
   canvasTexture.colorSpace = THREE.SRGBColorSpace;
   canvasTexture.needsUpdate = true;
 
-  setTexture(canvasTexture);
+  textureCache[imageUrl] = canvasTexture;
+setTexture(canvasTexture);
 };
 
 img.onerror = (error) => {
