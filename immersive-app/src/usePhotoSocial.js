@@ -61,6 +61,9 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
 
 useEffect(() => {
   async function registerView() {
+    console.log("VIEW START", {
+  photoId: selectedPhoto?.id,
+});
     if (!selectedPhoto?.id) return;
 
     const visitorStorageKey = "humanMosaicVisitorKey";
@@ -86,6 +89,11 @@ useEffect(() => {
       submission_id: selectedPhoto.id,
       visitor_key: visitorKey,
     });
+    console.log("VIEW INSERT RESULT", {
+  error,
+  visitorKey,
+  submissionId: selectedPhoto.id,
+});
 
     if (error) {
       const isDuplicate =
