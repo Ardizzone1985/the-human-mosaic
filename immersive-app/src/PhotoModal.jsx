@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function PhotoModal({
   selectedPhoto,
   photoComments,
@@ -9,6 +11,7 @@ export default function PhotoModal({
   onClose,
 }) {
   if (!selectedPhoto) return null;
+  const [showComments, setShowComments] = useState(false);
 
   return (
     <div
@@ -59,7 +62,13 @@ export default function PhotoModal({
         <div style={{ display: "flex", gap: "10px", marginBottom: "18px" }}>
           <div style={statBoxGold}>❤️ {selectedPhoto?.likes_count ?? 0}</div>
           <div style={statBox}>👁 {selectedPhoto?.views_count ?? 0}</div>
-          <div style={statBox}>💬 {selectedPhoto?.comments_count ?? 0}</div>
+          <button
+  type="button"
+  style={statButton}
+  onClick={() => setShowComments(true)}
+>
+  💬 {selectedPhoto?.comments_count ?? 0}
+</button>
         </div>
 
         <Label>COUNTRY</Label>
@@ -134,6 +143,11 @@ const statBox = {
   background: "rgba(255,255,255,0.06)",
   border: "1px solid rgba(255,255,255,0.12)",
   color: "#e8ded0",
+};
+
+const statButton = {
+  ...statBox,
+  cursor: "pointer",
 };
 
 const likeButton = {
