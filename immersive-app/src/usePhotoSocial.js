@@ -71,7 +71,7 @@ useEffect(() => {
       localStorage.setItem(visitorStorageKey, visitorId);
     }
 
-    const thirtyMinutes = 30 * 60 * 1000;
+    const thirtyMinutes = 10 * 1000;
     const timeBucket = Math.floor(Date.now() / thirtyMinutes);
     const visitorKey = `${visitorId}_${timeBucket}`;
 
