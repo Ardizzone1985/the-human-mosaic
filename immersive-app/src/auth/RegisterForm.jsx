@@ -14,6 +14,8 @@ export default function RegisterForm({ onSuccess }) {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   async function handleRegister(e) {
     e.preventDefault();
@@ -77,8 +79,36 @@ export default function RegisterForm({ onSuccess }) {
 </select>
       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} style={input} required />
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} required />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={input} required minLength={6} />
-      <input type="password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} style={input} required minLength={6} />
+      <div style={passwordWrap}>
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    style={{ ...input, paddingRight: "48px" }}
+    required
+    minLength={6}
+  />
+
+  <button type="button" onClick={() => setShowPassword((v) => !v)} style={eyeButton}>
+    {showPassword ? "🙈" : "👁"}
+  </button>
+</div>
+      <div style={passwordWrap}>
+  <input
+    type={showConfirmPassword ? "text" : "password"}
+    placeholder="Confirm password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+    style={{ ...input, paddingRight: "48px" }}
+    required
+    minLength={6}
+  />
+
+  <button type="button" onClick={() => setShowConfirmPassword((v) => !v)} style={eyeButton}>
+    {showConfirmPassword ? "🙈" : "👁"}
+  </button>
+</div>
 
       <label style={checkboxRow}>
         <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} />
@@ -134,4 +164,21 @@ const selectInput = {
   ...input,
   color: "#fff",
   backgroundColor: "#24211d",
+};
+
+const passwordWrap = {
+  position: "relative",
+  width: "100%",
+};
+
+const eyeButton = {
+  position: "absolute",
+  right: "12px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  border: "none",
+  background: "transparent",
+  color: "#f2c879",
+  cursor: "pointer",
+  fontSize: "18px",
 };
