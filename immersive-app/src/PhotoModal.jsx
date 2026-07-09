@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useState } from "react";
+import CommentsModal from "./CommentsModal.jsx";
 
 export default function PhotoModal({
   selectedPhoto,
@@ -10,10 +12,11 @@ export default function PhotoModal({
   handleSendComment,
   onClose,
 }) {
-  if (!selectedPhoto) return null;
   const [showComments, setShowComments] = useState(false);
+  if (!selectedPhoto) return null;
 
-  return (
+ return (
+  <>
     <div
       style={{
         position: "fixed",
@@ -115,6 +118,13 @@ export default function PhotoModal({
         </button>
       </div>
     </div>
+        {showComments && (
+      <CommentsModal
+        photoComments={photoComments}
+        onClose={() => setShowComments(false)}
+      />
+    )}
+  </>
   );
 }
 
@@ -217,4 +227,10 @@ const closeButton = {
   color: "#1b0d05",
   fontWeight: "700",
   cursor: "pointer",
+};
+
+const statButton = {
+  ...statBox,
+  cursor: "pointer",
+  fontFamily: "Arial, sans-serif",
 };
