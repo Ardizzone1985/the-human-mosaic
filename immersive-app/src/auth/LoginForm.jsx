@@ -76,7 +76,7 @@ const input = {
   background: "rgba(255,255,255,0.08)",
   color: "#fff",
   boxSizing: "border-box",
-  fontSize: "16px",
+  fontSize: "18px",
 };
 
 const submitButton = {
