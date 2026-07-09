@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient.js";
+import { COUNTRIES } from "../data/countries.js";
 
 export default function RegisterForm({ onSuccess }) {
   const [firstName, setFirstName] = useState("");
@@ -61,7 +62,19 @@ export default function RegisterForm({ onSuccess }) {
       <input placeholder="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} style={input} required />
       <input placeholder="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} style={input} required />
       <input placeholder="Nickname" value={nickname} onChange={(e) => setNickname(e.target.value)} style={input} required />
-      <input placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} style={input} required />
+      <select
+  value={country}
+  onChange={(e) => setCountry(e.target.value)}
+  style={input}
+  required
+>
+  <option value="">Select your country</option>
+  {COUNTRIES.map((countryName) => (
+    <option key={countryName} value={countryName}>
+      {countryName}
+    </option>
+  ))}
+</select>
       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} style={input} required />
       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} required />
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={input} required minLength={6} />
@@ -89,6 +102,7 @@ const input = {
   background: "rgba(255,255,255,0.08)",
   color: "#fff",
   boxSizing: "border-box",
+  fontSize: "18px",
 };
 
 const checkboxRow = {
