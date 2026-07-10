@@ -157,10 +157,12 @@ useEffect(() => {
       ),
     ];
 
-    const { data: profiles, error: profilesError } = await supabase
-      .from("user_profiles")
-      .select("id, nickname, country")
-      .in("id", userIds);
+    const { data: profiles, error: profilesError } = await supabase.rpc(
+  "get_comment_profiles",
+  {
+    p_user_ids: userIds,
+  }
+);
 
     if (profilesError) {
       console.error("Load comment profiles error:", profilesError);
