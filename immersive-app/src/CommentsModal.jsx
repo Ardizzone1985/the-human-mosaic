@@ -5,35 +5,34 @@ export default function CommentsModal({ photoComments, onClose }) {
         <div style={title}>COMMENTS</div>
 
         {photoComments.length > 0 ? (
-          photoComments.map((comment) => (
-            <div key={comment.id} style={commentItem}>
-  <div style={commentAuthor}>
-    <span>{comment.profile?.nickname || "Museum visitor"}</span>
-    <span style={separator}>·</span>
-    <span>{comment.profile?.country || "Country unavailable"}</span>
-  </div>
+  photoComments.map((comment) => (
+    <div key={comment.id} style={commentItem}>
+      <div style={commentAuthor}>
+        <span>{comment.profile?.nickname || "Museum visitor"}</span>
+        <span style={separator}>·</span>
+        <span>{comment.profile?.country || "Country unavailable"}</span>
+      </div>
 
-  <div style={commentText}>
-    {comment.comment}
-  </div>
+      <div style={commentText}>
+        {comment.comment}
+      </div>
 
-  <div style={commentDate}>
-    {comment.created_at
-      ? new Intl.DateTimeFormat("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(new Date(comment.created_at))
-      : ""}
-  </div>
-</div>              
-            </div>
-          ))
-        ) : (
-          <div style={emptyText}>No comments yet.</div>
-        )}
+      <div style={commentDate}>
+        {comment.created_at
+          ? new Intl.DateTimeFormat("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            }).format(new Date(comment.created_at))
+          : ""}
+      </div>
+    </div>
+  ))
+) : (
+  <div style={emptyText}>No comments yet.</div>
+)}
 
         <button type="button" onClick={onClose} style={closeButton}>
           Close comments
