@@ -7,12 +7,28 @@ export default function CommentsModal({ photoComments, onClose }) {
         {photoComments.length > 0 ? (
           photoComments.map((comment) => (
             <div key={comment.id} style={commentItem}>
-              <div style={commentText}>{comment.comment}</div>
-              <div style={commentDate}>
-                {comment.created_at
-                  ? new Date(comment.created_at).toLocaleString("en-GB")
-                  : ""}
-              </div>
+  <div style={commentAuthor}>
+    <span>{comment.profile?.nickname || "Museum visitor"}</span>
+    <span style={separator}>·</span>
+    <span>{comment.profile?.country || "Country unavailable"}</span>
+  </div>
+
+  <div style={commentText}>
+    {comment.comment}
+  </div>
+
+  <div style={commentDate}>
+    {comment.created_at
+      ? new Intl.DateTimeFormat("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(new Date(comment.created_at))
+      : ""}
+  </div>
+</div>              
             </div>
           ))
         ) : (
@@ -94,4 +110,19 @@ const closeButton = {
   color: "#1b0d05",
   fontWeight: 800,
   cursor: "pointer",
+};
+
+const commentAuthor = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "6px",
+  alignItems: "center",
+  marginBottom: "8px",
+  color: "#f2c879",
+  fontSize: "13px",
+  fontWeight: 800,
+};
+
+const separator = {
+  color: "#7f715f",
 };
