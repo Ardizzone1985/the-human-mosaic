@@ -88,18 +88,8 @@ export default function PhotoModal({
         </button>
 
         <div style={commentsBox}>
-          <Label>COMMENTS</Label>
-
-          {photoComments.length > 0 && (
-            <div style={{ marginBottom: "12px" }}>
-              {photoComments.map((comment) => (
-                <div key={comment.id} style={commentItem}>
-                  {comment.comment}
-                </div>
-              ))}
-            </div>
-          )}
-
+          <Label>ADD A COMMENT</Label>
+        
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -179,16 +169,6 @@ const commentsBox = {
   borderRadius: "16px",
   background: "rgba(255,255,255,0.06)",
   border: "1px solid rgba(255,255,255,0.12)",
-};
-
-const commentItem = {
-  padding: "10px",
-  marginBottom: "8px",
-  borderRadius: "12px",
-  background: "rgba(0,0,0,0.22)",
-  color: "#e8ded0",
-  fontSize: "13px",
-  lineHeight: 1.4,
 };
 
 const textareaStyle = {
