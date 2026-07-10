@@ -192,11 +192,7 @@ useEffect(() => {
   loadComments();
 }, [selectedPhoto?.id]);
 
-  async function handleLike() {
-    console.log("LIKE CLICKED", {
-  selectedPhoto,
-  user,
-});
+  async function handleLike() {    
     if (!selectedPhoto?.id) return;
 
     if (!user) {
@@ -247,14 +243,8 @@ setTimeout(() => {
 }, 1000);
   }
 
-  async function handleSendComment() {
-    console.log("SELECTED PHOTO");
-console.log(selectedPhoto);
-console.log("PHOTO ID =", selectedPhoto?.id);
-console.log("SUBMISSION ID =", selectedPhoto?.submission_id);
-console.log("USER =", user);
-    
-    if (!user) {
+  async function handleSendComment() {  
+        if (!user) {
       alert("Please sign in to comment.");
       return;
     }
@@ -276,12 +266,7 @@ console.log("USER =", user);
   .select("id, comment, created_at, user_id");
 
 const insertedComment = data?.[0];
-    console.log("COMMENT INSERT RESULT", {
-  data,
-  insertedComment,
-  error,
-});
-
+    
     if (error) {
       console.error("Send comment error:", error);
       alert("Unable to send comment.");
