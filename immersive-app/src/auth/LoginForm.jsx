@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient.js";
 
-export default function LoginForm({ onSuccess }) {
+export default function LoginForm({ onSuccess, onForgotPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -59,6 +59,14 @@ export default function LoginForm({ onSuccess }) {
   </button>
 </div>
 
+      <button
+  type="button"
+  onClick={onForgotPassword}
+  style={forgotPasswordButton}
+>
+  Forgot your password?
+</button>
+
       {message && <div style={messageStyle}>{message}</div>}
 
       <button type="submit" style={submitButton} disabled={loading}>
@@ -109,4 +117,15 @@ const eyeButton = {
   color: "#f2c879",
   cursor: "pointer",
   fontSize: "18px",
+};
+
+const forgotPasswordButton = {
+  justifySelf: "end",
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  color: "#f2c879",
+  cursor: "pointer",
+  fontSize: "14px",
+  textDecoration: "underline",
 };
