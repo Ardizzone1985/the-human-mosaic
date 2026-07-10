@@ -124,39 +124,71 @@ setTimeout(() => {
   registerView();
 }, [selectedPhoto?.id]);
 
-  useEffect(() => {
-    async function loadComments() {
-      if (!selectedPhoto?.id) {
-        setPhotoComments([]);
-        return;
-      }
-
-      const { data, error } = await supabase
-  .from("photo_comments")
-  .select(`
-    id,
-    comment,
-    created_at,
-    user_id,
-    user_profiles (
-      nickname,
-      country
-    )
-  `)
-  .eq("submission_id", selectedPhoto.id)
-  .order("created_at", { ascending: false })
-  .limit(50);
-
-      if (error) {
-        console.error("Load comments error:", error);
-        return;
-      }
-
-      setPhotoComments(data || []);
+useEffect(() => {
+  async function loadComments() {
+    if (!selectedPhoto?.id) {
+      setPhotoComments([]);
+      return;
     }
 
-    loadComments();
-  }, [selectedPhoto?.id]);
+    const { data: comments, error: commentsError } = await supabase
+      .from("photo_comments")
+      .select("id, comment, created_at, user_id")
+      .eq("submission_id", selectedPhoto.id)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (commentsError) {
+      console.error("Load comments error:", commentsError);
+      setPhotoComments([]);
+      return;
+    }
+
+    if (!comments?.length) {
+      setPhotoComments([]);
+      return;
+    }
+
+    const userIds = [
+      ...new Set(
+        comments
+          .map((comment) => comment.user_id)
+          .filter(Boolean)
+      ),
+    ];
+
+    const { data: profiles, error: profilesError } = await supabase
+      .from("user_profiles")
+      .select("id, nickname, country")
+      .in("id", userIds);
+
+    if (profilesError) {
+      console.error("Load comment profiles error:", profilesError);
+
+      setPhotoComments(
+        comments.map((comment) => ({
+          ...comment,
+          profile: null,
+        }))
+      );
+
+      return;
+    }
+
+    const profilesById = Object.fromEntries(
+      (profiles || []).map((profile) => [profile.id, profile])
+    );
+
+    const enrichedComments = comments.map((comment) => ({
+      ...comment,
+      profile: profilesById[comment.user_id] || null,
+    }));
+
+    setPhotoComments(enrichedComments);
+  }
+
+  loadComments();
+}, [selectedPhoto?.id]);
 
   async function handleLike() {
     console.log("LIKE CLICKED", {
