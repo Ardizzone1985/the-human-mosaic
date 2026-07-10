@@ -3,7 +3,7 @@ import { supabase } from "./supabaseClient.js";
 import { useAuth } from "./auth/AuthProvider.jsx";
 
 export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [newComment, setNewComment] = useState("");
   const [photoComments, setPhotoComments] = useState([]);  
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
@@ -295,17 +295,18 @@ setPhotoComments((current) => [
     ...insertedComment,
     profile: {
       nickname:
+        profile?.nickname ||
         user?.user_metadata?.nickname ||
-        user?.user_metadata?.first_name ||
         "Museum visitor",
       country:
+        profile?.country ||
         user?.user_metadata?.country ||
         "Country unavailable",
     },
   },
   ...current,
 ]);
-
+    
 setSelectedPhoto((current) => {
   if (!current) return current;
 
