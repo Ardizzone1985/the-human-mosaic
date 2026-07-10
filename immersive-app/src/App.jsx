@@ -557,21 +557,7 @@ onRegister={() => {
       );
     }}
   />
-)}
-
-      {passwordRecovery && (
-  <ResetPasswordForm
-    onSuccess={() => {
-      setPasswordRecovery(false);
-
-      window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-      );
-    }}
-  />
-)}
+)}      
       
       {!isLobby && (
   <div
