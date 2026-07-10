@@ -545,6 +545,11 @@ onRegister={() => {
   />
 )}
 
+      <AuthModal
+  mode={authMode}
+  onClose={() => setAuthMode(null)}
+/>
+
       {passwordRecovery && (
   <ResetPasswordForm
     onSuccess={() => {
