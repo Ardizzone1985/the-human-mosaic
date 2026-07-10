@@ -11,6 +11,7 @@ import PhotoModal from "./PhotoModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
 import WelcomeGate from "./WelcomeGate.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
+import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 
 function parseSlotCode(slotCode) {
@@ -381,7 +382,14 @@ const [targetPointId, setTargetPointId] = useState("center");
 }
 
 export default function App() {
-  const { user, profile, logout, loadingAuth } = useAuth();
+  const {
+  user,
+  profile,
+  logout,
+  loadingAuth,
+  passwordRecovery,
+  setPasswordRecovery,
+} = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
@@ -537,10 +545,33 @@ onRegister={() => {
   />
 )}
 
-      <AuthModal
-  mode={authMode}
-  onClose={() => setAuthMode(null)}
-/>
+      {passwordRecovery && (
+  <ResetPasswordForm
+    onSuccess={() => {
+      setPasswordRecovery(false);
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+    }}
+  />
+)}
+
+      {passwordRecovery && (
+  <ResetPasswordForm
+    onSuccess={() => {
+      setPasswordRecovery(false);
+
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+      );
+    }}
+  />
+)}
       
       {!isLobby && (
   <div
