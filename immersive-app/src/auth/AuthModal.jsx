@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm.jsx";
 import RegisterForm from "./RegisterForm.jsx";
+import ForgotPasswordForm from "./ForgotPasswordForm.jsx";
 
 export default function AuthModal({ mode, onClose }) {
   const [currentMode, setCurrentMode] = useState(mode ?? "login");
@@ -16,25 +17,29 @@ useEffect(() => {
       <div style={card}>
 
         <h2 style={title}>
-          {currentMode === "login"
-            ? "Welcome Back"
-            : "Create your Museum Account"}
-        </h2>
+  {currentMode === "login" && "Welcome Back"}
+  {currentMode === "register" && "Create your Museum Account"}
+  {currentMode === "forgot" && "Reset Your Password"}
+</h2>
 
         <p style={subtitle}>
-          {currentMode === "login"
-            ? "Sign in to continue your journey."
-            : "Become part of The Human Mosaic."}
-        </p>
-
+  {currentMode === "login" && "Sign in to continue your journey."}
+  {currentMode === "register" &&
+    "Become part of The Human Mosaic."}
+  {currentMode === "forgot" &&
+    "Enter your email and we will send you a password reset link."}
+</p>
         <div style={{ marginTop: 30 }}>
 
           {currentMode === "login" && (
   <LoginForm
-    onSuccess={() => {
-      onClose();
-    }}
-  />
+  onSuccess={() => {
+    onClose();
+  }}
+  onForgotPassword={() => {
+    setCurrentMode("forgot");
+  }}
+/>
 )}
 
           {currentMode === "register" && (
@@ -45,25 +50,31 @@ useEffect(() => {
   />
 )}
 
-          {currentMode === "login" ? (
+          {currentMode === "forgot" && (
+  <ForgotPasswordForm
+    onBackToLogin={() => {
+      setCurrentMode("login");
+    }}
+  />
+)}
 
-            <button
-              style={switchButton}
-              onClick={() => setCurrentMode("register")}
-            >
-              Need an account? Register
-            </button>
+          {currentMode === "login" && (
+  <button
+    style={switchButton}
+    onClick={() => setCurrentMode("register")}
+  >
+    Need an account? Register
+  </button>
+)}
 
-          ) : (
-
-            <button
-              style={switchButton}
-              onClick={() => setCurrentMode("login")}
-            >
-              Already have an account? Login
-            </button>
-
-          )}
+{currentMode === "register" && (
+  <button
+    style={switchButton}
+    onClick={() => setCurrentMode("login")}
+  >
+    Already have an account? Login
+  </button>
+)}
 
         </div>
 
