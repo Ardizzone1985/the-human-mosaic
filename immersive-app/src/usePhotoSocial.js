@@ -291,7 +291,18 @@ const insertedComment = data?.[0];
     setNewComment("");
 
 setPhotoComments((current) => [
-  insertedComment,
+  {
+    ...insertedComment,
+    profile: {
+      nickname:
+        user?.user_metadata?.nickname ||
+        user?.user_metadata?.first_name ||
+        "Museum visitor",
+      country:
+        user?.user_metadata?.country ||
+        "Country unavailable",
+    },
+  },
   ...current,
 ]);
 
