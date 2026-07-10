@@ -7,6 +7,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
+  const [passwordRecovery, setPasswordRecovery] = useState(false);
 
   async function loadProfile(userId) {
     if (!userId) {
@@ -74,7 +75,10 @@ async function logout() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+  setPasswordRecovery(true);
+}
       const nextUser = session?.user ?? null;
       setUser(nextUser);
 
@@ -96,6 +100,8 @@ async function logout() {
         user,
         profile,
         loadingAuth,
+        passwordRecovery,
+setPasswordRecovery,
         refreshAuth,
         loadProfile,
         logout,
