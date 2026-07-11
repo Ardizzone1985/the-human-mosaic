@@ -14,6 +14,7 @@ import AuthModal from "./auth/AuthModal.jsx";
 import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 import AppDialog from "./components/AppDialog.jsx";
+import MuseumIdentity from "./MuseumIdentity.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -394,6 +395,7 @@ export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
+  const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
   return localStorage.getItem("humanMosaicWelcomeSeen") !== "true";
 });
@@ -493,9 +495,13 @@ const isLobby = !currentRoom;
 
       {!loadingAuth && user && (
   <div style={userBar}>
-    <span>
-      Welcome, {profile?.nickname || profile?.first_name || "Visitor"}
-    </span>
+    <button
+  type="button"
+  style={profileButton}
+  onClick={() => setShowMuseumIdentity(true)}
+>
+  Welcome, {profile?.nickname || profile?.first_name || "Visitor"}
+</button>
 
     <button
        type="button"
@@ -570,6 +576,22 @@ onRegister={() => {
       setSelectedPhoto(null);
       setAuthMode("login");
     }
+  }}
+/>
+
+      <MuseumIdentity
+  open={showMuseumIdentity}
+  user={user}
+  profile={profile}
+  onClose={() => setShowMuseumIdentity(false)}
+  onUpload={() => {
+    setShowMuseumIdentity(false);
+  }}
+  onEditProfile={() => {}}
+  onChangePassword={() => {}}
+  onLogout={async () => {
+    setShowMuseumIdentity(false);
+    await logout();
   }}
 />
 
@@ -895,6 +917,19 @@ const userBar = {
   fontSize: "13px",
   fontWeight: 700,
   backdropFilter: "blur(10px)",
+};
+
+const profileButton = {
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  color: "#f2c879",
+  fontFamily: "inherit",
+  fontSize: "13px",
+  fontWeight: 700,
+  cursor: "pointer",
+  textDecoration: "underline",
+  textUnderlineOffset: "3px",
 };
 
 const logoutButton = {
