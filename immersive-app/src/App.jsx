@@ -13,6 +13,7 @@ import WelcomeGate from "./WelcomeGate.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
+import AppDialog from "./components/AppDialog.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -405,6 +406,8 @@ export default function App() {
   currentUser,
   userLikedPhoto,
   setUserLikedPhoto,
+    dialog,
+closeDialog,
     handleLike,
     handleSendComment,
 } = usePhotoSocial(selectedPhoto, setSelectedPhoto);
@@ -548,6 +551,26 @@ onRegister={() => {
       <AuthModal
   mode={authMode}
   onClose={() => setAuthMode(null)}
+/>
+
+      <AppDialog
+  open={!!dialog}
+  icon={dialog?.icon}
+  title={dialog?.title}
+  message={dialog?.message}
+  confirmText={dialog?.confirmText}
+  cancelText={dialog?.cancelText}
+  onCancel={closeDialog}
+  onConfirm={() => {
+    const action = dialog?.action;
+
+    closeDialog();
+
+    if (action === "login") {
+      setSelectedPhoto(null);
+      setAuthMode("login");
+    }
+  }}
 />
 
       {passwordRecovery && (
