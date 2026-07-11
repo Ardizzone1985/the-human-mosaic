@@ -54,18 +54,90 @@ export default function WelcomeGate({ onEnterGuest, onLogin, onRegister }) {
         </div>
 
         <div style={terms}>
-          By continuing, you agree to our <span style={link}>Terms of Service</span>,{" "}
-          <span style={link}>Privacy Policy</span> and{" "}
-          <span style={link}>Community Guidelines</span>.
-        </div>
+  By continuing, you agree to our{" "}
+  <a
+    href="https://thehumanmosaic.art/terms.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={link}
+  >
+    Terms of Service
+  </a>
+  ,{" "}
+  <a
+    href="https://thehumanmosaic.art/privacy.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={link}
+  >
+    Privacy Policy
+  </a>{" "}
+  and{" "}
+  <button
+    type="button"
+    style={linkButton}
+    onClick={() => {
+      window.open(
+        "https://thehumanmosaic.art/community-guidelines.html",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+  >
+    Community Guidelines
+  </button>
+  .
+</div>
 
         <div style={footerLinks}>
-          <span>Terms</span>
-          <span>Privacy</span>
-          <span>Community Guidelines</span>
-          <span>Licenses</span>
-          <span>Contact</span>
-        </div>
+  <a
+    href="https://thehumanmosaic.art/terms.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={footerLink}
+  >
+    Terms
+  </a>
+
+  <a
+    href="https://thehumanmosaic.art/privacy.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={footerLink}
+  >
+    Privacy
+  </a>
+
+  <button
+    type="button"
+    style={footerLinkButton}
+    onClick={() => {
+      window.open(
+        "https://thehumanmosaic.art/community-guidelines.html",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+  >
+    Community Guidelines
+  </button>
+
+  <a
+    href="https://thehumanmosaic.art/license.html"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={footerLink}
+  >
+    License
+  </a>
+
+  <a
+    href="mailto:info@thehumanmosaic.art"
+    style={footerLink}
+  >
+    Contact
+  </a>
+</div>
       </div>
     </div>
   );
@@ -301,6 +373,28 @@ const link = {
   color: "#d7b56d",
   textDecoration: "underline",
   cursor: "pointer",
+  font: "inherit",
+};
+
+const linkButton = {
+  ...link,
+  padding: 0,
+  border: "none",
+  background: "transparent",
+};
+
+const footerLink = {
+  color: "#817568",
+  textDecoration: "none",
+  cursor: "pointer",
+};
+
+const footerLinkButton = {
+  ...footerLink,
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  font: "inherit",
 };
 
 const footerLinks = {
