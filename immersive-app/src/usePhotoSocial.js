@@ -7,6 +7,15 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
   const [newComment, setNewComment] = useState("");
   const [photoComments, setPhotoComments] = useState([]);  
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
+  const [dialog, setDialog] = useState(null);
+
+  function showDialog(config) {
+  setDialog(config);
+}
+
+function closeDialog() {
+  setDialog(null);
+}
 
   async function refreshSelectedPhoto(photoId) {
     if (!photoId) return;
@@ -196,9 +205,17 @@ useEffect(() => {
     if (!selectedPhoto?.id) return;
 
     if (!user) {
-      alert("Please sign in to like this memory.");
-      return;
-    }
+  showDialog({
+    icon: "❤️",
+    title: "Join the Community",
+    message:
+      "Sign in to like this memory and become part of The Human Mosaic.",
+    confirmText: "Login",
+    cancelText: "Close",
+    action: "login",
+  });
+  return;
+}
 
     const { data: existingLike, error: checkError } = await supabase
       .from("photo_likes")
@@ -213,9 +230,14 @@ useEffect(() => {
     }
 
     if (existingLike) {
-      alert("You have already liked this memory.");
-      return;
-    }
+  showDialog({
+    icon: "❤️",
+    title: "Already Part of This Memory",
+    message: "You have already liked this memory.",
+    confirmText: "Close",
+  });
+  return;
+}
 
     const { error: insertError } = await supabase.from("photo_likes").insert({
       submission_id: selectedPhoto.id,
@@ -245,16 +267,29 @@ setTimeout(() => {
 
   async function handleSendComment() {  
         if (!user) {
-      alert("Please sign in to comment.");
-      return;
-    }
+  showDialog({
+    icon: "💬",
+    title: "Join the Conversation",
+    message:
+      "Sign in to comment on this memory and connect with the community.",
+    confirmText: "Login",
+    cancelText: "Close",
+    action: "login",
+  });
+  return;
+}
 
     if (!selectedPhoto?.id) return;
 
     if (!newComment.trim()) {
-      alert("Write a comment first.");
-      return;
-    }
+  showDialog({
+    icon: "✦",
+    title: "Write Your Message",
+    message: "Please write a comment before publishing it.",
+    confirmText: "Close",
+  });
+  return;
+}
 
     const { data, error } = await supabase
   .from("photo_comments")
@@ -268,10 +303,18 @@ setTimeout(() => {
 const insertedComment = data?.[0];
     
     if (error) {
-      console.error("Send comment error:", error);
-      alert("Unable to send comment.");
-      return;
-    }
+  console.error("Send comment error:", error);
+
+  showDialog({
+    icon: "⚠️",
+    title: "Comment Not Published",
+    message:
+      "We could not publish your comment. Please try again in a moment.",
+    confirmText: "Close",
+  });
+
+  return;
+}
 
     setNewComment("");
 
@@ -314,6 +357,8 @@ setTimeout(() => {
     currentUser: user,
     userLikedPhoto,
     setUserLikedPhoto,
+    dialog,
+closeDialog,
     handleLike,
     handleSendComment,
   };
