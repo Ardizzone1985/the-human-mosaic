@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient.js";
+
 export default function MuseumIdentity({
   open,
   user,
@@ -8,6 +11,46 @@ export default function MuseumIdentity({
   onChangePassword,
   onLogout,
 }) {
+
+    const [memorySummary, setMemorySummary] = useState({
+    total: 0,
+    approved: 0,
+    rejected: 0,
+    pending: 0,
+  });
+
+  const [loadingMemories, setLoadingMemories] = useState(false);
+
+    useEffect(() => {
+    async function loadMemorySummary() {
+      if (!open || !user) return;
+
+      setLoadingMemories(true);
+
+      const { data, error } = await supabase.rpc(
+        "get_my_memory_summary"
+      );
+
+      setLoadingMemories(false);
+
+      if (error) {
+        console.error("Load memory summary error:", error);
+        return;
+      }
+
+      const summary = data?.[0];
+
+      setMemorySummary({
+        total: Number(summary?.total_memories || 0),
+        approved: Number(summary?.approved_memories || 0),
+        rejected: Number(summary?.rejected_memories || 0),
+        pending: Number(summary?.pending_memories || 0),
+      });
+    }
+
+    loadMemorySummary();
+  }, [open, user?.id]);
+  
   if (!open) return null;
 
   const nickname =
@@ -93,7 +136,11 @@ export default function MuseumIdentity({
           </div>
 
           <div style={statsGrid}>
-            <StatCard icon="🖼" label="My Memories" value="—" />
+            <StatCard
+  icon="🖼"
+  label="My Memories"
+  value={loadingMemories ? "…" : memorySummary.total}
+/>
             <StatCard icon="❤️" label="Likes Given" value="—" />
             <StatCard icon="💬" label="Comments" value="—" />
             <StatCard icon="👁" label="Views Received" value="—" />
@@ -114,17 +161,46 @@ export default function MuseumIdentity({
           </div>
 
           <div style={emptyMemories}>
-            <div style={emptyIcon}>🖼</div>
+  <div style={emptyIcon}>🖼</div>
 
-            <div style={emptyTitle}>
-              Your memories will appear here
-            </div>
+  <div style={emptyTitle}>
+    {loadingMemories
+      ? "Loading your memories..."
+      : `${memorySummary.total} ${
+          memorySummary.total === 1 ? "Memory" : "Memories"
+        }`}
+  </div>
 
-            <div style={emptyText}>
-              Approved, pending, and rejected submissions will be shown
-              in this personal space.
-            </div>
-          </div>
+  {!loadingMemories && (
+    <div style={memoryStatusGrid}>
+      <div style={memoryStatusItem}>
+        <strong style={memoryStatusItemStrong}>
+      {memorySummary.approved}
+    </strong>
+        <span>Approved</span>
+      </div>
+
+      <div style={memoryStatusItem}>
+        <strong style={memoryStatusItemStrong}>
+      {memorySummary.pending}
+    </strong>
+        <span>Pending</span>
+      </div>
+
+      <div style={memoryStatusItem}>
+        <strong style={memoryStatusItemStrong}>
+      {memorySummary.rejected}
+    </strong>
+        <span>Rejected</span>
+      </div>
+    </div>
+  )}
+
+  <div style={emptyText}>
+    Your approved, pending, and rejected submissions are connected
+    to your Museum Account.
+  </div>
+</div>
         </section>
 
         <section style={actionsSection}>
@@ -433,6 +509,30 @@ const emptyTitle = {
   color: "#fff",
   fontSize: "18px",
   fontWeight: 800,
+};
+
+const memoryStatusGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, minmax(90px, 1fr))",
+  gap: "10px",
+  maxWidth: "440px",
+  margin: "18px auto",
+};
+
+const memoryStatusItem = {
+  display: "grid",
+  gap: "5px",
+  padding: "13px 10px",
+  borderRadius: "16px",
+  border: "1px solid rgba(215,181,109,0.22)",
+  background: "rgba(215,181,109,0.06)",
+  color: "#b9ae9e",
+  fontSize: "12px",
+};
+
+const memoryStatusItemStrong = {
+  color: "#f2c879",
+  fontSize: "22px",
 };
 
 const emptyText = {
