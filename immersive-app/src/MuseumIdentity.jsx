@@ -9,6 +9,7 @@ export default function MuseumIdentity({
   onUpload,
   onEditProfile,
   onChangePassword,
+  onMemorySelect,
   onLogout,
 }) {
 
