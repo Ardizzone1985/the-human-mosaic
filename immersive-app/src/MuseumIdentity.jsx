@@ -230,13 +230,16 @@ export default function MuseumIdentity({
           `https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/${memory.image_file_name}`;
 
         return (
-          <div
-            key={memory.id}
-            style={{
-              ...memoryCard,
-              borderColor: getStatusColor(status),
-            }}
-          >
+          <button
+  type="button"
+  key={memory.id}
+  onClick={() => onMemorySelect?.(memory)}
+  style={{
+    ...memoryCard,
+    borderColor: getStatusColor(status),
+  }}
+  aria-label={`Open ${memory.room || "museum"} memory`}
+>
             <div style={memoryImageWrap}>
               <img
                 src={imageSource}
@@ -271,7 +274,7 @@ export default function MuseumIdentity({
                 <span>👁 {memory.views_count ?? 0}</span>
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
     </div>
@@ -665,10 +668,17 @@ const memoriesGrid = {
 };
 
 const memoryCard = {
+  width: "100%",
+  padding: 0,
   overflow: "hidden",
   borderRadius: "18px",
   border: "1px solid",
   background: "rgba(255,255,255,0.045)",
+  color: "inherit",
+  font: "inherit",
+  textAlign: "left",
+  cursor: "pointer",
+  appearance: "none",
 };
 
 const memoryImageWrap = {
