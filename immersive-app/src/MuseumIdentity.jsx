@@ -287,12 +287,7 @@ export default function MuseumIdentity({
     )
   )}
 </div>
-
-  <div style={emptyText}>
-    Your approved, pending, and rejected submissions are connected
-    to your Museum Account.
-  </div>
-</div>
+  
         </section>
 
         <section style={actionsSection}>
