@@ -20,6 +20,7 @@ export default function MuseumIdentity({
   });
 
   const [loadingMemories, setLoadingMemories] = useState(false);
+  const [memories, setMemories] = useState([]);
 
     useEffect(() => {
     async function loadMemorySummary() {
@@ -48,7 +49,22 @@ export default function MuseumIdentity({
       });
     }
 
+      async function loadMemories() {
+  if (!open || !user) return;
+
+  const { data, error } = await supabase.rpc("get_my_memories");
+
+  if (error) {
+    console.error("Load personal memories error:", error);
+    setMemories([]);
+    return;
+  }
+
+  setMemories(Array.isArray(data) ? data : []);
+}
+
     loadMemorySummary();
+      loadMemories();
   }, [open, user?.id]);
   
   if (!open) return null;
@@ -160,41 +176,117 @@ export default function MuseumIdentity({
             </div>
           </div>
 
-          <div style={emptyMemories}>
-  <div style={emptyIcon}>🖼</div>
-
-  <div style={emptyTitle}>
-    {loadingMemories
-      ? "Loading your memories..."
-      : `${memorySummary.total} ${
-          memorySummary.total === 1 ? "Memory" : "Memories"
-        }`}
-  </div>
-
-  {!loadingMemories && (
-    <div style={memoryStatusGrid}>
-      <div style={memoryStatusItem}>
-        <strong style={memoryStatusItemStrong}>
-      {memorySummary.approved}
-    </strong>
-        <span>Approved</span>
+<div style={memoriesContainer}>
+  <div style={memorySummaryHeader}>
+    <div>
+      <div style={emptyTitle}>
+        {loadingMemories
+          ? "Loading your memories..."
+          : `${memorySummary.total} ${
+              memorySummary.total === 1 ? "Memory" : "Memories"
+            }`}
       </div>
 
-      <div style={memoryStatusItem}>
-        <strong style={memoryStatusItemStrong}>
-      {memorySummary.pending}
-    </strong>
-        <span>Pending</span>
-      </div>
-
-      <div style={memoryStatusItem}>
-        <strong style={memoryStatusItemStrong}>
-      {memorySummary.rejected}
-    </strong>
-        <span>Rejected</span>
+      <div style={emptyText}>
+        Your personal collection inside The Human Mosaic.
       </div>
     </div>
+
+    {!loadingMemories && (
+      <div style={memoryStatusGrid}>
+        <div style={memoryStatusItem}>
+          <strong style={memoryStatusItemStrong}>
+            {memorySummary.approved}
+          </strong>
+          <span>Approved</span>
+        </div>
+
+        <div style={memoryStatusItem}>
+          <strong style={memoryStatusItemStrong}>
+            {memorySummary.pending}
+          </strong>
+          <span>Pending</span>
+        </div>
+
+        <div style={memoryStatusItem}>
+          <strong style={memoryStatusItemStrong}>
+            {memorySummary.rejected}
+          </strong>
+          <span>Rejected</span>
+        </div>
+      </div>
+    )}
+  </div>
+
+  {!loadingMemories && memories.length > 0 ? (
+    <div style={memoriesGrid}>
+      {memories.map((memory) => {
+        const status = String(
+          memory.approval_status || "pending"
+        ).toLowerCase();
+
+        const imageSource =
+          memory.image_url ||
+          `https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/${memory.image_file_name}`;
+
+        return (
+          <div
+            key={memory.id}
+            style={{
+              ...memoryCard,
+              borderColor: getStatusColor(status),
+            }}
+          >
+            <div style={memoryImageWrap}>
+              <img
+                src={imageSource}
+                alt={`${memory.room || "Museum"} memory`}
+                style={memoryImage}
+                loading="lazy"
+              />
+
+              <div
+                style={{
+                  ...memoryStatusBadge,
+                  color: getStatusColor(status),
+                  borderColor: getStatusColor(status),
+                }}
+              >
+                {formatMemoryStatus(status)}
+              </div>
+            </div>
+
+            <div style={memoryCardBody}>
+              <div style={memoryRoom}>
+                {memory.room || "The Human Mosaic"}
+              </div>
+
+              <div style={memoryCountry}>
+                🌍 {memory.country || "Country unavailable"}
+              </div>
+
+              <div style={memorySocialStats}>
+                <span>❤️ {memory.likes_count ?? 0}</span>
+                <span>💬 {memory.comments_count ?? 0}</span>
+                <span>👁 {memory.views_count ?? 0}</span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    !loadingMemories && (
+      <div style={noMemories}>
+        <div style={emptyIcon}>🖼</div>
+        <div style={emptyTitle}>No memories yet</div>
+        <div style={emptyText}>
+          Your submitted memories will appear here.
+        </div>
+      </div>
+    )
   )}
+</div>
 
   <div style={emptyText}>
     Your approved, pending, and rejected submissions are connected
@@ -280,6 +372,18 @@ function formatMemberSince(value) {
     month: "long",
     year: "numeric",
   }).format(date);
+}
+
+function getStatusColor(status) {
+  if (status === "approved") return "#d7b56d";
+  if (status === "rejected") return "#ff8f8f";
+  return "#f2c879";
+}
+
+function formatMemoryStatus(status) {
+  if (status === "approved") return "APPROVED";
+  if (status === "rejected") return "REJECTED";
+  return "PENDING";
 }
 
 const overlay = {
@@ -541,6 +645,97 @@ const emptyText = {
   color: "#9f9588",
   fontSize: "14px",
   lineHeight: 1.6,
+};
+
+const memoriesContainer = {
+  padding: "22px",
+  borderRadius: "22px",
+  border: "1px solid rgba(215,181,109,0.28)",
+  background: "rgba(255,255,255,0.025)",
+};
+
+const memorySummaryHeader = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: "20px",
+  flexWrap: "wrap",
+  marginBottom: "20px",
+};
+
+const memoriesGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+  gap: "14px",
+};
+
+const memoryCard = {
+  overflow: "hidden",
+  borderRadius: "18px",
+  border: "1px solid",
+  background: "rgba(255,255,255,0.045)",
+};
+
+const memoryImageWrap = {
+  position: "relative",
+  width: "100%",
+  aspectRatio: "1 / 1",
+  overflow: "hidden",
+  background: "#050505",
+};
+
+const memoryImage = {
+  width: "100%",
+  height: "100%",
+  display: "block",
+  objectFit: "cover",
+};
+
+const memoryStatusBadge = {
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+  padding: "6px 9px",
+  borderRadius: "999px",
+  border: "1px solid",
+  background: "rgba(0,0,0,0.78)",
+  backdropFilter: "blur(8px)",
+  fontSize: "9px",
+  fontWeight: 900,
+  letterSpacing: "0.1em",
+};
+
+const memoryCardBody = {
+  padding: "13px",
+};
+
+const memoryRoom = {
+  color: "#f2c879",
+  fontSize: "13px",
+  fontWeight: 900,
+  textTransform: "uppercase",
+};
+
+const memoryCountry = {
+  marginTop: "7px",
+  color: "#c8bcaa",
+  fontSize: "12px",
+};
+
+const memorySocialStats = {
+  display: "flex",
+  justifyContent: "space-between",
+  gap: "7px",
+  marginTop: "12px",
+  color: "#ded4c5",
+  fontSize: "11px",
+};
+
+const noMemories = {
+  padding: "28px 20px",
+  borderRadius: "18px",
+  border: "1px dashed rgba(215,181,109,0.3)",
+  textAlign: "center",
 };
 
 const actionsSection = {
