@@ -589,6 +589,10 @@ onRegister={() => {
   }}
   onEditProfile={() => {}}
   onChangePassword={() => {}}
+        onMemorySelect={(memory) => {
+    setShowMuseumIdentity(false);
+    setSelectedPhoto(memory);
+  }}
   onLogout={async () => {
     setShowMuseumIdentity(false);
     await logout();
