@@ -70,8 +70,8 @@ export default function MuseumIdentity({
             <div style={nicknameStyle}>{nickname}</div>
 
             <div style={museumId}>
-              Museum ID · Coming Soon
-            </div>
+  {profile?.museum_id || "Museum ID unavailable"}
+</div>
 
             <div style={identityDetails}>
               <span>🌍 {country}</span>
