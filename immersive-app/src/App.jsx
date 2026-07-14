@@ -587,7 +587,7 @@ onRegister={() => {
   onUpload={() => {
     setShowMuseumIdentity(false);
   }}
-  onEditProfile={() => {}}
+  onChangeAvatar={() => {}}
   onChangePassword={() => {}}
         onMemorySelect={(memory) => {
     setShowMuseumIdentity(false);
