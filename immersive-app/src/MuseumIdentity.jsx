@@ -125,10 +125,15 @@ export default function MuseumIdentity({
         <section style={identityCard}>
           <div style={avatar}>
   <img
-    src={profile?.avatar_url || museumLogoUrl}
-    alt={`${nickname} avatar`}
-    style={avatarImage}
-  />
+  src={profile?.avatar_url || museumLogoUrl}
+  alt={`${nickname} avatar`}
+  style={{
+    ...avatarImage,
+    objectFit: profile?.avatar_url ? "cover" : "contain",
+    padding: profile?.avatar_url ? 0 : "8px",
+    boxSizing: "border-box",
+  }}
+/>
 </div>
 
           <div style={identityInformation}>
@@ -480,10 +485,9 @@ const avatar = {
   alignItems: "center",
   justifyContent: "center",
   overflow: "hidden",
-background: "#111",
   borderRadius: "50%",
   border: "2px solid rgba(215,181,109,0.72)",
-  background: "#d7b56d",  
+  background: "#111",
 };
 
 const avatarImage = {
