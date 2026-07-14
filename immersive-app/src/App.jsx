@@ -15,6 +15,8 @@ import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 import AppDialog from "./components/AppDialog.jsx";
 import MuseumIdentity from "./MuseumIdentity.jsx";
+import AvatarModal from "./AvatarModal.jsx";
+import museumLogoUrl from "./logo-cropped.png";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
@@ -388,6 +390,7 @@ export default function App() {
   user,
   profile,
   logout,
+  loadProfile,
   loadingAuth,
   passwordRecovery,
   setPasswordRecovery,
@@ -396,6 +399,9 @@ export default function App() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+const [savingAvatar, setSavingAvatar] = useState(false);
+const [avatarError, setAvatarError] = useState("");
   const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
   return localStorage.getItem("humanMosaicWelcomeSeen") !== "true";
 });
@@ -465,6 +471,108 @@ useEffect(() => {
 
   return () => clearTimeout(timer);
 }, [roomParam]);
+
+  async function handleSaveAvatar(file) {
+  if (!user || !file || savingAvatar) return;
+
+  setSavingAvatar(true);
+  setAvatarError("");
+
+  try {
+    const avatarPath = `${user.id}/avatar`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(avatarPath, file, {
+        upsert: true,
+        contentType: file.type,
+        cacheControl: "3600",
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(avatarPath);
+
+    const basePublicUrl = publicUrlData?.publicUrl;
+
+    if (!basePublicUrl) {
+      throw new Error("The avatar public URL could not be created.");
+    }
+
+    // Il parametro v forza il browser a mostrare subito la nuova immagine.
+    const avatarUrl = `${basePublicUrl}?v=${Date.now()}`;
+
+    const { error: profileError } = await supabase
+      .from("user_profiles")
+      .update({
+        avatar_url: avatarUrl,
+      })
+      .eq("id", user.id);
+
+    if (profileError) {
+      throw profileError;
+    }
+
+    await loadProfile(user.id);
+    setShowAvatarModal(false);
+  } catch (error) {
+    console.error("Save avatar error:", error);
+
+    setAvatarError(
+      error?.message ||
+        "The avatar could not be saved. Please try again."
+    );
+  } finally {
+    setSavingAvatar(false);
+  }
+}
+
+async function handleUseMuseumLogo() {
+  if (!user || savingAvatar) return;
+
+  setSavingAvatar(true);
+  setAvatarError("");
+
+  try {
+    const avatarPath = `${user.id}/avatar`;
+
+    const { error: removeError } = await supabase.storage
+      .from("avatars")
+      .remove([avatarPath]);
+
+    // Un file inesistente non deve impedire il ripristino del logo.
+    if (removeError) {
+      console.warn("Avatar removal warning:", removeError);
+    }
+
+    const { error: profileError } = await supabase
+      .from("user_profiles")
+      .update({
+        avatar_url: null,
+      })
+      .eq("id", user.id);
+
+    if (profileError) {
+      throw profileError;
+    }
+
+    await loadProfile(user.id);
+    setShowAvatarModal(false);
+  } catch (error) {
+    console.error("Reset avatar error:", error);
+
+    setAvatarError(
+      error?.message ||
+        "The Museum Logo could not be restored. Please try again."
+    );
+  } finally {
+    setSavingAvatar(false);
+  }
+}
   
 const currentRoom =
   roomParam?.toLowerCase() === "identity"
@@ -587,7 +695,10 @@ onRegister={() => {
   onUpload={() => {
     setShowMuseumIdentity(false);
   }}
-  onChangeAvatar={() => {}}
+  onChangeAvatar={() => {
+  setAvatarError("");
+  setShowAvatarModal(true);
+}}
   onChangePassword={() => {}}
         onMemorySelect={(memory) => {
     setShowMuseumIdentity(false);
@@ -597,6 +708,22 @@ onRegister={() => {
     setShowMuseumIdentity(false);
     await logout();
   }}
+/>
+
+      <AvatarModal
+  open={showAvatarModal}
+  currentAvatarUrl={profile?.avatar_url}
+  museumLogoUrl={museumLogoUrl}
+  saving={savingAvatar}
+  errorMessage={avatarError}
+  onClose={() => {
+    if (savingAvatar) return;
+
+    setAvatarError("");
+    setShowAvatarModal(false);
+  }}
+  onSave={handleSaveAvatar}
+  onUseMuseumLogo={handleUseMuseumLogo}
 />
 
       {passwordRecovery && (
