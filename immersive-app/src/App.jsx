@@ -691,6 +691,7 @@ onRegister={() => {
   open={showMuseumIdentity}
   user={user}
   profile={profile}
+        museumLogoUrl={museumLogoUrl}
   onClose={() => setShowMuseumIdentity(false)}
   onUpload={() => {
     setShowMuseumIdentity(false);
