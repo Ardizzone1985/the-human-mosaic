@@ -479,13 +479,18 @@ const avatar = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  overflow: "hidden",
+background: "#111",
   borderRadius: "50%",
   border: "2px solid rgba(215,181,109,0.72)",
-  background: "#d7b56d",
-  color: "#111",
-  fontSize: "30px",
-  fontWeight: 900,
-  letterSpacing: "0.06em",
+  background: "#d7b56d",  
+};
+
+const avatarImage = {
+  width: "100%",
+  height: "100%",
+  display: "block",
+  objectFit: "cover",
 };
 
 const identityInformation = {
