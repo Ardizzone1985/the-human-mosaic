@@ -7,7 +7,7 @@ export default function MuseumIdentity({
   profile,
   onClose,
   onUpload,
-  onEditProfile,
+  onChangeAvatar,
   onChangePassword,
   onMemorySelect,
   onLogout,
@@ -305,12 +305,12 @@ export default function MuseumIdentity({
 
           <div style={secondaryActions}>
             <button
-              type="button"
-              style={secondaryButton}
-              onClick={onEditProfile}
-            >
-              Edit Profile
-            </button>
+  type="button"
+  style={secondaryButton}
+  onClick={onChangeAvatar}
+>
+  Change Avatar
+</button>
 
             <button
               type="button"
