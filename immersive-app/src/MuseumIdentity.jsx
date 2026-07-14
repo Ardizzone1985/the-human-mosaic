@@ -5,6 +5,7 @@ export default function MuseumIdentity({
   open,
   user,
   profile,
+  museumLogoUrl,
   onClose,
   onUpload,
   onChangeAvatar,
@@ -122,9 +123,13 @@ export default function MuseumIdentity({
         </header>
 
         <section style={identityCard}>
-          <div style={avatar} aria-hidden="true">
-            {getInitials(nickname)}
-          </div>
+          <div style={avatar}>
+  <img
+    src={profile?.avatar_url || museumLogoUrl}
+    alt={`${nickname} avatar`}
+    style={avatarImage}
+  />
+</div>
 
           <div style={identityInformation}>
             <div style={nicknameStyle}>{nickname}</div>
