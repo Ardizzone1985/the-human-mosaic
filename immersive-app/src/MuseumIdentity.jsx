@@ -23,6 +23,8 @@ export default function MuseumIdentity({
 
   const [loadingMemories, setLoadingMemories] = useState(false);
   const [memories, setMemories] = useState([]);
+  const [likesGiven, setLikesGiven] = useState(0);
+const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
 
     useEffect(() => {
     async function loadMemorySummary() {
@@ -65,8 +67,29 @@ export default function MuseumIdentity({
   setMemories(Array.isArray(data) ? data : []);
 }
 
+      async function loadLikesGiven() {
+  if (!open || !user) return;
+
+  setLoadingLikesGiven(true);
+
+  const { data, error } = await supabase.rpc(
+    "get_my_likes_given_count"
+  );
+
+  setLoadingLikesGiven(false);
+
+  if (error) {
+    console.error("Load likes given error:", error);
+    setLikesGiven(0);
+    return;
+  }
+
+  setLikesGiven(Number(data || 0));
+}
+
     loadMemorySummary();
       loadMemories();
+      loadLikesGiven();
   }, [open, user?.id]);
   
   if (!open) return null;
@@ -168,7 +191,11 @@ export default function MuseumIdentity({
   label="My Memories"
   value={loadingMemories ? "…" : memorySummary.total}
 />
-            <StatCard icon="❤️" label="Likes Given" value="—" />
+            <StatCard
+  icon="❤️"
+  label="Likes Given"
+  value={loadingLikesGiven ? "…" : likesGiven}
+/>
             <StatCard icon="💬" label="Comments" value="—" />
             <StatCard icon="👁" label="Views Received" value="—" />
             <StatCard
