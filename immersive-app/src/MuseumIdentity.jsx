@@ -29,6 +29,9 @@ const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
 const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
   const [viewsReceived, setViewsReceived] = useState(0);
 const [loadingViewsReceived, setLoadingViewsReceived] = useState(false);
+  const [communityFavorites, setCommunityFavorites] = useState(0);
+const [loadingCommunityFavorites, setLoadingCommunityFavorites] =
+  useState(false);
 
     useEffect(() => {
     async function loadMemorySummary() {
@@ -131,11 +134,32 @@ const [loadingViewsReceived, setLoadingViewsReceived] = useState(false);
   setViewsReceived(Number(data || 0));
 }
 
+      async function loadCommunityFavorites() {
+  if (!open || !user) return;
+
+  setLoadingCommunityFavorites(true);
+
+  const { data, error } = await supabase.rpc(
+    "get_my_community_favorites_count"
+  );
+
+  setLoadingCommunityFavorites(false);
+
+  if (error) {
+    console.error("Load community favorites error:", error);
+    setCommunityFavorites(0);
+    return;
+  }
+
+  setCommunityFavorites(Number(data || 0));
+}
+
     loadMemorySummary();
       loadMemories();
       loadLikesGiven();
       loadCommentsWritten();
       loadViewsReceived();
+      loadCommunityFavorites();
   }, [open, user?.id]);
   
   if (!open) return null;
@@ -253,10 +277,14 @@ const [loadingViewsReceived, setLoadingViewsReceived] = useState(false);
   value={loadingViewsReceived ? "…" : viewsReceived}
 />
             <StatCard
-              icon="🏆"
-              label="Community Favorites"
-              value="—"
-            />
+  icon="🏆"
+  label="Community Favorites"
+  value={
+    loadingCommunityFavorites
+      ? "…"
+      : communityFavorites
+  }
+/>
           </div>
         </section>
 
