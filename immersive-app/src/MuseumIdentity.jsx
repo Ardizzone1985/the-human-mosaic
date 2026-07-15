@@ -27,6 +27,8 @@ export default function MuseumIdentity({
 const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
   const [commentsWritten, setCommentsWritten] = useState(0);
 const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
+  const [viewsReceived, setViewsReceived] = useState(0);
+const [loadingViewsReceived, setLoadingViewsReceived] = useState(false);
 
     useEffect(() => {
     async function loadMemorySummary() {
@@ -109,10 +111,31 @@ const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
   setCommentsWritten(Number(data || 0));
 }
 
+      async function loadViewsReceived() {
+  if (!open || !user) return;
+
+  setLoadingViewsReceived(true);
+
+  const { data, error } = await supabase.rpc(
+    "get_my_views_received_count"
+  );
+
+  setLoadingViewsReceived(false);
+
+  if (error) {
+    console.error("Load views received error:", error);
+    setViewsReceived(0);
+    return;
+  }
+
+  setViewsReceived(Number(data || 0));
+}
+
     loadMemorySummary();
       loadMemories();
       loadLikesGiven();
       loadCommentsWritten();
+      loadViewsReceived();
   }, [open, user?.id]);
   
   if (!open) return null;
@@ -224,7 +247,11 @@ const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
   label="Comments Written"
   value={loadingCommentsWritten ? "…" : commentsWritten}
 />
-            <StatCard icon="👁" label="Views Received" value="—" />
+            <StatCard
+  icon="👁"
+  label="Views Received"
+  value={loadingViewsReceived ? "…" : viewsReceived}
+/>
             <StatCard
               icon="🏆"
               label="Community Favorites"
