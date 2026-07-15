@@ -25,6 +25,8 @@ export default function MuseumIdentity({
   const [memories, setMemories] = useState([]);
   const [likesGiven, setLikesGiven] = useState(0);
 const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
+  const [commentsWritten, setCommentsWritten] = useState(0);
+const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
 
     useEffect(() => {
     async function loadMemorySummary() {
@@ -87,9 +89,30 @@ const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
   setLikesGiven(Number(data || 0));
 }
 
+      async function loadCommentsWritten() {
+  if (!open || !user) return;
+
+  setLoadingCommentsWritten(true);
+
+  const { data, error } = await supabase.rpc(
+    "get_my_comments_written_count"
+  );
+
+  setLoadingCommentsWritten(false);
+
+  if (error) {
+    console.error("Load comments written error:", error);
+    setCommentsWritten(0);
+    return;
+  }
+
+  setCommentsWritten(Number(data || 0));
+}
+
     loadMemorySummary();
       loadMemories();
       loadLikesGiven();
+      loadCommentsWritten();
   }, [open, user?.id]);
   
   if (!open) return null;
@@ -196,7 +219,11 @@ const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
   label="Likes Given"
   value={loadingLikesGiven ? "…" : likesGiven}
 />
-            <StatCard icon="💬" label="Comments" value="—" />
+            <StatCard
+  icon="💬"
+  label="Comments Written"
+  value={loadingCommentsWritten ? "…" : commentsWritten}
+/>
             <StatCard icon="👁" label="Views Received" value="—" />
             <StatCard
               icon="🏆"
