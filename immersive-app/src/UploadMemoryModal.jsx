@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "./supabaseClient.js";
 
 const STEPS = [
   "Choose Room",
@@ -52,16 +53,49 @@ const WALLS = [
   },
 ];
 
+const WALL_SECTIONS = {
+  "Front Wall": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+  ],
+  "Left Wall": ["L1", "L2", "L3", "L4", "L5", "L6"],
+  "Right Wall": ["R1", "R2", "R3", "R4", "R5", "R6"],
+};
+
+const HOLD_MINUTES = 15;
+
 export default function UploadMemoryModal({ open, onClose }) {
   const [currentStep, setCurrentStep] = useState(1);
+
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedWall, setSelectedWall] = useState(null);
+  const [selectedSection, setSelectedSection] = useState(null);
+
+  const [selectedSlotCode, setSelectedSlotCode] = useState(null);
+  const [selectedSpot, setSelectedSpot] = useState(null);
+
+  const [slots, setSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [slotsError, setSlotsError] = useState("");
 
   useEffect(() => {
     if (!open) {
       setCurrentStep(1);
       setSelectedRoom(null);
       setSelectedWall(null);
+      setSelectedSection(null);
+      setSelectedSlotCode(null);
+      setSelectedSpot(null);
+      setSlots([]);
+      setSlotsError("");
     }
   }, [open]);
 
@@ -81,6 +115,69 @@ export default function UploadMemoryModal({ open, onClose }) {
     };
   }, [open, onClose]);
 
+  useEffect(() => {
+    async function loadSlots() {
+      if (
+        !open ||
+        currentStep !== 3 ||
+        !selectedRoom ||
+        !selectedWall ||
+        !selectedSection
+      ) {
+        return;
+      }
+
+      setLoadingSlots(true);
+      setSlotsError("");
+      setSlots([]);
+      setSelectedSlotCode(null);
+      setSelectedSpot(null);
+
+      const { data, error } = await supabase
+        .from("slots")
+        .select(
+          `
+          id,
+          room,
+          wall,
+          section,
+          row_number,
+          col_number,
+          slot_code,
+          status,
+          reserved_at,
+          payment_confirmed
+          `
+        )
+        .eq("room", selectedRoom)
+        .eq("wall", selectedWall)
+        .eq("section", selectedSection)
+        .order("row_number", { ascending: true })
+        .order("col_number", { ascending: true })
+        .limit(1000);
+
+      setLoadingSlots(false);
+
+      if (error) {
+        console.error("Load upload slots error:", error);
+        setSlotsError(
+          "The available positions could not be loaded. Please try again."
+        );
+        return;
+      }
+
+      setSlots(Array.isArray(data) ? data : []);
+    }
+
+    loadSlots();
+  }, [
+    open,
+    currentStep,
+    selectedRoom,
+    selectedWall,
+    selectedSection,
+  ]);
+
   if (!open) return null;
 
   const activeRoom = ROOMS.find(
@@ -89,11 +186,29 @@ export default function UploadMemoryModal({ open, onClose }) {
 
   const accentColor = activeRoom?.color || "#d7b56d";
 
+  const availableSections =
+    WALL_SECTIONS[selectedWall] || [];
+
+  const availableSlotsCount = useMemo(
+    () =>
+      slots.filter((slot) => isSlotAvailable(slot)).length,
+    [slots]
+  );
+
+  const unavailableSlotsCount =
+    slots.length - availableSlotsCount;
+
   const canContinue =
     currentStep === 1
       ? Boolean(selectedRoom)
       : currentStep === 2
       ? Boolean(selectedWall)
+      : currentStep === 3
+      ? Boolean(
+          selectedSection &&
+            selectedSlotCode &&
+            selectedSpot
+        )
       : false;
 
   function handleContinue() {
@@ -105,9 +220,23 @@ export default function UploadMemoryModal({ open, onClose }) {
     }
 
     if (currentStep === 2) {
-      console.log("Upload selection:", {
+      const firstSection =
+        WALL_SECTIONS[selectedWall]?.[0] || null;
+
+      setSelectedSection(firstSection);
+      setSelectedSlotCode(null);
+      setSelectedSpot(null);
+      setCurrentStep(3);
+      return;
+    }
+
+    if (currentStep === 3) {
+      console.log("Complete upload position:", {
         room: selectedRoom,
         wall: selectedWall,
+        section: selectedSection,
+        spot: selectedSpot,
+        slotCode: selectedSlotCode,
       });
     }
   }
@@ -115,7 +244,35 @@ export default function UploadMemoryModal({ open, onClose }) {
   function handleBack() {
     if (currentStep === 2) {
       setCurrentStep(1);
+      return;
     }
+
+    if (currentStep === 3) {
+      setSelectedSlotCode(null);
+      setSelectedSpot(null);
+      setCurrentStep(2);
+    }
+  }
+
+  function selectRoom(roomName) {
+    setSelectedRoom(roomName);
+    setSelectedWall(null);
+    setSelectedSection(null);
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
+  }
+
+  function selectWall(wallName) {
+    setSelectedWall(wallName);
+    setSelectedSection(null);
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
+  }
+
+  function selectSection(sectionName) {
+    setSelectedSection(sectionName);
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
   }
 
   return (
@@ -160,22 +317,24 @@ export default function UploadMemoryModal({ open, onClose }) {
 
         {currentStep === 1 && (
           <section style={section}>
-            <div style={sectionEyebrow}>YOUR JOURNEY BEGINS</div>
+            <div style={sectionEyebrow}>
+              YOUR JOURNEY BEGINS
+            </div>
 
             <h2 style={sectionTitle}>Choose Your Room</h2>
 
             <div style={cardGrid}>
               {ROOMS.map((room) => {
-                const selected = selectedRoom === room.name;
+                const selected =
+                  selectedRoom === room.name;
 
                 return (
                   <button
                     key={room.name}
                     type="button"
-                    onClick={() => {
-                      setSelectedRoom(room.name);
-                      setSelectedWall(null);
-                    }}
+                    onClick={() =>
+                      selectRoom(room.name)
+                    }
                     style={{
                       ...selectionCard,
                       borderColor: selected
@@ -191,7 +350,9 @@ export default function UploadMemoryModal({ open, onClose }) {
                     }}
                     aria-pressed={selected}
                   >
-                    <div style={cardIcon}>{room.icon}</div>
+                    <div style={cardIcon}>
+                      {room.icon}
+                    </div>
 
                     <div
                       style={{
@@ -219,7 +380,9 @@ export default function UploadMemoryModal({ open, onClose }) {
                           : "rgba(255,255,255,0.1)",
                       }}
                     >
-                      {selected ? "SELECTED" : "SELECT ROOM"}
+                      {selected
+                        ? "SELECTED"
+                        : "SELECT ROOM"}
                     </div>
                   </button>
                 );
@@ -234,23 +397,26 @@ export default function UploadMemoryModal({ open, onClose }) {
               {selectedRoom?.toUpperCase()} ROOM
             </div>
 
-            <h2 style={sectionTitle}>Choose Your Wall</h2>
+            <h2 style={sectionTitle}>
+              Choose Your Wall
+            </h2>
 
             <p style={sectionDescription}>
-              Choose where your memory will be exhibited inside
-              the {selectedRoom} Room.
+              Choose where your memory will be exhibited
+              inside the {selectedRoom} Room.
             </p>
 
             <div style={cardGrid}>
               {WALLS.map((wall) => {
-                const selected = selectedWall === wall.name;
+                const selected =
+                  selectedWall === wall.name;
 
                 return (
                   <button
                     key={wall.name}
                     type="button"
                     onClick={() =>
-                      setSelectedWall(wall.name)
+                      selectWall(wall.name)
                     }
                     style={{
                       ...selectionCard,
@@ -304,7 +470,9 @@ export default function UploadMemoryModal({ open, onClose }) {
                           : "rgba(255,255,255,0.1)",
                       }}
                     >
-                      {selected ? "SELECTED" : "SELECT WALL"}
+                      {selected
+                        ? "SELECTED"
+                        : "SELECT WALL"}
                     </div>
                   </button>
                 );
@@ -313,23 +481,239 @@ export default function UploadMemoryModal({ open, onClose }) {
           </section>
         )}
 
+        {currentStep === 3 && (
+          <section style={section}>
+            <div style={sectionEyebrow}>
+              {selectedRoom?.toUpperCase()} ·{" "}
+              {selectedWall?.toUpperCase()}
+            </div>
+
+            <h2 style={sectionTitle}>
+              Choose Your Spot
+            </h2>
+
+            <p style={sectionDescription}>
+              Select a Section and then choose one real
+              position inside the mosaic.
+            </p>
+
+            <div style={sectionTabs}>
+              {availableSections.map(
+                (sectionName) => {
+                  const selected =
+                    selectedSection === sectionName;
+
+                  return (
+                    <button
+                      key={sectionName}
+                      type="button"
+                      onClick={() =>
+                        selectSection(sectionName)
+                      }
+                      style={{
+                        ...sectionTab,
+                        color: selected
+                          ? "#111"
+                          : "#cfc4b4",
+                        background: selected
+                          ? accentColor
+                          : "rgba(255,255,255,0.04)",
+                        borderColor: selected
+                          ? accentColor
+                          : "rgba(215,181,109,0.22)",
+                      }}
+                    >
+                      {sectionName}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+
+            <div style={slotPanel}>
+              <div style={slotPanelHeader}>
+                <div>
+                  <div style={slotPanelEyebrow}>
+                    CURRENT SECTION
+                  </div>
+
+                  <div style={slotPanelTitle}>
+                    {selectedRoom} · {selectedWall} ·{" "}
+                    {selectedSection}
+                  </div>
+                </div>
+
+                {!loadingSlots && !slotsError && (
+                  <div style={slotCountBadge}>
+                    {availableSlotsCount} available ·{" "}
+                    {unavailableSlotsCount} unavailable
+                  </div>
+                )}
+              </div>
+
+              {loadingSlots && (
+                <div style={slotMessage}>
+                  Loading available positions...
+                </div>
+              )}
+
+              {!loadingSlots && slotsError && (
+                <div style={slotErrorMessage}>
+                  {slotsError}
+                </div>
+              )}
+
+              {!loadingSlots &&
+                !slotsError &&
+                slots.length === 0 && (
+                  <div style={slotMessage}>
+                    No positions were found in this
+                    Section.
+                  </div>
+                )}
+
+              {!loadingSlots &&
+                !slotsError &&
+                slots.length > 0 && (
+                  <div style={slotGridScroller}>
+                    <div style={slotGrid}>
+                      {slots.map((slot) => {
+                        const available =
+                          isSlotAvailable(slot);
+
+                        const selected =
+                          selectedSlotCode ===
+                          slot.slot_code;
+
+                        const visibleSpot = `R${slot.row_number}-C${slot.col_number}`;
+
+                        return (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            disabled={!available}
+                            title={
+                              available
+                                ? `Select ${visibleSpot}`
+                                : `${visibleSpot} is unavailable`
+                            }
+                            aria-label={
+                              available
+                                ? `Select available spot ${visibleSpot}`
+                                : `Unavailable spot ${visibleSpot}`
+                            }
+                            aria-pressed={selected}
+                            onClick={() => {
+                              if (!available) return;
+
+                              setSelectedSlotCode(
+                                slot.slot_code
+                              );
+
+                              setSelectedSpot(
+                                visibleSpot
+                              );
+                            }}
+                            style={{
+                              ...slotButton,
+                              borderColor: selected
+                                ? accentColor
+                                : available
+                                ? "rgba(215,181,109,0.36)"
+                                : "rgba(255,255,255,0.06)",
+                              background: selected
+                                ? accentColor
+                                : available
+                                ? "rgba(255,255,255,0.055)"
+                                : "rgba(0,0,0,0.72)",
+                              color: selected
+                                ? "#111"
+                                : available
+                                ? "#d8cebf"
+                                : "#4d4943",
+                              cursor: available
+                                ? "pointer"
+                                : "not-allowed",
+                              boxShadow: selected
+                                ? `0 0 0 2px rgba(255,255,255,0.7),
+                                   0 0 24px ${accentColor}`
+                                : "none",
+                              transform: selected
+                                ? "scale(1.08)"
+                                : "none",
+                            }}
+                          >
+                            <span style={slotNumber}>
+                              {visibleSpot}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+              <div style={slotLegend}>
+                <div style={legendItem}>
+                  <span
+                    style={{
+                      ...legendBox,
+                      background:
+                        "rgba(255,255,255,0.055)",
+                    }}
+                  />
+                  Available
+                </div>
+
+                <div style={legendItem}>
+                  <span
+                    style={{
+                      ...legendBox,
+                      background: "rgba(0,0,0,0.72)",
+                    }}
+                  />
+                  Unavailable
+                </div>
+
+                <div style={legendItem}>
+                  <span
+                    style={{
+                      ...legendBox,
+                      background: accentColor,
+                    }}
+                  />
+                  Selected
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section style={summaryCard}>
           <div style={selectionSummary}>
-            <div>
-              <div style={summaryLabel}>ROOM</div>
+            <SummaryItem
+              label="ROOM"
+              value={selectedRoom}
+            />
 
-              <div style={summaryValue}>
-                {selectedRoom || "Not selected"}
-              </div>
-            </div>
+            <SummaryItem
+              label="WALL"
+              value={selectedWall}
+            />
 
-            <div>
-              <div style={summaryLabel}>WALL</div>
+            {currentStep >= 3 && (
+              <>
+                <SummaryItem
+                  label="SECTION"
+                  value={selectedSection}
+                />
 
-              <div style={summaryValue}>
-                {selectedWall || "Not selected"}
-              </div>
-            </div>
+                <SummaryItem
+                  label="SPOT"
+                  value={selectedSpot}
+                />
+              </>
+            )}
           </div>
 
           <div style={navigationActions}>
@@ -352,6 +736,7 @@ export default function UploadMemoryModal({ open, onClose }) {
                 cursor: canContinue
                   ? "pointer"
                   : "not-allowed",
+                background: accentColor,
               }}
               onClick={handleContinue}
             >
@@ -361,23 +746,29 @@ export default function UploadMemoryModal({ open, onClose }) {
         </section>
 
         <p style={testNote}>
-          Spot selection and secure reservation will be connected
-          in the next step.
+          Secure reservation will be activated only after
+          this selection has been fully tested.
         </p>
       </div>
     </div>
   );
 }
 
-function ProgressWizard({ currentStep, accentColor }) {
+function ProgressWizard({
+  currentStep,
+  accentColor,
+}) {
   return (
     <div style={progressArea}>
       <div style={progressTrack}>
         {STEPS.map((step, index) => {
           const stepNumber = index + 1;
-          const completed = stepNumber < currentStep;
-          const active = stepNumber === currentStep;
-          const reached = stepNumber <= currentStep;
+          const completed =
+            stepNumber < currentStep;
+          const active =
+            stepNumber === currentStep;
+          const reached =
+            stepNumber <= currentStep;
 
           return (
             <div key={step} style={progressItem}>
@@ -406,7 +797,8 @@ function ProgressWizard({ currentStep, accentColor }) {
                     style={{
                       ...progressLine,
                       background:
-                        stepNumber < currentStep
+                        stepNumber <
+                        currentStep
                           ? accentColor
                           : "rgba(255,255,255,0.12)",
                     }}
@@ -434,6 +826,53 @@ function ProgressWizard({ currentStep, accentColor }) {
   );
 }
 
+function SummaryItem({ label, value }) {
+  return (
+    <div>
+      <div style={summaryLabel}>{label}</div>
+
+      <div style={summaryValue}>
+        {value || "Not selected"}
+      </div>
+    </div>
+  );
+}
+
+function isSlotAvailable(slot) {
+  if (!slot) return false;
+
+  if (slot.payment_confirmed === true) {
+    return false;
+  }
+
+  if (slot.status === "available") {
+    return true;
+  }
+
+  if (
+    slot.status === "reserved" &&
+    slot.reserved_at
+  ) {
+    const reservedTime = new Date(
+      slot.reserved_at
+    ).getTime();
+
+    if (Number.isNaN(reservedTime)) {
+      return false;
+    }
+
+    const elapsed =
+      Date.now() - reservedTime;
+
+    return (
+      elapsed >
+      HOLD_MINUTES * 60 * 1000
+    );
+  }
+
+  return false;
+}
+
 const overlay = {
   position: "fixed",
   inset: 0,
@@ -449,7 +888,7 @@ const overlay = {
 
 const panel = {
   position: "relative",
-  width: "min(980px, 96vw)",
+  width: "min(1040px, 96vw)",
   maxHeight: "92vh",
   overflowY: "auto",
   padding: "38px",
@@ -641,6 +1080,138 @@ const selectionBadge = {
   letterSpacing: "0.12em",
 };
 
+const sectionTabs = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "9px",
+  marginBottom: "18px",
+};
+
+const sectionTab = {
+  minWidth: "54px",
+  padding: "10px 13px",
+  borderRadius: "999px",
+  border: "1px solid",
+  cursor: "pointer",
+  fontSize: "12px",
+  fontWeight: 900,
+  transition:
+    "background 160ms ease, color 160ms ease",
+};
+
+const slotPanel = {
+  padding: "20px",
+  borderRadius: "22px",
+  border: "1px solid rgba(215,181,109,0.24)",
+  background: "rgba(255,255,255,0.025)",
+};
+
+const slotPanelHeader = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: "14px",
+  marginBottom: "18px",
+};
+
+const slotPanelEyebrow = {
+  color: "#958a7b",
+  fontSize: "10px",
+  fontWeight: 900,
+  letterSpacing: "0.14em",
+};
+
+const slotPanelTitle = {
+  marginTop: "6px",
+  color: "#ffffff",
+  fontSize: "18px",
+  fontWeight: 900,
+};
+
+const slotCountBadge = {
+  padding: "8px 12px",
+  borderRadius: "999px",
+  border: "1px solid rgba(215,181,109,0.24)",
+  background: "rgba(215,181,109,0.07)",
+  color: "#cfc3b2",
+  fontSize: "11px",
+  fontWeight: 800,
+};
+
+const slotGridScroller = {
+  width: "100%",
+  overflowX: "auto",
+  padding: "8px 2px 14px",
+};
+
+const slotGrid = {
+  minWidth: "620px",
+  display: "grid",
+  gridTemplateColumns:
+    "repeat(10, minmax(48px, 1fr))",
+  gap: "8px",
+};
+
+const slotButton = {
+  aspectRatio: "1 / 1",
+  minHeight: "48px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "4px",
+  borderRadius: "10px",
+  border: "1px solid",
+  font: "inherit",
+  transition:
+    "transform 150ms ease, box-shadow 150ms ease, background 150ms ease",
+};
+
+const slotNumber = {
+  fontSize: "9px",
+  fontWeight: 900,
+  lineHeight: 1.15,
+  textAlign: "center",
+};
+
+const slotMessage = {
+  padding: "30px 18px",
+  borderRadius: "16px",
+  border: "1px dashed rgba(215,181,109,0.25)",
+  color: "#a99e8f",
+  textAlign: "center",
+  fontSize: "13px",
+};
+
+const slotErrorMessage = {
+  ...slotMessage,
+  border: "1px solid rgba(255,130,130,0.34)",
+  color: "#ffb2b2",
+  background: "rgba(255,90,90,0.055)",
+};
+
+const slotLegend = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "15px",
+  marginTop: "12px",
+  color: "#9c9284",
+  fontSize: "11px",
+};
+
+const legendItem = {
+  display: "flex",
+  alignItems: "center",
+  gap: "7px",
+};
+
+const legendBox = {
+  width: "13px",
+  height: "13px",
+  borderRadius: "4px",
+  border: "1px solid rgba(215,181,109,0.24)",
+};
+
 const summaryCard = {
   display: "flex",
   justifyContent: "space-between",
@@ -657,7 +1228,7 @@ const summaryCard = {
 const selectionSummary = {
   display: "flex",
   flexWrap: "wrap",
-  gap: "18px 34px",
+  gap: "18px 30px",
 };
 
 const summaryLabel = {
@@ -670,7 +1241,7 @@ const summaryLabel = {
 const summaryValue = {
   marginTop: "6px",
   color: "#f2c879",
-  fontSize: "18px",
+  fontSize: "17px",
   fontWeight: 900,
 };
 
@@ -686,7 +1257,6 @@ const continueButton = {
   padding: "13px 20px",
   border: "none",
   borderRadius: "999px",
-  background: "#d7b56d",
   color: "#111111",
   fontSize: "13px",
   fontWeight: 900,
