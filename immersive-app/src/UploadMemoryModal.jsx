@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
+import StepChooseRoom from "./upload/StepChooseRoom.jsx";
 
 const STEPS = [
   "Choose Room",
@@ -535,80 +536,12 @@ setGuidelinesConfirmed(false);
         />
 
         {currentStep === 1 && (
-          <section style={section}>
-            <div style={sectionEyebrow}>
-              YOUR JOURNEY BEGINS
-            </div>
-
-            <h2 style={sectionTitle}>Choose Your Room</h2>
-
-            <div style={cardGrid}>
-              {ROOMS.map((room) => {
-                const selected =
-                  selectedRoom === room.name;
-
-                return (
-                  <button
-                    key={room.name}
-                    type="button"
-                    onClick={() =>
-                      selectRoom(room.name)
-                    }
-                    style={{
-                      ...selectionCard,
-                      borderColor: selected
-                        ? room.color
-                        : "rgba(215,181,109,0.22)",
-                      boxShadow: selected
-                        ? `0 0 0 1px ${room.color},
-                           0 20px 55px rgba(0,0,0,0.35)`
-                        : "none",
-                      transform: selected
-                        ? "translateY(-3px)"
-                        : "none",
-                    }}
-                    aria-pressed={selected}
-                  >
-                    <div style={cardIcon}>
-                      {room.icon}
-                    </div>
-
-                    <div
-                      style={{
-                        ...cardName,
-                        color: selected
-                          ? room.color
-                          : "#ffffff",
-                      }}
-                    >
-                      {room.name}
-                    </div>
-
-                    <div style={cardDescription}>
-                      {room.description}
-                    </div>
-
-                    <div
-                      style={{
-                        ...selectionBadge,
-                        color: selected
-                          ? room.color
-                          : "#968b7c",
-                        borderColor: selected
-                          ? room.color
-                          : "rgba(255,255,255,0.1)",
-                      }}
-                    >
-                      {selected
-                        ? "SELECTED"
-                        : "SELECT ROOM"}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        )}
+  <StepChooseRoom
+    rooms={ROOMS}
+    selectedRoom={selectedRoom}
+    onSelectRoom={selectRoom}
+  />
+)}
 
         {currentStep === 2 && (
           <section style={section}>
