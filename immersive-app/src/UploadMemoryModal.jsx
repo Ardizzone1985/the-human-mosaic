@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 
+const STEPS = [
+  "Choose Room",
+  "Choose Wall",
+  "Choose Spot",
+  "Upload",
+];
+
 const ROOMS = [
   {
     name: "Identity",
@@ -24,15 +31,37 @@ const ROOMS = [
   },
 ];
 
-export default function UploadMemoryModal({
-  open,
-  onClose,
-}) {
+const WALLS = [
+  {
+    name: "Front Wall",
+    icon: "▤",
+    description:
+      "The main wall facing the entrance and the most immediate view inside the Room.",
+  },
+  {
+    name: "Left Wall",
+    icon: "◧",
+    description:
+      "A side perspective that becomes visible while exploring the Room.",
+  },
+  {
+    name: "Right Wall",
+    icon: "◨",
+    description:
+      "A complementary exhibition wall along the visitor's museum journey.",
+  },
+];
+
+export default function UploadMemoryModal({ open, onClose }) {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedWall, setSelectedWall] = useState(null);
 
   useEffect(() => {
     if (!open) {
+      setCurrentStep(1);
       setSelectedRoom(null);
+      setSelectedWall(null);
     }
   }, [open]);
 
@@ -53,6 +82,41 @@ export default function UploadMemoryModal({
   }, [open, onClose]);
 
   if (!open) return null;
+
+  const activeRoom = ROOMS.find(
+    (room) => room.name === selectedRoom
+  );
+
+  const accentColor = activeRoom?.color || "#d7b56d";
+
+  const canContinue =
+    currentStep === 1
+      ? Boolean(selectedRoom)
+      : currentStep === 2
+      ? Boolean(selectedWall)
+      : false;
+
+  function handleContinue() {
+    if (!canContinue) return;
+
+    if (currentStep === 1) {
+      setCurrentStep(2);
+      return;
+    }
+
+    if (currentStep === 2) {
+      console.log("Upload selection:", {
+        room: selectedRoom,
+        wall: selectedWall,
+      });
+    }
+  }
+
+  function handleBack() {
+    if (currentStep === 2) {
+      setCurrentStep(1);
+    }
+  }
 
   return (
     <div
@@ -80,102 +144,291 @@ export default function UploadMemoryModal({
           <div style={eyebrow}>THE HUMAN MOSAIC</div>
 
           <h1 id="upload-memory-title" style={title}>
-            Upload a Memory
+            Create Your Legacy
           </h1>
 
           <p style={subtitle}>
-            Choose the Room where your memory will become part of the
+            Choose where your memory will become part of the
             permanent global artwork.
           </p>
         </header>
 
-        <section style={section}>
-          <div style={sectionEyebrow}>STEP 1 OF 4</div>
-          <h2 style={sectionTitle}>Choose Your Room</h2>
+        <ProgressWizard
+          currentStep={currentStep}
+          accentColor={accentColor}
+        />
 
-          <div style={roomGrid}>
-            {ROOMS.map((room) => {
-              const selected = selectedRoom === room.name;
+        {currentStep === 1 && (
+          <section style={section}>
+            <div style={sectionEyebrow}>YOUR JOURNEY BEGINS</div>
 
-              return (
-                <button
-                  key={room.name}
-                  type="button"
-                  onClick={() => setSelectedRoom(room.name)}
-                  style={{
-                    ...roomCard,
-                    borderColor: selected
-                      ? room.color
-                      : "rgba(215,181,109,0.22)",
-                    boxShadow: selected
-                      ? `0 0 0 1px ${room.color}, 0 20px 55px rgba(0,0,0,0.35)`
-                      : "none",
-                    transform: selected
-                      ? "translateY(-3px)"
-                      : "none",
-                  }}
-                  aria-pressed={selected}
-                >
-                  <div style={roomIcon}>{room.icon}</div>
+            <h2 style={sectionTitle}>Choose Your Room</h2>
 
-                  <div
-                    style={{
-                      ...roomName,
-                      color: selected ? room.color : "#ffffff",
+            <div style={cardGrid}>
+              {ROOMS.map((room) => {
+                const selected = selectedRoom === room.name;
+
+                return (
+                  <button
+                    key={room.name}
+                    type="button"
+                    onClick={() => {
+                      setSelectedRoom(room.name);
+                      setSelectedWall(null);
                     }}
-                  >
-                    {room.name}
-                  </div>
-
-                  <div style={roomDescription}>
-                    {room.description}
-                  </div>
-
-                  <div
                     style={{
-                      ...selectionBadge,
-                      color: selected ? room.color : "#968b7c",
+                      ...selectionCard,
                       borderColor: selected
                         ? room.color
-                        : "rgba(255,255,255,0.1)",
+                        : "rgba(215,181,109,0.22)",
+                      boxShadow: selected
+                        ? `0 0 0 1px ${room.color},
+                           0 20px 55px rgba(0,0,0,0.35)`
+                        : "none",
+                      transform: selected
+                        ? "translateY(-3px)"
+                        : "none",
                     }}
+                    aria-pressed={selected}
                   >
-                    {selected ? "SELECTED" : "SELECT ROOM"}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+                    <div style={cardIcon}>{room.icon}</div>
+
+                    <div
+                      style={{
+                        ...cardName,
+                        color: selected
+                          ? room.color
+                          : "#ffffff",
+                      }}
+                    >
+                      {room.name}
+                    </div>
+
+                    <div style={cardDescription}>
+                      {room.description}
+                    </div>
+
+                    <div
+                      style={{
+                        ...selectionBadge,
+                        color: selected
+                          ? room.color
+                          : "#968b7c",
+                        borderColor: selected
+                          ? room.color
+                          : "rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      {selected ? "SELECTED" : "SELECT ROOM"}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {currentStep === 2 && (
+          <section style={section}>
+            <div style={sectionEyebrow}>
+              {selectedRoom?.toUpperCase()} ROOM
+            </div>
+
+            <h2 style={sectionTitle}>Choose Your Wall</h2>
+
+            <p style={sectionDescription}>
+              Choose where your memory will be exhibited inside
+              the {selectedRoom} Room.
+            </p>
+
+            <div style={cardGrid}>
+              {WALLS.map((wall) => {
+                const selected = selectedWall === wall.name;
+
+                return (
+                  <button
+                    key={wall.name}
+                    type="button"
+                    onClick={() =>
+                      setSelectedWall(wall.name)
+                    }
+                    style={{
+                      ...selectionCard,
+                      borderColor: selected
+                        ? accentColor
+                        : "rgba(215,181,109,0.22)",
+                      boxShadow: selected
+                        ? `0 0 0 1px ${accentColor},
+                           0 20px 55px rgba(0,0,0,0.35)`
+                        : "none",
+                      transform: selected
+                        ? "translateY(-3px)"
+                        : "none",
+                    }}
+                    aria-pressed={selected}
+                  >
+                    <div
+                      style={{
+                        ...wallIcon,
+                        color: selected
+                          ? accentColor
+                          : "#d8c7ad",
+                      }}
+                    >
+                      {wall.icon}
+                    </div>
+
+                    <div
+                      style={{
+                        ...cardName,
+                        color: selected
+                          ? accentColor
+                          : "#ffffff",
+                      }}
+                    >
+                      {wall.name}
+                    </div>
+
+                    <div style={cardDescription}>
+                      {wall.description}
+                    </div>
+
+                    <div
+                      style={{
+                        ...selectionBadge,
+                        color: selected
+                          ? accentColor
+                          : "#968b7c",
+                        borderColor: selected
+                          ? accentColor
+                          : "rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      {selected ? "SELECTED" : "SELECT WALL"}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         <section style={summaryCard}>
-          <div>
-            <div style={summaryLabel}>CURRENT SELECTION</div>
-            <div style={summaryValue}>
-              {selectedRoom || "No Room selected"}
+          <div style={selectionSummary}>
+            <div>
+              <div style={summaryLabel}>ROOM</div>
+
+              <div style={summaryValue}>
+                {selectedRoom || "Not selected"}
+              </div>
+            </div>
+
+            <div>
+              <div style={summaryLabel}>WALL</div>
+
+              <div style={summaryValue}>
+                {selectedWall || "Not selected"}
+              </div>
             </div>
           </div>
 
-          <button
-            type="button"
-            disabled={!selectedRoom}
-            style={{
-              ...continueButton,
-              opacity: selectedRoom ? 1 : 0.45,
-              cursor: selectedRoom ? "pointer" : "not-allowed",
-            }}
-            onClick={() => {
-              console.log("Selected upload room:", selectedRoom);
-            }}
-          >
-            Continue
-          </button>
+          <div style={navigationActions}>
+            {currentStep > 1 && (
+              <button
+                type="button"
+                style={backButton}
+                onClick={handleBack}
+              >
+                ← Back
+              </button>
+            )}
+
+            <button
+              type="button"
+              disabled={!canContinue}
+              style={{
+                ...continueButton,
+                opacity: canContinue ? 1 : 0.42,
+                cursor: canContinue
+                  ? "pointer"
+                  : "not-allowed",
+              }}
+              onClick={handleContinue}
+            >
+              Continue →
+            </button>
+          </div>
         </section>
 
         <p style={testNote}>
-          Wall, Section and Spot selection will be connected in the next
-          step.
+          Spot selection and secure reservation will be connected
+          in the next step.
         </p>
+      </div>
+    </div>
+  );
+}
+
+function ProgressWizard({ currentStep, accentColor }) {
+  return (
+    <div style={progressArea}>
+      <div style={progressTrack}>
+        {STEPS.map((step, index) => {
+          const stepNumber = index + 1;
+          const completed = stepNumber < currentStep;
+          const active = stepNumber === currentStep;
+          const reached = stepNumber <= currentStep;
+
+          return (
+            <div key={step} style={progressItem}>
+              <div style={progressTopRow}>
+                <div
+                  style={{
+                    ...progressDot,
+                    borderColor: reached
+                      ? accentColor
+                      : "rgba(255,255,255,0.16)",
+                    background:
+                      completed || active
+                        ? accentColor
+                        : "#0b0b0b",
+                    color:
+                      completed || active
+                        ? "#111"
+                        : "#746b60",
+                  }}
+                >
+                  {completed ? "✓" : stepNumber}
+                </div>
+
+                {index < STEPS.length - 1 && (
+                  <div
+                    style={{
+                      ...progressLine,
+                      background:
+                        stepNumber < currentStep
+                          ? accentColor
+                          : "rgba(255,255,255,0.12)",
+                    }}
+                  />
+                )}
+              </div>
+
+              <div
+                style={{
+                  ...progressLabel,
+                  color: active
+                    ? accentColor
+                    : reached
+                    ? "#d8cdbd"
+                    : "#71695f",
+                }}
+              >
+                {step}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -196,7 +449,7 @@ const overlay = {
 
 const panel = {
   position: "relative",
-  width: "min(930px, 96vw)",
+  width: "min(980px, 96vw)",
   maxHeight: "92vh",
   overflowY: "auto",
   padding: "38px",
@@ -226,7 +479,7 @@ const closeButton = {
 };
 
 const header = {
-  padding: "8px 42px 30px",
+  padding: "8px 42px 24px",
   textAlign: "center",
 };
 
@@ -252,6 +505,58 @@ const subtitle = {
   lineHeight: 1.65,
 };
 
+const progressArea = {
+  margin: "4px 0 30px",
+  padding: "20px 18px 16px",
+  borderRadius: "22px",
+  border: "1px solid rgba(215,181,109,0.2)",
+  background: "rgba(255,255,255,0.025)",
+};
+
+const progressTrack = {
+  display: "grid",
+  gridTemplateColumns: "repeat(4, 1fr)",
+  alignItems: "start",
+};
+
+const progressItem = {
+  minWidth: 0,
+};
+
+const progressTopRow = {
+  display: "flex",
+  alignItems: "center",
+};
+
+const progressDot = {
+  width: "30px",
+  height: "30px",
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "50%",
+  border: "1px solid",
+  fontSize: "11px",
+  fontWeight: 900,
+  transition: "all 200ms ease",
+};
+
+const progressLine = {
+  width: "100%",
+  height: "2px",
+  transition: "background 200ms ease",
+};
+
+const progressLabel = {
+  marginTop: "9px",
+  paddingRight: "8px",
+  fontSize: "10px",
+  fontWeight: 900,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+};
+
 const section = {
   marginTop: "6px",
 };
@@ -264,18 +569,26 @@ const sectionEyebrow = {
 };
 
 const sectionTitle = {
-  margin: "6px 0 18px",
+  margin: "6px 0 8px",
   color: "#ffffff",
   fontSize: "26px",
 };
 
-const roomGrid = {
+const sectionDescription = {
+  margin: "0 0 18px",
+  color: "#a99e8f",
+  fontSize: "14px",
+  lineHeight: 1.6,
+};
+
+const cardGrid = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+  gridTemplateColumns:
+    "repeat(auto-fit, minmax(210px, 1fr))",
   gap: "14px",
 };
 
-const roomCard = {
+const selectionCard = {
   minHeight: "270px",
   display: "flex",
   flexDirection: "column",
@@ -294,17 +607,23 @@ const roomCard = {
     "transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease",
 };
 
-const roomIcon = {
+const cardIcon = {
   fontSize: "38px",
 };
 
-const roomName = {
+const wallIcon = {
+  fontSize: "46px",
+  fontWeight: 900,
+  lineHeight: 1,
+};
+
+const cardName = {
   marginTop: "14px",
   fontSize: "23px",
   fontWeight: 900,
 };
 
-const roomDescription = {
+const cardDescription = {
   minHeight: "72px",
   marginTop: "12px",
   color: "#bdb2a2",
@@ -326,12 +645,19 @@ const summaryCard = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  flexWrap: "wrap",
   gap: "18px",
   marginTop: "24px",
   padding: "18px",
   borderRadius: "20px",
   border: "1px solid rgba(215,181,109,0.26)",
   background: "rgba(215,181,109,0.06)",
+};
+
+const selectionSummary = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "18px 34px",
 };
 
 const summaryLabel = {
@@ -344,12 +670,19 @@ const summaryLabel = {
 const summaryValue = {
   marginTop: "6px",
   color: "#f2c879",
-  fontSize: "19px",
+  fontSize: "18px",
   fontWeight: 900,
 };
 
+const navigationActions = {
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "flex-end",
+  gap: "10px",
+};
+
 const continueButton = {
-  minWidth: "145px",
+  minWidth: "150px",
   padding: "13px 20px",
   border: "none",
   borderRadius: "999px",
@@ -358,6 +691,20 @@ const continueButton = {
   fontSize: "13px",
   fontWeight: 900,
   letterSpacing: "0.05em",
+  textTransform: "uppercase",
+};
+
+const backButton = {
+  minWidth: "120px",
+  padding: "13px 20px",
+  borderRadius: "999px",
+  border: "1px solid rgba(215,181,109,0.35)",
+  background: "rgba(255,255,255,0.04)",
+  color: "#f2c879",
+  cursor: "pointer",
+  fontSize: "13px",
+  fontWeight: 900,
+  letterSpacing: "0.04em",
   textTransform: "uppercase",
 };
 
