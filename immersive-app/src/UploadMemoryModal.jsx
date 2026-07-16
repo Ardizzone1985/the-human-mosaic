@@ -238,13 +238,23 @@ setReservationError("");
   async function handleRequestClose() {
   if (isReservingSlot) return;
 
+  setReservationError("");
+
   if (reservedSlotCode) {
-    await releaseReservedSlot(reservedSlotCode);
+    const released = await releaseReservedSlot(
+      reservedSlotCode
+    );
+
+    if (!released) {
+      setReservationError(
+        "The reserved position could not be released. Please try again before closing."
+      );
+      return;
+    }
   }
 
   onClose?.();
 }
-
 async function handleContinue() {
   if (!canContinue || isReservingSlot) return;
 
@@ -887,8 +897,7 @@ async function handleBack() {
         </section>
 
         <p style={testNote}>
-          Secure reservation will be activated only after
-          this selection has been fully tested.
+          Your selected position remains reserved for 15 minutes while you complete the upload.
         </p>
       </div>
     </div>
