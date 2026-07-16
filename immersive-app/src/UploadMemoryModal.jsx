@@ -74,21 +74,23 @@ const HOLD_MINUTES = 15;
 
 export default function UploadMemoryModal({ open, onClose }) {
   const [currentStep, setCurrentStep] = useState(1);
-
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedWall, setSelectedWall] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
-
   const [selectedSlotCode, setSelectedSlotCode] = useState(null);
   const [selectedSpot, setSelectedSpot] = useState(null);
-
   const [slots, setSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotsError, setSlotsError] = useState("");
-
   const [reservedSlotCode, setReservedSlotCode] = useState(null);
 const [isReservingSlot, setIsReservingSlot] = useState(false);
 const [reservationError, setReservationError] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+const [previewUrl, setPreviewUrl] = useState("");
+const [memoryNote, setMemoryNote] = useState("");
+const [uploadFormError, setUploadFormError] = useState("");
+const [rightsConfirmed, setRightsConfirmed] = useState(false);
+const [guidelinesConfirmed, setGuidelinesConfirmed] = useState(false);
 
   useEffect(() => {
     if (!open) {
@@ -103,8 +105,22 @@ const [reservationError, setReservationError] = useState("");
       setReservedSlotCode(null);
 setIsReservingSlot(false);
 setReservationError("");
+      setSelectedFile(null);
+setPreviewUrl("");
+setMemoryNote("");
+setUploadFormError("");
+setRightsConfirmed(false);
+setGuidelinesConfirmed(false);
     }
   }, [open]);
+
+  useEffect(() => {
+  return () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+  };
+}, [previewUrl]);
 
   useEffect(() => {
     if (!open) return;
@@ -215,6 +231,97 @@ setReservationError("");
             selectedSpot
         )
       : false;
+
+  function handleImageSelection(event) {
+  const file = event.target.files?.[0];
+
+  setUploadFormError("");
+
+  if (!file) {
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+  ];
+
+  const maxSizeBytes = 8 * 1024 * 1024;
+
+  if (!allowedTypes.includes(file.type)) {
+    event.target.value = "";
+
+    setSelectedFile(null);
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl("");
+    }
+
+    setUploadFormError(
+      "Invalid file format. Please choose a JPG, PNG or WEBP image."
+    );
+
+    return;
+  }
+
+  if (file.size > maxSizeBytes) {
+    event.target.value = "";
+
+    setSelectedFile(null);
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl("");
+    }
+
+    setUploadFormError(
+      "The selected image is too large. The maximum size is 8 MB."
+    );
+
+    return;
+  }
+
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+  }
+
+  const nextPreviewUrl = URL.createObjectURL(file);
+
+  setSelectedFile(file);
+  setPreviewUrl(nextPreviewUrl);
+}
+
+  function handleUploadInterfaceTest() {
+  setUploadFormError("");
+
+  if (!selectedFile) {
+    setUploadFormError(
+      "Please choose an image before submitting your memory."
+    );
+    return;
+  }
+
+  if (!rightsConfirmed || !guidelinesConfirmed) {
+    setUploadFormError(
+      "Please confirm the required rights and project guidelines."
+    );
+    return;
+  }
+
+  console.log("Upload interface ready:", {
+    room: selectedRoom,
+    wall: selectedWall,
+    section: selectedSection,
+    spot: selectedSpot,
+    slotCode: reservedSlotCode,
+    fileName: selectedFile.name,
+    fileType: selectedFile.type,
+    fileSize: selectedFile.size,
+    note: memoryNote.trim(),
+  });
+}
 
   async function releaseReservedSlot(slotCode = reservedSlotCode) {
   if (!slotCode) return true;
@@ -349,6 +456,17 @@ async function handleBack() {
       );
       return;
     }
+
+    if (previewUrl) {
+  URL.revokeObjectURL(previewUrl);
+}
+
+setSelectedFile(null);
+setPreviewUrl("");
+setMemoryNote("");
+setUploadFormError("");
+setRightsConfirmed(false);
+setGuidelinesConfirmed(false);
 
     setCurrentStep(3);
   }
@@ -802,11 +920,19 @@ async function handleBack() {
 
     <p style={sectionDescription}>
       Your selected position is reserved for 15 minutes.
-      The image upload form will be connected in the next step.
+      Choose the image that will represent your place inside
+      The Human Mosaic.
     </p>
 
     <div style={reservedPositionCard}>
-      <div style={reservedPositionIcon}>✓</div>
+      <div
+        style={{
+          ...reservedPositionIcon,
+          background: accentColor,
+        }}
+      >
+        ✓
+      </div>
 
       <div>
         <div style={reservedPositionTitle}>
@@ -818,10 +944,178 @@ async function handleBack() {
           {selectedSection} · {selectedSpot}
         </div>
 
-        <div style={reservedPositionCode}>
+        <div
+          style={{
+            ...reservedPositionCode,
+            color: accentColor,
+          }}
+        >
           {reservedSlotCode}
         </div>
       </div>
+    </div>
+
+    <div style={uploadLayout}>
+      <div style={uploadColumn}>
+        <label style={filePicker}>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleImageSelection}
+            style={hiddenFileInput}
+          />
+
+          <span style={filePickerIcon}>🖼</span>
+
+          <span style={filePickerTitle}>
+            Choose Your Image
+          </span>
+
+          <span style={filePickerText}>
+            JPG, PNG or WEBP · Maximum 8 MB
+          </span>
+
+          <span
+            style={{
+              ...filePickerButton,
+              background: accentColor,
+            }}
+          >
+            Select Image
+          </span>
+        </label>
+
+        {selectedFile && (
+          <div style={selectedFileInformation}>
+            <strong>{selectedFile.name}</strong>
+
+            <span>
+              {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+            </span>
+          </div>
+        )}
+
+        <label style={fieldGroup}>
+          <span style={fieldLabel}>
+            Memory Note
+          </span>
+
+          <textarea
+            value={memoryNote}
+            maxLength={500}
+            onChange={(event) =>
+              setMemoryNote(event.target.value)
+            }
+            placeholder="Write a short description of your memory..."
+            style={noteTextarea}
+          />
+
+          <span style={characterCounter}>
+            {memoryNote.length} / 500
+          </span>
+        </label>
+      </div>
+
+      <div style={previewColumn}>
+        <div style={previewLabel}>
+          IMAGE PREVIEW
+        </div>
+
+        <div style={previewFrame}>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="Selected memory preview"
+              style={previewImage}
+            />
+          ) : (
+            <div style={emptyPreview}>
+              <div style={emptyPreviewIcon}>🖼</div>
+
+              <div style={emptyPreviewTitle}>
+                No image selected
+              </div>
+
+              <div style={emptyPreviewText}>
+                Your memory preview will appear here.
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div style={confirmationArea}>
+      <label style={confirmationLabel}>
+        <input
+          type="checkbox"
+          checked={rightsConfirmed}
+          onChange={(event) =>
+            setRightsConfirmed(event.target.checked)
+          }
+          style={confirmationCheckbox}
+        />
+
+        <span>
+          I confirm that I own this image or have all
+          necessary rights and consent to submit it,
+          including consent for identifiable people and
+          minors where applicable.
+        </span>
+      </label>
+
+      <label style={confirmationLabel}>
+        <input
+          type="checkbox"
+          checked={guidelinesConfirmed}
+          onChange={(event) =>
+            setGuidelinesConfirmed(event.target.checked)
+          }
+          style={confirmationCheckbox}
+        />
+
+        <span>
+          I confirm that this memory follows the{" "}
+          <strong>{selectedRoom} Room</strong> guideline,
+          Community Guidelines, Terms, Privacy Policy and
+          Content License.
+        </span>
+      </label>
+    </div>
+
+    {uploadFormError && (
+      <div style={uploadErrorBox}>
+        {uploadFormError}
+      </div>
+    )}
+
+    <button
+      type="button"
+      onClick={handleUploadInterfaceTest}
+      style={{
+        ...submitMemoryButton,
+        background: accentColor,
+        opacity:
+          selectedFile &&
+          rightsConfirmed &&
+          guidelinesConfirmed
+            ? 1
+            : 0.48,
+        cursor:
+          selectedFile &&
+          rightsConfirmed &&
+          guidelinesConfirmed
+            ? "pointer"
+            : "not-allowed",
+      }}
+    >
+      Submit Memory for Review
+    </button>
+
+    <div style={reviewNotice}>
+      Your memory will remain pending until it is reviewed.
+      Approved memories become visible in the museum and
+      receive the official certificate.
     </div>
   </section>
 )}
@@ -1495,4 +1789,238 @@ const reservedPositionCode = {
   fontWeight: 900,
   letterSpacing: "0.05em",
   overflowWrap: "anywhere",
+};
+
+const uploadLayout = {
+  display: "grid",
+  gridTemplateColumns:
+    "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: "20px",
+  marginTop: "24px",
+};
+
+const uploadColumn = {
+  display: "grid",
+  alignContent: "start",
+  gap: "18px",
+};
+
+const previewColumn = {
+  minWidth: 0,
+};
+
+const filePicker = {
+  minHeight: "235px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "24px",
+  boxSizing: "border-box",
+  borderRadius: "22px",
+  border: "1px dashed rgba(215,181,109,0.45)",
+  background: "rgba(255,255,255,0.025)",
+  cursor: "pointer",
+  textAlign: "center",
+};
+
+const hiddenFileInput = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  opacity: 0,
+  pointerEvents: "none",
+};
+
+const filePickerIcon = {
+  fontSize: "38px",
+};
+
+const filePickerTitle = {
+  marginTop: "12px",
+  color: "#ffffff",
+  fontSize: "20px",
+  fontWeight: 900,
+};
+
+const filePickerText = {
+  marginTop: "8px",
+  color: "#9e9487",
+  fontSize: "12px",
+  lineHeight: 1.5,
+};
+
+const filePickerButton = {
+  marginTop: "17px",
+  padding: "10px 16px",
+  borderRadius: "999px",
+  color: "#111111",
+  fontSize: "11px",
+  fontWeight: 900,
+  letterSpacing: "0.07em",
+  textTransform: "uppercase",
+};
+
+const selectedFileInformation = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: "8px",
+  padding: "12px 14px",
+  borderRadius: "14px",
+  border: "1px solid rgba(215,181,109,0.22)",
+  background: "rgba(215,181,109,0.055)",
+  color: "#d9cebf",
+  fontSize: "12px",
+  overflowWrap: "anywhere",
+};
+
+const fieldGroup = {
+  position: "relative",
+  display: "grid",
+  gap: "9px",
+};
+
+const fieldLabel = {
+  color: "#d7b56d",
+  fontSize: "11px",
+  fontWeight: 900,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+};
+
+const noteTextarea = {
+  width: "100%",
+  minHeight: "135px",
+  padding: "15px",
+  boxSizing: "border-box",
+  resize: "vertical",
+  borderRadius: "16px",
+  border: "1px solid rgba(215,181,109,0.25)",
+  outline: "none",
+  background: "rgba(255,255,255,0.045)",
+  color: "#ffffff",
+  fontFamily: "Arial, sans-serif",
+  fontSize: "14px",
+  lineHeight: 1.55,
+};
+
+const characterCounter = {
+  justifySelf: "end",
+  color: "#847b70",
+  fontSize: "10px",
+};
+
+const previewLabel = {
+  marginBottom: "9px",
+  color: "#d7b56d",
+  fontSize: "11px",
+  fontWeight: 900,
+  letterSpacing: "0.12em",
+};
+
+const previewFrame = {
+  width: "100%",
+  aspectRatio: "1 / 1",
+  overflow: "hidden",
+  borderRadius: "22px",
+  border: "1px solid rgba(215,181,109,0.25)",
+  background: "#050505",
+};
+
+const previewImage = {
+  width: "100%",
+  height: "100%",
+  display: "block",
+  objectFit: "contain",
+};
+
+const emptyPreview = {
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "24px",
+  boxSizing: "border-box",
+  color: "#847b70",
+  textAlign: "center",
+};
+
+const emptyPreviewIcon = {
+  fontSize: "40px",
+  opacity: 0.55,
+};
+
+const emptyPreviewTitle = {
+  marginTop: "12px",
+  color: "#b8ad9e",
+  fontSize: "16px",
+  fontWeight: 800,
+};
+
+const emptyPreviewText = {
+  marginTop: "7px",
+  fontSize: "12px",
+  lineHeight: 1.5,
+};
+
+const confirmationArea = {
+  display: "grid",
+  gap: "12px",
+  marginTop: "22px",
+  padding: "18px",
+  borderRadius: "18px",
+  border: "1px solid rgba(215,181,109,0.2)",
+  background: "rgba(255,255,255,0.025)",
+};
+
+const confirmationLabel = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: "11px",
+  color: "#bdb2a3",
+  fontSize: "12px",
+  lineHeight: 1.55,
+  cursor: "pointer",
+};
+
+const confirmationCheckbox = {
+  marginTop: "3px",
+  flexShrink: 0,
+  accentColor: "#d7b56d",
+};
+
+const uploadErrorBox = {
+  marginTop: "16px",
+  padding: "14px 16px",
+  borderRadius: "15px",
+  border: "1px solid rgba(255,130,130,0.38)",
+  background: "rgba(255,70,70,0.07)",
+  color: "#ffb5b5",
+  fontSize: "12px",
+  lineHeight: 1.5,
+};
+
+const submitMemoryButton = {
+  width: "100%",
+  marginTop: "18px",
+  padding: "15px 20px",
+  border: "none",
+  borderRadius: "999px",
+  color: "#111111",
+  fontSize: "13px",
+  fontWeight: 900,
+  letterSpacing: "0.06em",
+  textTransform: "uppercase",
+};
+
+const reviewNotice = {
+  marginTop: "12px",
+  color: "#8f8578",
+  fontSize: "11px",
+  lineHeight: 1.55,
+  textAlign: "center",
 };
