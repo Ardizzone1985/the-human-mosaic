@@ -187,12 +187,16 @@ export default async function handler(req, res) {
         const { error } = await supabase
           .from("slots")
           .update({
-            status: "available",
-            reserved_at: null,
-            submission_id: null,
-          })
+  status: "available",
+  reserved_at: null,
+  reserved_by: null,
+  submission_id: null,
+  payment_confirmed: false,
+  payment_confirmed_at: null,
+})
           .eq("slot_code", slotCode)
           .eq("status", "reserved");
+        .eq("payment_confirmed", false)
 
         if (error) {
           console.error("❌ DB UPDATE ERROR (expired):", error);
