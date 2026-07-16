@@ -110,17 +110,17 @@ setReservationError("");
     if (!open) return;
 
     function handleEscape(event) {
-      if (event.key === "Escape") {
-        onClose?.();
-      }
-    }
+  if (event.key === "Escape") {
+    handleRequestClose();
+  }
+}
 
     window.addEventListener("keydown", handleEscape);
 
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [open, onClose]);
+  }, [open, onClose, reservedSlotCode, isReservingSlot]);
 
   useEffect(() => {
     async function loadSlots() {
@@ -216,48 +216,133 @@ setReservationError("");
         )
       : false;
 
-  function handleContinue() {
-    if (!canContinue) return;
+  async function releaseReservedSlot(slotCode = reservedSlotCode) {
+  if (!slotCode) return true;
 
-    if (currentStep === 1) {
-      setCurrentStep(2);
-      return;
+  const { data, error } = await supabase.rpc(
+    "release_my_app_slot",
+    {
+      p_slot_code: slotCode,
     }
+  );
 
-    if (currentStep === 2) {
-      const firstSection =
-        WALL_SECTIONS[selectedWall]?.[0] || null;
-
-      setSelectedSection(firstSection);
-      setSelectedSlotCode(null);
-      setSelectedSpot(null);
-      setCurrentStep(3);
-      return;
-    }
-
-    if (currentStep === 3) {
-      console.log("Complete upload position:", {
-        room: selectedRoom,
-        wall: selectedWall,
-        section: selectedSection,
-        spot: selectedSpot,
-        slotCode: selectedSlotCode,
-      });
-    }
+  if (error) {
+    console.error("Release reserved slot error:", error);
+    return false;
   }
 
-  function handleBack() {
-    if (currentStep === 2) {
-      setCurrentStep(1);
+  setReservedSlotCode(null);
+  return data === true;
+}
+
+  async function handleRequestClose() {
+  if (isReservingSlot) return;
+
+  if (reservedSlotCode) {
+    await releaseReservedSlot(reservedSlotCode);
+  }
+
+  onClose?.();
+}
+
+async function handleContinue() {
+  if (!canContinue || isReservingSlot) return;
+
+  setReservationError("");
+
+  if (currentStep === 1) {
+    setCurrentStep(2);
+    return;
+  }
+
+  if (currentStep === 2) {
+    const firstSection =
+      WALL_SECTIONS[selectedWall]?.[0] || null;
+
+    setSelectedSection(firstSection);
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
+    setCurrentStep(3);
+    return;
+  }
+
+  if (currentStep === 3) {
+    setIsReservingSlot(true);
+
+    const { data, error } = await supabase.rpc(
+      "reserve_app_slot",
+      {
+        p_slot_code: selectedSlotCode,
+      }
+    );
+
+    setIsReservingSlot(false);
+
+    if (error) {
+      console.error("Reserve app slot error:", error);
+
+      setReservationError(
+        error.message?.includes("Authentication required")
+          ? "Please sign in again before reserving your position."
+          : "Your position could not be reserved. Please try again."
+      );
+
       return;
     }
 
-    if (currentStep === 3) {
+    const reservedSlot = Array.isArray(data)
+      ? data[0]
+      : null;
+
+    if (!reservedSlot) {
+      setReservationError(
+        "This position has just been reserved by another participant. Please choose another available spot."
+      );
+
       setSelectedSlotCode(null);
       setSelectedSpot(null);
-      setCurrentStep(2);
+
+      return;
     }
+
+    setReservedSlotCode(reservedSlot.slot_code);
+    setReservationError("");
+    setCurrentStep(4);
   }
+}
+
+async function handleBack() {
+  if (isReservingSlot) return;
+
+  setReservationError("");
+
+  if (currentStep === 2) {
+    setCurrentStep(1);
+    return;
+  }
+
+  if (currentStep === 3) {
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
+    setCurrentStep(2);
+    return;
+  }
+
+  if (currentStep === 4) {
+    const released = await releaseReservedSlot(
+      reservedSlotCode
+    );
+
+    if (!released) {
+      setReservationError(
+        "The reserved position could not be released. Please try again."
+      );
+      return;
+    }
+
+    setCurrentStep(3);
+  }
+}
 
   function selectRoom(roomName) {
     setSelectedRoom(roomName);
@@ -287,15 +372,16 @@ setReservationError("");
       aria-modal="true"
       aria-labelledby="upload-memory-title"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose?.();
-        }
-      }}
+  if (event.target === event.currentTarget) {
+    handleRequestClose();
+  }
+}}
     >
       <div style={panel}>
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleRequestClose}
+          disabled={isReservingSlot}
           style={closeButton}
           aria-label="Close Upload Memory"
         >
@@ -694,6 +780,50 @@ setReservationError("");
           </section>
         )}
 
+        {currentStep === 4 && (
+  <section style={section}>
+    <div style={sectionEyebrow}>
+      POSITION SECURELY RESERVED
+    </div>
+
+    <h2 style={sectionTitle}>
+      Upload Your Memory
+    </h2>
+
+    <p style={sectionDescription}>
+      Your selected position is reserved for 15 minutes.
+      The image upload form will be connected in the next step.
+    </p>
+
+    <div style={reservedPositionCard}>
+      <div style={reservedPositionIcon}>✓</div>
+
+      <div>
+        <div style={reservedPositionTitle}>
+          Your Place
+        </div>
+
+        <div style={reservedPositionDetails}>
+          {selectedRoom} · {selectedWall} ·{" "}
+          {selectedSection} · {selectedSpot}
+        </div>
+
+        <div style={reservedPositionCode}>
+          {reservedSlotCode}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+        {reservationError && (
+  <div style={reservationErrorBox}>
+    <strong>Reservation not completed</strong>
+
+    <span>{reservationError}</span>
+  </div>
+)}
+
         <section style={summaryCard}>
           <div style={selectionSummary}>
             <SummaryItem
@@ -732,21 +862,27 @@ setReservationError("");
               </button>
             )}
 
-            <button
-              type="button"
-              disabled={!canContinue}
-              style={{
-                ...continueButton,
-                opacity: canContinue ? 1 : 0.42,
-                cursor: canContinue
-                  ? "pointer"
-                  : "not-allowed",
-                background: accentColor,
-              }}
-              onClick={handleContinue}
-            >
-              Continue →
-            </button>
+            {currentStep < 4 && (
+  <button
+    type="button"
+    disabled={!canContinue || isReservingSlot}
+    style={{
+      ...continueButton,
+      opacity:
+        canContinue && !isReservingSlot ? 1 : 0.42,
+      cursor:
+        canContinue && !isReservingSlot
+          ? "pointer"
+          : "not-allowed",
+      background: accentColor,
+    }}
+    onClick={handleContinue}
+  >
+    {isReservingSlot
+      ? "Reserving..."
+      : "Continue →"}
+  </button>
+)}
           </div>
         </section>
 
@@ -1289,4 +1425,65 @@ const testNote = {
   fontSize: "12px",
   textAlign: "center",
   lineHeight: 1.5,
+};
+
+const reservationErrorBox = {
+  display: "grid",
+  gap: "6px",
+  marginTop: "20px",
+  padding: "15px 18px",
+  borderRadius: "17px",
+  border: "1px solid rgba(255,130,130,0.4)",
+  background: "rgba(255,70,70,0.07)",
+  color: "#ffb5b5",
+  fontSize: "13px",
+  lineHeight: 1.5,
+};
+
+const reservedPositionCard = {
+  display: "flex",
+  alignItems: "center",
+  gap: "18px",
+  marginTop: "22px",
+  padding: "22px",
+  borderRadius: "22px",
+  border: "1px solid rgba(215,181,109,0.32)",
+  background:
+    "linear-gradient(135deg, rgba(215,181,109,0.12), rgba(255,255,255,0.03))",
+};
+
+const reservedPositionIcon = {
+  width: "54px",
+  height: "54px",
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "50%",
+  background: "#d7b56d",
+  color: "#111",
+  fontSize: "24px",
+  fontWeight: 900,
+};
+
+const reservedPositionTitle = {
+  color: "#ffffff",
+  fontSize: "20px",
+  fontWeight: 900,
+};
+
+const reservedPositionDetails = {
+  marginTop: "7px",
+  color: "#d8cdbd",
+  fontSize: "14px",
+  lineHeight: 1.5,
+};
+
+const reservedPositionCode = {
+  marginTop: "7px",
+  color: "#f2c879",
+  fontSize: "12px",
+  fontWeight: 900,
+  letterSpacing: "0.05em",
+  overflowWrap: "anywhere",
 };
