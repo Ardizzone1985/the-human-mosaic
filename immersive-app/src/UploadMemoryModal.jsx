@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
 
 const STEPS = [
@@ -189,11 +189,9 @@ export default function UploadMemoryModal({ open, onClose }) {
   const availableSections =
     WALL_SECTIONS[selectedWall] || [];
 
-  const availableSlotsCount = useMemo(
-    () =>
-      slots.filter((slot) => isSlotAvailable(slot)).length,
-    [slots]
-  );
+  const availableSlotsCount = slots.filter((slot) =>
+  isSlotAvailable(slot)
+).length;
 
   const unavailableSlotsCount =
     slots.length - availableSlotsCount;
