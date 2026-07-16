@@ -16,6 +16,7 @@ import { useAuth } from "./auth/AuthProvider.jsx";
 import AppDialog from "./components/AppDialog.jsx";
 import MuseumIdentity from "./MuseumIdentity.jsx";
 import AvatarModal from "./AvatarModal.jsx";
+import UploadMemoryModal from "./UploadMemoryModal.jsx";
 import museumLogoUrl from "./logo-cropped.png";
 
 function parseSlotCode(slotCode) {
@@ -399,6 +400,8 @@ export default function App() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
+  const [showUploadMemoryModal, setShowUploadMemoryModal] =
+  useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 const [savingAvatar, setSavingAvatar] = useState(false);
 const [avatarError, setAvatarError] = useState("");
@@ -694,8 +697,9 @@ onRegister={() => {
         museumLogoUrl={museumLogoUrl}
   onClose={() => setShowMuseumIdentity(false)}
   onUpload={() => {
-    setShowMuseumIdentity(false);
-  }}
+  setShowMuseumIdentity(false);
+  setShowUploadMemoryModal(true);
+}}
   onChangeAvatar={() => {
   setAvatarError("");
   setShowAvatarModal(true);
@@ -708,6 +712,13 @@ onRegister={() => {
   onLogout={async () => {
     setShowMuseumIdentity(false);
     await logout();
+  }}
+/>
+
+      <UploadMemoryModal
+  open={showUploadMemoryModal}
+  onClose={() => {
+    setShowUploadMemoryModal(false);
   }}
 />
 
