@@ -86,6 +86,10 @@ export default function UploadMemoryModal({ open, onClose }) {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotsError, setSlotsError] = useState("");
 
+  const [reservedSlotCode, setReservedSlotCode] = useState(null);
+const [isReservingSlot, setIsReservingSlot] = useState(false);
+const [reservationError, setReservationError] = useState("");
+
   useEffect(() => {
     if (!open) {
       setCurrentStep(1);
@@ -96,6 +100,9 @@ export default function UploadMemoryModal({ open, onClose }) {
       setSelectedSpot(null);
       setSlots([]);
       setSlotsError("");
+      setReservedSlotCode(null);
+setIsReservingSlot(false);
+setReservationError("");
     }
   }, [open]);
 
