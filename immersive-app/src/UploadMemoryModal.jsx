@@ -336,23 +336,120 @@ setPaymentError("");
   });
 }
 
-  function handlePaymentInterfaceTest() {
+async function handleStartPayment() {
+  if (isStartingPayment) return;
+
   setPaymentError("");
 
-  if (!reservedSlotCode) {
+  if (
+    !selectedRoom ||
+    !selectedWall ||
+    !selectedSection ||
+    !selectedSpot ||
+    !reservedSlotCode
+  ) {
     setPaymentError(
       "Your reserved position could not be found. Please return and choose the position again."
     );
     return;
   }
 
-  console.log("Secure payment interface ready:", {
-    room: selectedRoom,
-    wall: selectedWall,
-    section: selectedSection,
-    spot: selectedSpot,
-    slotCode: reservedSlotCode,
-  });
+  setIsStartingPayment(true);
+
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (
+      sessionError ||
+      !session?.access_token ||
+      !session?.user
+    ) {
+      throw new Error(
+        "Your login session has expired. Please sign in again."
+      );
+    }
+
+    /*
+     * Conserviamo soltanto i dati necessari a ricostruire
+     * il wizard dopo il ritorno da Stripe.
+     *
+     * Il file immagine non viene ancora scelto e quindi
+     * non deve essere salvato.
+     */
+    const checkoutState = {
+      room: selectedRoom,
+      wall: selectedWall,
+      section: selectedSection,
+      spot: selectedSpot,
+      slotCode: reservedSlotCode,
+      userId: session.user.id,
+      savedAt: Date.now(),
+    };
+
+    sessionStorage.setItem(
+      "thm_app_checkout",
+      JSON.stringify(checkoutState)
+    );
+
+    const response = await fetch(
+      "https://thehumanmosaic.art/api/create-app-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          room: selectedRoom,
+          wall: selectedWall,
+          section: selectedSection,
+          spot: selectedSpot,
+          slotCode: reservedSlotCode,
+          email: session.user.email || "",
+          note: "",
+        }),
+      }
+    );
+
+    const result = await response
+      .json()
+      .catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+          "The secure checkout could not be created."
+      );
+    }
+
+    if (!result.url) {
+      throw new Error(
+        "Stripe did not return a valid checkout address."
+      );
+    }
+
+    window.location.assign(result.url);
+  } catch (error) {
+    console.error(
+      "Start Stripe checkout error:",
+      error
+    );
+
+    sessionStorage.removeItem(
+      "thm_app_checkout"
+    );
+
+    setPaymentError(
+      error.message ||
+        "The secure checkout could not be started. Please try again."
+    );
+
+    setIsStartingPayment(false);
+  }
 }
 
   async function releaseReservedSlot(slotCode = reservedSlotCode) {
@@ -621,7 +718,7 @@ setPaymentError("");
     accentColor={accentColor}
     isStartingPayment={isStartingPayment}
     paymentError={paymentError}
-    onStartPayment={handlePaymentInterfaceTest}
+    onStartPayment={handleStartPayment}
   />
 )}
 
