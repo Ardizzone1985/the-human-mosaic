@@ -3,6 +3,7 @@ import { supabase } from "./supabaseClient.js";
 import StepChooseRoom from "./upload/StepChooseRoom.jsx";
 import StepChooseWall from "./upload/StepChooseWall.jsx";
 import StepChooseSpot from "./upload/StepChooseSpot.jsx";
+import StepUpload from "./upload/StepUpload.jsx";
 
 const STEPS = [
   "Choose Room",
@@ -577,215 +578,27 @@ setGuidelinesConfirmed(false);
 )}
 
         {currentStep === 4 && (
-  <section style={section}>
-    <div style={sectionEyebrow}>
-      POSITION SECURELY RESERVED
-    </div>
-
-    <h2 style={sectionTitle}>
-      Upload Your Memory
-    </h2>
-
-    <p style={sectionDescription}>
-      Your selected position is reserved for 15 minutes.
-      Choose the image that will represent your place inside
-      The Human Mosaic.
-    </p>
-
-    <div style={reservedPositionCard}>
-      <div
-        style={{
-          ...reservedPositionIcon,
-          background: accentColor,
-        }}
-      >
-        ✓
-      </div>
-
-      <div>
-        <div style={reservedPositionTitle}>
-          Your Place
-        </div>
-
-        <div style={reservedPositionDetails}>
-          {selectedRoom} · {selectedWall} ·{" "}
-          {selectedSection} · {selectedSpot}
-        </div>
-
-        <div
-          style={{
-            ...reservedPositionCode,
-            color: accentColor,
-          }}
-        >
-          {reservedSlotCode}
-        </div>
-      </div>
-    </div>
-
-    <div style={uploadLayout}>
-      <div style={uploadColumn}>
-        <label style={filePicker}>
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={handleImageSelection}
-            style={hiddenFileInput}
-          />
-
-          <span style={filePickerIcon}>🖼</span>
-
-          <span style={filePickerTitle}>
-            Choose Your Image
-          </span>
-
-          <span style={filePickerText}>
-            JPG, PNG or WEBP · Maximum 8 MB
-          </span>
-
-          <span
-            style={{
-              ...filePickerButton,
-              background: accentColor,
-            }}
-          >
-            Select Image
-          </span>
-        </label>
-
-        {selectedFile && (
-          <div style={selectedFileInformation}>
-            <strong>{selectedFile.name}</strong>
-
-            <span>
-              {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
-            </span>
-          </div>
-        )}
-
-        <label style={fieldGroup}>
-          <span style={fieldLabel}>
-            Memory Note
-          </span>
-
-          <textarea
-            value={memoryNote}
-            maxLength={500}
-            onChange={(event) =>
-              setMemoryNote(event.target.value)
-            }
-            placeholder="Write a short description of your memory..."
-            style={noteTextarea}
-          />
-
-          <span style={characterCounter}>
-            {memoryNote.length} / 500
-          </span>
-        </label>
-      </div>
-
-      <div style={previewColumn}>
-        <div style={previewLabel}>
-          IMAGE PREVIEW
-        </div>
-
-        <div style={previewFrame}>
-          {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="Selected memory preview"
-              style={previewImage}
-            />
-          ) : (
-            <div style={emptyPreview}>
-              <div style={emptyPreviewIcon}>🖼</div>
-
-              <div style={emptyPreviewTitle}>
-                No image selected
-              </div>
-
-              <div style={emptyPreviewText}>
-                Your memory preview will appear here.
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-
-    <div style={confirmationArea}>
-      <label style={confirmationLabel}>
-        <input
-          type="checkbox"
-          checked={rightsConfirmed}
-          onChange={(event) =>
-            setRightsConfirmed(event.target.checked)
-          }
-          style={confirmationCheckbox}
-        />
-
-        <span>
-          I confirm that I own this image or have all
-          necessary rights and consent to submit it,
-          including consent for identifiable people and
-          minors where applicable.
-        </span>
-      </label>
-
-      <label style={confirmationLabel}>
-        <input
-          type="checkbox"
-          checked={guidelinesConfirmed}
-          onChange={(event) =>
-            setGuidelinesConfirmed(event.target.checked)
-          }
-          style={confirmationCheckbox}
-        />
-
-        <span>
-          I confirm that this memory follows the{" "}
-          <strong>{selectedRoom} Room</strong> guideline,
-          Community Guidelines, Terms, Privacy Policy and
-          Content License.
-        </span>
-      </label>
-    </div>
-
-    {uploadFormError && (
-      <div style={uploadErrorBox}>
-        {uploadFormError}
-      </div>
-    )}
-
-    <button
-      type="button"
-      onClick={handleUploadInterfaceTest}
-      style={{
-        ...submitMemoryButton,
-        background: accentColor,
-        opacity:
-          selectedFile &&
-          rightsConfirmed &&
-          guidelinesConfirmed
-            ? 1
-            : 0.48,
-        cursor:
-          selectedFile &&
-          rightsConfirmed &&
-          guidelinesConfirmed
-            ? "pointer"
-            : "not-allowed",
-      }}
-    >
-      Submit Memory for Review
-    </button>
-
-    <div style={reviewNotice}>
-      Your memory will remain pending until it is reviewed.
-      Approved memories become visible in the museum and
-      receive the official certificate.
-    </div>
-  </section>
+  <StepUpload
+    room={selectedRoom}
+    wall={selectedWall}
+    section={selectedSection}
+    spot={selectedSpot}
+    reservedSlotCode={reservedSlotCode}
+    accentColor={accentColor}
+    selectedFile={selectedFile}
+    previewUrl={previewUrl}
+    memoryNote={memoryNote}
+    uploadFormError={uploadFormError}
+    rightsConfirmed={rightsConfirmed}
+    guidelinesConfirmed={guidelinesConfirmed}
+    onImageSelection={handleImageSelection}
+    onMemoryNoteChange={setMemoryNote}
+    onRightsConfirmedChange={setRightsConfirmed}
+    onGuidelinesConfirmedChange={
+      setGuidelinesConfirmed
+    }
+    onSubmit={handleUploadInterfaceTest}
+  />
 )}
 
         {reservationError && (
