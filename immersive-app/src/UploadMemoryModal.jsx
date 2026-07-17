@@ -3,12 +3,14 @@ import { supabase } from "./supabaseClient.js";
 import StepChooseRoom from "./upload/StepChooseRoom.jsx";
 import StepChooseWall from "./upload/StepChooseWall.jsx";
 import StepChooseSpot from "./upload/StepChooseSpot.jsx";
+import StepSecurePayment from "./upload/StepSecurePayment.jsx";
 import StepUpload from "./upload/StepUpload.jsx";
 
 const STEPS = [
   "Choose Room",
   "Choose Wall",
   "Choose Spot",
+  "Secure Payment",
   "Upload",
 ];
 
