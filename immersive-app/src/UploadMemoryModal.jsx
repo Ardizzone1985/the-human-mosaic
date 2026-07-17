@@ -97,6 +97,11 @@ const [memoryNote, setMemoryNote] = useState("");
 const [uploadFormError, setUploadFormError] = useState("");
 const [rightsConfirmed, setRightsConfirmed] = useState(false);
 const [guidelinesConfirmed, setGuidelinesConfirmed] = useState(false);
+  const [isStartingPayment, setIsStartingPayment] =
+  useState(false);
+
+const [paymentError, setPaymentError] =
+  useState("");
 
   useEffect(() => {
     if (!open) {
@@ -117,6 +122,8 @@ setMemoryNote("");
 setUploadFormError("");
 setRightsConfirmed(false);
 setGuidelinesConfirmed(false);
+      setIsStartingPayment(false);
+setPaymentError("");
     }
   }, [open]);
 
@@ -329,6 +336,25 @@ setGuidelinesConfirmed(false);
   });
 }
 
+  function handlePaymentInterfaceTest() {
+  setPaymentError("");
+
+  if (!reservedSlotCode) {
+    setPaymentError(
+      "Your reserved position could not be found. Please return and choose the position again."
+    );
+    return;
+  }
+
+  console.log("Secure payment interface ready:", {
+    room: selectedRoom,
+    wall: selectedWall,
+    section: selectedSection,
+    spot: selectedSpot,
+    slotCode: reservedSlotCode,
+  });
+}
+
   async function releaseReservedSlot(slotCode = reservedSlotCode) {
   if (!slotCode) return true;
 
@@ -450,6 +476,12 @@ async function handleBack() {
     setCurrentStep(2);
     return;
   }
+
+  if (currentStep === 5) {
+  setPaymentError("");
+  setCurrentStep(4);
+  return;
+}
 
   if (currentStep === 4) {
     const released = await releaseReservedSlot(
@@ -580,6 +612,20 @@ setGuidelinesConfirmed(false);
 )}
 
         {currentStep === 4 && (
+  <StepSecurePayment
+    room={selectedRoom}
+    wall={selectedWall}
+    section={selectedSection}
+    spot={selectedSpot}
+    reservedSlotCode={reservedSlotCode}
+    accentColor={accentColor}
+    isStartingPayment={isStartingPayment}
+    paymentError={paymentError}
+    onStartPayment={handlePaymentInterfaceTest}
+  />
+)}
+
+{currentStep === 5 && (
   <StepUpload
     room={selectedRoom}
     wall={selectedWall}
@@ -674,8 +720,12 @@ setGuidelinesConfirmed(false);
         </section>
 
         <p style={testNote}>
-          Your selected position remains reserved for 15 minutes while you complete the upload.
-        </p>
+  {currentStep === 4
+    ? "Your position remains reserved while you prepare the secure payment."
+    : currentStep === 5
+    ? "Payment confirmed. Complete your memory submission for review."
+    : "Your selected position will be securely reserved before payment."}
+</p>
       </div>
     </div>
   );
@@ -881,7 +931,7 @@ const progressArea = {
 
 const progressTrack = {
   display: "grid",
-  gridTemplateColumns: "repeat(4, 1fr)",
+  gridTemplateColumns: "repeat(5, 1fr)",
   alignItems: "start",
 };
 
