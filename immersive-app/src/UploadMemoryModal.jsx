@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
 import StepChooseRoom from "./upload/StepChooseRoom.jsx";
+import StepChooseWall from "./upload/StepChooseWall.jsx";
 
 const STEPS = [
   "Choose Room",
@@ -544,94 +545,13 @@ setGuidelinesConfirmed(false);
 )}
 
         {currentStep === 2 && (
-          <section style={section}>
-            <div style={sectionEyebrow}>
-              {selectedRoom?.toUpperCase()} ROOM
-            </div>
-
-            <h2 style={sectionTitle}>
-              Choose Your Wall
-            </h2>
-
-            <p style={sectionDescription}>
-              Choose where your memory will be exhibited
-              inside the {selectedRoom} Room.
-            </p>
-
-            <div style={cardGrid}>
-              {WALLS.map((wall) => {
-                const selected =
-                  selectedWall === wall.name;
-
-                return (
-                  <button
-                    key={wall.name}
-                    type="button"
-                    onClick={() =>
-                      selectWall(wall.name)
-                    }
-                    style={{
-                      ...selectionCard,
-                      borderColor: selected
-                        ? accentColor
-                        : "rgba(215,181,109,0.22)",
-                      boxShadow: selected
-                        ? `0 0 0 1px ${accentColor},
-                           0 20px 55px rgba(0,0,0,0.35)`
-                        : "none",
-                      transform: selected
-                        ? "translateY(-3px)"
-                        : "none",
-                    }}
-                    aria-pressed={selected}
-                  >
-                    <div
-                      style={{
-                        ...wallIcon,
-                        color: selected
-                          ? accentColor
-                          : "#d8c7ad",
-                      }}
-                    >
-                      {wall.icon}
-                    </div>
-
-                    <div
-                      style={{
-                        ...cardName,
-                        color: selected
-                          ? accentColor
-                          : "#ffffff",
-                      }}
-                    >
-                      {wall.name}
-                    </div>
-
-                    <div style={cardDescription}>
-                      {wall.description}
-                    </div>
-
-                    <div
-                      style={{
-                        ...selectionBadge,
-                        color: selected
-                          ? accentColor
-                          : "#968b7c",
-                        borderColor: selected
-                          ? accentColor
-                          : "rgba(255,255,255,0.1)",
-                      }}
-                    >
-                      {selected
-                        ? "SELECTED"
-                        : "SELECT WALL"}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        )}
+  <StepChooseWall
+    room={selectedRoom}
+    walls={WALLS}
+    selectedWall={selectedWall}
+    onSelectWall={selectWall}
+  />
+)}
 
         {currentStep === 3 && (
           <section style={section}>
