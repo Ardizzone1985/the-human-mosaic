@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient.js";
 import StepChooseRoom from "./upload/StepChooseRoom.jsx";
 import StepChooseWall from "./upload/StepChooseWall.jsx";
+import StepChooseSpot from "./upload/StepChooseSpot.jsx";
 
 const STEPS = [
   "Choose Room",
@@ -554,212 +555,26 @@ setGuidelinesConfirmed(false);
 )}
 
         {currentStep === 3 && (
-          <section style={section}>
-            <div style={sectionEyebrow}>
-              {selectedRoom?.toUpperCase()} ·{" "}
-              {selectedWall?.toUpperCase()}
-            </div>
-
-            <h2 style={sectionTitle}>
-              Choose Your Spot
-            </h2>
-
-            <p style={sectionDescription}>
-              Select a Section and then choose one real
-              position inside the mosaic.
-            </p>
-
-            <div style={sectionTabs}>
-              {availableSections.map(
-                (sectionName) => {
-                  const selected =
-                    selectedSection === sectionName;
-
-                  return (
-                    <button
-                      key={sectionName}
-                      type="button"
-                      onClick={() =>
-                        selectSection(sectionName)
-                      }
-                      style={{
-                        ...sectionTab,
-                        color: selected
-                          ? "#111"
-                          : "#cfc4b4",
-                        background: selected
-                          ? accentColor
-                          : "rgba(255,255,255,0.04)",
-                        borderColor: selected
-                          ? accentColor
-                          : "rgba(215,181,109,0.22)",
-                      }}
-                    >
-                      {sectionName}
-                    </button>
-                  );
-                }
-              )}
-            </div>
-
-            <div style={slotPanel}>
-              <div style={slotPanelHeader}>
-                <div>
-                  <div style={slotPanelEyebrow}>
-                    CURRENT SECTION
-                  </div>
-
-                  <div style={slotPanelTitle}>
-                    {selectedRoom} · {selectedWall} ·{" "}
-                    {selectedSection}
-                  </div>
-                </div>
-
-                {!loadingSlots && !slotsError && (
-                  <div style={slotCountBadge}>
-                    {availableSlotsCount} available ·{" "}
-                    {unavailableSlotsCount} unavailable
-                  </div>
-                )}
-              </div>
-
-              {loadingSlots && (
-                <div style={slotMessage}>
-                  Loading available positions...
-                </div>
-              )}
-
-              {!loadingSlots && slotsError && (
-                <div style={slotErrorMessage}>
-                  {slotsError}
-                </div>
-              )}
-
-              {!loadingSlots &&
-                !slotsError &&
-                slots.length === 0 && (
-                  <div style={slotMessage}>
-                    No positions were found in this
-                    Section.
-                  </div>
-                )}
-
-              {!loadingSlots &&
-                !slotsError &&
-                slots.length > 0 && (
-                  <div style={slotGridScroller}>
-                    <div style={slotGrid}>
-                      {slots.map((slot) => {
-                        const available =
-                          isSlotAvailable(slot);
-
-                        const selected =
-                          selectedSlotCode ===
-                          slot.slot_code;
-
-                        const visibleSpot = `R${slot.row_number}-C${slot.col_number}`;
-
-                        return (
-                          <button
-                            key={slot.id}
-                            type="button"
-                            disabled={!available}
-                            title={
-                              available
-                                ? `Select ${visibleSpot}`
-                                : `${visibleSpot} is unavailable`
-                            }
-                            aria-label={
-                              available
-                                ? `Select available spot ${visibleSpot}`
-                                : `Unavailable spot ${visibleSpot}`
-                            }
-                            aria-pressed={selected}
-                            onClick={() => {
-                              if (!available) return;
-
-                              setSelectedSlotCode(
-                                slot.slot_code
-                              );
-
-                              setSelectedSpot(
-                                visibleSpot
-                              );
-                            }}
-                            style={{
-                              ...slotButton,
-                              borderColor: selected
-                                ? accentColor
-                                : available
-                                ? "rgba(215,181,109,0.36)"
-                                : "rgba(255,255,255,0.06)",
-                              background: selected
-                                ? accentColor
-                                : available
-                                ? "rgba(255,255,255,0.055)"
-                                : "rgba(0,0,0,0.72)",
-                              color: selected
-                                ? "#111"
-                                : available
-                                ? "#d8cebf"
-                                : "#4d4943",
-                              cursor: available
-                                ? "pointer"
-                                : "not-allowed",
-                              boxShadow: selected
-                                ? `0 0 0 2px rgba(255,255,255,0.7),
-                                   0 0 24px ${accentColor}`
-                                : "none",
-                              transform: selected
-                                ? "scale(1.08)"
-                                : "none",
-                            }}
-                          >
-                            <span style={slotNumber}>
-                              {visibleSpot}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-              <div style={slotLegend}>
-                <div style={legendItem}>
-                  <span
-                    style={{
-                      ...legendBox,
-                      background:
-                        "rgba(255,255,255,0.055)",
-                    }}
-                  />
-                  Available
-                </div>
-
-                <div style={legendItem}>
-                  <span
-                    style={{
-                      ...legendBox,
-                      background: "rgba(0,0,0,0.72)",
-                    }}
-                  />
-                  Unavailable
-                </div>
-
-                <div style={legendItem}>
-                  <span
-                    style={{
-                      ...legendBox,
-                      background: accentColor,
-                    }}
-                  />
-                  Selected
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+  <StepChooseSpot
+    room={selectedRoom}
+    wall={selectedWall}
+    sections={availableSections}
+    selectedSection={selectedSection}
+    onSelectSection={selectSection}
+    slots={slots}
+    loadingSlots={loadingSlots}
+    slotsError={slotsError}
+    availableSlotsCount={availableSlotsCount}
+    unavailableSlotsCount={unavailableSlotsCount}
+    selectedSlotCode={selectedSlotCode}
+    accentColor={accentColor}
+    isSlotAvailable={isSlotAvailable}
+    onSelectSlot={({ slotCode, visibleSpot }) => {
+      setSelectedSlotCode(slotCode);
+      setSelectedSpot(visibleSpot);
+    }}
+  />
+)}
 
         {currentStep === 4 && (
   <section style={section}>
