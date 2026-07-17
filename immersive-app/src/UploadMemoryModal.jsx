@@ -149,7 +149,7 @@ setPaymentError("");
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [open, onClose, reservedSlotCode, isReservingSlot]);
+  }, [open, onClose, reservedSlotCode, isReservingSlot, isStartingPayment]);
 
   useEffect(() => {
     async function loadSlots() {
@@ -547,7 +547,7 @@ setPaymentError("");
         <button
           type="button"
           onClick={handleRequestClose}
-          disabled={isReservingSlot}
+          disabled={isReservingSlot || isStartingPayment}
           style={closeButton}
           aria-label="Close Upload Memory"
         >
