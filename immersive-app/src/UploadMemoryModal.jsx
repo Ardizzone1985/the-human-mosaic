@@ -375,7 +375,7 @@ setPaymentError("");
 }
 
   async function handleRequestClose() {
-  if (isReservingSlot) return;
+  if (isReservingSlot || isStartingPayment) return;
 
   setReservationError("");
 
@@ -461,7 +461,7 @@ async function handleContinue() {
 }
 
 async function handleBack() {
-  if (isReservingSlot) return;
+  if (isReservingSlot || isStartingPayment) return;
 
   setReservationError("");
 
@@ -505,7 +505,7 @@ setMemoryNote("");
 setUploadFormError("");
 setRightsConfirmed(false);
 setGuidelinesConfirmed(false);
-
+setPaymentError("");
     setCurrentStep(3);
   }
 }
