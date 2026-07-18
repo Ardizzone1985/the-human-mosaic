@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { supabase } from "./supabaseClient.js";
 import StepChooseRoom from "./upload/StepChooseRoom.jsx";
 import StepChooseWall from "./upload/StepChooseWall.jsx";
@@ -78,7 +82,12 @@ const WALL_SECTIONS = {
 
 const HOLD_MINUTES = 15;
 
-export default function UploadMemoryModal({ open, onClose }) {
+export default function UploadMemoryModal({
+  open,
+  onClose,
+  paymentReturn,
+  onPaymentReturnHandled,
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [selectedWall, setSelectedWall] = useState(null);
@@ -100,8 +109,13 @@ const [guidelinesConfirmed, setGuidelinesConfirmed] = useState(false);
   const [isStartingPayment, setIsStartingPayment] =
   useState(false);
 
-const [paymentError, setPaymentError] =
-  useState("");
+const [isVerifyingPayment, setIsVerifyingPayment] =
+  useState(false);
+
+const [paymentConfirmed, setPaymentConfirmed] =
+  useState(false);
+
+const paymentReturnHandledRef = useRef(false);
 
   useEffect(() => {
     if (!open) {
@@ -124,6 +138,9 @@ setRightsConfirmed(false);
 setGuidelinesConfirmed(false);
       setIsStartingPayment(false);
 setPaymentError("");
+      setIsVerifyingPayment(false);
+setPaymentConfirmed(false);
+paymentReturnHandledRef.current = false;
     }
   }, [open]);
 
@@ -134,6 +151,316 @@ setPaymentError("");
     }
   };
 }, [previewUrl]);
+
+  useEffect(() => {
+  if (
+    !open ||
+    !paymentReturn ||
+    paymentReturnHandledRef.current
+  ) {
+    return;
+  }
+
+  paymentReturnHandledRef.current = true;
+
+  let cancelled = false;
+  let retryTimer = null;
+
+  function cleanPaymentReturn() {
+    onPaymentReturnHandled?.();
+  }
+
+  function readCheckoutState() {
+    try {
+      const rawState = sessionStorage.getItem(
+        "thm_app_checkout"
+      );
+
+      if (!rawState) {
+        return null;
+      }
+
+      const parsedState = JSON.parse(rawState);
+
+      if (
+        !parsedState?.room ||
+        !parsedState?.wall ||
+        !parsedState?.section ||
+        !parsedState?.spot ||
+        !parsedState?.slotCode
+      ) {
+        return null;
+      }
+
+      return parsedState;
+    } catch (error) {
+      console.error(
+        "Read checkout state error:",
+        error
+      );
+
+      return null;
+    }
+  }
+
+  function restoreCheckoutState(checkoutState) {
+    setSelectedRoom(checkoutState.room);
+    setSelectedWall(checkoutState.wall);
+    setSelectedSection(checkoutState.section);
+    setSelectedSpot(checkoutState.spot);
+    setSelectedSlotCode(checkoutState.slotCode);
+    setReservedSlotCode(checkoutState.slotCode);
+  }
+
+  async function handleCancelledPayment(
+    checkoutState
+  ) {
+    setPaymentError("");
+    setReservationError("");
+
+    const slotCode =
+      paymentReturn.slotCode ||
+      checkoutState?.slotCode ||
+      "";
+
+    if (!checkoutState || !slotCode) {
+      sessionStorage.removeItem(
+        "thm_app_checkout"
+      );
+
+      cleanPaymentReturn();
+
+      setReservationError(
+        "The cancelled payment could not be restored. Please choose your position again."
+      );
+
+      setCurrentStep(1);
+      return;
+    }
+
+    restoreCheckoutState(checkoutState);
+
+    const { data, error } = await supabase.rpc(
+      "release_my_app_slot",
+      {
+        p_slot_code: slotCode,
+      }
+    );
+
+    if (cancelled) return;
+
+    sessionStorage.removeItem(
+      "thm_app_checkout"
+    );
+
+    cleanPaymentReturn();
+
+    setReservedSlotCode(null);
+    setSelectedSlotCode(null);
+    setSelectedSpot(null);
+    setPaymentConfirmed(false);
+    setCurrentStep(3);
+
+    if (error) {
+      console.error(
+        "Release cancelled payment slot error:",
+        error
+      );
+
+      setReservationError(
+        "Payment was cancelled, but the reserved position could not be released automatically. Please try again."
+      );
+
+      return;
+    }
+
+    if (data !== true) {
+      setReservationError(
+        "Payment was cancelled. The position is no longer reserved."
+      );
+
+      return;
+    }
+
+    setReservationError(
+      "Payment was cancelled. Your position has been released and you may choose another available spot."
+    );
+  }
+
+  async function verifySuccessfulPayment(
+    checkoutState,
+    attempt = 1
+  ) {
+    setIsVerifyingPayment(true);
+    setPaymentError("");
+    setReservationError("");
+
+    try {
+      if (
+        !checkoutState ||
+        !paymentReturn.sessionId
+      ) {
+        throw new Error(
+          "The payment information could not be restored. Please contact The Human Mosaic before trying another payment."
+        );
+      }
+
+      restoreCheckoutState(checkoutState);
+
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (
+        sessionError ||
+        !session?.access_token ||
+        !session?.user
+      ) {
+        throw new Error(
+          "Your login session has expired. Please sign in again to verify the payment."
+        );
+      }
+
+      if (
+        checkoutState.userId &&
+        checkoutState.userId !== session.user.id
+      ) {
+        throw new Error(
+          "This payment belongs to another user account."
+        );
+      }
+
+      const response = await fetch(
+        "https://www.thehumanmosaic.art/api/verify-payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            session_id:
+              paymentReturn.sessionId,
+            slotCode:
+              checkoutState.slotCode,
+          }),
+        }
+      );
+
+      const result = await response
+        .json()
+        .catch(() => ({}));
+
+      if (cancelled) return;
+
+      /*
+       * Stripe ha ricevuto il pagamento, ma il webhook
+       * potrebbe impiegare qualche secondo ad aggiornare
+       * lo slot in Supabase.
+       */
+      if (
+        response.status === 202 &&
+        result.webhookPending === true
+      ) {
+        if (attempt >= 6) {
+          throw new Error(
+            "Your payment was received, but final confirmation is taking longer than expected. Please wait a moment and reopen the app."
+          );
+        }
+
+        retryTimer = window.setTimeout(() => {
+          verifySuccessfulPayment(
+            checkoutState,
+            attempt + 1
+          );
+        }, 2000);
+
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "The payment could not be verified."
+        );
+      }
+
+      if (
+        result.success !== true ||
+        result.paymentConfirmed !== true
+      ) {
+        throw new Error(
+          "The payment has not yet been confirmed."
+        );
+      }
+
+      setPaymentConfirmed(true);
+      setReservedSlotCode(
+        checkoutState.slotCode
+      );
+      setSelectedSlotCode(
+        checkoutState.slotCode
+      );
+      setCurrentStep(5);
+      setIsVerifyingPayment(false);
+      setPaymentError("");
+
+      /*
+       * Non cancelliamo ancora thm_app_checkout:
+       * servirà nel prossimo step finché l'upload non
+       * sarà stato completato con successo.
+       */
+      cleanPaymentReturn();
+    } catch (error) {
+      if (cancelled) return;
+
+      console.error(
+        "Verify returned payment error:",
+        error
+      );
+
+      setIsVerifyingPayment(false);
+      setPaymentConfirmed(false);
+
+      setPaymentError(
+        error.message ||
+          "The payment could not be verified. Please try again."
+      );
+
+      /*
+       * Mostriamo lo Step Payment con l'errore,
+       * senza liberare lo slot e senza permettere
+       * un secondo pagamento alla cieca.
+       */
+      setCurrentStep(4);
+      cleanPaymentReturn();
+    }
+  }
+
+  const checkoutState = readCheckoutState();
+
+  if (paymentReturn.status === "cancelled") {
+    handleCancelledPayment(checkoutState);
+  } else if (
+    paymentReturn.status === "success"
+  ) {
+    verifySuccessfulPayment(checkoutState);
+  }
+
+  return () => {
+    cancelled = true;
+
+    if (retryTimer) {
+      window.clearTimeout(retryTimer);
+    }
+  };
+}, [
+  open,
+  paymentReturn,
+  onPaymentReturnHandled,
+]);
 
   useEffect(() => {
     if (!open) return;
@@ -472,11 +799,17 @@ async function handleStartPayment() {
 }
 
   async function handleRequestClose() {
-  if (isReservingSlot || isStartingPayment) return;
+  if (
+  isReservingSlot ||
+  isStartingPayment ||
+  isVerifyingPayment
+) {
+  return;
+}
 
   setReservationError("");
 
-  if (reservedSlotCode) {
+  if (reservedSlotCode && !paymentConfirmed) {if (reservedSlotCode) {
     const released = await releaseReservedSlot(
       reservedSlotCode
     );
@@ -575,12 +908,26 @@ async function handleBack() {
   }
 
   if (currentStep === 5) {
+  if (paymentConfirmed) {
+    setUploadFormError(
+      "Your payment is already confirmed. Complete the memory upload to continue."
+    );
+    return;
+  }
+
   setPaymentError("");
   setCurrentStep(4);
   return;
 }
 
   if (currentStep === 4) {
+    if (paymentConfirmed) {
+  setPaymentError(
+    "This position has already been paid. Continue with the memory upload."
+  );
+  setCurrentStep(5);
+  return;
+}
     const released = await releaseReservedSlot(
       reservedSlotCode
     );
@@ -644,7 +991,11 @@ setPaymentError("");
         <button
           type="button"
           onClick={handleRequestClose}
-          disabled={isReservingSlot || isStartingPayment}
+          disabled={
+  isReservingSlot ||
+  isStartingPayment ||
+  isVerifyingPayment
+}
           style={closeButton}
           aria-label="Close Upload Memory"
         >
