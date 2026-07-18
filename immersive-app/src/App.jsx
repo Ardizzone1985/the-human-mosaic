@@ -1,5 +1,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useState, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import RoomShell from "./RoomShell.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
 import InfoWall from "./InfoWall.jsx";
