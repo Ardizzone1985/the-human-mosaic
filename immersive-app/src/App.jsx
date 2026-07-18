@@ -625,6 +625,24 @@ async function handleUseMuseumLogo() {
     setSavingAvatar(false);
   }
 }
+
+  const handlePaymentReturnHandled = useCallback(() => {
+  setPaymentReturn(null);
+
+  const cleanUrl = new URL(
+    window.location.href
+  );
+
+  cleanUrl.searchParams.delete("payment");
+  cleanUrl.searchParams.delete("session_id");
+  cleanUrl.searchParams.delete("slotCode");
+
+  window.history.replaceState(
+    {},
+    document.title,
+    `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+  );
+}, []);
   
 const currentRoom =
   roomParam?.toLowerCase() === "identity"
