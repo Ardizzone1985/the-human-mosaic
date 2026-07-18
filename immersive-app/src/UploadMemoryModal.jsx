@@ -108,6 +108,8 @@ const [rightsConfirmed, setRightsConfirmed] = useState(false);
 const [guidelinesConfirmed, setGuidelinesConfirmed] = useState(false);
   const [isStartingPayment, setIsStartingPayment] =
   useState(false);
+  const [paymentError, setPaymentError] =
+  useState("");
 
 const [isVerifyingPayment, setIsVerifyingPayment] =
   useState(false);
