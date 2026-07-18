@@ -402,6 +402,29 @@ export default function App() {
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
   useState(false);
+  const [paymentReturn, setPaymentReturn] =
+  useState(() => {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const status = params.get("payment");
+
+    if (
+      status !== "success" &&
+      status !== "cancelled"
+    ) {
+      return null;
+    }
+
+    return {
+      status,
+      sessionId:
+        params.get("session_id") || "",
+      slotCode:
+        params.get("slotCode") || "",
+    };
+  });
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 const [savingAvatar, setSavingAvatar] = useState(false);
 const [avatarError, setAvatarError] = useState("");
@@ -442,6 +465,27 @@ closeDialog,
     setShowWelcomeGate(false);
   }
 }, [user]);
+
+  useEffect(() => {
+  if (!paymentReturn || loadingAuth) {
+    return;
+  }
+
+  /*
+   * Il pagamento dell'app richiede un utente
+   * autenticato. Normalmente la sessione Supabase
+   * sopravvive al redirect Stripe.
+   */
+  if (!user) {
+    setShowWelcomeGate(false);
+    setAuthMode("login");
+    return;
+  }
+
+  setShowWelcomeGate(false);
+  setShowMuseumIdentity(false);
+  setShowUploadMemoryModal(true);
+}, [paymentReturn, loadingAuth, user]);
   
 useEffect(() => {
   setTimeout(() => {
@@ -717,6 +761,24 @@ onRegister={() => {
 
       <UploadMemoryModal
   open={showUploadMemoryModal}
+  paymentReturn={paymentReturn}
+  onPaymentReturnHandled={() => {
+    setPaymentReturn(null);
+
+    const cleanUrl = new URL(
+      window.location.href
+    );
+
+    cleanUrl.searchParams.delete("payment");
+    cleanUrl.searchParams.delete("session_id");
+    cleanUrl.searchParams.delete("slotCode");
+
+    window.history.replaceState(
+      {},
+      document.title,
+      `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+    );
+  }}
   onClose={() => {
     setShowUploadMemoryModal(false);
   }}
