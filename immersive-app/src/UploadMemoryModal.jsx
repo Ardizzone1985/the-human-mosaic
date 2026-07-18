@@ -395,7 +395,7 @@ async function handleStartPayment() {
     );
 
     const response = await fetch(
-      "https://thehumanmosaic.art/api/create-app-checkout-session",
+  "https://www.thehumanmosaic.art/api/create-app-checkout-session",
       {
         method: "POST",
         headers: {
