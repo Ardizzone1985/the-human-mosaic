@@ -785,23 +785,9 @@ onRegister={() => {
       <UploadMemoryModal
   open={showUploadMemoryModal}
   paymentReturn={paymentReturn}
-  onPaymentReturnHandled={() => {
-    setPaymentReturn(null);
-
-    const cleanUrl = new URL(
-      window.location.href
-    );
-
-    cleanUrl.searchParams.delete("payment");
-    cleanUrl.searchParams.delete("session_id");
-    cleanUrl.searchParams.delete("slotCode");
-
-    window.history.replaceState(
-      {},
-      document.title,
-      `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
-    );
-  }}
+  onPaymentReturnHandled={
+    handlePaymentReturnHandled
+  }
   onClose={() => {
     setShowUploadMemoryModal(false);
   }}
