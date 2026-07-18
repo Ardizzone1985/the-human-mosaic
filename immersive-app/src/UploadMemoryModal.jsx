@@ -476,7 +476,14 @@ paymentReturnHandledRef.current = false;
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [open, onClose, reservedSlotCode, isReservingSlot, isStartingPayment]);
+ }, [
+  open,
+  onClose,
+  reservedSlotCode,
+  isReservingSlot,
+  isStartingPayment,
+  isVerifyingPayment,
+]);
 
   useEffect(() => {
     async function loadSlots() {
@@ -809,7 +816,7 @@ async function handleStartPayment() {
 
   setReservationError("");
 
-  if (reservedSlotCode && !paymentConfirmed) {if (reservedSlotCode) {
+  if (reservedSlotCode && !paymentConfirmed) {
     const released = await releaseReservedSlot(
       reservedSlotCode
     );
