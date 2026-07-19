@@ -100,6 +100,8 @@ export default function UploadMemoryModal({
   const [reservedSlotCode, setReservedSlotCode] = useState(null);
 const [isReservingSlot, setIsReservingSlot] = useState(false);
 const [reservationError, setReservationError] = useState("");
+  const [flowNotice, setFlowNotice] =
+  useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 const [previewUrl, setPreviewUrl] = useState("");
 const [memoryNote, setMemoryNote] = useState("");
@@ -132,6 +134,7 @@ const paymentReturnHandledRef = useRef(false);
       setReservedSlotCode(null);
 setIsReservingSlot(false);
 setReservationError("");
+      setFlowNotice("");
       setSelectedFile(null);
 setPreviewUrl("");
 setMemoryNote("");
@@ -219,6 +222,7 @@ paymentReturnHandledRef.current = false;
   ) {
     setPaymentError("");
     setReservationError("");
+    setFlowNotice("");
 
     const slotCode =
       paymentReturn.slotCode ||
@@ -277,16 +281,16 @@ paymentReturnHandledRef.current = false;
     }
 
     if (data !== true) {
-      setReservationError(
-        "Payment was cancelled. The position is no longer reserved."
-      );
+  setFlowNotice(
+    "Payment was cancelled. The position is no longer reserved and you may choose another available spot."
+  );
 
-      return;
-    }
+  return;
+}
 
-    setReservationError(
-      "Payment was cancelled. Your position has been released and you may choose another available spot."
-    );
+    setFlowNotice(
+  "Payment was cancelled. Your position has been released and you may choose another available spot."
+);
   }
 
   async function verifySuccessfulPayment(
@@ -836,6 +840,7 @@ async function handleStartPayment() {
 async function handleContinue() {
   if (!canContinue || isReservingSlot) return;
 
+  setFlowNotice("");
   setReservationError("");
 
   if (currentStep === 1) {
@@ -900,8 +905,13 @@ async function handleContinue() {
 }
 
 async function handleBack() {
-  if (isReservingSlot || isStartingPayment) return;
-
+  if (
+  isReservingSlot ||
+  isStartingPayment ||
+  isVerifyingPayment
+) {
+  return;
+}
   setReservationError("");
 
   if (currentStep === 2) {
@@ -964,6 +974,7 @@ setPaymentError("");
 }
 
   function selectRoom(roomName) {
+    setFlowNotice("");
     setSelectedRoom(roomName);
     setSelectedWall(null);
     setSelectedSection(null);
@@ -972,6 +983,7 @@ setPaymentError("");
   }
 
   function selectWall(wallName) {
+    setFlowNotice("");
     setSelectedWall(wallName);
     setSelectedSection(null);
     setSelectedSlotCode(null);
@@ -979,6 +991,7 @@ setPaymentError("");
   }
 
   function selectSection(sectionName) {
+    setFlowNotice("");
     setSelectedSection(sectionName);
     setSelectedSlotCode(null);
     setSelectedSpot(null);
@@ -1028,6 +1041,17 @@ setPaymentError("");
           currentStep={currentStep}
           accentColor={accentColor}
         />
+
+        {flowNotice && (
+  <div style={flowNoticeBox}>
+    <span style={flowNoticeIcon}>✓</span>
+
+    <div style={flowNoticeText}>
+      <strong>Payment cancelled safely</strong>
+      <span>{flowNotice}</span>
+    </div>
+  </div>
+)}
 
         {currentStep === 1 && (
   <StepChooseRoom
@@ -1731,6 +1755,38 @@ const reservationErrorBox = {
   color: "#ffb5b5",
   fontSize: "13px",
   lineHeight: 1.5,
+};
+
+const flowNoticeBox = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: "12px",
+  marginBottom: "22px",
+  padding: "15px 18px",
+  borderRadius: "17px",
+  border: "1px solid rgba(112, 214, 154, 0.42)",
+  background: "rgba(70, 190, 120, 0.09)",
+  color: "#c9f3d9",
+  fontSize: "13px",
+  lineHeight: 1.5,
+};
+
+const flowNoticeIcon = {
+  width: "25px",
+  height: "25px",
+  flexShrink: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "50%",
+  background: "rgba(112, 214, 154, 0.18)",
+  color: "#8ce7af",
+  fontWeight: 900,
+};
+
+const flowNoticeText = {
+  display: "grid",
+  gap: "3px",
 };
 
 const reservedPositionCard = {
