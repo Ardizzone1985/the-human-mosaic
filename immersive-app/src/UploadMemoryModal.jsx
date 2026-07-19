@@ -912,6 +912,7 @@ async function handleBack() {
 ) {
   return;
 }
+  setFlowNotice("");
   setReservationError("");
 
   if (currentStep === 2) {
