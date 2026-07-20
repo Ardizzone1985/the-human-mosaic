@@ -122,6 +122,7 @@ export default function StepUpload({
               onChange={(event) =>
                 onMemoryNoteChange(event.target.value)
               }
+              disabled={isSubmitting}
               placeholder="Write a short description of your memory..."
               style={noteTextarea}
             />
@@ -166,6 +167,7 @@ export default function StepUpload({
           <input
             type="checkbox"
             checked={rightsConfirmed}
+            disabled={isSubmitting}
             onChange={(event) =>
               onRightsConfirmedChange(
                 event.target.checked
@@ -186,6 +188,7 @@ export default function StepUpload({
           <input
             type="checkbox"
             checked={guidelinesConfirmed}
+            disabled={isSubmitting}
             onChange={(event) =>
               onGuidelinesConfirmedChange(
                 event.target.checked
