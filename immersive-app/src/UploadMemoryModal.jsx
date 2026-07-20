@@ -119,6 +119,12 @@ const [isVerifyingPayment, setIsVerifyingPayment] =
 const [paymentConfirmed, setPaymentConfirmed] =
   useState(false);
 
+  const [isRecoveringPaidSlot, setIsRecoveringPaidSlot] =
+  useState(false);
+
+const [recoveredPaidSlot, setRecoveredPaidSlot] =
+  useState(null);
+
 const paymentReturnHandledRef = useRef(false);
 
   useEffect(() => {
@@ -145,6 +151,8 @@ setGuidelinesConfirmed(false);
 setPaymentError("");
       setIsVerifyingPayment(false);
 setPaymentConfirmed(false);
+      setIsRecoveringPaidSlot(false);
+setRecoveredPaidSlot(null);
 paymentReturnHandledRef.current = false;
     }
   }, [open]);
@@ -489,6 +497,7 @@ paymentReturnHandledRef.current = false;
   isReservingSlot,
   isStartingPayment,
   isVerifyingPayment,
+    isRecoveringPaidSlot,
 ]);
 
   useEffect(() => {
@@ -816,6 +825,7 @@ async function handleStartPayment() {
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment
+    isRecoveringPaidSlot
 ) {
   return;
 }
@@ -909,6 +919,7 @@ async function handleBack() {
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment
+    isRecoveringPaidSlot
 ) {
   return;
 }
@@ -1018,6 +1029,7 @@ setPaymentError("");
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment
+            isRecoveringPaidSlot
 }
           style={closeButton}
           aria-label="Close Upload Memory"
@@ -1048,7 +1060,11 @@ setPaymentError("");
     <span style={flowNoticeIcon}>✓</span>
 
     <div style={flowNoticeText}>
-      <strong>Payment cancelled safely</strong>
+      <strong>
+  {recoveredPaidSlot
+    ? "Purchased position recovered"
+    : "Payment cancelled safely"}
+</strong>
       <span>{flowNotice}</span>
     </div>
   </div>
@@ -2070,4 +2086,15 @@ const reviewNotice = {
   fontSize: "11px",
   lineHeight: 1.55,
   textAlign: "center",
+};
+
+const recoveryLoadingBox = {
+  marginBottom: "22px",
+  padding: "14px 18px",
+  borderRadius: "17px",
+  border: "1px solid rgba(215,181,109,0.28)",
+  background: "rgba(215,181,109,0.07)",
+  color: "#d8cdbd",
+  fontSize: "13px",
+  lineHeight: 1.5,
 };
