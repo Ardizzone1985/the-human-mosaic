@@ -477,6 +477,81 @@ paymentReturnHandledRef.current = false;
 ]);
 
   useEffect(() => {
+  if (
+    !open ||
+    paymentReturn ||
+    paymentReturnHandledRef.current
+  ) {
+    return;
+  }
+
+  let cancelled = false;
+
+  async function recoverPendingPaidSlot() {
+    setIsRecoveringPaidSlot(true);
+
+    const { data, error } = await supabase.rpc(
+      "get_my_pending_paid_slots"
+    );
+
+    if (cancelled) return;
+
+    setIsRecoveringPaidSlot(false);
+
+    if (error) {
+      console.error(
+        "Recover pending paid slot error:",
+        error
+      );
+      return;
+    }
+
+    const paidSlots = Array.isArray(data)
+      ? data
+      : [];
+
+    if (paidSlots.length === 0) {
+      return;
+    }
+
+    const paidSlot = paidSlots[0];
+
+    setRecoveredPaidSlot(paidSlot);
+    setSelectedRoom(paidSlot.room);
+    setSelectedWall(paidSlot.wall);
+    setSelectedSection(paidSlot.section);
+    setSelectedSpot(paidSlot.spot);
+    setSelectedSlotCode(paidSlot.slot_code);
+    setReservedSlotCode(paidSlot.slot_code);
+    setPaymentConfirmed(true);
+    setCurrentStep(5);
+
+    setFlowNotice(
+      "Welcome back. Your purchased position is waiting for the memory upload."
+    );
+
+    sessionStorage.setItem(
+      "thm_app_checkout",
+      JSON.stringify({
+        room: paidSlot.room,
+        wall: paidSlot.wall,
+        section: paidSlot.section,
+        spot: paidSlot.spot,
+        slotCode: paidSlot.slot_code,
+        recoveredFromDatabase: true,
+        savedAt: Date.now(),
+      })
+    );
+  }
+
+  recoverPendingPaidSlot();
+
+  return () => {
+    cancelled = true;
+  };
+}, [open, paymentReturn]);
+
+  useEffect(() => {
     if (!open) return;
 
     function handleEscape(event) {
@@ -824,7 +899,7 @@ async function handleStartPayment() {
   if (
   isReservingSlot ||
   isStartingPayment ||
-  isVerifyingPayment
+  isVerifyingPayment ||
     isRecoveringPaidSlot
 ) {
   return;
@@ -918,7 +993,7 @@ async function handleBack() {
   if (
   isReservingSlot ||
   isStartingPayment ||
-  isVerifyingPayment
+  isVerifyingPayment ||
     isRecoveringPaidSlot
 ) {
   return;
@@ -1028,7 +1103,7 @@ setPaymentError("");
           disabled={
   isReservingSlot ||
   isStartingPayment ||
-  isVerifyingPayment
+  isVerifyingPayment ||
             isRecoveringPaidSlot
 }
           style={closeButton}
@@ -1054,6 +1129,12 @@ setPaymentError("");
           currentStep={currentStep}
           accentColor={accentColor}
         />
+
+        {isRecoveringPaidSlot && (
+  <div style={recoveryLoadingBox}>
+    Checking for a purchased position waiting for upload...
+  </div>
+)}
 
         {flowNotice && (
   <div style={flowNoticeBox}>
@@ -1774,6 +1855,17 @@ const reservationErrorBox = {
   lineHeight: 1.5,
 };
 
+const recoveryLoadingBox = {
+  marginBottom: "22px",
+  padding: "14px 18px",
+  borderRadius: "17px",
+  border: "1px solid rgba(215,181,109,0.28)",
+  background: "rgba(215,181,109,0.07)",
+  color: "#d8cdbd",
+  fontSize: "13px",
+  lineHeight: 1.5,
+};
+
 const flowNoticeBox = {
   display: "flex",
   alignItems: "flex-start",
@@ -2086,15 +2178,4 @@ const reviewNotice = {
   fontSize: "11px",
   lineHeight: 1.55,
   textAlign: "center",
-};
-
-const recoveryLoadingBox = {
-  marginBottom: "22px",
-  padding: "14px 18px",
-  borderRadius: "17px",
-  border: "1px solid rgba(215,181,109,0.28)",
-  background: "rgba(215,181,109,0.07)",
-  color: "#d8cdbd",
-  fontSize: "13px",
-  lineHeight: 1.5,
 };
