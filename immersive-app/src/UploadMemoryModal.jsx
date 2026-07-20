@@ -739,8 +739,12 @@ paymentReturnHandledRef.current = false;
   setPreviewUrl(nextPreviewUrl);
 }
 
-  function handleUploadInterfaceTest() {
+ async function handleUploadInterfaceTest() {
   setUploadFormError("");
+
+  if (isSubmittingMemory) {
+    return;
+  }
 
   if (!selectedFile) {
     setUploadFormError(
@@ -749,24 +753,33 @@ paymentReturnHandledRef.current = false;
     return;
   }
 
-  if (!rightsConfirmed || !guidelinesConfirmed) {
+  if (
+    !rightsConfirmed ||
+    !guidelinesConfirmed
+  ) {
     setUploadFormError(
       "Please confirm the required rights and project guidelines."
     );
     return;
   }
 
-  console.log("Upload interface ready:", {
+  setIsSubmittingMemory(true);
+
+  await new Promise((resolve) => {
+    window.setTimeout(resolve, 2500);
+  });
+
+  console.log("Upload submission state ready:", {
     room: selectedRoom,
     wall: selectedWall,
     section: selectedSection,
     spot: selectedSpot,
     slotCode: reservedSlotCode,
     fileName: selectedFile.name,
-    fileType: selectedFile.type,
-    fileSize: selectedFile.size,
     note: memoryNote.trim(),
   });
+
+  setIsSubmittingMemory(false);
 }
 
 async function handleStartPayment() {
