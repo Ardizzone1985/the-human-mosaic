@@ -125,6 +125,12 @@ const [paymentConfirmed, setPaymentConfirmed] =
 const [recoveredPaidSlot, setRecoveredPaidSlot] =
   useState(null);
 
+  const [isSubmittingMemory, setIsSubmittingMemory] =
+  useState(false);
+
+const [submittedMemory, setSubmittedMemory] =
+  useState(null);
+
 const paymentReturnHandledRef = useRef(false);
 
   useEffect(() => {
@@ -153,6 +159,8 @@ setPaymentError("");
 setPaymentConfirmed(false);
       setIsRecoveringPaidSlot(false);
 setRecoveredPaidSlot(null);
+      setIsSubmittingMemory(false);
+setSubmittedMemory(null);
 paymentReturnHandledRef.current = false;
     }
   }, [open]);
@@ -573,6 +581,7 @@ paymentReturnHandledRef.current = false;
   isStartingPayment,
   isVerifyingPayment,
     isRecoveringPaidSlot,
+    isSubmittingMemory,
 ]);
 
   useEffect(() => {
@@ -900,7 +909,8 @@ async function handleStartPayment() {
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment ||
-    isRecoveringPaidSlot
+  isRecoveringPaidSlot ||
+  isSubmittingMemory
 ) {
   return;
 }
@@ -994,7 +1004,8 @@ async function handleBack() {
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment ||
-    isRecoveringPaidSlot
+  isRecoveringPaidSlot ||
+  isSubmittingMemory
 ) {
   return;
 }
@@ -1104,7 +1115,8 @@ setPaymentError("");
   isReservingSlot ||
   isStartingPayment ||
   isVerifyingPayment ||
-            isRecoveringPaidSlot
+            isRecoveringPaidSlot ||
+            isSubmittingMemory
 }
           style={closeButton}
           aria-label="Close Upload Memory"
