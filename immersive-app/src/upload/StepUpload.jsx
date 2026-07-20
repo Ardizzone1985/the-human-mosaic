@@ -11,6 +11,7 @@ export default function StepUpload({
   uploadFormError,
   rightsConfirmed,
   guidelinesConfirmed,
+  isSubmitting,
   onImageSelection,
   onMemoryNoteChange,
   onRightsConfirmedChange,
@@ -18,9 +19,10 @@ export default function StepUpload({
   onSubmit,
 }) {
   const formReady =
-    Boolean(selectedFile) &&
-    rightsConfirmed &&
-    guidelinesConfirmed;
+  Boolean(selectedFile) &&
+  rightsConfirmed &&
+  guidelinesConfirmed &&
+  !isSubmitting;
 
   return (
     <section style={sectionStyle}>
@@ -74,6 +76,7 @@ export default function StepUpload({
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
+              disabled={isSubmitting}
               onChange={onImageSelection}
               style={hiddenFileInput}
             />
@@ -207,19 +210,22 @@ export default function StepUpload({
       )}
 
       <button
-        type="button"
-        onClick={onSubmit}
-        style={{
-          ...submitMemoryButton,
-          background: accentColor,
-          opacity: formReady ? 1 : 0.48,
-          cursor: formReady
-            ? "pointer"
-            : "not-allowed",
-        }}
-      >
-        Submit Memory for Review
-      </button>
+  type="button"
+  onClick={onSubmit}
+  disabled={!formReady}
+  style={{
+    ...submitMemoryButton,
+    background: accentColor,
+    opacity: formReady ? 1 : 0.48,
+    cursor: formReady
+      ? "pointer"
+      : "not-allowed",
+  }}
+>
+  {isSubmitting
+    ? "Submitting Memory..."
+    : "Submit Memory for Review"}
+</button>
 
       <div style={reviewNotice}>
         Your memory will remain pending until it is reviewed.
