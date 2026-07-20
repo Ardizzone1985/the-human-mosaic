@@ -1230,6 +1230,7 @@ setPaymentError("");
     uploadFormError={uploadFormError}
     rightsConfirmed={rightsConfirmed}
     guidelinesConfirmed={guidelinesConfirmed}
+    isSubmitting={isSubmittingMemory}
     onImageSelection={handleImageSelection}
     onMemoryNoteChange={setMemoryNote}
     onRightsConfirmedChange={setRightsConfirmed}
