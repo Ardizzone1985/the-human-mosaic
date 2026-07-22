@@ -866,6 +866,69 @@ console.log(
   "Storage upload completed:",
   storagePath
 );
+
+const userMetadata =
+  session.user.user_metadata || {};
+
+const firstName =
+  String(userMetadata.first_name || "").trim();
+
+const lastName =
+  String(userMetadata.last_name || "").trim();
+
+const fullName =
+  `${firstName} ${lastName}`.trim();
+
+const country =
+  String(userMetadata.country || "").trim();
+
+const email =
+  String(session.user.email || "")
+    .trim()
+    .toLowerCase();
+
+if (!fullName) {
+  throw new Error(
+    "Your first and last name could not be found. Please update your account information before submitting your memory."
+  );
+}
+
+if (!email) {
+  throw new Error(
+    "Your account email could not be found. Please sign in again."
+  );
+}
+
+if (!country) {
+  throw new Error(
+    "Your country could not be found. Please update your account information before submitting your memory."
+  );
+}
+
+const {
+  data: publicImageData,
+} = supabase.storage
+  .from("images")
+  .getPublicUrl(storagePath);
+
+const imageUrl =
+  publicImageData?.publicUrl || "";
+
+console.log(
+  "Submission data ready:",
+  {
+    submissionId,
+    slotCode: reservedSlotCode,
+    fullName,
+    email,
+    country,
+    note: memoryNote.trim(),
+    imageFileName: storagePath,
+    imageUrl,
+    room: selectedRoom,
+  }
+);
+    
   } catch (error) {
     console.error(
       "Prepare memory submission error:",
