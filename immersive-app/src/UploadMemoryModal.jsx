@@ -977,17 +977,48 @@ console.log(
   "Memory submission completed:",
   submissionResult
 );
+
+    sessionStorage.removeItem(
+  "thm_app_checkout"
+);
+
+setSubmittedMemory({
+  submissionId:
+    submissionResult.submissionId,
+  slotCode:
+    submissionResult.slotCode ||
+    reservedSlotCode,
+  slotStatus:
+    submissionResult.slotStatus || "submitted",
+  room: selectedRoom,
+  wall: selectedWall,
+  section: selectedSection,
+  spot: selectedSpot,
+  fullName,
+  email,
+  country,
+  imageUrl,
+});
+
+setPaymentConfirmed(false);
+setReservedSlotCode(null);
+setRecoveredPaidSlot(null);
+
+setUploadFormError("");
+setFlowNotice(
+  "Your memory has been submitted successfully and is now waiting for review."
+);
     
   } catch (error) {
     console.error(
-      "Prepare memory submission error:",
-      error
-    );
+  "Submit memory error:",
+  error
+);
 
     setUploadFormError(
-      error.message ||
-        "Your memory could not be prepared for submission. Please try again."
-    );
+  error.message ||
+    "Your memory could not be submitted. Please try again."
+);
   } finally {
     setIsSubmittingMemory(false);
   }
