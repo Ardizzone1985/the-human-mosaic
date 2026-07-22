@@ -869,6 +869,7 @@ console.log(
 
 const userMetadata =
   session.user.user_metadata || {};
+console.log("User metadata:", userMetadata);
 
 const firstName =
   String(userMetadata.first_name || "").trim();
