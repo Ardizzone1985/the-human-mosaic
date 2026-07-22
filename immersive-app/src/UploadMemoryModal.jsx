@@ -928,6 +928,55 @@ console.log(
     room: selectedRoom,
   }
 );
+
+    const submissionResponse = await fetch(
+  "https://www.thehumanmosaic.art/api/create-app-submission",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify({
+      slotCode: reservedSlotCode,
+      submissionId,
+      fullName,
+      email,
+      country,
+      note: memoryNote.trim(),
+      imageFileName: storagePath,
+      imageUrl,
+      room: selectedRoom,
+    }),
+  }
+);
+
+const submissionResult =
+  await submissionResponse
+    .json()
+    .catch(() => ({}));
+
+if (!submissionResponse.ok) {
+  throw new Error(
+    submissionResult.error ||
+      "Your memory could not be submitted."
+  );
+}
+
+if (
+  submissionResult.success !== true ||
+  !submissionResult.submissionId
+) {
+  throw new Error(
+    "The memory was submitted, but no valid confirmation was returned."
+  );
+}
+
+console.log(
+  "Memory submission completed:",
+  submissionResult
+);
     
   } catch (error) {
     console.error(
