@@ -866,7 +866,25 @@ const email =
     .trim()
     .toLowerCase();
 
-    const submissionId = crypto.randomUUID();
+if (!fullName) {
+  throw new Error(
+    "Your first and last name could not be found. Please update your account information before submitting your memory."
+  );
+}
+
+if (!email) {
+  throw new Error(
+    "Your account email could not be found. Please sign in again."
+  );
+}
+
+if (!country) {
+  throw new Error(
+    "Your country could not be found. Please update your account information before submitting your memory."
+  );
+}
+
+const submissionId = crypto.randomUUID();
 
     const safeOriginalFileName =
       createSafeImageFileName(selectedFile.name);
