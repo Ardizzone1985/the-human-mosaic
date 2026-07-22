@@ -1004,6 +1004,9 @@ setPaymentConfirmed(false);
 setReservedSlotCode(null);
 setRecoveredPaidSlot(null);
 
+setFlowNotice("");
+setReservationError("");
+setPaymentError("");
 setUploadFormError("");
     
   } catch (error) {
