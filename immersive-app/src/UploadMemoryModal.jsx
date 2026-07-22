@@ -842,14 +842,30 @@ paymentReturnHandledRef.current = false;
       }
     );
 
-    /*
-     * Il caricamento reale verrà inserito nel prossimo
-     * blocco. Per ora controlliamo soltanto che tutti i
-     * dati necessari vengano preparati correttamente.
-     */
-    await new Promise((resolve) => {
-      window.setTimeout(resolve, 600);
-    });
+    const { error: uploadError } =
+  await supabase.storage
+    .from("images")
+    .upload(
+      storagePath,
+      selectedFile,
+      {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: selectedFile.type,
+      }
+    );
+
+if (uploadError) {
+  throw new Error(
+    uploadError.message ||
+      "The image could not be uploaded."
+  );
+}
+
+console.log(
+  "Storage upload completed:",
+  storagePath
+);
   } catch (error) {
     console.error(
       "Prepare memory submission error:",
