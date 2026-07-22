@@ -1005,9 +1005,6 @@ setReservedSlotCode(null);
 setRecoveredPaidSlot(null);
 
 setUploadFormError("");
-setFlowNotice(
-  "Your memory has been submitted successfully and is now waiting for review."
-);
     
   } catch (error) {
     console.error(
@@ -1472,28 +1469,201 @@ setPaymentError("");
 )}
 
 {currentStep === 5 && (
-  <StepUpload
-    room={selectedRoom}
-    wall={selectedWall}
-    section={selectedSection}
-    spot={selectedSpot}
-    reservedSlotCode={reservedSlotCode}
-    accentColor={accentColor}
-    selectedFile={selectedFile}
-    previewUrl={previewUrl}
-    memoryNote={memoryNote}
-    uploadFormError={uploadFormError}
-    rightsConfirmed={rightsConfirmed}
-    guidelinesConfirmed={guidelinesConfirmed}
-    isSubmitting={isSubmittingMemory}
-    onImageSelection={handleImageSelection}
-    onMemoryNoteChange={setMemoryNote}
-    onRightsConfirmedChange={setRightsConfirmed}
-    onGuidelinesConfirmedChange={
-      setGuidelinesConfirmed
-    }
-    onSubmit={handleSubmitMemory}
-  />
+  submittedMemory ? (
+    <section
+      style={{
+        marginTop: "28px",
+        padding: "34px 26px",
+        borderRadius: "24px",
+        border: `1px solid ${accentColor}`,
+        background:
+          "linear-gradient(180deg, rgba(25,25,25,0.96), rgba(10,10,10,0.98))",
+        textAlign: "center",
+        boxShadow:
+          "0 24px 70px rgba(0,0,0,0.36)",
+      }}
+    >
+      <div
+        style={{
+          width: "66px",
+          height: "66px",
+          margin: "0 auto 18px",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: accentColor,
+          color: "#111",
+          fontSize: "34px",
+          fontWeight: 900,
+        }}
+      >
+        ✓
+      </div>
+
+      <div
+        style={{
+          color: accentColor,
+          fontSize: "12px",
+          fontWeight: 800,
+          letterSpacing: "0.18em",
+          marginBottom: "10px",
+        }}
+      >
+        SUBMISSION RECEIVED
+      </div>
+
+      <h2
+        style={{
+          margin: "0 0 12px",
+          color: "#fff",
+          fontSize: "clamp(25px, 4vw, 38px)",
+        }}
+      >
+        Your memory is now part of the journey
+      </h2>
+
+      <p
+        style={{
+          maxWidth: "650px",
+          margin: "0 auto",
+          color: "#d8d0c5",
+          lineHeight: 1.65,
+          fontSize: "15px",
+        }}
+      >
+        Thank you for contributing to The Human Mosaic.
+        Your image has been received successfully and is
+        now waiting for human review.
+      </p>
+
+      <div
+        style={{
+          maxWidth: "610px",
+          margin: "26px auto 0",
+          padding: "18px",
+          borderRadius: "18px",
+          background: "rgba(255,255,255,0.045)",
+          border:
+            "1px solid rgba(255,255,255,0.10)",
+          display: "grid",
+          gap: "12px",
+          textAlign: "left",
+        }}
+      >
+        <div>
+          <strong style={{ color: "#fff" }}>
+            Submission ID
+          </strong>
+
+          <div
+            style={{
+              marginTop: "4px",
+              color: "#cfc6ba",
+              fontSize: "13px",
+              wordBreak: "break-word",
+            }}
+          >
+            {submittedMemory.submissionId}
+          </div>
+        </div>
+
+        <div>
+          <strong style={{ color: "#fff" }}>
+            Position
+          </strong>
+
+          <div
+            style={{
+              marginTop: "4px",
+              color: "#cfc6ba",
+              fontSize: "14px",
+            }}
+          >
+            {submittedMemory.room} ·{" "}
+            {submittedMemory.wall} ·{" "}
+            {submittedMemory.section} ·{" "}
+            {submittedMemory.spot}
+          </div>
+        </div>
+
+        <div>
+          <strong style={{ color: "#fff" }}>
+            Current status
+          </strong>
+
+          <div
+            style={{
+              marginTop: "4px",
+              color: accentColor,
+              fontSize: "14px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+            }}
+          >
+            Waiting for review
+          </div>
+        </div>
+      </div>
+
+      <p
+        style={{
+          maxWidth: "610px",
+          margin: "22px auto 0",
+          color: "#a9a096",
+          fontSize: "13px",
+          lineHeight: 1.6,
+        }}
+      >
+        You will receive an email after the review.
+        If your memory is approved, your official
+        certificate will be issued through the project’s
+        approval process.
+      </p>
+
+      <button
+        type="button"
+        onClick={handleRequestClose}
+        style={{
+          marginTop: "26px",
+          padding: "14px 28px",
+          border: "none",
+          borderRadius: "999px",
+          background: accentColor,
+          color: "#111",
+          fontSize: "15px",
+          fontWeight: 800,
+          cursor: "pointer",
+        }}
+      >
+        Return to the Museum
+      </button>
+    </section>
+  ) : (
+    <StepUpload
+      room={selectedRoom}
+      wall={selectedWall}
+      section={selectedSection}
+      spot={selectedSpot}
+      reservedSlotCode={reservedSlotCode}
+      accentColor={accentColor}
+      selectedFile={selectedFile}
+      previewUrl={previewUrl}
+      memoryNote={memoryNote}
+      uploadFormError={uploadFormError}
+      rightsConfirmed={rightsConfirmed}
+      guidelinesConfirmed={guidelinesConfirmed}
+      isSubmitting={isSubmittingMemory}
+      onImageSelection={handleImageSelection}
+      onMemoryNoteChange={setMemoryNote}
+      onRightsConfirmedChange={setRightsConfirmed}
+      onGuidelinesConfirmedChange={
+        setGuidelinesConfirmed
+      }
+      onSubmit={handleSubmitMemory}
+    />
+  )
 )}
 
         {reservationError && (
@@ -1532,7 +1702,7 @@ setPaymentError("");
           </div>
 
           <div style={navigationActions}>
-            {currentStep > 1 && (
+            {currentStep > 1 && !submittedMemory && (
               <button
                 type="button"
                 style={backButton}
@@ -1567,7 +1737,9 @@ setPaymentError("");
         </section>
 
         <p style={testNote}>
-  {currentStep === 4
+  {submittedMemory
+    ? "Submission completed successfully. You may now return to the museum."
+    : currentStep === 4
     ? "Your position remains reserved while you prepare the secure payment."
     : currentStep === 5
     ? "Payment confirmed. Complete your memory submission for review."
