@@ -82,6 +82,25 @@ const WALL_SECTIONS = {
 
 const HOLD_MINUTES = 15;
 
+function createSafeImageFileName(originalName) {
+  const extension =
+    originalName
+      .split(".")
+      .pop()
+      ?.toLowerCase() || "jpg";
+
+  const nameWithoutExtension =
+    originalName
+      .replace(/\.[^/.]+$/, "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .toLowerCase() || "memory";
+
+  return `${nameWithoutExtension}.${extension}`;
+}
+
 export default function UploadMemoryModal({
   open,
   onClose,
@@ -739,7 +758,7 @@ paymentReturnHandledRef.current = false;
   setPreviewUrl(nextPreviewUrl);
 }
 
- async function handleUploadInterfaceTest() {
+ async function handleSubmitMemory() {
   setUploadFormError("");
 
   if (isSubmittingMemory) {
@@ -763,23 +782,87 @@ paymentReturnHandledRef.current = false;
     return;
   }
 
+  if (
+    !paymentConfirmed ||
+    !selectedRoom ||
+    !selectedWall ||
+    !selectedSection ||
+    !selectedSpot ||
+    !reservedSlotCode
+  ) {
+    setUploadFormError(
+      "Your paid position could not be verified. Please close and reopen the upload window."
+    );
+    return;
+  }
+
   setIsSubmittingMemory(true);
 
-  await new Promise((resolve) => {
-    window.setTimeout(resolve, 2500);
-  });
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
-  console.log("Upload submission state ready:", {
-    room: selectedRoom,
-    wall: selectedWall,
-    section: selectedSection,
-    spot: selectedSpot,
-    slotCode: reservedSlotCode,
-    fileName: selectedFile.name,
-    note: memoryNote.trim(),
-  });
+    if (
+      sessionError ||
+      !session?.access_token ||
+      !session?.user
+    ) {
+      throw new Error(
+        "Your login session has expired. Please sign in again before submitting your memory."
+      );
+    }
 
-  setIsSubmittingMemory(false);
+    const submissionId = crypto.randomUUID();
+
+    const safeOriginalFileName =
+      createSafeImageFileName(selectedFile.name);
+
+    const storageFileName =
+      `${submissionId}-${safeOriginalFileName}`;
+
+    const storagePath =
+      `app/${session.user.id}/${storageFileName}`;
+
+    console.log(
+      "Real memory submission prepared:",
+      {
+        submissionId,
+        userId: session.user.id,
+        room: selectedRoom,
+        wall: selectedWall,
+        section: selectedSection,
+        spot: selectedSpot,
+        slotCode: reservedSlotCode,
+        storagePath,
+        originalFileName: selectedFile.name,
+        safeOriginalFileName,
+        note: memoryNote.trim(),
+      }
+    );
+
+    /*
+     * Il caricamento reale verrà inserito nel prossimo
+     * blocco. Per ora controlliamo soltanto che tutti i
+     * dati necessari vengano preparati correttamente.
+     */
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 600);
+    });
+  } catch (error) {
+    console.error(
+      "Prepare memory submission error:",
+      error
+    );
+
+    setUploadFormError(
+      error.message ||
+        "Your memory could not be prepared for submission. Please try again."
+    );
+  } finally {
+    setIsSubmittingMemory(false);
+  }
 }
 
 async function handleStartPayment() {
@@ -1250,7 +1333,7 @@ setPaymentError("");
     onGuidelinesConfirmedChange={
       setGuidelinesConfirmed
     }
-    onSubmit={handleUploadInterfaceTest}
+    onSubmit={handleSubmitMemory}
   />
 )}
 
