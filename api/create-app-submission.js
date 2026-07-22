@@ -160,33 +160,56 @@ export default async function handler(req, res) {
      * presente nel bucket prima di creare
      * la submission.
      */
-    const { data: storageObject, error: storageError } =
-      await supabaseAdmin
-        .schema("storage")
-        .from("objects")
-        .select("id, name, bucket_id")
-        .eq("bucket_id", "images")
-        .eq("name", safeImageFileName)
-        .maybeSingle();
+    const expectedFolder =
+  `app/${user.id}`;
 
-    if (storageError) {
-      console.error(
-        "Storage object verification error:",
-        storageError
-      );
+if (
+  !safeImageFileName.startsWith(
+    `${expectedFolder}/`
+  )
+) {
+  return res.status(403).json({
+    error:
+      "The uploaded image does not belong to the authenticated user",
+  });
+}
 
-      return res.status(500).json({
-        error:
-          "The uploaded image could not be verified",
-      });
-    }
+const fileNameOnly =
+  safeImageFileName.split("/").pop();
 
-    if (!storageObject) {
-      return res.status(409).json({
-        error:
-          "The uploaded image was not found",
-      });
-    }
+const { data: storedFiles, error: storageError } =
+  await supabaseAdmin.storage
+    .from("images")
+    .list(expectedFolder, {
+      search: fileNameOnly,
+      limit: 100,
+    });
+
+if (storageError) {
+  console.error(
+    "Storage object verification error:",
+    storageError
+  );
+
+  return res.status(500).json({
+    error:
+      "The uploaded image could not be verified",
+  });
+}
+
+const storageObject =
+  Array.isArray(storedFiles)
+    ? storedFiles.find(
+        (file) => file.name === fileNameOnly
+      )
+    : null;
+
+if (!storageObject) {
+  return res.status(409).json({
+    error:
+      "The uploaded image was not found",
+  });
+}
 
     /*
      * Usiamo un client autenticato con il token
@@ -233,6 +256,18 @@ export default async function handler(req, res) {
         "Create app submission RPC error:",
         error
       );
+
+      const { error: cleanupError } =
+  await supabaseAdmin.storage
+    .from("images")
+    .remove([safeImageFileName]);
+
+if (cleanupError) {
+  console.error(
+    "Uploaded image rollback error:",
+    cleanupError
+  );
+}
 
       const message =
         error.message ||
