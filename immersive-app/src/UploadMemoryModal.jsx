@@ -814,6 +814,58 @@ paymentReturnHandledRef.current = false;
       );
     }
 
+    const userMetadata =
+  session.user.user_metadata || {};
+
+const {
+  data: userProfile,
+  error: userProfileError,
+} = await supabase
+  .from("user_profiles")
+  .select("first_name, last_name, country")
+  .eq("id", session.user.id)
+  .maybeSingle();
+
+if (userProfileError) {
+  console.error(
+    "Load user profile error:",
+    userProfileError
+  );
+
+  throw new Error(
+    "Your account information could not be loaded. Please try again."
+  );
+}
+
+const firstName =
+  String(
+    userMetadata.first_name ||
+      userProfile?.first_name ||
+      ""
+  ).trim();
+
+const lastName =
+  String(
+    userMetadata.last_name ||
+      userProfile?.last_name ||
+      ""
+  ).trim();
+
+const fullName =
+  `${firstName} ${lastName}`.trim();
+
+const country =
+  String(
+    userMetadata.country ||
+      userProfile?.country ||
+      ""
+  ).trim();
+
+const email =
+  String(session.user.email || "")
+    .trim()
+    .toLowerCase();
+
     const submissionId = crypto.randomUUID();
 
     const safeOriginalFileName =
@@ -866,45 +918,6 @@ console.log(
   "Storage upload completed:",
   storagePath
 );
-
-const userMetadata =
-  session.user.user_metadata || {};
-console.log("User metadata:", userMetadata);
-
-const firstName =
-  String(userMetadata.first_name || "").trim();
-
-const lastName =
-  String(userMetadata.last_name || "").trim();
-
-const fullName =
-  `${firstName} ${lastName}`.trim();
-
-const country =
-  String(userMetadata.country || "").trim();
-
-const email =
-  String(session.user.email || "")
-    .trim()
-    .toLowerCase();
-
-if (!fullName) {
-  throw new Error(
-    "Your first and last name could not be found. Please update your account information before submitting your memory."
-  );
-}
-
-if (!email) {
-  throw new Error(
-    "Your account email could not be found. Please sign in again."
-  );
-}
-
-if (!country) {
-  throw new Error(
-    "Your country could not be found. Please update your account information before submitting your memory."
-  );
-}
 
 const {
   data: publicImageData,
