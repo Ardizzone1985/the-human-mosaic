@@ -404,6 +404,7 @@ export default function App() {
 } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
