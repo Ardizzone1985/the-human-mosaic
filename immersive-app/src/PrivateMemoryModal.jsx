@@ -6,8 +6,29 @@ export default function PrivateMemoryModal({
   if (!memory) return null;
 
   const normalizedStatus = String(
-    memory.status || memory.submission_status || ""
-  ).toLowerCase();
+  memory.status ||
+  memory.submission_status ||
+  memory.review_status ||
+  ""
+).toLowerCase();
+
+const submittedDate =
+  memory.created_at
+    ? new Date(memory.created_at).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "Not available";
+
+const submissionCode =
+  memory.museum_id ||
+  memory.museum_code ||
+  `THM-${String(
+    memory.id ||
+    memory.submission_id ||
+    0
+  ).padStart(8, "0")}`;
 
   const isRejected = normalizedStatus === "rejected";
   const isPending =
@@ -99,33 +120,24 @@ export default function PrivateMemoryModal({
 
         <div style={detailsStyle}>
           <DetailItem
-            label="ROOM"
-            value={memory.room}
-          />
+  label="ROOM"
+  value={memory.room}
+/>
 
-          <DetailItem
-            label="WALL"
-            value={memory.wall}
-          />
+<DetailItem
+  label="SUBMISSION"
+  value={submissionCode}
+/>
 
-          <DetailItem
-            label="SECTION"
-            value={memory.section}
-          />
+<DetailItem
+  label="COUNTRY"
+  value={memory.country}
+/>
 
-          <DetailItem
-            label="SPOT"
-            value={memory.spot}
-          />
-
-          <DetailItem
-            label="SUBMISSION ID"
-            value={
-              memory.id ||
-              memory.submission_id ||
-              memory.submissionId
-            }
-          />
+<DetailItem
+  label="SUBMITTED"
+  value={submittedDate}
+/>
         </div>
 
         {(memory.note ||
