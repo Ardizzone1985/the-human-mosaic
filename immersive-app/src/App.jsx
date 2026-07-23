@@ -405,6 +405,7 @@ export default function App() {
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
+  const [replacementMemory, setReplacementMemory] = useState(null);
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
@@ -1011,7 +1012,9 @@ onRegister={() => {
   memory={selectedPrivateMemory}
   onClose={() => setSelectedPrivateMemory(null)}
   onReplaceImage={(memory) => {
-    console.log("Replace image:", memory);
+    setSelectedPrivateMemory(null);
+    setReplacementMemory(memory);
+    setShowUploadMemoryModal(true);
   }}
 />
       
