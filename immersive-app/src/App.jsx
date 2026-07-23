@@ -775,6 +775,8 @@ onRegister={() => {
 }}
   onChangePassword={() => {}}
         onMemorySelect={(memory) => {
+  console.log("MEMORY:", memory);
+
   setShowMuseumIdentity(false);
 
   const status = String(
@@ -783,9 +785,9 @@ onRegister={() => {
     ""
   ).toLowerCase();
 
-  if (
-    status === "approved"
-  ) {
+  console.log("STATUS:", status);
+
+  if (status === "approved") {
     setSelectedPhoto(memory);
     return;
   }
