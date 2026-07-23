@@ -940,26 +940,52 @@ async function deleteProjectNews(id) {
   }
 
   try {
-    await fetch("/api/send-email", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    submissionId: submission.submission_id,
-    fullName: submission.full_name,
-    email: submission.email,
-    country: submission.country,
-    room: submission.room,
-    wall: submission.wall,
-    section: submission.section,
-    spot: submission.spot
-  })
-});
-  } catch (err) {
-    console.error("Reject email send error:", err);
-  }
+  const emailResponse = await fetch(
+    "/api/reject-email",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        submissionId:
+          submission.submission_id,
+        fullName:
+          submission.full_name,
+        email:
+          submission.email,
+        country:
+          submission.country,
+        room:
+          submission.room,
+        wall:
+          submission.wall,
+        section:
+          submission.section,
+        spot:
+          submission.spot,
+        slotCode:
+          submission.slot_code
+      })
+    }
+  );
 
+  const emailResult = await emailResponse
+    .json()
+    .catch(() => ({}));
+
+  if (!emailResponse.ok) {
+    throw new Error(
+      emailResult.error ||
+        "The rejection email could not be sent."
+    );
+  }
+} catch (err) {
+  console.error(
+    "Reject email send error:",
+    err
+  );
+}
   await loadSubmissions(currentStatus, currentRoom, currentAi);
   await loadAdminStats();
 }
