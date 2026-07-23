@@ -13,6 +13,7 @@ import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
+import PrivateMemoryModal from "./PrivateMemoryModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
 import WelcomeGate from "./WelcomeGate.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
