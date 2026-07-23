@@ -6,6 +6,7 @@ export default function PrivateMemoryModal({
   if (!memory) return null;
 
   const normalizedStatus = String(
+  memory.approval_status ||
   memory.status ||
   memory.submission_status ||
   memory.review_status ||
