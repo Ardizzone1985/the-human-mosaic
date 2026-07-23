@@ -106,6 +106,7 @@ export default function UploadMemoryModal({
   onClose,
   paymentReturn,
   onPaymentReturnHandled,
+  replacementMemory = null,
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -150,6 +151,9 @@ const [recoveredPaidSlot, setRecoveredPaidSlot] =
 const [submittedMemory, setSubmittedMemory] =
   useState(null);
 
+  const isReplacement =
+  Boolean(replacementMemory);
+
 const paymentReturnHandledRef = useRef(false);
 
   useEffect(() => {
@@ -181,8 +185,36 @@ setRecoveredPaidSlot(null);
       setIsSubmittingMemory(false);
 setSubmittedMemory(null);
 paymentReturnHandledRef.current = false;
+      
     }
   }, [open]);
+
+  useEffect(() => {
+  if (!open || !replacementMemory) {
+    return;
+  }
+
+  setCurrentStep(5);
+
+  setSelectedRoom(replacementMemory.room);
+  setSelectedWall(replacementMemory.wall);
+  setSelectedSection(replacementMemory.section);
+  setSelectedSpot(replacementMemory.spot);
+
+  setSelectedSlotCode(
+    replacementMemory.slot_code
+  );
+
+  setReservedSlotCode(
+    replacementMemory.slot_code
+  );
+
+  setPaymentConfirmed(true);
+
+  setFlowNotice(
+    "Your existing position has been restored. You can now upload a replacement image without another payment."
+  );
+}, [open, replacementMemory]);
 
   useEffect(() => {
   return () => {
