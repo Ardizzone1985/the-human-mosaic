@@ -980,6 +980,9 @@ console.log(
       imageFileName: storagePath,
       imageUrl,
       room: selectedRoom,
+      wall: selectedWall,
+  section: selectedSection,
+  spot: selectedSpot,
     }),
   }
 );
