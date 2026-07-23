@@ -82,16 +82,19 @@ export default async function handler(req, res) {
     }
 
     const {
-      slotCode,
-      submissionId,
-      fullName,
-      email,
-      country,
-      note,
-      imageFileName,
-      imageUrl,
-      room,
-    } = req.body || {};
+  slotCode,
+  submissionId,
+  fullName,
+  email,
+  country,
+  note,
+  imageFileName,
+  imageUrl,
+  room,
+  wall,
+  section,
+  spot,
+} = req.body || {};
 
     const safeSlotCode = cleanText(
       slotCode,
@@ -133,6 +136,26 @@ export default async function handler(req, res) {
       1500
     );
 
+    const safeRoom = cleanText(
+  room,
+  100
+);
+
+const safeWall = cleanText(
+  wall,
+  100
+);
+
+const safeSection = cleanText(
+  section,
+  100
+);
+
+const safeSpot = cleanText(
+  spot,
+  100
+);
+
     if (
       !safeSlotCode ||
       !safeSubmissionId ||
@@ -147,9 +170,9 @@ export default async function handler(req, res) {
     }
 
     if (
-      room &&
-      !ALLOWED_ROOMS.includes(room)
-    ) {
+  safeRoom &&
+  !ALLOWED_ROOMS.includes(safeRoom)
+) {
       return res.status(400).json({
         error: "Invalid Room",
       });
@@ -304,6 +327,50 @@ if (cleanupError) {
         "The submission was created but no confirmation was returned"
       );
     }
+
+    try {
+  const emailResponse = await fetch(
+    "https://www.thehumanmosaic.art/api/send-email",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: "submitted",
+        email: safeEmail,
+        fullName: safeFullName,
+        submissionId: result.submission_id,
+        room: safeRoom,
+        wall: safeWall,
+        section: safeSection,
+        spot: safeSpot,
+        country: safeCountry,
+      }),
+    }
+  );
+
+  const emailResult = await emailResponse
+    .json()
+    .catch(() => ({}));
+
+  if (!emailResponse.ok) {
+    console.error(
+      "Submitted email delivery error:",
+      emailResult
+    );
+  } else {
+    console.log(
+      "Submitted email delivered:",
+      result.submission_id
+    );
+  }
+} catch (emailError) {
+  console.error(
+    "Submitted email request error:",
+    emailError
+  );
+}
 
     return res.status(200).json({
       success: true,
