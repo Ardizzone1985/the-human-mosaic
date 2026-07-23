@@ -26,6 +26,7 @@ export default function MuseumIdentity({
   const [likesGiven, setLikesGiven] = useState(0);
 const [loadingLikesGiven, setLoadingLikesGiven] = useState(false);
   const [commentsWritten, setCommentsWritten] = useState(0);
+  const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
 const [loadingCommentsWritten, setLoadingCommentsWritten] = useState(false);
   const [viewsReceived, setViewsReceived] = useState(0);
 const [loadingViewsReceived, setLoadingViewsReceived] = useState(false);
