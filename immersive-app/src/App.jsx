@@ -775,9 +775,23 @@ onRegister={() => {
 }}
   onChangePassword={() => {}}
         onMemorySelect={(memory) => {
-    setShowMuseumIdentity(false);
+  setShowMuseumIdentity(false);
+
+  const status = String(
+    memory.status ||
+    memory.submission_status ||
+    ""
+  ).toLowerCase();
+
+  if (
+    status === "approved"
+  ) {
     setSelectedPhoto(memory);
-  }}
+    return;
+  }
+
+  setSelectedPrivateMemory(memory);
+}}
   onLogout={async () => {
     setShowMuseumIdentity(false);
     await logout();
@@ -988,6 +1002,14 @@ onRegister={() => {
   handleLike={handleLike}
   handleSendComment={handleSendComment}
   onClose={() => setSelectedPhoto(null)}
+/>
+
+      <PrivateMemoryModal
+  memory={selectedPrivateMemory}
+  onClose={() => setSelectedPrivateMemory(null)}
+  onReplaceImage={(memory) => {
+    console.log("Replace image:", memory);
+  }}
 />
       
     <div
