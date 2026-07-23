@@ -780,10 +780,11 @@ onRegister={() => {
   setShowMuseumIdentity(false);
 
   const status = String(
-    memory.status ||
-    memory.submission_status ||
-    ""
-  ).toLowerCase();
+  memory.approval_status ||
+  memory.status ||
+  memory.submission_status ||
+  ""
+).toLowerCase();
 
   console.log("STATUS:", status);
 
