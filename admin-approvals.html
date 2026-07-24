@@ -627,10 +627,29 @@ async function deleteProjectNews(id) {
     
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
+  const rejectModal = document.getElementById("rejectModal");
+const rejectReason = document.getElementById("rejectReason");
+const cancelRejectBtn = document.getElementById("cancelRejectBtn");
+const confirmRejectBtn = document.getElementById("confirmRejectBtn");
+
+let pendingRejectSubmissionId = null;
 
     let currentRoom = "ALL";
     let currentStatus = "pending";
     let currentAi = "ALL";
+
+  function openRejectModal(submissionId) {
+  pendingRejectSubmissionId = submissionId;
+  rejectReason.selectedIndex = 0;
+  rejectModal.hidden = false;
+}
+
+function closeRejectModal() {
+  pendingRejectSubmissionId = null;
+  rejectModal.hidden = true;
+}
+
+cancelRejectBtn.addEventListener("click", closeRejectModal);
 
     function getRoomBadgeClass(room) {
       if (room === "Identity") return "badge-room-identity";
