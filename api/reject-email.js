@@ -1,39 +1,6 @@
 import { Resend } from 'resend';
-import crypto from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-function createReplacementToken(submissionId) {
-  const secret = process.env.REPLACEMENT_LINK_SECRET;
-
-  if (!secret) {
-    throw new Error(
-      "Missing REPLACEMENT_LINK_SECRET environment variable"
-    );
-  }
-
-  const payload = {
-    submissionId: String(submissionId || "").trim(),
-    expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
-  };
-
-  if (!payload.submissionId) {
-    throw new Error(
-      "A valid submission ID is required to create the replacement link"
-    );
-  }
-
-  const encodedPayload = Buffer.from(
-    JSON.stringify(payload)
-  ).toString("base64url");
-
-  const signature = crypto
-    .createHmac("sha256", secret)
-    .update(encodedPayload)
-    .digest("base64url");
-
-  return `${encodedPayload}.${signature}`;
-}
 
 async function getJsonBody(req) {
   return new Promise((resolve, reject) => {
@@ -51,6 +18,12 @@ export default async function handler(req, res) {
     if (!body.email || body.email === "—") {
       return res.status(400).json({ error: "Invalid email" });
     }
+
+    if (!body.submissionId) {
+  return res.status(400).json({
+    error: "Invalid submission ID",
+  });
+}
 
     const replacementLink =
   `https://www.thehumanmosaic.art/?replacementSubmissionId=${encodeURIComponent(
