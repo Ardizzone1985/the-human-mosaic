@@ -226,12 +226,13 @@ paymentReturnHandledRef.current = false;
 
   useEffect(() => {
   if (
-    !open ||
-    !paymentReturn ||
-    paymentReturnHandledRef.current
-  ) {
-    return;
-  }
+  !open ||
+  isReplacement ||
+  !paymentReturn ||
+  paymentReturnHandledRef.current
+) {
+  return;
+}
 
   paymentReturnHandledRef.current = true;
 
@@ -533,6 +534,7 @@ paymentReturnHandledRef.current = false;
   open,
   paymentReturn,
   onPaymentReturnHandled,
+  isReplacement,
 ]);
 
   useEffect(() => {
@@ -1496,7 +1498,9 @@ setPaymentError("");
 
     <div style={flowNoticeText}>
       <strong>
-  {recoveredPaidSlot
+  {isReplacement
+    ? "Replacement available"
+    : recoveredPaidSlot
     ? "Purchased position recovered"
     : "Payment cancelled safely"}
 </strong>
