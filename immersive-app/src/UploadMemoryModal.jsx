@@ -921,7 +921,9 @@ if (!country) {
   );
 }
 
-const submissionId = crypto.randomUUID();
+const submissionId = isReplacement
+  ? replacementMemory.submission_id
+  : crypto.randomUUID();
 
     const safeOriginalFileName =
       createSafeImageFileName(selectedFile.name);
@@ -998,8 +1000,12 @@ console.log(
   }
 );
 
-    const submissionResponse = await fetch(
-  "https://www.thehumanmosaic.art/api/create-app-submission",
+    const endpoint = isReplacement
+  ? "https://www.thehumanmosaic.art/api/replace-app-submission"
+  : "https://www.thehumanmosaic.art/api/create-app-submission";
+
+const submissionResponse = await fetch(
+  endpoint,
   {
     method: "POST",
     headers: {
@@ -1007,20 +1013,29 @@ console.log(
       Authorization:
         `Bearer ${session.access_token}`,
     },
-    body: JSON.stringify({
-      slotCode: reservedSlotCode,
-      submissionId,
-      fullName,
-      email,
-      country,
-      note: memoryNote.trim(),
-      imageFileName: storagePath,
-      imageUrl,
-      room: selectedRoom,
-      wall: selectedWall,
-  section: selectedSection,
-  spot: selectedSpot,
-    }),
+    body: JSON.stringify(
+  isReplacement
+    ? {
+        submissionId,
+        imageFileName: storagePath,
+        imageUrl,
+        note: memoryNote.trim(),
+      }
+    : {
+        slotCode: reservedSlotCode,
+        submissionId,
+        fullName,
+        email,
+        country,
+        note: memoryNote.trim(),
+        imageFileName: storagePath,
+        imageUrl,
+        room: selectedRoom,
+        wall: selectedWall,
+        section: selectedSection,
+        spot: selectedSpot,
+      }
+),
   }
 );
 
