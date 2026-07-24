@@ -406,6 +406,16 @@ export default function App() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
   const [replacementMemory, setReplacementMemory] = useState(null);
+  const [replacementSubmissionId, setReplacementSubmissionId] =
+  useState(() => {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    return String(
+      params.get("replacementSubmissionId") || ""
+    ).trim();
+  });
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
@@ -473,6 +483,90 @@ closeDialog,
     setShowWelcomeGate(false);
   }
 }, [user]);
+
+  useEffect(() => {
+  if (
+    !replacementSubmissionId ||
+    loadingAuth
+  ) {
+    return;
+  }
+
+  /*
+   * Il link può essere aperto anche senza una sessione attiva.
+   * In quel caso conserviamo il parametro nell'URL e mostriamo
+   * il login. Dopo l'autenticazione questo stesso effect riparte.
+   */
+  if (!user) {
+    setShowWelcomeGate(false);
+    setAuthMode("login");
+    return;
+  }
+
+  let cancelled = false;
+
+  async function openReplacementFromEmail() {
+    const { data, error } = await supabase.rpc(
+      "get_my_memories"
+    );
+
+    if (cancelled) return;
+
+    if (error) {
+      console.error(
+        "Load email replacement memory error:",
+        error
+      );
+      return;
+    }
+
+    const memories = Array.isArray(data)
+      ? data
+      : [];
+
+    const memory = memories.find(
+      (item) =>
+        String(item?.submission_id || "") ===
+        replacementSubmissionId
+    );
+
+    if (!memory) {
+      console.error(
+        "Replacement memory not found or not owned by the current user."
+      );
+      return;
+    }
+
+    const status = String(
+      memory.approval_status ||
+        memory.status ||
+        memory.submission_status ||
+        ""
+    ).toLowerCase();
+
+    if (status !== "rejected") {
+      console.error(
+        "This memory is not currently available for replacement."
+      );
+      return;
+    }
+
+    setAuthMode(null);
+    setShowWelcomeGate(false);
+    setShowMuseumIdentity(false);
+    setSelectedPrivateMemory(memory);
+  }
+
+  openReplacementFromEmail();
+
+  return () => {
+    cancelled = true;
+  };
+}, [
+  replacementSubmissionId,
+  loadingAuth,
+  user,
+]);
 
   useEffect(() => {
   if (!paymentReturn || loadingAuth) {
@@ -1012,7 +1106,27 @@ onRegister={() => {
 
       <PrivateMemoryModal
   memory={selectedPrivateMemory}
-  onClose={() => setSelectedPrivateMemory(null)}
+  onClose={() => {
+  setSelectedPrivateMemory(null);
+
+  if (replacementSubmissionId) {
+    setReplacementSubmissionId("");
+
+    const cleanUrl = new URL(
+      window.location.href
+    );
+
+    cleanUrl.searchParams.delete(
+      "replacementSubmissionId"
+    );
+
+    window.history.replaceState(
+      {},
+      document.title,
+      `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+    );
+  }
+}}
   onReplaceImage={(memory) => {
     setSelectedPrivateMemory(null);
     setReplacementMemory(memory);
