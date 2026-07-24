@@ -166,14 +166,132 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(501).json({
-      error:
-        "Replacement database function not yet connected",
-      submissionId: safeSubmissionId,
-      imageFileName: safeImageFileName,
-      imageUrl: safeImageUrl || null,
-      note: safeNote,
+    const supabaseUser = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY,
+  {
+    global: {
+      headers: {
+        Authorization:
+          `Bearer ${accessToken}`,
+      },
+    },
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  }
+);
+
+const { data, error } =
+  await supabaseUser.rpc(
+    "replace_my_rejected_app_submission",
+    {
+      p_submission_id:
+        safeSubmissionId,
+      p_image_file_name:
+        safeImageFileName,
+      p_image_url:
+        safeImageUrl || null,
+      p_note:
+        safeNote || null,
+    }
+  );
+
+if (error) {
+  console.error(
+    "Replace app submission RPC error:",
+    error
+  );
+
+  /*
+   * Se il database rifiuta la sostituzione,
+   * eliminiamo la nuova immagine appena caricata.
+   */
+  const { error: cleanupError } =
+    await supabaseAdmin.storage
+      .from("images")
+      .remove([safeImageFileName]);
+
+  if (cleanupError) {
+    console.error(
+      "Replacement image rollback error:",
+      cleanupError
+    );
+  }
+
+  const message =
+    error.message ||
+    "The memory could not be replaced";
+
+  const conflict =
+    message.includes(
+      "Only a rejected memory"
+    ) ||
+    message.includes(
+      "does not belong"
+    ) ||
+    message.includes(
+      "not linked"
+    ) ||
+    message.includes(
+      "Payment has not been confirmed"
+    ) ||
+    message.includes(
+      "Submission not found"
+    );
+
+  return res
+    .status(conflict ? 409 : 500)
+    .json({
+      error: message,
     });
+}
+
+const result =
+  Array.isArray(data) && data.length > 0
+    ? data[0]
+    : null;
+
+if (!result?.submission_id) {
+  throw new Error(
+    "The replacement was saved but no confirmation was returned"
+  );
+}
+
+/*
+ * Solo dopo il successo del database eliminiamo
+ * la vecchia immagine dallo Storage.
+ */
+const oldImageFileName =
+  result.old_image_file_name;
+
+if (
+  oldImageFileName &&
+  oldImageFileName !== safeImageFileName
+) {
+  const { error: oldImageDeleteError } =
+    await supabaseAdmin.storage
+      .from("images")
+      .remove([oldImageFileName]);
+
+  if (oldImageDeleteError) {
+    console.error(
+      "Old replacement image deletion warning:",
+      oldImageDeleteError
+    );
+  }
+}
+
+return res.status(200).json({
+  success: true,
+  submissionId:
+    result.submission_id,
+  slotCode:
+    result.slot_code,
+  slotStatus:
+    result.slot_status,
+});
   } catch (error) {
     console.error(
       "REPLACE APP SUBMISSION ERROR:",
