@@ -565,7 +565,7 @@ closeDialog,
 }, [
   replacementSubmissionId,
   loadingAuth,
-  user,
+  user?.id,
 ]);
 
   useEffect(() => {
@@ -1128,10 +1128,26 @@ onRegister={() => {
   }
 }}
   onReplaceImage={(memory) => {
-    setSelectedPrivateMemory(null);
-    setReplacementMemory(memory);
-    setShowUploadMemoryModal(true);
-  }}
+  setSelectedPrivateMemory(null);
+  setReplacementMemory(memory);
+  setReplacementSubmissionId("");
+
+  const cleanUrl = new URL(
+    window.location.href
+  );
+
+  cleanUrl.searchParams.delete(
+    "replacementSubmissionId"
+  );
+
+  window.history.replaceState(
+    {},
+    document.title,
+    `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+  );
+
+  setShowUploadMemoryModal(true);
+}}
 />
       
     <div
