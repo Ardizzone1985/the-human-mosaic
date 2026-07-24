@@ -915,6 +915,31 @@ async function deleteProjectNews(id) {
 }
 
     async function rejectSubmission(submissionId) {
+      const rejectionReason = prompt(
+  "Please explain why this submission requires a replacement:"
+);
+
+if (rejectionReason === null) {
+  return;
+}
+
+const cleanRejectionReason = rejectionReason.trim();
+
+if (!cleanRejectionReason) {
+  alert(
+    "Please provide a clear reason before rejecting the submission."
+  );
+  return;
+}
+
+const confirmReject = confirm(
+  "Reject this submission and send the replacement instructions to the participant?"
+);
+
+if (!confirmReject) {
+  return;
+}
+      
   const { error } = await supabaseClient
     .from("submissions")
     .update({
@@ -965,7 +990,9 @@ async function deleteProjectNews(id) {
         spot:
           submission.spot,
         slotCode:
-          submission.slot_code
+  submission.slot_code,
+rejectionReason:
+  cleanRejectionReason
       })
     }
   );
