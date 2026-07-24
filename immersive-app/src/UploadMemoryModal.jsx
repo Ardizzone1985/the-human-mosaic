@@ -930,8 +930,9 @@ const submissionId = isReplacement
     const safeOriginalFileName =
       createSafeImageFileName(selectedFile.name);
 
-    const storageFileName =
-      `${submissionId}-${safeOriginalFileName}`;
+    const storageFileName = isReplacement
+  ? `${submissionId}-replacement-${Date.now()}-${safeOriginalFileName}`
+  : `${submissionId}-${safeOriginalFileName}`;
 
     const storagePath =
       `app/${session.user.id}/${storageFileName}`;
