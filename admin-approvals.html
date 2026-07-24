@@ -1038,31 +1038,14 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
   }
 }
 
-    async function rejectSubmission(submissionId) {
-      const rejectionReason = prompt(
-  "Please explain why this submission requires a replacement:"
-);
-
-if (rejectionReason === null) {
-  return;
-}
-
-const cleanRejectionReason = rejectionReason.trim();
-
-if (!cleanRejectionReason) {
-  alert(
-    "Please provide a clear reason before rejecting the submission."
-  );
-  return;
-}
-
-const confirmReject = confirm(
-  "Reject this submission and send the replacement instructions to the participant?"
-);
-
-if (!confirmReject) {
-  return;
-}
+    async function rejectSubmission(
+  submissionId,
+  cleanRejectionReason
+) {
+  if (!submissionId || !cleanRejectionReason) {
+    alert("Unable to reject this submission.");
+    return;
+  }
       
   const { error } = await supabaseClient
     .from("submissions")
