@@ -798,7 +798,7 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
 
         <div class="actions">
   ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
-  ${showReject ? `<button class="reject-btn" onclick="rejectSubmission('${item.submission_id}')">Reject</button>` : ""}
+  ${showReject ? `<button class="reject-btn" onclick="openRejectModal('${item.submission_id}')">Reject</button>` : ""}
   <button class="delete-btn" onclick="deletePhotoAndFreeSlot('${item.submission_id}', '${item.image_file_name}', '${item.slot_code}')">
     Delete Photo + Free Slot
   </button>
@@ -1180,6 +1180,7 @@ statusFilterButtons.forEach(button => {
 
     window.approveSubmission = approveSubmission;
 window.rejectSubmission = rejectSubmission;
+  window.openRejectModal = openRejectModal;
 window.downloadCertificate = downloadCertificate;
 window.deletePhotoAndFreeSlot = deletePhotoAndFreeSlot;
 window.resendCertificate = resendCertificate;
