@@ -25,8 +25,8 @@ export default async function handler(req, res) {
   });
 }
 
-    const replacementLink =
-  `https://www.thehumanmosaic.art/?replacementSubmissionId=${encodeURIComponent(
+    const replacementUrl =
+  `https://the-human-mosaic-immersive-app.vercel.app/?replacementSubmissionId=${encodeURIComponent(submissionId)}`;
     body.submissionId || ""
   )}`;
     
