@@ -1068,6 +1068,60 @@ console.log(
   submissionResult
 );
 
+    /*
+ * L'email dedicata viene inviata soltanto dopo la conferma
+ * definitiva del backend replacement.
+ *
+ * Un eventuale errore email non deve trasformare un replacement
+ * già completato in un falso errore di submission.
+ */
+if (isReplacement) {
+  try {
+    const emailResponse = await fetch(
+      "https://www.thehumanmosaic.art/api/send-email",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "replacement_submitted",
+          submissionId:
+            submissionResult.submissionId,
+          fullName,
+          email,
+          country,
+          room: selectedRoom,
+          wall: selectedWall,
+          section: selectedSection,
+          spot: selectedSpot,
+        }),
+      }
+    );
+
+    const emailResult = await emailResponse
+      .json()
+      .catch(() => ({}));
+
+    if (!emailResponse.ok) {
+      console.error(
+        "Replacement confirmation email error:",
+        emailResult
+      );
+    } else {
+      console.log(
+        "Replacement confirmation email sent:",
+        emailResult
+      );
+    }
+  } catch (emailError) {
+    console.error(
+      "Replacement confirmation email request error:",
+      emailError
+    );
+  }
+}
+
     sessionStorage.removeItem(
   "thm_app_checkout"
 );
