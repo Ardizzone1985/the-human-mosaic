@@ -808,8 +808,10 @@ onRegister={() => {
   onPaymentReturnHandled={
     handlePaymentReturnHandled
   }
+  replacementMemory={replacementMemory}
   onClose={() => {
     setShowUploadMemoryModal(false);
+    setReplacementMemory(null);
   }}
 />
 
