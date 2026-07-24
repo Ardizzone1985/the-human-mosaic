@@ -538,6 +538,7 @@ paymentReturnHandledRef.current = false;
   useEffect(() => {
   if (
     !open ||
+    isReplacement ||
     paymentReturn ||
     paymentReturnHandledRef.current
   ) {
@@ -608,7 +609,11 @@ paymentReturnHandledRef.current = false;
   return () => {
     cancelled = true;
   };
-}, [open, paymentReturn]);
+}, [
+  open,
+  paymentReturn,
+  isReplacement,
+]);
 
   useEffect(() => {
     if (!open) return;
