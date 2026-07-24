@@ -649,6 +649,32 @@ function closeRejectModal() {
 
 cancelRejectBtn.addEventListener("click", closeRejectModal);
 
+    confirmRejectBtn.addEventListener("click", async () => {
+  const submissionId = pendingRejectSubmissionId;
+  const cleanRejectionReason = rejectReason.value.trim();
+
+  if (!submissionId || !cleanRejectionReason) {
+    alert("Please select a valid rejection reason.");
+    return;
+  }
+
+  confirmRejectBtn.disabled = true;
+  confirmRejectBtn.textContent = "Sending...";
+
+  try {
+    await rejectSubmission(
+      submissionId,
+      cleanRejectionReason
+    );
+
+    closeRejectModal();
+  } finally {
+    confirmRejectBtn.disabled = false;
+    confirmRejectBtn.textContent =
+      "Reject & Send Email";
+  }
+});
+
     function getRoomBadgeClass(room) {
       if (room === "Identity") return "badge-room-identity";
       if (room === "Love") return "badge-room-love";
