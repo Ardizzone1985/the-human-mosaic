@@ -374,7 +374,60 @@
 </div>
 
     <div id="grid" class="grid"></div>
+</div>
+
+<!-- Reject Submission Modal -->
+<div id="rejectModal" hidden>
+  <div class="reject-modal-box">
+    <h2>Reject Submission</h2>
+
+    <p>
+      Select the reason that will be included in the replacement email.
+    </p>
+
+    <label for="rejectReason">
+      Reason for rejection
+    </label>
+
+    <select id="rejectReason">
+      <option value="The image does not comply with The Human Mosaic Community Guidelines.">
+        The image does not comply with The Human Mosaic Community Guidelines.
+      </option>
+
+      <option value="The image does not match the selected room or theme.">
+        The image does not match the selected room or theme.
+      </option>
+
+      <option value="The image quality is too low, blurry, or unsuitable for display.">
+        The image quality is too low, blurry, or unsuitable for display.
+      </option>
+
+      <option value="The image contains content that cannot be accepted for publication.">
+        The image contains content that cannot be accepted for publication.
+      </option>
+    </select>
+
+    <div class="reject-modal-actions">
+      <button
+        type="button"
+        id="cancelRejectBtn"
+        class="open-btn"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="confirmRejectBtn"
+        class="delete-btn"
+      >
+        Reject &amp; Send Email
+      </button>
+    </div>
   </div>
+</div>
+
+<script>
 
   <script>
     const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
