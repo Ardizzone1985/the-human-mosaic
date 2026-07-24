@@ -330,6 +330,145 @@ Support: info@thehumanmosaic.art
       return res.status(200).json({ success: true, type: "submitted" });
     }
 
+    // ✅ EMAIL: REPLACEMENT SUBMITTED
+// Inviata dopo la sostituzione corretta di una memoria rifiutata.
+if (emailType === "replacement_submitted") {
+  await resend.emails.send({
+    from: "The Human Mosaic <info@mail.thehumanmosaic.art>",
+    to: [body.email],
+    subject: "Your replacement image has been received",
+    html: `
+      <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 680px; margin: 0 auto; padding: 24px;">
+        <div style="background: #ffffff; border: 1px solid #e8e8e8; border-radius: 20px; padding: 32px;">
+          <p style="font-size: 12px; letter-spacing: 0.14em; color: #777; margin: 0 0 18px;">
+            ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+          </p>
+
+          <h2 style="margin: 0 0 18px; font-size: 28px; line-height: 1.2;">
+            Your replacement image has been received
+          </h2>
+
+          <p>
+            Hello ${body.fullName || "Participant"},
+          </p>
+
+          <p style="color: #555;">
+            Your new image has been successfully received by
+            <strong>The Human Mosaic</strong>.
+          </p>
+
+          <p>
+            It has replaced the previously rejected image and is now
+            ready for a new review by our curators.
+          </p>
+
+          <div style="margin: 24px 0; padding: 18px; border-radius: 14px; background: #f8f5ed; border: 1px solid #e5d7b7;">
+            <p style="margin: 0; font-weight: 700;">
+              Your original position remains safely reserved.
+            </p>
+
+            <p style="margin: 8px 0 0; color: #555;">
+              No additional payment was required and your Submission ID
+              has remained unchanged.
+            </p>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
+
+          <p>
+            <strong>Submission ID:</strong>
+            ${body.submissionId || "—"}
+          </p>
+
+          <p>
+            <strong>Room:</strong>
+            ${body.room || "—"}
+          </p>
+
+          <p>
+            <strong>Wall:</strong>
+            ${body.wall || "—"}
+          </p>
+
+          <p>
+            <strong>Section:</strong>
+            ${body.section || "—"}
+          </p>
+
+          <p>
+            <strong>Spot:</strong>
+            ${body.spot || "—"}
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
+
+          <p>
+            <strong>What happens next?</strong>
+          </p>
+
+          <p>
+            1. New review — Our curators will review your replacement image.
+          </p>
+
+          <p>
+            2. Approval — Once approved, it will become part of the live gallery.
+          </p>
+
+          <p>
+            3. Certificate — After approval, you will receive your official certificate by email.
+          </p>
+
+          <p style="margin-top: 24px;">
+            For questions or support:
+            <a
+              href="mailto:info@thehumanmosaic.art"
+              style="color: #111; text-decoration: none; font-weight: 700;"
+            >
+              info@thehumanmosaic.art
+            </a>
+          </p>
+
+          <p style="margin-top: 24px; font-weight: 700;">
+            — The Human Mosaic
+          </p>
+        </div>
+      </div>
+    `,
+    text: `
+Your replacement image has been received
+
+Hello ${body.fullName || "Participant"},
+
+Your new image has been successfully received by The Human Mosaic.
+
+It has replaced the previously rejected image and is now ready for a new review by our curators.
+
+Your original position remains safely reserved.
+No additional payment was required and your Submission ID has remained unchanged.
+
+Submission ID: ${body.submissionId || "—"}
+Room: ${body.room || "—"}
+Wall: ${body.wall || "—"}
+Section: ${body.section || "—"}
+Spot: ${body.spot || "—"}
+
+What happens next?
+1. New review — Our curators will review your replacement image.
+2. Approval — Once approved, it will become part of the live gallery.
+3. Certificate — After approval, you will receive your official certificate by email.
+
+Support: info@thehumanmosaic.art
+
+— The Human Mosaic
+    `.trim(),
+  });
+
+  return res.status(200).json({
+    success: true,
+    type: "replacement_submitted",
+  });
+}
+
     // ✅ EMAIL 2: APPROVED (dopo approvazione, CON certificato)
     const certificateResponse = await fetch(`https://${req.headers.host}/api/generate-certificate-v3-pdf`, {
   method: "POST",
