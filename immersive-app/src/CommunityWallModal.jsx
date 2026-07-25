@@ -121,19 +121,71 @@ export default function CommunityWallModal({
         <div style={dividerStyle} />
 
         <div style={messagesAreaStyle}>
-          <div style={emptyStateStyle}>
-            <div style={emptyIconStyle}>✦</div>
+  {loading ? (
+    <div style={emptyStateStyle}>
+      <div style={emptyIconStyle}>✦</div>
 
-            <div style={emptyTitleStyle}>
-              The wall is waiting for its first messages
+      <div style={emptyTitleStyle}>
+        Loading community messages...
+      </div>
+    </div>
+  ) : loadError ? (
+    <div style={errorStateStyle}>
+      {loadError}
+    </div>
+  ) : messages.length === 0 ? (
+    <div style={emptyStateStyle}>
+      <div style={emptyIconStyle}>✦</div>
+
+      <div style={emptyTitleStyle}>
+        The wall is waiting for its first messages
+      </div>
+
+      <div style={emptyTextStyle}>
+        Approved messages from members of The Human Mosaic
+        community will appear here.
+      </div>
+    </div>
+  ) : (
+    <div style={messagesListStyle}>
+      {messages.map((item) => (
+        <article
+          key={item.id}
+          style={messageCardStyle}
+        >
+          <div style={messageHeaderStyle}>
+            <div>
+              <div style={messageNicknameStyle}>
+                {item.nickname || "Participant"}
+              </div>
+
+              {item.country && (
+                <div style={messageCountryStyle}>
+                  {item.country}
+                </div>
+              )}
             </div>
 
-            <div style={emptyTextStyle}>
-              Approved messages from members of The Human Mosaic
-              community will appear here.
-            </div>
+            <time style={messageDateStyle}>
+              {new Date(item.created_at).toLocaleDateString(
+                "en-GB",
+                {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }
+              )}
+            </time>
           </div>
-        </div>
+
+          <p style={messageTextStyle}>
+            {item.message}
+          </p>
+        </article>
+      ))}
+    </div>
+  )}
+</div>
 
         <div style={dividerStyle} />
 
@@ -294,6 +346,70 @@ const emptyTextStyle = {
   color: "#b9aa94",
   fontSize: "14px",
   lineHeight: 1.7,
+};
+
+const errorStateStyle = {
+  width: "100%",
+  padding: "22px",
+  boxSizing: "border-box",
+  borderRadius: "16px",
+  border: "1px solid rgba(210, 92, 92, 0.45)",
+  background: "rgba(130, 35, 35, 0.16)",
+  color: "#f0b6b6",
+  fontSize: "14px",
+  lineHeight: 1.6,
+  textAlign: "center",
+};
+
+const messagesListStyle = {
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  gap: "14px",
+};
+
+const messageCardStyle = {
+  width: "100%",
+  boxSizing: "border-box",
+  padding: "18px",
+  borderRadius: "18px",
+  border: "1px solid rgba(215, 181, 109, 0.25)",
+  background: "rgba(255, 255, 255, 0.035)",
+};
+
+const messageHeaderStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "flex-start",
+  gap: "16px",
+  marginBottom: "13px",
+};
+
+const messageNicknameStyle = {
+  color: "#f2c879",
+  fontSize: "15px",
+  fontWeight: 800,
+};
+
+const messageCountryStyle = {
+  marginTop: "4px",
+  color: "#9f8b6a",
+  fontSize: "12px",
+};
+
+const messageDateStyle = {
+  flexShrink: 0,
+  color: "#8f8270",
+  fontSize: "11px",
+};
+
+const messageTextStyle = {
+  margin: 0,
+  color: "#e7dcc8",
+  fontSize: "14px",
+  lineHeight: 1.7,
+  whiteSpace: "pre-wrap",
+  overflowWrap: "anywhere",
 };
 
 const composerStyle = {
