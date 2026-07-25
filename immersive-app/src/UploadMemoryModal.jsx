@@ -937,23 +937,6 @@ const submissionId = isReplacement
     const storagePath =
       `app/${session.user.id}/${storageFileName}`;
 
-    console.log(
-      "Real memory submission prepared:",
-      {
-        submissionId,
-        userId: session.user.id,
-        room: selectedRoom,
-        wall: selectedWall,
-        section: selectedSection,
-        spot: selectedSpot,
-        slotCode: reservedSlotCode,
-        storagePath,
-        originalFileName: selectedFile.name,
-        safeOriginalFileName,
-        note: memoryNote.trim(),
-      }
-    );
-
     const { error: uploadError } =
   await supabase.storage
     .from("images")
@@ -974,11 +957,6 @@ if (uploadError) {
   );
 }
 
-console.log(
-  "Storage upload completed:",
-  storagePath
-);
-
 const {
   data: publicImageData,
 } = supabase.storage
@@ -987,21 +965,6 @@ const {
 
 const imageUrl =
   publicImageData?.publicUrl || "";
-
-console.log(
-  "Submission data ready:",
-  {
-    submissionId,
-    slotCode: reservedSlotCode,
-    fullName,
-    email,
-    country,
-    note: memoryNote.trim(),
-    imageFileName: storagePath,
-    imageUrl,
-    room: selectedRoom,
-  }
-);
 
     const endpoint = isReplacement
   ? "https://www.thehumanmosaic.art/api/replace-app-submission"
@@ -1063,11 +1026,6 @@ if (
   );
 }
 
-console.log(
-  "Memory submission completed:",
-  submissionResult
-);
-
     /*
  * L'email dedicata viene inviata soltanto dopo la conferma
  * definitiva del backend replacement.
@@ -1108,12 +1066,9 @@ if (isReplacement) {
         "Replacement confirmation email error:",
         emailResult
       );
-    } else {
-      console.log(
-        "Replacement confirmation email sent:",
-        emailResult
-      );
-    }
+}
+      
+    
   } catch (emailError) {
     console.error(
       "Replacement confirmation email request error:",
