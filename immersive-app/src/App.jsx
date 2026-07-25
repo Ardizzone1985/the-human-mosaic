@@ -533,10 +533,7 @@ closeDialog,
     ) === replacementSubmissionId
 );
 
-    if (!memory) {
-      console.error(
-        "Replacement memory not found or not owned by the current user."
-      );
+    if (!memory) {      
       return;
     }
 
@@ -548,9 +545,6 @@ closeDialog,
     ).toLowerCase();
 
     if (status !== "rejected") {
-      console.error(
-        "This memory is not currently available for replacement."
-      );
       return;
     }
 
@@ -873,8 +867,7 @@ onRegister={() => {
 }}
   onChangePassword={() => {}}
         onMemorySelect={(memory) => {
-  console.log("MEMORY:", memory);
-
+  
   setShowMuseumIdentity(false);
 
   const status = String(
@@ -883,9 +876,7 @@ onRegister={() => {
   memory.submission_status ||
   ""
 ).toLowerCase();
-
-  console.log("STATUS:", status);
-
+  
   if (status === "approved") {
     setSelectedPhoto(memory);
     return;
