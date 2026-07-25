@@ -140,6 +140,10 @@ const LOBBY_VIEWPOINTS = [
 
   { id: "welcomeWall", position: [0, 2.05, 7.2] },
 
+  { id: "newsPanel", position: [6.4, 2.05, 7.15] },
+
+  { id: "livePanel", position: [-6.4, 2.05, 7.15] },
+
   { id: "infoWall", position: [-7.2, 2.05, 0] },
 
   { id: "futureWall", position: [7.2, 2.05, 0] }
