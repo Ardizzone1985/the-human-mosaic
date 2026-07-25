@@ -346,14 +346,18 @@ function FloorArrow({ point, onMove }) {
       }}
     >
       <mesh>
-        <circleGeometry args={[0.42, 32]} />
-        <meshBasicMaterial color="#d7b56d" transparent opacity={0.55} />
-      </mesh>
+  <circleGeometry args={[0.42, 32]} />
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={0.38}
+  />
+</mesh>
 
-      <mesh position={[0, 0.18, 0.01]}>
-        <coneGeometry args={[0.18, 0.38, 3]} />
-        <meshBasicMaterial color="#fff0c0" />
-      </mesh>
+<mesh position={[0, 0.18, 0.01]}>
+  <coneGeometry args={[0.18, 0.38, 3]} />
+  <meshBasicMaterial color="#d7b56d" />
+</mesh>
     </group>
   );
 }
