@@ -525,10 +525,13 @@ closeDialog,
       : [];
 
     const memory = memories.find(
-      (item) =>
-        String(item?.submission_id || "") ===
-        replacementSubmissionId
-    );
+  (item) =>
+    String(
+      item?.submission_id ||
+      item?.id ||
+      ""
+    ) === replacementSubmissionId
+);
 
     if (!memory) {
       console.error(
