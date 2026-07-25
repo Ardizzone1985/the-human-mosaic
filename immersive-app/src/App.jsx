@@ -13,6 +13,7 @@ import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
+import CommunityWallModal from "./CommunityWallModal.jsx";
 import PrivateMemoryModal from "./PrivateMemoryModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
 import WelcomeGate from "./WelcomeGate.jsx";
@@ -452,6 +453,7 @@ export default function App() {
     };
   });
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [showCommunityWall, setShowCommunityWall] = useState(false);
 const [savingAvatar, setSavingAvatar] = useState(false);
 const [avatarError, setAvatarError] = useState("");
   const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
@@ -1104,6 +1106,13 @@ onRegister={() => {
   handleLike={handleLike}
   handleSendComment={handleSendComment}
   onClose={() => setSelectedPhoto(null)}
+/>
+
+      <CommunityWallModal
+  open={showCommunityWall}
+  user={user}
+  profile={profile}
+  onClose={() => setShowCommunityWall(false)}
 />
 
       <PrivateMemoryModal
