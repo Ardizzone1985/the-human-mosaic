@@ -631,6 +631,7 @@ const cancelRejectBtn = document.getElementById("cancelRejectBtn");
 const confirmRejectBtn = document.getElementById("confirmRejectBtn");
 
 let pendingRejectSubmissionId = null;
+    let rejectModalMode = "reject";
 
     let currentRoom = "ALL";
     let currentStatus = "pending";
@@ -638,7 +639,17 @@ let pendingRejectSubmissionId = null;
 
   function openRejectModal(submissionId) {
   pendingRejectSubmissionId = submissionId;
+  rejectModalMode = "reject";
   rejectReason.selectedIndex = 0;
+  confirmRejectBtn.textContent = "Reject & Send Email";
+  rejectModal.hidden = false;
+}
+
+    function openResendReplacementModal(submissionId) {
+  pendingRejectSubmissionId = submissionId;
+  rejectModalMode = "resend";
+  rejectReason.selectedIndex = 0;
+  confirmRejectBtn.textContent = "Resend Email";
   rejectModal.hidden = false;
 }
 
@@ -651,7 +662,8 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
 
     confirmRejectBtn.addEventListener("click", async () => {
   const submissionId = pendingRejectSubmissionId;
-  const cleanRejectionReason = rejectReason.value.trim();
+  const cleanRejectionReason =
+    rejectReason.value.trim();
 
   if (!submissionId || !cleanRejectionReason) {
     alert("Please select a valid rejection reason.");
@@ -662,16 +674,36 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
   confirmRejectBtn.textContent = "Sending...";
 
   try {
-    await rejectSubmission(
-      submissionId,
-      cleanRejectionReason
-    );
+    if (rejectModalMode === "resend") {
+      await resendReplacementEmail(
+        submissionId,
+        cleanRejectionReason
+      );
+
+      alert(
+        "Replacement email sent successfully ✅"
+      );
+    } else {
+      await rejectSubmission(
+        submissionId,
+        cleanRejectionReason
+      );
+    }
 
     closeRejectModal();
+  } catch (err) {
+    console.error("Replacement email error:", err);
+
+    alert(
+      err.message ||
+        "Unable to send the replacement email."
+    );
   } finally {
     confirmRejectBtn.disabled = false;
     confirmRejectBtn.textContent =
-      "Reject & Send Email";
+      rejectModalMode === "resend"
+        ? "Resend Email"
+        : "Reject & Send Email";
   }
 });
 
@@ -1077,6 +1109,60 @@ ${showResendReplacementEmail ? `
   }
 }
 
+    async function resendReplacementEmail(
+  submissionId,
+  cleanRejectionReason
+) {
+  if (!submissionId || !cleanRejectionReason) {
+    throw new Error("Missing replacement email data.");
+  }
+
+  const { data: submission, error: fetchError } =
+    await supabaseClient
+      .from("submissions")
+      .select("*")
+      .eq("submission_id", submissionId)
+      .single();
+
+  if (fetchError || !submission) {
+    console.error("Submission fetch error:", fetchError);
+    throw new Error("Unable to load submission data.");
+  }
+
+  const emailResponse = await fetch(
+    "/api/reject-email",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        submissionId: submission.submission_id,
+        fullName: submission.full_name,
+        email: submission.email,
+        country: submission.country,
+        room: submission.room,
+        wall: submission.wall,
+        section: submission.section,
+        spot: submission.spot,
+        slotCode: submission.slot_code,
+        rejectionReason: cleanRejectionReason
+      })
+    }
+  );
+
+  const emailResult = await emailResponse
+    .json()
+    .catch(() => ({}));
+
+  if (!emailResponse.ok) {
+    throw new Error(
+      emailResult.error ||
+        "The replacement email could not be sent."
+    );
+  }
+}
+
     async function rejectSubmission(
   submissionId,
   cleanRejectionReason
@@ -1201,6 +1287,8 @@ statusFilterButtons.forEach(button => {
     window.approveSubmission = approveSubmission;
 window.rejectSubmission = rejectSubmission;
   window.openRejectModal = openRejectModal;
+    window.openResendReplacementModal =
+  openResendReplacementModal;
 window.downloadCertificate = downloadCertificate;
 window.deletePhotoAndFreeSlot = deletePhotoAndFreeSlot;
 window.resendCertificate = resendCertificate;
