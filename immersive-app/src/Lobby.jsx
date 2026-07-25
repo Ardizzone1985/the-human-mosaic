@@ -719,7 +719,7 @@ color="#6b5a3f"
       event.stopPropagation();
 
       window.open(
-        "https://www.facebook.com/thehumanmosaic.art",
+        "https://facebook.com/profile.php?id=61573309801007&locale=it_IT",
         "_blank",
         "noopener,noreferrer"
       );
