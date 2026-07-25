@@ -603,7 +603,7 @@ color="#6b5a3f"
   rotation={[0, Math.PI, 0]}
 >
   <mesh position={[0, 0, -0.05]}>
-    <boxGeometry args={[5.2, 1.70, 0.12]}
+    <boxGeometry args={[5.2, 1.70, 0.12]} />
 
     <meshStandardMaterial
       color="#140805"
