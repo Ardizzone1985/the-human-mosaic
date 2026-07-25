@@ -598,57 +598,134 @@ color="#6b5a3f"
         
       <group
   position={[0, 0.35, 10.55]}
-rotation={[0, Math.PI, 0]}
-  onPointerOver={() => {
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={() => {
-    document.body.style.cursor = "default";
-  }}
-  onClick={() => {
-    window.location.href = "https://thehumanmosaic.art/join.html";
-  }}
+  rotation={[0, Math.PI, 0]}
 >
   <mesh position={[0, 0, -0.05]}>
-    <boxGeometry args={[3.65, 1.25, 0.12]} />
+    <boxGeometry args={[4.8, 1.55, 0.12]} />
+
     <meshStandardMaterial
       color="#140805"
       emissive="#8a4b12"
-      emissiveIntensity={0.28}
+      emissiveIntensity={0.22}
       roughness={0.32}
       metalness={0.35}
     />
   </mesh>
 
-  <mesh position={[0, 0.68, 0]}>
-    <boxGeometry args={[3.7, 0.045, 0.08]} />
-    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.7} />
+  <mesh position={[0, 0.83, 0]}>
+    <boxGeometry args={[4.85, 0.045, 0.08]} />
+
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.7}
+    />
   </mesh>
 
-  <mesh position={[0, -0.68, 0]}>
-    <boxGeometry args={[3.7, 0.045, 0.08]} />
-    <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
+  <mesh position={[0, -0.83, 0]}>
+    <boxGeometry args={[4.85, 0.045, 0.08]} />
+
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
   </mesh>
 
   <Text
-    position={[0, 0.22, 0.08]}
-    fontSize={0.22}
+    position={[0, 0.43, 0.08]}
+    fontSize={0.2}
     color="#f8d890"
     anchorX="center"
     letterSpacing={0.08}
   >
-    JOIN THE MOSAIC
+    VISIT OUR OFFICIAL WEBSITE
   </Text>
 
   <Text
-    position={[0, -0.18, 0.08]}
-    fontSize={0.115}
+    position={[0, 0.07, 0.08]}
+    fontSize={0.1}
     color="#c9a96b"
     anchorX="center"
-    maxWidth={3}
+    maxWidth={4}
     textAlign="center"
   >
-    Reserve your place in the permanent artwork
+    Discover the story, mission, news and global vision of The Human Mosaic
+  </Text>
+
+  <Text
+    position={[0, -0.35, 0.08]}
+    fontSize={0.13}
+    color="#f2c879"
+    anchorX="center"
+    onPointerOver={(event) => {
+      event.stopPropagation();
+      document.body.style.cursor = "pointer";
+    }}
+    onPointerOut={() => {
+      document.body.style.cursor = "default";
+    }}
+    onClick={(event) => {
+      event.stopPropagation();
+
+      window.open(
+        "https://thehumanmosaic.art",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+  >
+    THEHUMANMOSAIC.ART
+  </Text>
+
+  <Text
+    position={[-0.95, -0.65, 0.08]}
+    fontSize={0.11}
+    color="#d8c7ad"
+    anchorX="center"
+    onPointerOver={(event) => {
+      event.stopPropagation();
+      document.body.style.cursor = "pointer";
+    }}
+    onPointerOut={() => {
+      document.body.style.cursor = "default";
+    }}
+    onClick={(event) => {
+      event.stopPropagation();
+
+      window.open(
+        "https://www.instagram.com/thehumanmosaic.art",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+  >
+    INSTAGRAM
+  </Text>
+
+  <Text
+    position={[0.95, -0.65, 0.08]}
+    fontSize={0.11}
+    color="#d8c7ad"
+    anchorX="center"
+    onPointerOver={(event) => {
+      event.stopPropagation();
+      document.body.style.cursor = "pointer";
+    }}
+    onPointerOut={() => {
+      document.body.style.cursor = "default";
+    }}
+    onClick={(event) => {
+      event.stopPropagation();
+
+      window.open(
+        "https://www.facebook.com/thehumanmosaic.art",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+  >
+    FACEBOOK
   </Text>
 </group>
 
