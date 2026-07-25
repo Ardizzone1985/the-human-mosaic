@@ -446,7 +446,9 @@ function HumanityImpactDoor({
   );
 }
 
-export default function Lobby() {
+export default function Lobby({
+  onOpenCommunityWall,
+}) {
     const [roomCounts, setRoomCounts] = useState({
     Identity: 0,
     Love: 0,
@@ -483,6 +485,9 @@ const earlyAccessFillWidth = Math.max(
   const [news, setNews] = useState([]);
 
   const [hoveredOfficialLink, setHoveredOfficialLink] = useState(null);
+
+  const [communityWallHovered, setCommunityWallHovered] =
+  useState(false);
 
   useEffect(() => {
 async function loadNews() {
@@ -1046,28 +1051,110 @@ color="#6b5a3f"
   </group>
 
   {/* Community wall */}
-  <group position={[0, 0.15, 0]}>
-    <mesh>
-      <boxGeometry args={[4.4, 5.2, 0.18]} />
-      <meshStandardMaterial color="#8d877f" emissive="#d7c7a0" emissiveIntensity={0.4} roughness={0.46} />
-    </mesh>
+<group
+  position={[0, 0.15, 0]}
+  scale={communityWallHovered ? 1.035 : 1}
+  onPointerOver={(event) => {
+    event.stopPropagation();
+    setCommunityWallHovered(true);
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(event) => {
+    event.stopPropagation();
+    setCommunityWallHovered(false);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(event) => {
+    event.stopPropagation();
+    onOpenCommunityWall?.();
+  }}
+>
+  <mesh>
+    <boxGeometry args={[4.4, 5.2, 0.18]} />
 
-    <Text position={[0, 1.85, 0.14]} fontSize={0.26} color="#f2c879" anchorX="center" letterSpacing={0.08}>
-      COMMUNITY WALL
-    </Text>
+    <meshStandardMaterial
+      color={
+        communityWallHovered
+          ? "#9a948b"
+          : "#8d877f"
+      }
+      emissive="#d7c7a0"
+      emissiveIntensity={
+        communityWallHovered
+          ? 0.72
+          : 0.4
+      }
+      roughness={0.46}
+    />
+  </mesh>
 
-    <Text position={[0, 0.75, 0.14]} fontSize={0.14} color="#d8c7ad" anchorX="center" maxWidth={3.4} textAlign="center">
-      Messages from participants around the world
-    </Text>
+  {/* Subtle hover frame */}
+  <mesh position={[0, 0, 0.11]}>
+    <boxGeometry args={[4.1, 4.9, 0.025]} />
 
-    <Text position={[0, -0.25, 0.14]} fontSize={0.13} color="#c9a96b" anchorX="center" maxWidth={3.5} textAlign="center">
-      “Every memory becomes part of humanity.”
-    </Text>
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={
+        communityWallHovered
+          ? 0.13
+          : 0
+      }
+    />
+  </mesh>
 
-    <Text position={[0, -1.0, 0.14]} fontSize={0.12} color="#9f8b6a" anchorX="center">
-      Coming soon
-    </Text>
-  </group>
+  <Text
+    position={[0, 1.85, 0.15]}
+    fontSize={0.26}
+    color={
+      communityWallHovered
+        ? "#ffffff"
+        : "#f2c879"
+    }
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    COMMUNITY WALL
+  </Text>
+
+  <Text
+    position={[0, 0.75, 0.15]}
+    fontSize={0.14}
+    color="#d8c7ad"
+    anchorX="center"
+    maxWidth={3.4}
+    textAlign="center"
+  >
+    Messages from participants around the world
+  </Text>
+
+  <Text
+    position={[0, -0.25, 0.15]}
+    fontSize={0.13}
+    color="#c9a96b"
+    anchorX="center"
+    maxWidth={3.5}
+    textAlign="center"
+  >
+    “Every memory becomes part of humanity.”
+  </Text>
+
+  <Text
+    position={[0, -1.15, 0.15]}
+    fontSize={0.12}
+    color={
+      communityWallHovered
+        ? "#fff4d8"
+        : "#9f8b6a"
+    }
+    anchorX="center"
+    letterSpacing={0.08}
+  >
+    {communityWallHovered
+      ? "CLICK TO OPEN"
+      : "OPEN COMMUNITY WALL"}
+  </Text>
+</group>
 
   {/* Right sponsor */}
   <group position={[4.2, 0, 0]}>
