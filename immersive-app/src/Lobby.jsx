@@ -359,7 +359,7 @@ function HumanityImpactDoor({
       </mesh>
 
       <Text
-        position={[0, 3.45, 0.28]}
+        position={[0, 3.18, 0.28]}
         fontSize={0.27}
         color={color}
         anchorX="center"
@@ -370,7 +370,7 @@ function HumanityImpactDoor({
 
       <Text
         position={[0, 0.45, 0.4]}
-        fontSize={0.22}
+        fontSize={0.30}
         color="#f2c879"
         anchorX="center"
         anchorY="middle"
@@ -383,8 +383,8 @@ function HumanityImpactDoor({
 
       <Text
         position={[0, -0.35, 0.4]}
-        fontSize={0.115}
-        color="#d8c7ad"
+        fontSize={0.15}
+        color="#e7dcc8"
         anchorX="center"
         anchorY="middle"
         maxWidth={1.9}
@@ -393,6 +393,15 @@ function HumanityImpactDoor({
       >
         Together we create real impact.
       </Text>
+
+      <mesh position={[0, -0.72, 0.32]}>
+  <boxGeometry args={[1.55, 0.02, 0.02]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.35}
+  />
+</mesh>
 
       {/* Subtle floor glow */}
       <mesh
