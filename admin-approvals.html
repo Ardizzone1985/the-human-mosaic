@@ -779,6 +779,9 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
     const showApprove = item.approval_status !== "approved";
     const showReject = item.approval_status !== "rejected";
 
+    const showResendReplacementEmail =
+  item.approval_status === "rejected";
+
     const card = document.createElement("div");
     card.className = "card";
 
@@ -823,6 +826,16 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
         <div class="actions">
   ${showApprove ? `<button class="approve-btn" onclick="approveSubmission('${item.submission_id}')">Approve</button>` : ""}
   ${showReject ? `<button class="reject-btn" onclick="openRejectModal('${item.submission_id}')">Reject</button>` : ""}
+
+${showResendReplacementEmail ? `
+  <button
+    class="reject-btn"
+    onclick="openResendReplacementModal('${item.submission_id}')"
+  >
+    Resend Replacement Email
+  </button>
+` : ""}
+  
   <button class="delete-btn" onclick="deletePhotoAndFreeSlot('${item.submission_id}', '${item.image_file_name}', '${item.slot_code}')">
     Delete Photo + Free Slot
   </button>
