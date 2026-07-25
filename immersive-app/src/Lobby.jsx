@@ -301,6 +301,8 @@ export default function Lobby() {
 
   const [news, setNews] = useState([]);
 
+  const [hoveredOfficialLink, setHoveredOfficialLink] = useState(null);
+
   useEffect(() => {
 async function loadNews() {
   const { data, error } = await supabase
@@ -597,7 +599,7 @@ color="#6b5a3f"
 </group>
         
       <group
-  position={[0, 0.35, 10.55]}
+  position={[0, 0.15, 10.55]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh position={[0, 0, -0.05]}>
@@ -654,79 +656,111 @@ color="#6b5a3f"
   </Text>
 
   <Text
-    position={[0, -0.35, 0.08]}
-    fontSize={0.13}
-    color="#f2c879"
-    anchorX="center"
-    onPointerOver={(event) => {
-      event.stopPropagation();
-      document.body.style.cursor = "pointer";
-    }}
-    onPointerOut={() => {
-      document.body.style.cursor = "default";
-    }}
-    onClick={(event) => {
-      event.stopPropagation();
+  position={[0, -0.28, 0.08]}
+  fontSize={0.15}
+  color={
+    hoveredOfficialLink === "website"
+      ? "#ffffff"
+      : "#f2c879"
+  }
+  anchorX="center"
+  fontWeight={700}
+  onPointerOver={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink("website");
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink(null);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(event) => {
+    event.stopPropagation();
 
-      window.open(
-        "https://thehumanmosaic.art",
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }}
-  >
-    THEHUMANMOSAIC.ART
-  </Text>
+    window.open(
+      "https://thehumanmosaic.art",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
+  THEHUMANMOSAIC.ART
+</Text>
 
-  <Text
-    position={[-0.95, -0.65, 0.08]}
-    fontSize={0.11}
-    color="#d8c7ad"
-    anchorX="center"
-    onPointerOver={(event) => {
-      event.stopPropagation();
-      document.body.style.cursor = "pointer";
-    }}
-    onPointerOut={() => {
-      document.body.style.cursor = "default";
-    }}
-    onClick={(event) => {
-      event.stopPropagation();
-
-      window.open(
-        "https://www.instagram.com/thehumanmosaic.art",
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }}
-  >
-    INSTAGRAM
-  </Text>
+        <Text
+  position={[0, -0.52, 0.08]}
+  fontSize={0.085}
+  color="#9f8b6a"
+  anchorX="center"
+  letterSpacing={0.05}
+>
+  FOLLOW OUR GLOBAL JOURNEY
+</Text>
 
   <Text
-    position={[0.95, -0.65, 0.08]}
-    fontSize={0.11}
-    color="#d8c7ad"
-    anchorX="center"
-    onPointerOver={(event) => {
-      event.stopPropagation();
-      document.body.style.cursor = "pointer";
-    }}
-    onPointerOut={() => {
-      document.body.style.cursor = "default";
-    }}
-    onClick={(event) => {
-      event.stopPropagation();
+  position={[-0.95, -0.72, 0.08]}
+  fontSize={0.11}
+  color={
+    hoveredOfficialLink === "instagram"
+      ? "#ffffff"
+      : "#d8c7ad"
+  }
+  anchorX="center"
+  onPointerOver={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink("instagram");
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink(null);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(event) => {
+    event.stopPropagation();
 
-      window.open(
-        "https://facebook.com/profile.php?id=61573309801007&locale=it_IT",
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }}
-  >
-    FACEBOOK
-  </Text>
+    window.open(
+      "https://www.instagram.com/thehumanmosaic.art",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
+  INSTAGRAM
+</Text>
+
+  <Text
+  position={[0.95, -0.72, 0.08]}
+  fontSize={0.11}
+  color={
+    hoveredOfficialLink === "facebook"
+      ? "#ffffff"
+      : "#d8c7ad"
+  }
+  anchorX="center"
+  onPointerOver={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink("facebook");
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(event) => {
+    event.stopPropagation();
+    setHoveredOfficialLink(null);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(event) => {
+    event.stopPropagation();
+
+    window.open(
+      "https://www.facebook.com/profile.php?id=61573309801007&locale=it_IT",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }}
+>
+  FACEBOOK
+</Text>
 </group>
 
     <group position={[11.72, 3.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
