@@ -7,6 +7,15 @@ export default function CommunityWallModal({
   profile,
   onClose,
 }) {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
+  const displayName =
+    profile?.nickname ||
+    profile?.first_name ||
+    "Participant";
+
   useEffect(() => {
     if (!open) return;
 
@@ -23,55 +32,54 @@ export default function CommunityWallModal({
     };
   }, [open, onClose]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    let cancelled = false;
+
+    async function loadMessages() {
+      setLoading(true);
+      setLoadError("");
+
+      const { data, error } = await supabase
+        .from("community_messages")
+        .select(`
+          id,
+          nickname,
+          country,
+          message,
+          created_at
+        `)
+        .eq("approval_status", "approved")
+        .order("created_at", {
+          ascending: false,
+        });
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error("Community messages error:", error);
+        setLoadError(
+          "Unable to load community messages."
+        );
+        setLoading(false);
+        return;
+      }
+
+      setMessages(data || []);
+      setLoading(false);
+    }
+
+    loadMessages();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
+
   if (!open) {
     return null;
   }
-
-  const displayName =
-    profile?.nickname ||
-    profile?.first_name ||
-    "Participant";
-
-  const [messages, setMessages] = useState([]);
-const [loading, setLoading] = useState(true);
-const [loadError, setLoadError] = useState("");
-
-  useEffect(() => {
-  if (!open) return;
-
-  async function loadMessages() {
-    setLoading(true);
-    setLoadError("");
-
-    const { data, error } = await supabase
-      .from("community_messages")
-      .select(`
-        id,
-        nickname,
-        country,
-        message,
-        created_at
-      `)
-      .eq("approval_status", "approved")
-      .order("created_at", {
-        ascending: false,
-      });
-
-    if (error) {
-      console.error(error);
-      setLoadError(
-        "Unable to load community messages."
-      );
-      setLoading(false);
-      return;
-    }
-
-    setMessages(data || []);
-    setLoading(false);
-  }
-
-  loadMessages();
-}, [open]);
 
   return (
     <div
