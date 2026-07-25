@@ -689,7 +689,7 @@ color="#6b5a3f"
 </Text>
 
         <Text
-  position={[0, -0.52, 0.08]}
+  position={[0, -0.46, 0.08]}
   fontSize={0.085}
   color="#9f8b6a"
   anchorX="center"
@@ -699,7 +699,7 @@ color="#6b5a3f"
 </Text>
 
   <Text
-  position={[-0.95, -0.72, 0.08]}
+  position={[-0.95, -0.60, 0.08]}
   fontSize={0.11}
   color={
     hoveredOfficialLink === "instagram"
@@ -731,7 +731,7 @@ color="#6b5a3f"
 </Text>
 
   <Text
-  position={[0.95, -0.72, 0.08]}
+  position={[0.95, -0.60, 0.08]}
   fontSize={0.11}
   color={
     hoveredOfficialLink === "facebook"
