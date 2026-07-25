@@ -359,17 +359,18 @@ function HumanityImpactDoor({
       </mesh>
 
       <Text
-  position={[0, 3.85, 0.28]}
-  fontSize={0.42}
+  position={[0, 3.45, 0.28]}
+  fontSize={0.48}
   color="#fff4d8"
   anchorX="center"
   letterSpacing={0.15}
   outlineWidth={0.01}
   outlineColor="#d7b56d"
   emissive="#fff4d8"
-  emissiveIntensity={1.2}
+  emissiveIntensity={1.8}
 >
-  COMING SOON
+  COMING
+  SOON
 </Text>
 
       <Text
