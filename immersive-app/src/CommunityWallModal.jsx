@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "./supabaseClient.js";
 
 export default function CommunityWallModal({
   open,
@@ -30,6 +32,47 @@ export default function CommunityWallModal({
     profile?.nickname ||
     profile?.first_name ||
     "Participant";
+
+  const [messages, setMessages] = useState([]);
+const [loading, setLoading] = useState(true);
+const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+  if (!open) return;
+
+  async function loadMessages() {
+    setLoading(true);
+    setLoadError("");
+
+    const { data, error } = await supabase
+      .from("community_messages")
+      .select(`
+        id,
+        nickname,
+        country,
+        message,
+        created_at
+      `)
+      .eq("approval_status", "approved")
+      .order("created_at", {
+        ascending: false,
+      });
+
+    if (error) {
+      console.error(error);
+      setLoadError(
+        "Unable to load community messages."
+      );
+      setLoading(false);
+      return;
+    }
+
+    setMessages(data || []);
+    setLoading(false);
+  }
+
+  loadMessages();
+}, [open]);
 
   return (
     <div
