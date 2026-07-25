@@ -1251,7 +1251,11 @@ onRegister={() => {
 
   {isLobby ? (
   <>
-    <Lobby />
+    <Lobby
+  onOpenCommunityWall={() =>
+    setShowCommunityWall(true)
+  }
+/>
 
     <StreetViewControls
   currentPointId="center"
