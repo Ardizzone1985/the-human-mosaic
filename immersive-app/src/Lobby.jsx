@@ -603,7 +603,7 @@ color="#6b5a3f"
   rotation={[0, Math.PI, 0]}
 >
   <mesh position={[0, 0, -0.05]}>
-    <boxGeometry args={[4.8, 1.55, 0.12]} />
+    <boxGeometry args={[5.2, 1.70, 0.12]}
 
     <meshStandardMaterial
       color="#140805"
@@ -657,7 +657,7 @@ color="#6b5a3f"
 
   <Text
   position={[0, -0.28, 0.08]}
-  fontSize={0.15}
+  fontSize={0.17}
   color={
     hoveredOfficialLink === "website"
       ? "#ffffff"
