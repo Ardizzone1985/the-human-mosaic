@@ -350,13 +350,13 @@ function FloorArrow({ point, onMove }) {
   <meshBasicMaterial
     color="#d7b56d"
     transparent
-    opacity={0.38}
+    opacity={0.40}
   />
 </mesh>
 
 <mesh position={[0, 0.18, 0.01]}>
   <coneGeometry args={[0.18, 0.38, 3]} />
-  <meshBasicMaterial color="#d7b56d" />
+  <meshBasicMaterial color="#fff6dc" />
 </mesh>
     </group>
   );
