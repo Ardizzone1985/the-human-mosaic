@@ -25,9 +25,9 @@ export default async function handler(req, res) {
   });
 }
 
-    const replacementUrl =
-  `https://the-human-mosaic-immersive-app.vercel.app/?replacementSubmissionId=${encodeURIComponent(submissionId)}`;
-    body.submissionId || ""
+    const replacementLink =
+  `https://the-human-mosaic-immersive-app.vercel.app/?replacementSubmissionId=${encodeURIComponent(
+    body.submissionId
   )}`;
     
     await resend.emails.send({
