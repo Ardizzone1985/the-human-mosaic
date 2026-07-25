@@ -299,6 +299,28 @@ export default function Lobby() {
   roomCounts.Love +
   roomCounts.Creativity;
 
+  const earlyAccessLimit = 1000;
+
+const earlyAccessClaimed = Math.min(
+  totalMosaic,
+  earlyAccessLimit
+);
+
+const earlyAccessRemaining = Math.max(
+  earlyAccessLimit - earlyAccessClaimed,
+  0
+);
+
+const earlyAccessProgress =
+  earlyAccessClaimed / earlyAccessLimit;
+
+const earlyAccessBarWidth = 3.6;
+
+const earlyAccessFillWidth = Math.max(
+  0.04,
+  earlyAccessBarWidth * earlyAccessProgress
+);
+
   const [news, setNews] = useState([]);
 
   const [hoveredOfficialLink, setHoveredOfficialLink] = useState(null);
@@ -578,7 +600,7 @@ color="#6b5a3f"
   </Text>
 
   <Text
-  position={[0, -1.05, 0.12]}
+  position={[0, -0.92, 0.12]}
   fontSize={0.18}
   color="#d7b56d"
   anchorX="center"
@@ -586,16 +608,93 @@ color="#6b5a3f"
   {`TOTAL MOSAIC: ${totalMosaic.toLocaleString()} / 3,000,000`}
 </Text>
 
-  <Text
-    position={[0, -1.95, 0.12]}
-    fontSize={0.13}
-    color="#5b4630"
-    anchorX="center"
-    maxWidth={3.4}
-    textAlign="center"
-  >
-    Connected to approved submissions
-  </Text>
+ {/* Early Access separator */}
+<mesh position={[0, -1.32, 0.1]}>
+  <boxGeometry args={[3.8, 0.025, 0.025]} />
+
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={0.5}
+  />
+</mesh>
+
+<Text
+  position={[0, -1.55, 0.12]}
+  fontSize={0.18}
+  color="#d7b56d"
+  anchorX="center"
+  letterSpacing={0.12}
+>
+  EARLY ACCESS
+</Text>
+
+<Text
+  position={[0, -1.82, 0.12]}
+  fontSize={0.105}
+  color="#6b5a3f"
+  anchorX="center"
+  maxWidth={3.8}
+  textAlign="center"
+>
+  First 1,000 participants join at reduced prices
+</Text>
+
+<Text
+  position={[0, -2.08, 0.12]}
+  fontSize={0.115}
+  color="#4f4638"
+  anchorX="center"
+>
+  IDENTITY €5   ·   LOVE €5   ·   CREATIVITY €10
+</Text>
+
+{/* Progress bar background */}
+<mesh position={[0, -2.34, 0.1]}>
+  <boxGeometry args={[earlyAccessBarWidth, 0.085, 0.035]} />
+
+  <meshBasicMaterial
+    color="#5e584f"
+    transparent
+    opacity={0.55}
+  />
+</mesh>
+
+{/* Progress bar fill */}
+<mesh
+  position={[
+    -earlyAccessBarWidth / 2 +
+      earlyAccessFillWidth / 2,
+    -2.34,
+    0.13,
+  ]}
+>
+  <boxGeometry
+    args={[earlyAccessFillWidth, 0.105, 0.045]}
+  />
+
+  <meshBasicMaterial color="#d7b56d" />
+</mesh>
+
+<Text
+  position={[0, -2.58, 0.12]}
+  fontSize={0.105}
+  color="#5b4630"
+  anchorX="center"
+>
+  {`${earlyAccessClaimed.toLocaleString()} / ${earlyAccessLimit.toLocaleString()} spots claimed`}
+</Text>
+
+<Text
+  position={[0, -2.82, 0.12]}
+  fontSize={0.11}
+  color="#8a7758"
+  anchorX="center"
+>
+  {earlyAccessRemaining > 0
+    ? `${earlyAccessRemaining.toLocaleString()} Early Access spots remaining`
+    : "Early Access allocation completed"}
+</Text>
 </group>
         
       <group
