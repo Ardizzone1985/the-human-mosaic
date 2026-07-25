@@ -524,6 +524,18 @@ closeDialog,
       ? data
       : [];
 
+    console.log("REPLACEMENT USER:", {
+  id: user?.id,
+  email: user?.email,
+});
+
+console.log("GET MY MEMORIES RESULT:", memories);
+
+console.log(
+  "REPLACEMENT SUBMISSION ID:",
+  replacementSubmissionId
+);
+
     const memory = memories.find(
   (item) =>
     String(
