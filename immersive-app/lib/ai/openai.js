@@ -24,6 +24,8 @@ async function callOpenAI(endpoint, payload) {
   const result = await response
     .json()
     .catch(() => null);
+  console.log("Status:", response.status);
+console.log("Raw response:", result);
 
   if (!response.ok) {
   const errorDetails = {
