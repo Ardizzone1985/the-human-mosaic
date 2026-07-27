@@ -135,13 +135,19 @@ if (!response.ok) {
 console.log("Community moderation response:", result);
 
 setDraftMessage("");
-    setRefreshKey((value) => value + 1);
 setPublishError("");
-setPublishSuccess(
-  result?.approvalStatus === "approved"
-    ? "Your message has been published successfully."
-    : "Your message is under review before publication."
-);
+
+if (result?.approvalStatus === "approved") {
+  setRefreshKey((value) => value + 1);
+
+  setPublishSuccess(
+    "Your message has been published successfully."
+  );
+} else {
+  setPublishSuccess(
+    "Your message is under review before publication."
+  );
+}
   } catch (error) {
     console.error("Community publish error:", error);
 
