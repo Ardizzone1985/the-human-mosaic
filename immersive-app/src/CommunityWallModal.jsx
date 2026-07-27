@@ -125,17 +125,21 @@ const [publishSuccess, setPublishSuccess] = useState("");
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(
-        result?.error || "Unable to publish the message."
-      );
-    }
+if (!response.ok) {
+  throw new Error(
+    result?.error || "Unable to publish the message."
+  );
+}
 
-    console.log("Community moderation response:", result);
+console.log("Community moderation response:", result);
 
-    setPublishSuccess(
-      "Authentication and moderation completed successfully."
-    );
+setDraftMessage("");
+setPublishError("");
+setPublishSuccess(
+  result?.approvalStatus === "approved"
+    ? "Your message has been published successfully."
+    : "Your message is under review before publication."
+);
   } catch (error) {
     console.error("Community publish error:", error);
 
