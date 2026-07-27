@@ -10,6 +10,10 @@ export default function CommunityWallModal({
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [draftMessage, setDraftMessage] = useState("");
+const [publishing, setPublishing] = useState(false);
+const [publishError, setPublishError] = useState("");
+const [publishSuccess, setPublishSuccess] = useState("");
 
   const displayName =
     profile?.nickname ||
@@ -76,6 +80,72 @@ export default function CommunityWallModal({
       cancelled = true;
     };
   }, [open]);
+
+  async function handlePublishMessage() {
+  const cleanMessage = draftMessage.trim();
+
+  setPublishError("");
+  setPublishSuccess("");
+
+  if (!cleanMessage) {
+    setPublishError("Please write a message before publishing.");
+    return;
+  }
+
+  if (cleanMessage.length > 500) {
+    setPublishError("Message cannot exceed 500 characters.");
+    return;
+  }
+
+  setPublishing(true);
+
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session?.access_token) {
+      setPublishError(
+        "Your session has expired. Please log in again."
+      );
+      return;
+    }
+
+    const response = await fetch("/api/community/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({
+        message: cleanMessage,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result?.error || "Unable to publish the message."
+      );
+    }
+
+    console.log("Community moderation response:", result);
+
+    setPublishSuccess(
+      "Authentication and moderation completed successfully."
+    );
+  } catch (error) {
+    console.error("Community publish error:", error);
+
+    setPublishError(
+      error?.message || "Unable to publish the message."
+    );
+  } finally {
+    setPublishing(false);
+  }
+}
 
   if (!open) {
     return null;
@@ -199,25 +269,50 @@ export default function CommunityWallModal({
             </div>
 
             <textarea
-              placeholder="Share a message with the global community..."
-              maxLength={500}
-              disabled
-              style={textareaStyle}
-            />
+  value={draftMessage}
+  onChange={(event) => {
+    setDraftMessage(event.target.value);
+    setPublishError("");
+    setPublishSuccess("");
+  }}
+  placeholder="Share a message with the global community..."
+  maxLength={500}
+  disabled={publishing}
+  style={{
+    ...textareaStyle,
+    opacity: publishing ? 0.62 : 1,
+  }}
+/>
 
             <div style={composerFooterStyle}>
               <span style={helperTextStyle}>
-                Message publishing will be activated in the next step.
-              </span>
+  {draftMessage.length} / 500 characters
+</span>
 
               <button
-                type="button"
-                disabled
-                style={disabledButtonStyle}
-              >
-                PUBLISH MESSAGE
-              </button>
+  type="button"
+  onClick={handlePublishMessage}
+  disabled={publishing || !draftMessage.trim()}
+  style={
+    publishing || !draftMessage.trim()
+      ? disabledButtonStyle
+      : publishButtonStyle
+  }
+>
+  {publishing ? "CHECKING..." : "PUBLISH MESSAGE"}
+</button>
             </div>
+            {publishError && (
+  <div style={publishErrorStyle}>
+    {publishError}
+  </div>
+)}
+
+{publishSuccess && (
+  <div style={publishSuccessStyle}>
+    {publishSuccess}
+  </div>
+)}
           </div>
         ) : (
           <div style={guestNoticeStyle}>
@@ -489,4 +584,38 @@ const guestNoticeTextStyle = {
   color: "#b9aa94",
   fontSize: "14px",
   lineHeight: 1.65,
+};
+
+const publishButtonStyle = {
+  border: "none",
+  borderRadius: "999px",
+  padding: "11px 18px",
+  background:
+    "linear-gradient(135deg, #d7b56d, #f2c879)",
+  color: "#211308",
+  fontSize: "12px",
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+  cursor: "pointer",
+  boxShadow: "0 8px 24px rgba(215, 181, 109, 0.22)",
+};
+
+const publishErrorStyle = {
+  padding: "12px 14px",
+  borderRadius: "12px",
+  border: "1px solid rgba(210, 92, 92, 0.45)",
+  background: "rgba(130, 35, 35, 0.16)",
+  color: "#f0b6b6",
+  fontSize: "13px",
+  lineHeight: 1.5,
+};
+
+const publishSuccessStyle = {
+  padding: "12px 14px",
+  borderRadius: "12px",
+  border: "1px solid rgba(105, 190, 130, 0.38)",
+  background: "rgba(45, 125, 70, 0.14)",
+  color: "#bce5c5",
+  fontSize: "13px",
+  lineHeight: 1.5,
 };
