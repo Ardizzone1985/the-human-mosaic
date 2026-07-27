@@ -14,6 +14,7 @@ export default function CommunityWallModal({
 const [publishing, setPublishing] = useState(false);
 const [publishError, setPublishError] = useState("");
 const [publishSuccess, setPublishSuccess] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const displayName =
     profile?.nickname ||
@@ -79,7 +80,7 @@ const [publishSuccess, setPublishSuccess] = useState("");
     return () => {
       cancelled = true;
     };
-  }, [open]);
+  }, [open, refreshKey]);
 
   async function handlePublishMessage() {
   const cleanMessage = draftMessage.trim();
@@ -134,6 +135,7 @@ if (!response.ok) {
 console.log("Community moderation response:", result);
 
 setDraftMessage("");
+    setRefreshKey((value) => value + 1);
 setPublishError("");
 setPublishSuccess(
   result?.approvalStatus === "approved"
