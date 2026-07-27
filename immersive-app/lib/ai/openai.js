@@ -26,12 +26,20 @@ async function callOpenAI(endpoint, payload) {
     .catch(() => null);
 
   if (!response.ok) {
-    const message =
+  const errorDetails = {
+    status: response.status,
+    statusText: response.statusText,
+    type: result?.error?.type || null,
+    code: result?.error?.code || null,
+    message:
       result?.error?.message ||
-      "OpenAI request failed.";
+      "OpenAI request failed.",
+  };
 
-    throw new Error(message);
-  }
+  console.error("OpenAI API error:", errorDetails);
+
+  throw new Error(JSON.stringify(errorDetails));
+}
 
   return result;
 }
