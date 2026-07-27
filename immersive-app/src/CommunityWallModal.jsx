@@ -83,6 +83,9 @@ const [publishSuccess, setPublishSuccess] = useState("");
   }, [open, refreshKey]);
 
   async function handlePublishMessage() {
+    if (publishing) {
+  return;
+}
   const cleanMessage = draftMessage.trim();
 
   setPublishError("");
