@@ -74,11 +74,44 @@ export default async function handler(req, res) {
 
     const moderation = await moderateMessage(message);
 
-    return res.status(200).json({
-      success: true,
-      userId: user.id,
-      moderation,
-    });
+const { data: profile, error: profileError } = await supabase
+  .from("user_profiles")
+  .select("nickname, country")
+  .eq("id", user.id)
+  .single();
+
+if (profileError || !profile) {
+  throw new Error("User profile not found.");
+}
+
+const approvalStatus = moderation.flagged ? "pending" : "approved";
+
+const { error: insertError } = await supabase
+  .from("community_messages")
+  .insert({
+    user_id: user.id,
+    nickname: profile.nickname,
+    country: profile.country,
+    message,
+    approval_status: approvalStatus,
+    moderation_flagged: moderation.flagged,
+    moderation_categories: moderation.categories,
+    moderation_model: moderation.model,
+    moderated_at: new Date().toISOString(),
+    approved_at: moderation.flagged
+      ? null
+      : new Date().toISOString(),
+  });
+
+if (insertError) {
+  throw insertError;
+}
+
+return res.status(200).json({
+  success: true,
+  moderation,
+  approvalStatus,
+});
   } catch (error) {
     console.error("Community moderation error:", error);
 
