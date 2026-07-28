@@ -72,6 +72,42 @@ export default async function handler(req, res) {
       });
     }
 
+    const { data: latestMessage, error: latestMessageError } =
+  await supabase
+    .from("community_messages")
+    .select("created_at")
+    .eq("user_id", user.id)
+    .order("created_at", {
+      ascending: false,
+    })
+    .limit(1)
+    .maybeSingle();
+
+if (latestMessageError) {
+  throw latestMessageError;
+}
+
+if (latestMessage?.created_at) {
+  const lastMessageTime = new Date(
+    latestMessage.created_at
+  ).getTime();
+
+  const now = Date.now();
+  const cooldownMs = 60 * 1000;
+  const elapsedMs = now - lastMessageTime;
+
+  if (elapsedMs < cooldownMs) {
+    const remainingSeconds = Math.ceil(
+      (cooldownMs - elapsedMs) / 1000
+    );
+
+    return res.status(429).json({
+      error: `Please wait ${remainingSeconds} seconds before posting another message.`,
+      retryAfterSeconds: remainingSeconds,
+    });
+  }
+}
+
     const moderation = await moderateMessage(message);
 
 const { data: profile, error: profileError } = await supabase
