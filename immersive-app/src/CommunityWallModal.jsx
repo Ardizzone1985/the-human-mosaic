@@ -178,7 +178,10 @@ if (result?.approvalStatus === "approved") {
         }
       }}
     >
-      <div style={modalStyle}>
+      <div
+  style={modalStyle}
+  className="community-wall-scroll"
+>
         <button
           type="button"
           aria-label="Close Community Wall"
