@@ -300,22 +300,29 @@ if (result?.approvalStatus === "approved") {
 />
 
             <div style={composerFooterStyle}>
-              <span style={helperTextStyle}>
-  {draftMessage.length} / 500 characters
-</span>
+  <div>
+    <span style={helperTextStyle}>
+      {draftMessage.length} / 500 characters
+    </span>
 
-              <button
-  type="button"
-  onClick={handlePublishMessage}
-  disabled={publishing || !draftMessage.trim()}
-  style={
-    publishing || !draftMessage.trim()
-      ? disabledButtonStyle
-      : publishButtonStyle
-  }
->
-  {publishing ? "CHECKING..." : "PUBLISH MESSAGE"}
-</button>
+    <div style={guidelinesStyle}>
+      By publishing you agree to our Community Guidelines.
+    </div>
+  </div>
+
+  <button
+    type="button"
+    onClick={handlePublishMessage}
+    disabled={publishing || !draftMessage.trim()}
+    style={
+      publishing || !draftMessage.trim()
+        ? disabledButtonStyle
+        : publishButtonStyle
+    }
+  >
+    {publishing ? "CHECKING..." : "PUBLISH MESSAGE"}
+  </button>
+</div>
             </div>
             {publishError && (
   <div style={publishErrorStyle}>
@@ -565,6 +572,13 @@ const composerFooterStyle = {
 const helperTextStyle = {
   color: "#8f8270",
   fontSize: "12px",
+  lineHeight: 1.5,
+};
+
+const guidelinesStyle = {
+  marginTop: "6px",
+  color: "#8f8270",
+  fontSize: "11px",
   lineHeight: 1.5,
 };
 
