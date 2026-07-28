@@ -1069,48 +1069,81 @@ color="#6b5a3f"
     onOpenCommunityWall?.();
   }}
 >
-  <mesh>
-    <boxGeometry args={[4.4, 5.2, 0.18]} />
+  {/* External golden frame */}
+<mesh position={[0, 0, -0.05]}>
+  <boxGeometry args={[4.8, 5.6, 0.24]} />
 
-    <meshStandardMaterial
-      color={
-        communityWallHovered
-          ? "#9a948b"
-          : "#8d877f"
-      }
-      emissive="#d7c7a0"
-      emissiveIntensity={
-        communityWallHovered
-          ? 0.72
-          : 0.4
-      }
-      roughness={0.46}
-    />
-  </mesh>
-
-  {/* Subtle hover frame */}
-  <mesh position={[0, 0, 0.11]}>
-    <boxGeometry args={[4.1, 4.9, 0.025]} />
-
-    <meshBasicMaterial
-      color="#d7b56d"
-      transparent
-      opacity={
-        communityWallHovered
-          ? 0.13
-          : 0
-      }
-    />
-  </mesh>
-
-  <Text
-    position={[0, 1.85, 0.15]}
-    fontSize={0.26}
+  <meshStandardMaterial
     color={
       communityWallHovered
-        ? "#ffffff"
-        : "#f2c879"
+        ? "#f2c879"
+        : "#b88932"
     }
+    emissive="#d7b56d"
+    emissiveIntensity={
+      communityWallHovered ? 0.85 : 0.38
+    }
+    metalness={0.82}
+    roughness={0.24}
+  />
+</mesh>
+
+{/* Dark frame depth */}
+<mesh position={[0, 0, 0.08]}>
+  <boxGeometry args={[4.48, 5.28, 0.20]} />
+
+  <meshStandardMaterial
+    color="#241407"
+    emissive="#6b4315"
+    emissiveIntensity={0.16}
+    metalness={0.34}
+    roughness={0.42}
+  />
+</mesh>
+
+{/* Black museum panel */}
+<mesh position={[0, 0, 0.19]}>
+  <boxGeometry args={[4.18, 4.98, 0.18]} />
+
+  <meshStandardMaterial
+    color="#050302"
+    emissive="#120904"
+    emissiveIntensity={
+      communityWallHovered ? 0.24 : 0.10
+    }
+    metalness={0.16}
+    roughness={0.72}
+  />
+</mesh>
+
+{/* Inner golden border */}
+<mesh position={[0, 0, 0.30]}>
+  <boxGeometry args={[3.96, 4.76, 0.025]} />
+
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={
+      communityWallHovered ? 0.26 : 0.13
+    }
+  />
+</mesh>
+
+{/* Inner black surface */}
+<mesh position={[0, 0, 0.325]}>
+  <boxGeometry args={[3.88, 4.68, 0.028]} />
+
+  <meshBasicMaterial color="#080504" />
+</mesh>
+
+  <Text
+    position={[0, 1.85, 0.38]}
+fontSize={0.32}
+color={
+  communityWallHovered
+    ? "#fff4d8"
+    : "#d7b56d"
+}
     anchorX="center"
     letterSpacing={0.08}
   >
@@ -1118,9 +1151,9 @@ color="#6b5a3f"
   </Text>
 
   <Text
-    position={[0, 0.75, 0.15]}
-    fontSize={0.14}
-    color="#d8c7ad"
+    position={[0, 0.75, 0.38]}
+fontSize={0.15}
+color="#e2c486"
     anchorX="center"
     maxWidth={3.4}
     textAlign="center"
@@ -1129,9 +1162,9 @@ color="#6b5a3f"
   </Text>
 
   <Text
-    position={[0, -0.25, 0.15]}
-    fontSize={0.13}
-    color="#c9a96b"
+    position={[0, -0.25, 0.38]}
+fontSize={0.15}
+color="#d7b56d"
     anchorX="center"
     maxWidth={3.5}
     textAlign="center"
@@ -1140,13 +1173,13 @@ color="#6b5a3f"
   </Text>
 
   <Text
-    position={[0, -1.15, 0.15]}
-    fontSize={0.12}
-    color={
-      communityWallHovered
-        ? "#fff4d8"
-        : "#9f8b6a"
-    }
+    position={[0, -1.35, 0.38]}
+fontSize={0.14}
+color={
+  communityWallHovered
+    ? "#ffffff"
+    : "#f2c879"
+}
     anchorX="center"
     letterSpacing={0.08}
   >
