@@ -306,7 +306,7 @@ if (result?.approvalStatus === "approved") {
     </span>
 
     <div style={guidelinesStyle}>
-  By publishing you agree to our{" "}
+  Read our{" "}
   <button
     type="button"
     onClick={() => {
@@ -602,9 +602,12 @@ const guidelinesLinkStyle = {
   background: "transparent",
   color: "#d7b56d",
   font: "inherit",
+  fontWeight: 600,
+  fontSize: "12px",
   textDecoration: "underline",
   textUnderlineOffset: "3px",
   cursor: "pointer",
+  transition: "opacity 0.2s ease",
 };
 
 const disabledButtonStyle = {
