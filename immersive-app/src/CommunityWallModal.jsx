@@ -323,7 +323,7 @@ if (result?.approvalStatus === "approved") {
     {publishing ? "CHECKING..." : "PUBLISH MESSAGE"}
   </button>
 </div>
-            </div>
+            
             {publishError && (
   <div style={publishErrorStyle}>
     {publishError}
