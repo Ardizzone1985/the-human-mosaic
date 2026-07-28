@@ -306,8 +306,22 @@ if (result?.approvalStatus === "approved") {
     </span>
 
     <div style={guidelinesStyle}>
-      By publishing you agree to our Community Guidelines.
-    </div>
+  By publishing you agree to our{" "}
+  <button
+    type="button"
+    onClick={() => {
+      window.open(
+        "https://thehumanmosaic.art/community-guidelines.html",
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }}
+    style={guidelinesLinkStyle}
+  >
+    Community Guidelines
+  </button>
+  .
+</div>
   </div>
 
   <button
@@ -580,6 +594,17 @@ const guidelinesStyle = {
   color: "#8f8270",
   fontSize: "11px",
   lineHeight: 1.5,
+};
+
+const guidelinesLinkStyle = {
+  padding: 0,
+  border: "none",
+  background: "transparent",
+  color: "#d7b56d",
+  font: "inherit",
+  textDecoration: "underline",
+  textUnderlineOffset: "3px",
+  cursor: "pointer",
 };
 
 const disabledButtonStyle = {
