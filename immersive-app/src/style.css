@@ -28,3 +28,28 @@ canvas {
     transform: scale(1) translateY(0);
   }
 }
+
+.community-wall-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(215, 181, 109, 0.55)
+    rgba(255, 255, 255, 0.04);
+}
+
+.community-wall-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.community-wall-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.community-wall-scroll::-webkit-scrollbar-thumb {
+  background: rgba(215, 181, 109, 0.55);
+  border-radius: 999px;
+  border: 2px solid rgba(20, 8, 5, 0.9);
+}
+
+.community-wall-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 200, 121, 0.78);
+}
