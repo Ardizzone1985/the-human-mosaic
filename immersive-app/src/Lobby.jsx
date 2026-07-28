@@ -1028,7 +1028,7 @@ color="#6b5a3f"
 
       {/* Future Humanity Impact wall */}
 <HumanityImpactDoor
-  position={[-12.72, 1.45, 0]}
+  position={[-13.15, 1.45, 0]}
   rotation={[0, Math.PI / 2, 0]}
   color="#d7b56d"
 />
