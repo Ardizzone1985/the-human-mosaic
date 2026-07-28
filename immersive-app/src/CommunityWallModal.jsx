@@ -181,6 +181,7 @@ if (result?.approvalStatus === "approved") {
       <div
   style={modalStyle}
   className="community-wall-scroll"
+        style={messagesContainerStyle}
 >
         <button
           type="button"
