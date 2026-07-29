@@ -4,7 +4,11 @@ export default function SponsorPanel({
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   label = "PARTNER SPACE",
+  placement,
 }) {
+    if (!placement) {
+    console.warn("SponsorPanel: missing placement");
+  }
   return (
     <group position={position} rotation={rotation}>
       {/* Outer wood frame */}
