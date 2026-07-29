@@ -1,4 +1,4 @@
-import { Text } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 import useSponsors from "../../hooks/useSponsors.js";
 
 export default function SponsorPanel({
@@ -12,6 +12,9 @@ export default function SponsorPanel({
   }
 
   const sponsor = useSponsors(placement);
+  const sponsorTexture = useTexture(
+  sponsor?.image || "/logo-cropped.png"
+);
   
   return (
     <group position={position} rotation={rotation}>
@@ -53,30 +56,30 @@ export default function SponsorPanel({
       {/* Placeholder title */}
       {sponsor?.active ? (
   <>
-    <Text
-      position={[0, 0.15, 0.09]}
-      fontSize={0.18}
-      color="#4d4031"
-      anchorX="center"
-      anchorY="middle"
-      maxWidth={2.8}
-      textAlign="center"
-    >
-      {sponsor.company}
-    </Text>
+  {sponsor.image && (
+    <mesh position={[0, 0.12, 0.095]}>
+      <planeGeometry args={[2.6, 0.75]} />
 
-    <Text
-      position={[0, -0.17, 0.09]}
-      fontSize={0.1}
-      color="#8a6a2f"
-      anchorX="center"
-      anchorY="middle"
-      maxWidth={2.75}
-      textAlign="center"
-    >
-      {sponsor.title}
-    </Text>
-  </>
+      <meshBasicMaterial
+        map={sponsorTexture}
+        transparent
+        toneMapped={false}
+      />
+    </mesh>
+  )}
+
+  <Text
+    position={[0, -0.38, 0.1]}
+    fontSize={0.09}
+    color="#8a6a2f"
+    anchorX="center"
+    anchorY="middle"
+    maxWidth={2.75}
+    textAlign="center"
+  >
+    {sponsor.title}
+  </Text>
+</>
 ) : (
   <>
     <Text
