@@ -1,0 +1,94 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 720 360"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Atlas Cultural Foundation</title>
+
+  <desc id="description">
+    Demo logo for Atlas Cultural Foundation.
+  </desc>
+
+  <rect
+    width="720"
+    height="360"
+    rx="28"
+    fill="#f2ede4"
+  />
+
+  <circle
+    cx="180"
+    cy="180"
+    r="92"
+    fill="none"
+    stroke="#9b6a2f"
+    stroke-width="10"
+  />
+
+  <path
+    d="M118 216 L180 102 L242 216 Z"
+    fill="none"
+    stroke="#4d4031"
+    stroke-width="12"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M142 184 H218"
+    stroke="#d8b36d"
+    stroke-width="10"
+    stroke-linecap="round"
+  />
+
+  <circle
+    cx="180"
+    cy="180"
+    r="12"
+    fill="#d8b36d"
+  />
+
+  <text
+    x="310"
+    y="145"
+    fill="#4d4031"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="42"
+    font-weight="700"
+    letter-spacing="3"
+  >
+    ATLAS
+  </text>
+
+  <text
+    x="310"
+    y="195"
+    fill="#9b6a2f"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="25"
+    font-weight="600"
+    letter-spacing="2"
+  >
+    CULTURAL FOUNDATION
+  </text>
+
+  <line
+    x1="310"
+    y1="220"
+    x2="600"
+    y2="220"
+    stroke="#d8b36d"
+    stroke-width="4"
+  />
+
+  <text
+    x="310"
+    y="258"
+    fill="#6b5a3f"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="18"
+    letter-spacing="1.5"
+  >
+    PRESERVING STORIES • CONNECTING CULTURES
+  </text>
+</svg>
