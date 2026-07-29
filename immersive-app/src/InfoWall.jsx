@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Text, useTexture } from "@react-three/drei";
 import logoImage from "./logo-cropped.png";
 import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
+import { getRoomSponsorPlacement } from "./data/sponsorPlacements.js";
 
 const ROOM_TEXT = {
   Identity: {
@@ -180,7 +181,7 @@ fontSize={0.18}
       {/* Ad spaces */}
       <SponsorPanel
   position={[2.5, 1.65, 0.22]}
-  placement={`${room.toLowerCase()}-top-left`}
+  placement={getRoomSponsorPlacement(room, "top-left")}
   label="FUTURE AD SPACE"
 />
       <AdSpace position={[5.9, 1.65, 0.22]} label="PARTNER SPACE" />
