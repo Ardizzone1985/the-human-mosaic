@@ -1,3 +1,5 @@
+import atlasLogo from "../assets/sponsors/atlas-cultural-foundation.svg";
+
 export const MOCK_SPONSORS = {
   // Lobby
   "lobby-left": null,
@@ -5,12 +7,12 @@ export const MOCK_SPONSORS = {
 
   // Identity Room
   "identity-top-left": {
-    company: "Atlas Cultural Foundation",
-    title: "Official Cultural Partner",
-    website: "https://example.com",
-    image: null,
-    active: true,
-  },
+  company: "Atlas Cultural Foundation",
+  title: "Official Cultural Partner",
+  website: "https://example.com",
+  image: atlasLogo,
+  active: true,
+},
 
   "identity-top-right": null,
   "identity-bottom-left": null,
