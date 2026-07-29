@@ -22,57 +22,6 @@ const ROOM_TEXT = {
   }
 };
 
-function AdSpace({ position, label = "FUTURE AD SPACE" }) {
-  return (
-    <group position={position}>
-
-      {/* Outer wood frame */}
-      <mesh>
-        <boxGeometry args={[3.72, 1.68, 0.12]} />
-        <meshStandardMaterial
-          color="#9b6a2f"
-          roughness={0.55}
-          metalness={0.12}
-        />
-      </mesh>
-
-      {/* Inner golden frame */}
-      <mesh position={[0, 0, 0.03]}>
-        <boxGeometry args={[3.55, 1.52, 0.05]} />
-        <meshStandardMaterial
-          color="#d8b36d"
-          roughness={0.32}
-          metalness={0.38}
-          emissive="#d8b36d"
-          emissiveIntensity={0.08}
-        />
-      </mesh>
-
-      {/* Canvas */}
-      <mesh position={[0, 0, 0.06]}>
-        <boxGeometry args={[3.22, 1.22, 0.03]} />
-        <meshStandardMaterial
-          color="#efe8dd"
-          roughness={0.88}
-          metalness={0}
-        />
-      </mesh>
-
-      {/* Title */}
-      <Text
-        position={[0, 0, 0.09]}
-        fontSize={0.16}
-        color="#4d4031"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {label}
-      </Text>
-
-    </group>
-  );
-}
-
 export default function InfoWall({ room = "Identity" }) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
   const [doorHovered, setDoorHovered] = useState(false);
