@@ -178,14 +178,24 @@ fontSize={0.18}
         Explore. Discover. Be part of the story.
       </Text>
 
-      {/* Ad spaces */}
-      <SponsorPanel
+      {/* Sponsor spaces */}
+<SponsorPanel
   position={[2.5, 1.65, 0.22]}
   placement={getRoomSponsorPlacement(room, "top-left")}
   label="FUTURE AD SPACE"
 />
-      <AdSpace position={[5.9, 1.65, 0.22]} label="PARTNER SPACE" />
-      <AdSpace position={[2.5, -0.1, 0.22]} label="SPONSOR SPACE" />
+
+<SponsorPanel
+  position={[5.9, 1.65, 0.22]}
+  placement={getRoomSponsorPlacement(room, "top-right")}
+  label="PARTNER SPACE"
+/>
+
+<SponsorPanel
+  position={[2.5, -0.1, 0.22]}
+  placement={getRoomSponsorPlacement(room, "bottom-left")}
+  label="SPONSOR SPACE"
+/>
 
      {/* Exit door */}
 <group
