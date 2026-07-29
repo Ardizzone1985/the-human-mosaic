@@ -180,6 +180,7 @@ fontSize={0.18}
       {/* Ad spaces */}
       <SponsorPanel
   position={[2.5, 1.65, 0.22]}
+  placement={`${room.toLowerCase()}-top-left`}
   label="FUTURE AD SPACE"
 />
       <AdSpace position={[5.9, 1.65, 0.22]} label="PARTNER SPACE" />
