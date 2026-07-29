@@ -103,6 +103,7 @@ export default function SponsorPanel({
 
 function SponsorArtwork({ image }) {
   const texture = useTexture(image);
+  texture.colorSpace = "srgb";
 
   return (
     <mesh position={[0, 0.12, 0.095]}>
