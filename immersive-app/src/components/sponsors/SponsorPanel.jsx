@@ -1,5 +1,6 @@
 import { Text, useTexture } from "@react-three/drei";
 import useSponsors from "../../hooks/useSponsors.js";
+import fallbackLogo from "../../logo-cropped.png";
 
 export default function SponsorPanel({
   position = [0, 0, 0],
@@ -13,7 +14,7 @@ export default function SponsorPanel({
 
   const sponsor = useSponsors(placement);
   const sponsorTexture = useTexture(
-  sponsor?.image || "/logo-cropped.png"
+  sponsor?.image || fallbackLogo
 );
   
   return (
