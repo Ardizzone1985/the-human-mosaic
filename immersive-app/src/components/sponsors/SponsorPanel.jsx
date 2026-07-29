@@ -1,4 +1,5 @@
 import { Text } from "@react-three/drei";
+import useSponsors from "../../hooks/useSponsors.js";
 
 export default function SponsorPanel({
   position = [0, 0, 0],
@@ -9,6 +10,9 @@ export default function SponsorPanel({
     if (!placement) {
     console.warn("SponsorPanel: missing placement");
   }
+
+  const sponsor = useSponsors(placement);
+  
   return (
     <group position={position} rotation={rotation}>
       {/* Outer wood frame */}
@@ -47,15 +51,57 @@ export default function SponsorPanel({
       </mesh>
 
       {/* Placeholder title */}
-      <Text
-        position={[0, 0, 0.09]}
-        fontSize={0.16}
-        color="#4d4031"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {label}
-      </Text>
+      {sponsor?.active ? (
+  <>
+    <Text
+      position={[0, 0.15, 0.09]}
+      fontSize={0.18}
+      color="#4d4031"
+      anchorX="center"
+      anchorY="middle"
+      maxWidth={2.8}
+      textAlign="center"
+    >
+      {sponsor.company}
+    </Text>
+
+    <Text
+      position={[0, -0.17, 0.09]}
+      fontSize={0.1}
+      color="#8a6a2f"
+      anchorX="center"
+      anchorY="middle"
+      maxWidth={2.75}
+      textAlign="center"
+    >
+      {sponsor.title}
+    </Text>
+  </>
+) : (
+  <>
+    <Text
+      position={[0, 0.13, 0.09]}
+      fontSize={0.15}
+      color="#4d4031"
+      anchorX="center"
+      anchorY="middle"
+    >
+      {label}
+    </Text>
+
+    <Text
+      position={[0, -0.17, 0.09]}
+      fontSize={0.08}
+      color="#8a6a2f"
+      anchorX="center"
+      anchorY="middle"
+      maxWidth={2.7}
+      textAlign="center"
+    >
+      Become a partner of The Human Mosaic
+    </Text>
+  </>
+)}
     </group>
   );
 }
