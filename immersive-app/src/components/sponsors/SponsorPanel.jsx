@@ -1,6 +1,5 @@
 import { Text, useTexture } from "@react-three/drei";
 import useSponsors from "../../hooks/useSponsors.js";
-import fallbackLogo from "../../logo-cropped.png";
 
 export default function SponsorPanel({
   position = [0, 0, 0],
@@ -13,10 +12,7 @@ export default function SponsorPanel({
   }
 
   const sponsor = useSponsors(placement);
-  const sponsorTexture = useTexture(
-  sponsor?.image || fallbackLogo
-);
-  
+   
   return (
     <group position={position} rotation={rotation}>
       {/* Outer wood frame */}
@@ -58,16 +54,11 @@ export default function SponsorPanel({
       {sponsor?.active ? (
   <>
   {sponsor.image && (
-    <mesh position={[0, 0.12, 0.095]}>
-      <planeGeometry args={[2.6, 0.75]} />
-
-      <meshBasicMaterial
-        map={sponsorTexture}
-        transparent
-        toneMapped={false}
-      />
-    </mesh>
-  )}
+  <SponsorArtwork
+    key={sponsor.image}
+    image={sponsor.image}
+  />
+)}
 
   <Text
     position={[0, -0.38, 0.1]}
@@ -107,5 +98,21 @@ export default function SponsorPanel({
   </>
 )}
     </group>
+  );
+}
+
+function SponsorArtwork({ image }) {
+  const texture = useTexture(image);
+
+  return (
+    <mesh position={[0, 0.12, 0.095]}>
+      <planeGeometry args={[2.6, 0.75]} />
+
+      <meshBasicMaterial
+        map={texture}
+        transparent
+        toneMapped={false}
+      />
+    </mesh>
   );
 }
