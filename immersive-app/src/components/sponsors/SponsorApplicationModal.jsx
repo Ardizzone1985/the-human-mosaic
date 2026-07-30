@@ -1,4 +1,50 @@
+import { useState } from "react";
 export default function SponsorApplicationModal({ plan, onClose }) {
+
+    const [formData, setFormData] = useState({
+    company: "",
+    contact_name: "",
+    email: "",
+    website: "",
+    country: "",
+    organization_type: "",
+    message: "",
+  });
+
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoError, setLogoError] = useState("");
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  function handleLogoChange(event) {
+    const file = event.target.files?.[0];
+
+    setLogoError("");
+
+    if (!file) {
+      setLogoFile(null);
+      return;
+    }
+
+    const maximumSize = 5 * 1024 * 1024;
+
+    if (file.size > maximumSize) {
+      setLogoFile(null);
+      setLogoError("The selected logo must be smaller than 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setLogoFile(file);
+  }
+  
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: plan?.currency || "EUR",
@@ -56,6 +102,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="company"
                 style={input}
                 placeholder="Organization or company name"
+                value={formData.company}
+onChange={handleChange}
               />
             </label>
 
@@ -67,6 +115,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="contact_name"
                 style={input}
                 placeholder="Full name"
+                value={formData.contact_name}
+onChange={handleChange}
               />
             </label>
 
@@ -78,6 +128,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="email"
                 style={input}
                 placeholder="name@company.com"
+                value={formData.email}
+onChange={handleChange}
               />
             </label>
 
@@ -89,6 +141,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="website"
                 style={input}
                 placeholder="https://www.company.com"
+                value={formData.website}
+onChange={handleChange}
               />
             </label>
 
@@ -100,6 +154,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="country"
                 style={input}
                 placeholder="Country"
+                value={formData.country}
+onChange={handleChange}
               />
             </label>
 
@@ -109,7 +165,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
               <select
                 name="organization_type"
                 style={input}
-                defaultValue=""
+                value={formData.organization_type}
+onChange={handleChange}
               >
                 <option value="" disabled>
                   Select organization type
@@ -137,15 +194,24 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 name="logo"
                 accept=".svg,.png,.jpg,.jpeg,.webp"
                 style={fileInput}
+                onChange={handleLogoChange}
               />
 
-              <div style={uploadTitle}>
-                Upload your official logo
-              </div>
+              {logoError && (
+  <div style={errorText}>
+    {logoError}
+  </div>
+)}
 
-              <div style={uploadText}>
-                SVG, PNG, JPG or WEBP · Maximum 5 MB
-              </div>
+              <div style={uploadTitle}>
+  {logoFile ? logoFile.name : "Upload your official logo"}
+</div>
+
+<div style={uploadText}>
+  {logoFile
+    ? `${(logoFile.size / 1024 / 1024).toFixed(2)} MB selected`
+    : "SVG, PNG, JPG or WEBP · Maximum 5 MB"}
+</div>
             </div>
           </label>
 
@@ -158,6 +224,8 @@ export default function SponsorApplicationModal({ plan, onClose }) {
               name="message"
               style={textarea}
               placeholder="Tell us about your organization, your values and why this partnership would be meaningful."
+              value={formData.message}
+onChange={handleChange}
             />
           </label>
 
@@ -399,4 +467,11 @@ const submitButton = {
   border: "none",
   background: "#2b1b0e",
   color: "#ffffff",
+};
+
+const errorText = {
+  marginTop: "8px",
+  color: "#a12f2f",
+  fontSize: "13px",
+  fontWeight: 700,
 };
