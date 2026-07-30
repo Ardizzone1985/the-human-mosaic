@@ -293,14 +293,10 @@ export default function AdvertisePage({ onClose, onApply }) {
   <div style={plansGrid}>
     {plans.map((plan) => (
       <SponsorPlanCard
-        key={plan.id}
-        plan={plan}
-        onApply={(selectedPlan) => {
-          alert(
-            `Application form coming soon:\n\n${selectedPlan.name}`
-          );
-        }}
-      />
+  key={plan.id}
+  plan={plan}
+  onApply={onApply}
+/>
     ))}
   </div>
 )}
