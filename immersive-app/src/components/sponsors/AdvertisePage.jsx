@@ -1,4 +1,6 @@
 import logoImage from "../../logo-cropped.png";
+import useSponsorPlans from "../../hooks/useSponsorPlans";
+import SponsorPlanCard from "./SponsorPlanCard";
 
 const partnerTypes = [
   {
@@ -52,6 +54,13 @@ const benefits = [
 ];
 
 export default function AdvertisePage({ onClose, onApply }) {
+
+  const {
+  plans,
+  loading,
+  error,
+} = useSponsorPlans();
+  
   function scrollToOpportunities() {
     document
       .getElementById("partnership-opportunities")
@@ -791,4 +800,23 @@ const trustText = {
   color: "#b9aa96",
   fontSize: "14px",
   lineHeight: 1.7,
+};
+
+const plansGrid = {
+  marginTop: "50px",
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+  gap: "28px",
+  alignItems: "stretch",
+};
+
+const loadingBox = {
+  marginTop: "50px",
+  padding: "50px",
+  borderRadius: "24px",
+  textAlign: "center",
+  color: "#c7b49b",
+  border: "1px solid rgba(215,181,109,0.15)",
+  background: "rgba(255,255,255,0.03)",
+  fontSize: "18px",
 };
