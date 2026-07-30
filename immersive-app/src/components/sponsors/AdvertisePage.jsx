@@ -804,7 +804,7 @@ const trustText = {
 const plansGrid = {
   marginTop: "50px",
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
   gap: "28px",
   alignItems: "stretch",
 };
