@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function SponsorApplicationModal({ plan, onClose }) {
 
     const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
   const [logoFile, setLogoFile] = useState(null);
   const [logoError, setLogoError] = useState("");
+  const [logoPreview, setLogoPreview] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -44,6 +45,20 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
     setLogoFile(file);
   }
+
+    useEffect(() => {
+  if (!logoFile) {
+    setLogoPreview("");
+    return;
+  }
+
+  const previewUrl = URL.createObjectURL(logoFile);
+  setLogoPreview(previewUrl);
+
+  return () => {
+    URL.revokeObjectURL(previewUrl);
+  };
+}, [logoFile]);
   
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -195,24 +210,44 @@ onChange={handleChange}
                 accept=".svg,.png,.jpg,.jpeg,.webp"
                 style={fileInput}
                 onChange={handleLogoChange}
-              />
+              />                  
 
-              {logoError && (
+  {logoPreview ? (
+    <>
+      <img
+        src={logoPreview}
+        alt="Selected company logo preview"
+        style={logoPreviewImage}
+      />
+
+      <div style={uploadTitle}>
+        {logoFile.name}
+      </div>
+
+      <div style={uploadText}>
+        {(logoFile.size / 1024 / 1024).toFixed(2)} MB selected
+      </div>
+    </>
+  ) : (
+    <>
+      <div style={uploadTitle}>
+        Upload your official logo
+      </div>
+
+      <div style={uploadText}>
+        SVG, PNG, JPG or WEBP · Maximum 5 MB
+      </div>
+    </>
+  )}
+</div>
+            </div>
+
+{logoError && (
   <div style={errorText}>
     {logoError}
   </div>
 )}
-
-              <div style={uploadTitle}>
-  {logoFile ? logoFile.name : "Upload your official logo"}
-</div>
-
-<div style={uploadText}>
-  {logoFile
-    ? `${(logoFile.size / 1024 / 1024).toFixed(2)} MB selected`
-    : "SVG, PNG, JPG or WEBP · Maximum 5 MB"}
-</div>
-            </div>
+              
           </label>
 
           <label style={field}>
@@ -474,4 +509,17 @@ const errorText = {
   color: "#a12f2f",
   fontSize: "13px",
   fontWeight: 700,
+};
+
+const logoPreviewImage = {
+  width: "100%",
+  maxWidth: "220px",
+  height: "100px",
+  marginBottom: "16px",
+  objectFit: "contain",
+  borderRadius: "12px",
+  background: "#ffffff",
+  padding: "10px",
+  boxSizing: "border-box",
+  border: "1px solid rgba(93, 65, 35, 0.12)",
 };
