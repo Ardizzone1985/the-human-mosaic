@@ -1,6 +1,11 @@
 import logoImage from "./logo-cropped.png";
 
-export default function WelcomeGate({ onEnterGuest, onLogin, onRegister }) {
+export default function WelcomeGate({
+  onEnterGuest,
+  onLogin,
+  onRegister,
+  onAdvertise,
+}) {
   return (
     <div style={overlay}>
       <div style={card}>
@@ -48,10 +53,38 @@ export default function WelcomeGate({ onEnterGuest, onLogin, onRegister }) {
         <div style={journeyText}>Choose how you'd like to begin your journey.</div>
 
         <div style={buttons}>
-          <button style={primaryButton} onClick={onLogin}>LOGIN</button>
-          <button style={outlineButton} onClick={onRegister}>REGISTER FOR FREE</button>
-          <button style={guestButton} onClick={onEnterGuest}>ENTER MUSEUM AS GUEST</button>
-        </div>
+  <button
+    type="button"
+    style={primaryButton}
+    onClick={onLogin}
+  >
+    LOGIN
+  </button>
+
+  <button
+    type="button"
+    style={outlineButton}
+    onClick={onRegister}
+  >
+    REGISTER FOR FREE
+  </button>
+
+  <button
+    type="button"
+    style={guestButton}
+    onClick={onEnterGuest}
+  >
+    ENTER MUSEUM AS GUEST
+  </button>
+
+  <button
+    type="button"
+    style={partnerButton}
+    onClick={onAdvertise}
+  >
+    PARTNER WITH US
+  </button>
+</div>
 
         <div style={terms}>
   By continuing, you agree to our{" "}
@@ -405,4 +438,11 @@ const footerLinks = {
   gap: "14px",
   color: "#817568",
   fontSize: "12px",
+};
+
+const partnerButton = {
+  ...outlineButton,
+  gridColumn: "1 / -1",
+  background: "rgba(215,181,109,0.08)",
+  color: "#f2c879",
 };
