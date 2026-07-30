@@ -184,6 +184,77 @@ export default function AdvertisePage({ onClose, onApply }) {
           </div>
         </section>
 
+        <section style={trustSection}>
+  <div style={sectionInner}>
+    <div style={sectionEyebrow}>
+      WHY ORGANIZATIONS CHOOSE THE HUMAN MOSAIC
+    </div>
+
+    <h2 style={lightTitle}>
+      More than visibility
+    </h2>
+
+    <p style={lightIntro}>
+      Every partnership is designed to create cultural value, strengthen
+      human connection and support a project built to last.
+    </p>
+
+    <div style={trustGrid}>
+      <article style={trustCard}>
+        <div style={trustIcon}>🌍</div>
+
+        <h3 style={trustTitle}>
+          International Vision
+        </h3>
+
+        <p style={trustText}>
+          A permanent global artwork connecting cultures through real human
+          stories and memories.
+        </p>
+      </article>
+
+      <article style={trustCard}>
+        <div style={trustIcon}>🎨</div>
+
+        <h3 style={trustTitle}>
+          Meaningful Visibility
+        </h3>
+
+        <p style={trustText}>
+          Your organization becomes part of an authentic cultural experience,
+          not a conventional advertising campaign.
+        </p>
+      </article>
+
+      <article style={trustCard}>
+        <div style={trustIcon}>❤️</div>
+
+        <h3 style={trustTitle}>
+          Positive Impact
+        </h3>
+
+        <p style={trustText}>
+          Help preserve human memories while supporting the future social and
+          humanitarian mission of the project.
+        </p>
+      </article>
+
+      <article style={trustCard}>
+        <div style={trustIcon}>🤝</div>
+
+        <h3 style={trustTitle}>
+          Long-Term Partnership
+        </h3>
+
+        <p style={trustText}>
+          We build trusted relationships with organizations that share our
+          cultural and human values.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
         <section
           id="partnership-opportunities"
           style={opportunitiesSection}
