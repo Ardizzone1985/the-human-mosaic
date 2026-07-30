@@ -201,54 +201,52 @@ onChange={handleChange}
           </div>
 
           <label style={field}>
-            <span style={label}>Company Logo *</span>
+  <span style={label}>Company Logo *</span>
 
-            <div style={uploadBox}>
-              <input
-                type="file"
-                name="logo"
-                accept=".svg,.png,.jpg,.jpeg,.webp"
-                style={fileInput}
-                onChange={handleLogoChange}
-              />                  
+  <div style={uploadBox}>
+    <input
+      type="file"
+      name="logo"
+      accept=".svg,.png,.jpg,.jpeg,.webp"
+      style={fileInput}
+      onChange={handleLogoChange}
+    />
 
-  {logoPreview ? (
-    <>
-      <img
-        src={logoPreview}
-        alt="Selected company logo preview"
-        style={logoPreviewImage}
-      />
+    {logoPreview ? (
+      <>
+        <img
+          src={logoPreview}
+          alt="Selected company logo preview"
+          style={logoPreviewImage}
+        />
 
-      <div style={uploadTitle}>
-        {logoFile.name}
-      </div>
+        <div style={uploadTitle}>
+          {logoFile.name}
+        </div>
 
-      <div style={uploadText}>
-        {(logoFile.size / 1024 / 1024).toFixed(2)} MB selected
-      </div>
-    </>
-  ) : (
-    <>
-      <div style={uploadTitle}>
-        Upload your official logo
-      </div>
+        <div style={uploadText}>
+          {(logoFile.size / 1024 / 1024).toFixed(2)} MB selected
+        </div>
+      </>
+    ) : (
+      <>
+        <div style={uploadTitle}>
+          Upload your official logo
+        </div>
 
-      <div style={uploadText}>
-        SVG, PNG, JPG or WEBP · Maximum 5 MB
-      </div>
-    </>
-  )}
-</div>
-            </div>
-
-{logoError && (
-  <div style={errorText}>
-    {logoError}
+        <div style={uploadText}>
+          SVG, PNG, JPG or WEBP · Maximum 5 MB
+        </div>
+      </>
+    )}
   </div>
-)}
-              
-          </label>
+
+  {logoError && (
+    <div style={errorText}>
+      {logoError}
+    </div>
+  )}
+</label>
 
           <label style={field}>
             <span style={label}>
