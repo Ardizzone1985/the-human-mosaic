@@ -1,6 +1,8 @@
+import { useState } from "react";
 import logoImage from "../../logo-cropped.png";
 import useSponsorPlans from "../../hooks/useSponsorPlans";
 import SponsorPlanCard from "./SponsorPlanCard";
+import SponsorApplicationModal from "./SponsorApplicationModal";
 
 const partnerTypes = [
   {
@@ -54,6 +56,8 @@ const benefits = [
 ];
 
 export default function AdvertisePage({ onClose, onApply }) {
+  const [selectedPlan, setSelectedPlan] = useState(null);
+const [showApplicationModal, setShowApplicationModal] = useState(false);
 
   const {
   plans,
@@ -295,7 +299,10 @@ export default function AdvertisePage({ onClose, onApply }) {
       <SponsorPlanCard
   key={plan.id}
   plan={plan}
-  onApply={onApply}
+  onApply={(plan) => {
+    setSelectedPlan(plan);
+    setShowApplicationModal(true);
+  }}
 />
     ))}
   </div>
@@ -344,6 +351,16 @@ export default function AdvertisePage({ onClose, onApply }) {
           info@thehumanmosaic.art
         </a>
       </footer>
+      
+      {showApplicationModal && (
+  <SponsorApplicationModal
+    plan={selectedPlan}
+    onClose={() => {
+      setShowApplicationModal(false);
+      setSelectedPlan(null);
+    }}
+  />
+)}
     </div>
   );
 }
