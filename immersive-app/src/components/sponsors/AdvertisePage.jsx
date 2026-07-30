@@ -281,26 +281,29 @@ export default function AdvertisePage({ onClose, onApply }) {
               Every placement is reviewed before approval.
             </p>
 
-            <div style={opportunityPlaceholder}>
-              <div style={placeholderLabel}>PARTNERSHIP PLANS</div>
-
-              <h3 style={placeholderTitle}>
-                Curated opportunities are being prepared
-              </h3>
-
-              <p style={placeholderText}>
-                Available plans, placements, durations and prices will appear
-                here directly from our official partnership catalogue.
-              </p>
-
-              <button
-                type="button"
-                style={primaryButton}
-                onClick={onApply}
-              >
-                APPLY FOR A PARTNERSHIP
-              </button>
-            </div>
+            {loading ? (
+  <div style={loadingBox}>
+    Loading partnership opportunities...
+  </div>
+) : error ? (
+  <div style={loadingBox}>
+    Unable to load partnership opportunities.
+  </div>
+) : (
+  <div style={plansGrid}>
+    {plans.map((plan) => (
+      <SponsorPlanCard
+        key={plan.id}
+        plan={plan}
+        onApply={(selectedPlan) => {
+          alert(
+            `Application form coming soon:\n\n${selectedPlan.name}`
+          );
+        }}
+      />
+    ))}
+  </div>
+)}
           </div>
         </section>
 
