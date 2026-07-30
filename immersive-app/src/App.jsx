@@ -21,6 +21,7 @@ import AuthModal from "./auth/AuthModal.jsx";
 import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 import AppDialog from "./components/AppDialog.jsx";
+import AdvertisePage from "./components/sponsors/AdvertisePage.jsx";
 import MuseumIdentity from "./MuseumIdentity.jsx";
 import AvatarModal from "./AvatarModal.jsx";
 import UploadMemoryModal from "./UploadMemoryModal.jsx";
@@ -427,6 +428,7 @@ export default function App() {
   });
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
+  const [showAdvertisePage, setShowAdvertisePage] = useState(false);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
   useState(false);
   const [paymentReturn, setPaymentReturn] =
@@ -827,12 +829,27 @@ const isLobby = !currentRoom;
       setShowWelcomeGate(false);
     }}
     onLogin={() => {
-  setAuthMode("login");
-}}
+      setAuthMode("login");
+    }}
+    onRegister={() => {
+      setAuthMode("register");
+    }}
+    onAdvertise={() => {
+      setShowAdvertisePage(true);
+    }}
+  />
+)}
 
-onRegister={() => {
-  setAuthMode("register");
-}}
+      {showAdvertisePage && (
+  <AdvertisePage
+    onClose={() => {
+      setShowAdvertisePage(false);
+    }}
+    onApply={() => {
+      window.alert(
+        "The partnership application form will be available in the next step."
+      );
+    }}
   />
 )}
 
