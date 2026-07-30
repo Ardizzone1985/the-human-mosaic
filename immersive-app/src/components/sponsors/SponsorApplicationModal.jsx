@@ -44,7 +44,7 @@ const overlay = {
 
 const modal = {
   position: "relative",
-  width: "min(100%, 560px)",
+  width: "min(100%, 800px)",
   padding: "50px 34px",
   boxSizing: "border-box",
   borderRadius: "26px",
