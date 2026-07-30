@@ -747,3 +747,48 @@ const footerLink = {
   color: "#c9a962",
   textDecoration: "none",
 };
+
+const trustSection = {
+  padding: "100px 22px",
+  background:
+    "linear-gradient(180deg, #15100b 0%, #0b0806 100%)",
+  borderTop: "1px solid rgba(215,181,109,0.12)",
+  borderBottom: "1px solid rgba(215,181,109,0.12)",
+};
+
+const trustGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+  gap: "18px",
+};
+
+const trustCard = {
+  minHeight: "255px",
+  padding: "30px",
+  boxSizing: "border-box",
+  borderRadius: "24px",
+  border: "1px solid rgba(215,181,109,0.22)",
+  background:
+    "linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018))",
+};
+
+const trustIcon = {
+  marginBottom: "24px",
+  fontSize: "31px",
+};
+
+const trustTitle = {
+  margin: "0 0 14px",
+  color: "#f1d9ab",
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  fontSize: "24px",
+  lineHeight: 1.2,
+  fontWeight: 500,
+};
+
+const trustText = {
+  margin: 0,
+  color: "#b9aa96",
+  fontSize: "14px",
+  lineHeight: 1.7,
+};
