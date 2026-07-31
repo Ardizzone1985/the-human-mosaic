@@ -280,6 +280,12 @@ onChange={handleChange}
               SUBMIT APPLICATION
             </button>
           </div>
+            <p style={reviewNotice}>
+  Every partnership application is personally reviewed by The Human Mosaic
+  team. We may contact you for additional information before approving your
+  partnership. Approved partners will be notified by email with the next
+  steps.
+</p>
         </form>
       </div>
     </div>
@@ -522,4 +528,14 @@ const logoPreviewImage = {
   padding: "10px",
   boxSizing: "border-box",
   border: "1px solid rgba(93, 65, 35, 0.12)",
+};
+
+const reviewNotice = {
+  margin: "18px 0 0",
+  color: "#6f6254",
+  fontSize: "13px",
+  lineHeight: 1.7,
+  textAlign: "center",
+  maxWidth: "620px",
+  alignSelf: "center",
 };
