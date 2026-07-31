@@ -146,6 +146,34 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
     const publicUrl = publicUrlData?.publicUrl;
 
+      const { error: insertError } = await supabase
+  .from("sponsor_requests")
+  .insert({
+    company: formData.company,
+    contact_name: formData.contact_name,
+    email: formData.email,
+    website: formData.website,
+    country: formData.country,
+    organization_type: formData.organization_type,
+    message: formData.message || null,
+
+    logo_url: publicUrl,
+
+    plan_id: plan.id,
+    preferred_room: plan.room,
+    requested_days: plan.duration_days,
+    requested_placement: plan.placement,
+
+    status: "pending",
+    payment_status: "not_requested",
+  });
+
+if (insertError) {
+  console.error(insertError);
+  alert("Unable to submit your partnership request.");
+  return;
+}
+
     if (!publicUrl) {
       console.error("No public URL was returned for the sponsor logo.");
       setLogoError(
