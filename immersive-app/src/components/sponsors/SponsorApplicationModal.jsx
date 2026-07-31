@@ -260,7 +260,7 @@ onChange={handleChange}
             </label>
 
             <label style={field}>
-              <span style={label}>Organization Type</span>
+              <span style={label}>Organization Type *</span>
 
               <select
                 name="organization_type"
@@ -282,6 +282,14 @@ onChange={handleChange}
                 <option value="foundation">Foundation</option>
                 <option value="other">Other</option>
               </select>
+
+{formErrors.organization_type && (
+  <div style={errorText}>
+    {formErrors.organization_type}
+  </div>
+)}
+
+                
             </label>
           </div>
 
