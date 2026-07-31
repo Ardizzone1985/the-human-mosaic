@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+
+const initialFormData = {
+  company: "",
+  contact_name: "",
+  email: "",
+  website: "",
+  country: "",
+  organization_type: "",
+  message: "",
+};
+
 export default function SponsorApplicationModal({ plan, onClose }) {
 
-    const [formData, setFormData] = useState({
-    company: "",
-    contact_name: "",
-    email: "",
-    website: "",
-    country: "",
-    organization_type: "",
-    message: "",
-  });
+    const [formData, setFormData] = useState(initialFormData);
 
   const [logoFile, setLogoFile] = useState(null);
   const [logoError, setLogoError] = useState("");
@@ -112,21 +115,24 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
   const isValid = validateForm();
 
-  if (!isValid || !logoFile) {
+  if (!isValid || !logoFile || !plan?.id) {
     return;
   }
 
   setIsSubmitting(true);
+  setLogoError("");
+
+  let uploadedFileName = null;
 
   try {
     const originalExtension =
       logoFile.name.split(".").pop()?.toLowerCase() || "png";
 
-    const fileName = `${crypto.randomUUID()}.${originalExtension}`;
+    uploadedFileName = `${crypto.randomUUID()}.${originalExtension}`;
 
     const { error: uploadError } = await supabase.storage
       .from("sponsor-logos")
-      .upload(fileName, logoFile, {
+      .upload(uploadedFileName, logoFile, {
         cacheControl: "3600",
         upsert: false,
         contentType: logoFile.type,
@@ -134,45 +140,15 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
     if (uploadError) {
       console.error("Sponsor logo upload error:", uploadError);
-      setLogoError(
-        "We could not upload the logo. Please try again."
-      );
+      setLogoError("We could not upload the logo. Please try again.");
       return;
     }
 
     const { data: publicUrlData } = supabase.storage
       .from("sponsor-logos")
-      .getPublicUrl(fileName);
+      .getPublicUrl(uploadedFileName);
 
     const publicUrl = publicUrlData?.publicUrl;
-
-      const { error: insertError } = await supabase
-  .from("sponsor_requests")
-  .insert({
-    company: formData.company,
-    contact_name: formData.contact_name,
-    email: formData.email,
-    website: formData.website,
-    country: formData.country,
-    organization_type: formData.organization_type,
-    message: formData.message || null,
-
-    logo_url: publicUrl,
-
-    plan_id: plan.id,
-    preferred_room: plan.room,
-    requested_days: plan.duration_days,
-    requested_placement: plan.placement,
-
-    status: "pending",
-    payment_status: "not_requested",
-  });
-
-if (insertError) {
-  console.error(insertError);
-  alert("Unable to submit your partnership request.");
-  return;
-}
 
     if (!publicUrl) {
       console.error("No public URL was returned for the sponsor logo.");
@@ -182,14 +158,72 @@ if (insertError) {
       return;
     }
 
-    console.log("Uploaded sponsor logo:", {
-      fileName,
-      publicUrl,
+    const { error: insertError } = await supabase
+      .from("sponsor_requests")
+      .insert({
+        company: formData.company.trim(),
+        contact_name: formData.contact_name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        website: formData.website.trim(),
+        country: formData.country.trim() || null,
+        organization_type: formData.organization_type,
+        message: formData.message.trim() || null,
+
+        logo_url: publicUrl,
+
+        plan_id: plan.id,
+        preferred_room: plan.room,
+        requested_days: plan.duration_days,
+        requested_placement: plan.placement,
+
+        status: "pending",
+        payment_status: "not_requested",
+      });
+
+    if (insertError) {
+      console.error("Sponsor request insert error:", insertError);
+
+      // Se il database fallisce, eliminiamo il logo appena caricato
+      // per non lasciare file inutilizzati nello Storage.
+      await supabase.storage
+        .from("sponsor-logos")
+        .remove([uploadedFileName]);
+
+      window.alert(
+        "The Human Mosaic says:\n\nUnable to submit your partnership application. Please try again."
+      );
+
+      return;
+    }
+
+    console.log("Sponsor application submitted successfully:", {
+      company: formData.company,
+      plan_id: plan.id,
+      logo_url: publicUrl,
     });
+
+    setFormData(initialFormData);
+    setLogoFile(null);
+    setLogoPreview("");
+    setLogoError("");
+    setFormErrors({});
+
+    window.alert(
+      "The Human Mosaic says:\n\nYour partnership application has been submitted successfully and is now under review."
+    );
+
+    onClose();
   } catch (error) {
-    console.error("Unexpected sponsor logo upload error:", error);
+    console.error("Unexpected sponsor application error:", error);
+
+    if (uploadedFileName) {
+      await supabase.storage
+        .from("sponsor-logos")
+        .remove([uploadedFileName]);
+    }
+
     setLogoError(
-      "An unexpected error occurred while uploading the logo."
+      "An unexpected error occurred while submitting the application."
     );
   } finally {
     setIsSubmitting(false);
