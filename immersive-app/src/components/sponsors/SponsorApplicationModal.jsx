@@ -19,6 +19,11 @@ export default function SponsorApplicationModal({ plan, onClose }) {
   function handleChange(event) {
     const { name, value } = event.target;
 
+      setFormErrors((current) => ({
+  ...current,
+  [name]: "",
+}));
+
     setFormData((current) => ({
       ...current,
       [name]: value,
@@ -29,6 +34,11 @@ export default function SponsorApplicationModal({ plan, onClose }) {
     const file = event.target.files?.[0];
 
     setLogoError("");
+
+      setFormErrors((current) => ({
+  ...current,
+  logo: "",
+}));
 
     if (!file) {
       setLogoFile(null);
@@ -89,6 +99,22 @@ export default function SponsorApplicationModal({ plan, onClose }) {
   setFormErrors(errors);
 
   return Object.keys(errors).length === 0;
+}
+
+    function handleSubmit(event) {
+  event.preventDefault();
+
+  const isValid = validateForm();
+
+  if (!isValid) {
+    return;
+  }
+
+  console.log("Sponsor application ready:", {
+    ...formData,
+    logoFile,
+    plan_id: plan?.id,
+  });
 }
 
     useEffect(() => {
@@ -152,7 +178,7 @@ export default function SponsorApplicationModal({ plan, onClose }) {
           </div>
         </div>
 
-        <form style={form}>
+        <form style={form} onSubmit={handleSubmit} noValidate>
           <div style={formGrid}>
             <label style={field}>
               <span style={label}>Company Name *</span>
@@ -165,6 +191,9 @@ export default function SponsorApplicationModal({ plan, onClose }) {
                 value={formData.company}
 onChange={handleChange}
               />
+                {formErrors.company && (
+  <div style={errorText}>{formErrors.company}</div>
+)}
             </label>
 
             <label style={field}>
@@ -178,6 +207,9 @@ onChange={handleChange}
                 value={formData.contact_name}
 onChange={handleChange}
               />
+                {formErrors.contact_name && (
+  <div style={errorText}>{formErrors.contact_name}</div>
+)}
             </label>
 
             <label style={field}>
@@ -191,6 +223,9 @@ onChange={handleChange}
                 value={formData.email}
 onChange={handleChange}
               />
+                {formErrors.email && (
+  <div style={errorText}>{formErrors.email}</div>
+)}
             </label>
 
             <label style={field}>
@@ -206,6 +241,9 @@ onChange={handleChange}
                 value={formData.website}
 onChange={handleChange}
               />
+                {formErrors.website && (
+  <div style={errorText}>{formErrors.website}</div>
+)}
             </label>
 
             <label style={field}>
@@ -293,6 +331,9 @@ onChange={handleChange}
       {logoError}
     </div>
   )}
+              {formErrors.logo && (
+  <div style={errorText}>{formErrors.logo}</div>
+)}
 </label>
 
           <label style={field}>
@@ -319,9 +360,9 @@ onChange={handleChange}
             </button>
 
             <button
-              type="button"
-              style={submitButton}
-            >
+  type="submit"
+  style={submitButton}
+>
               SUBMIT APPLICATION
             </button>
           </div>
