@@ -14,6 +14,7 @@ export default function SponsorApplicationModal({ plan, onClose }) {
   const [logoFile, setLogoFile] = useState(null);
   const [logoError, setLogoError] = useState("");
   const [logoPreview, setLogoPreview] = useState("");
+    const [formErrors, setFormErrors] = useState({});
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -45,6 +46,50 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
     setLogoFile(file);
   }
+
+    function validateForm() {
+  const errors = {};
+
+  if (!formData.company.trim()) {
+    errors.company = "Company name is required.";
+  }
+
+  if (!formData.contact_name.trim()) {
+    errors.contact_name = "Contact person is required.";
+  }
+
+  if (!formData.email.trim()) {
+    errors.email = "Business email is required.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  if (!formData.website.trim()) {
+    errors.website = "An official website or social profile is required.";
+  } else {
+    try {
+      const parsedUrl = new URL(formData.website.trim());
+
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        errors.website = "Please enter a valid http or https link.";
+      }
+    } catch {
+      errors.website = "Please enter a complete link beginning with https://";
+    }
+  }
+
+  if (!formData.organization_type) {
+    errors.organization_type = "Please select an organization type.";
+  }
+
+  if (!logoFile) {
+    errors.logo = "Please upload your official logo.";
+  }
+
+  setFormErrors(errors);
+
+  return Object.keys(errors).length === 0;
+}
 
     useEffect(() => {
   if (!logoFile) {
