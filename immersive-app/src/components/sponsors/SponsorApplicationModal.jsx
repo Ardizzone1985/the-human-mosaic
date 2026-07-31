@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { supabase } from "../../supabaseClient";
 export default function SponsorApplicationModal({ plan, onClose }) {
 
     const [formData, setFormData] = useState({
