@@ -112,22 +112,57 @@ export default function SponsorApplicationModal({ plan, onClose }) {
 
   const isValid = validateForm();
 
-  if (!isValid) {
+  if (!isValid || !logoFile) {
     return;
   }
 
   setIsSubmitting(true);
 
   try {
-    console.log("Sponsor application ready:", {
-      ...formData,
-      logoFile,
-      plan_id: plan?.id,
-    });
+    const originalExtension =
+      logoFile.name.split(".").pop()?.toLowerCase() || "png";
 
-    // Temporary simulation.
-    // This will be replaced by the Supabase upload and database insert.
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const fileName = `${crypto.randomUUID()}.${originalExtension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("sponsor-logos")
+      .upload(fileName, logoFile, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: logoFile.type,
+      });
+
+    if (uploadError) {
+      console.error("Sponsor logo upload error:", uploadError);
+      setLogoError(
+        "We could not upload the logo. Please try again."
+      );
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("sponsor-logos")
+      .getPublicUrl(fileName);
+
+    const publicUrl = publicUrlData?.publicUrl;
+
+    if (!publicUrl) {
+      console.error("No public URL was returned for the sponsor logo.");
+      setLogoError(
+        "We could not prepare the uploaded logo. Please try again."
+      );
+      return;
+    }
+
+    console.log("Uploaded sponsor logo:", {
+      fileName,
+      publicUrl,
+    });
+  } catch (error) {
+    console.error("Unexpected sponsor logo upload error:", error);
+    setLogoError(
+      "An unexpected error occurred while uploading the logo."
+    );
   } finally {
     setIsSubmitting(false);
   }
