@@ -15,6 +15,7 @@ export default function SponsorApplicationModal({ plan, onClose }) {
   const [logoError, setLogoError] = useState("");
   const [logoPreview, setLogoPreview] = useState("");
     const [formErrors, setFormErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -101,8 +102,12 @@ export default function SponsorApplicationModal({ plan, onClose }) {
   return Object.keys(errors).length === 0;
 }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
   event.preventDefault();
+
+  if (isSubmitting) {
+    return;
+  }
 
   const isValid = validateForm();
 
@@ -110,11 +115,21 @@ export default function SponsorApplicationModal({ plan, onClose }) {
     return;
   }
 
-  console.log("Sponsor application ready:", {
-    ...formData,
-    logoFile,
-    plan_id: plan?.id,
-  });
+  setIsSubmitting(true);
+
+  try {
+    console.log("Sponsor application ready:", {
+      ...formData,
+      logoFile,
+      plan_id: plan?.id,
+    });
+
+    // Temporary simulation.
+    // This will be replaced by the Supabase upload and database insert.
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  } finally {
+    setIsSubmitting(false);
+  }
 }
 
     useEffect(() => {
@@ -369,10 +384,14 @@ onChange={handleChange}
 
             <button
   type="submit"
-  style={submitButton}
+  style={{
+    ...submitButton,
+    ...(isSubmitting ? submitButtonDisabled : {}),
+  }}
+  disabled={isSubmitting}
 >
-              SUBMIT APPLICATION
-            </button>
+  {isSubmitting ? "SUBMITTING APPLICATION..." : "SUBMIT APPLICATION"}
+</button>
           </div>
             <p style={reviewNotice}>
   Every partnership application is personally reviewed by The Human Mosaic
@@ -632,4 +651,9 @@ const reviewNotice = {
   textAlign: "center",
   maxWidth: "620px",
   alignSelf: "center",
+};
+
+const submitButtonDisabled = {
+  opacity: 0.65,
+  cursor: "not-allowed",
 };
