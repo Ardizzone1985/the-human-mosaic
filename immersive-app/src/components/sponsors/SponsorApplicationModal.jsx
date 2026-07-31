@@ -149,13 +149,15 @@ onChange={handleChange}
             </label>
 
             <label style={field}>
-              <span style={label}>Website *</span>
+              <span style={label}>
+  Official Website or Social Profile *
+</span>
 
               <input
                 type="url"
                 name="website"
                 style={input}
-                placeholder="https://www.company.com"
+                placeholder="https://www.company.com or your official social profile"
                 value={formData.website}
 onChange={handleChange}
               />
@@ -250,13 +252,13 @@ onChange={handleChange}
 
           <label style={field}>
             <span style={label}>
-              Why would you like to partner with The Human Mosaic?
+              Additional Information (optional)
             </span>
 
             <textarea
               name="message"
               style={textarea}
-              placeholder="Tell us about your organization, your values and why this partnership would be meaningful."
+              placeholder="Share anything you'd like us to know about your organization, your mission or your partnership goals."
               value={formData.message}
 onChange={handleChange}
             />
