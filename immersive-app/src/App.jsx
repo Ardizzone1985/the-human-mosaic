@@ -847,9 +847,23 @@ const isLobby = !currentRoom;
       setShowAdvertisePage(false);
     }}
     onApply={() => {
-      window.alert(
-        "The partnership application form will be available in the next step."
+      const opportunitiesSection = document.getElementById(
+        "partnership-opportunities"
       );
+
+      opportunitiesSection?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }}
+    onApplicationSuccess={() => {
+      setSponsorDialog({
+        icon: "✓",
+        title: "Application Submitted",
+        message:
+          "Thank you for your interest in partnering with The Human Mosaic. Your application has been received and is now under review. Our team will contact you by email if additional information is required.",
+        confirmText: "RETURN TO THE MUSEUM",
+      });
     }}
   />
 )}
@@ -859,6 +873,7 @@ const isLobby = !currentRoom;
   onClose={() => setAuthMode(null)}
 />
 
+      
       <AppDialog
   open={!!dialog}
   icon={dialog?.icon}
@@ -876,6 +891,19 @@ const isLobby = !currentRoom;
       setSelectedPhoto(null);
       setAuthMode("login");
     }
+  }}
+/>
+
+      <AppDialog
+  open={!!sponsorDialog}
+  icon={sponsorDialog?.icon}
+  title={sponsorDialog?.title}
+  message={sponsorDialog?.message}
+  confirmText={sponsorDialog?.confirmText}
+  onCancel={() => {}}
+  onConfirm={() => {
+    setSponsorDialog(null);
+    setShowAdvertisePage(false);
   }}
 />
 
