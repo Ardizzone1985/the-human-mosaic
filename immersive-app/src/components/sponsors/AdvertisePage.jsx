@@ -55,7 +55,11 @@ const benefits = [
   },
 ];
 
-export default function AdvertisePage({ onClose, onApply }) {
+export default function AdvertisePage({
+  onClose,
+  onApply,
+  onApplicationSuccess,
+}) {
   const [selectedPlan, setSelectedPlan] = useState(null);
 const [showApplicationModal, setShowApplicationModal] = useState(false);
 
@@ -358,6 +362,11 @@ const [showApplicationModal, setShowApplicationModal] = useState(false);
     onClose={() => {
       setShowApplicationModal(false);
       setSelectedPlan(null);
+    }}
+    onSuccess={() => {
+      setShowApplicationModal(false);
+      setSelectedPlan(null);
+      onApplicationSuccess?.();
     }}
   />
 )}
