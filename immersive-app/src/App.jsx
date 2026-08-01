@@ -857,14 +857,14 @@ const isLobby = !currentRoom;
       });
     }}
     onApplicationSuccess={() => {
-      setSponsorDialog({
-        icon: "✓",
-        title: "Application Submitted",
-        message:
-          "Thank you for your interest in partnering with The Human Mosaic. Your application has been received and is now under review. Our team will contact you by email if additional information is required.",
-        confirmText: "RETURN TO THE MUSEUM",
-      });
-    }}
+  setSponsorDialog({
+    icon: "🤝",
+    title: "Partnership Request Received",
+    message:
+      "Thank you for your interest in partnering with The Human Mosaic.\n\nYour partnership application has been successfully received and is now under review by our team.\n\nWe carefully evaluate every proposal to ensure it aligns with our mission and values.\n\nIf your application is approved, we will contact you by email with the next steps, including partnership confirmation and payment instructions.\n\nTogether, we can inspire millions of people around the world.",
+    confirmText: "RETURN TO THE MUSEUM",
+  });
+}}
   />
 )}
 
