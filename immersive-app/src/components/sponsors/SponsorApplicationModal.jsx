@@ -11,8 +11,11 @@ const initialFormData = {
   message: "",
 };
 
-export default function SponsorApplicationModal({ plan, onClose }) {
-
+export default function SponsorApplicationModal({
+  plan,
+  onClose,
+  onSuccess,
+}) {
     const [formData, setFormData] = useState(initialFormData);
 
   const [logoFile, setLogoFile] = useState(null);
@@ -203,16 +206,16 @@ export default function SponsorApplicationModal({ plan, onClose }) {
     });
 
     setFormData(initialFormData);
-    setLogoFile(null);
-    setLogoPreview("");
-    setLogoError("");
-    setFormErrors({});
+setLogoFile(null);
+setLogoPreview("");
+setLogoError("");
+setFormErrors({});
 
-    window.alert(
-      "The Human Mosaic says:\n\nYour partnership application has been submitted successfully and is now under review."
-    );
-
-    onClose();
+if (onSuccess) {
+  onSuccess();
+} else {
+  onClose();
+}
   } catch (error) {
     console.error("Unexpected sponsor application error:", error);
 
