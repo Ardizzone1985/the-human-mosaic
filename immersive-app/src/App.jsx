@@ -429,6 +429,7 @@ export default function App() {
   const [authMode, setAuthMode] = useState(null);
   const [showMuseumIdentity, setShowMuseumIdentity] = useState(false);
   const [showAdvertisePage, setShowAdvertisePage] = useState(false);
+  const [sponsorDialog, setSponsorDialog] = useState(null);
   const [showUploadMemoryModal, setShowUploadMemoryModal] =
   useState(false);
   const [paymentReturn, setPaymentReturn] =
