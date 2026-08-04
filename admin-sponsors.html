@@ -603,102 +603,192 @@
     }
 
     async function loadSponsorRequests() {
-      statusMessage.textContent =
-        "Loading sponsor requests...";
+  statusMessage.textContent =
+    "Loading sponsor requests...";
 
-      const { data, error } = await supabaseClient
-        .from("sponsor_requests")
-        .select("*")
-        .order("created_at", {
-          ascending: false,
-        });
-
-      if (error) {
-        console.error(
-          "Load sponsor requests error:",
-          error
-        );
-
-        statusMessage.textContent =
-          "Unable to load sponsor requests.";
-
-        sponsorGrid.innerHTML = `
-          <div class="empty-state">
-            ${escapeHtml(error.message)}
-          </div>
-        `;
-
-        return;
+  try {
+    const response = await fetch(
+      "/api/admin-sponsors",
+      {
+        method: "GET",
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+        },
       }
+    );
 
-      allRequests = Array.isArray(data)
-        ? data
-        : [];
+    const result = await response
+      .json()
+      .catch(() => ({}));
 
-      updateStats();
-      renderRequests();
+    if (response.status === 401) {
+      sessionStorage.removeItem(
+        "thm_admin_authenticated"
+      );
+
+      window.location.href =
+        "admin-login.html";
+
+      return;
     }
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+          "Unable to load sponsor requests."
+      );
+    }
+
+    allRequests = Array.isArray(result.requests)
+      ? result.requests
+      : [];
+
+    updateStats();
+    renderRequests();
+  } catch (error) {
+    console.error(
+      "Load sponsor requests error:",
+      error
+    );
+
+    statusMessage.textContent =
+      "Unable to load sponsor requests.";
+
+    sponsorGrid.innerHTML = `
+      <div class="empty-state">
+        ${escapeHtml(
+          error.message ||
+            "Unable to load sponsor requests."
+        )}
+      </div>
+    `;
+  }
+}
 
     async function approveRequest(requestId) {
-      const confirmed = window.confirm(
-        "Approve this partnership application?"
+  const confirmed = window.confirm(
+    "Approve this partnership application?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "/api/admin-sponsors",
+      {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          requestId,
+          action: "approve",
+        }),
+      }
+    );
+
+    const result = await response
+      .json()
+      .catch(() => ({}));
+
+    if (response.status === 401) {
+      sessionStorage.removeItem(
+        "thm_admin_authenticated"
       );
 
-      if (!confirmed) return;
+      window.location.href =
+        "admin-login.html";
 
-      const { error } = await supabaseClient
-        .from("sponsor_requests")
-        .update({
-          status: "approved",
-          payment_status: "pending",
-        })
-        .eq("id", requestId);
-
-      if (error) {
-        console.error(
-          "Approve sponsor request error:",
-          error
-        );
-
-        window.alert(
-          "Unable to approve this partnership application."
-        );
-
-        return;
-      }
-
-      await loadSponsorRequests();
+      return;
     }
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+          "Unable to approve this partnership application."
+      );
+    }
+
+    await loadSponsorRequests();
+  } catch (error) {
+    console.error(
+      "Approve sponsor request error:",
+      error
+    );
+
+    window.alert(
+      error.message ||
+        "Unable to approve this partnership application."
+    );
+  }
+}
 
     async function rejectRequest(requestId) {
-      const confirmed = window.confirm(
-        "Reject this partnership application?"
+  const confirmed = window.confirm(
+    "Reject this partnership application?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "/api/admin-sponsors",
+      {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          requestId,
+          action: "reject",
+        }),
+      }
+    );
+
+    const result = await response
+      .json()
+      .catch(() => ({}));
+
+    if (response.status === 401) {
+      sessionStorage.removeItem(
+        "thm_admin_authenticated"
       );
 
-      if (!confirmed) return;
+      window.location.href =
+        "admin-login.html";
 
-      const { error } = await supabaseClient
-        .from("sponsor_requests")
-        .update({
-          status: "rejected",
-        })
-        .eq("id", requestId);
-
-      if (error) {
-        console.error(
-          "Reject sponsor request error:",
-          error
-        );
-
-        window.alert(
-          "Unable to reject this partnership application."
-        );
-
-        return;
-      }
-
-      await loadSponsorRequests();
+      return;
     }
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+          "Unable to reject this partnership application."
+      );
+    }
+
+    await loadSponsorRequests();
+  } catch (error) {
+    console.error(
+      "Reject sponsor request error:",
+      error
+    );
+
+    window.alert(
+      error.message ||
+        "Unable to reject this partnership application."
+    );
+  }
+}
 
     document
       .querySelectorAll(".filter-btn")
