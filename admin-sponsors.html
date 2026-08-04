@@ -273,6 +273,123 @@
       text-align: center;
     }
 
+    .reject-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 8, 5, 0.72);
+  backdrop-filter: blur(7px);
+}
+
+.reject-modal-overlay[hidden] {
+  display: none;
+}
+
+.reject-modal-box {
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  border: 1px solid #decda9;
+  border-radius: 24px;
+  background: #fffaf1;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+}
+
+.reject-modal-eyebrow {
+  margin: 0 0 10px;
+  color: #a67c31;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reject-modal-title {
+  margin: 0 0 12px;
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.reject-modal-description {
+  margin: 0 0 24px;
+  color: #62594e;
+  line-height: 1.6;
+}
+
+.reject-modal-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+
+.reject-modal-select,
+.reject-modal-textarea {
+  width: 100%;
+  border: 1px solid #d9cdbb;
+  border-radius: 14px;
+  background: #fff;
+  color: #111;
+  font: inherit;
+}
+
+.reject-modal-select {
+  padding: 14px 16px;
+}
+
+.reject-modal-textarea {
+  min-height: 120px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.reject-modal-error {
+  min-height: 20px;
+  margin-top: 10px;
+  color: #b42318;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.reject-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.reject-modal-cancel,
+.reject-modal-confirm {
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.reject-modal-cancel {
+  border: 1px solid #352b20;
+  background: transparent;
+  color: #352b20;
+}
+
+.reject-modal-confirm {
+  border: 1px solid #b42318;
+  background: #b42318;
+  color: white;
+}
+
+.reject-modal-confirm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
     @media (max-width: 700px) {
       body {
         padding: 22px 14px;
@@ -360,6 +477,113 @@
     <div id="sponsorGrid" class="grid"></div>
   </div>
 
+  <div
+  id="rejectSponsorModal"
+  class="reject-modal-overlay"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="rejectSponsorTitle"
+>
+  <div class="reject-modal-box">
+    <p class="reject-modal-eyebrow">
+      Partnership Review
+    </p>
+
+    <h2
+      id="rejectSponsorTitle"
+      class="reject-modal-title"
+    >
+      Reject Partnership Application
+    </h2>
+
+    <p class="reject-modal-description">
+      Select the reason for this decision. The selected
+      reason will be saved in the dashboard and included
+      in the email sent to the applicant.
+    </p>
+
+    <label
+      class="reject-modal-label"
+      for="rejectSponsorReason"
+    >
+      Reason for rejection *
+    </label>
+
+    <select
+      id="rejectSponsorReason"
+      class="reject-modal-select"
+    >
+      <option value="">
+        Select a reason
+      </option>
+
+      <option value="The official website or social profile is invalid or inaccessible.">
+        The official website or social profile is invalid or inaccessible.
+      </option>
+
+      <option value="The submitted logo does not match the organization or linked website.">
+        The submitted logo does not match the organization or linked website.
+      </option>
+
+      <option value="The organization or campaign is not aligned with The Human Mosaic values.">
+        The organization or campaign is not aligned with The Human Mosaic values.
+      </option>
+
+      <option value="The proposed partnership is not suitable for the selected museum placement.">
+        The proposed partnership is not suitable for the selected museum placement.
+      </option>
+
+      <option value="The uploaded logo quality is too low or unsuitable for display.">
+        The uploaded logo quality is too low or unsuitable for display.
+      </option>
+
+      <option value="The application contains incomplete or inconsistent information.">
+        The application contains incomplete or inconsistent information.
+      </option>
+
+      <option value="The organization could not be sufficiently verified.">
+        The organization could not be sufficiently verified.
+      </option>
+
+      <option value="other">
+        Other reason
+      </option>
+    </select>
+
+    <textarea
+      id="rejectSponsorCustomReason"
+      class="reject-modal-textarea"
+      placeholder="Write the specific reason for the rejection..."
+      maxlength="1000"
+      hidden
+    ></textarea>
+
+    <div
+      id="rejectSponsorError"
+      class="reject-modal-error"
+    ></div>
+
+    <div class="reject-modal-actions">
+      <button
+        type="button"
+        id="cancelSponsorRejectBtn"
+        class="reject-modal-cancel"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="confirmSponsorRejectBtn"
+        class="reject-modal-confirm"
+      >
+        Reject Application
+      </button>
+    </div>
+  </div>
+</div>
+
   <script>
     const SUPABASE_URL =
       "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
@@ -374,6 +598,32 @@
 
     let currentStatus = "pending";
     let allRequests = [];
+
+    let pendingRejectSponsorId = null;
+
+const rejectSponsorModal =
+  document.getElementById("rejectSponsorModal");
+
+const rejectSponsorReason =
+  document.getElementById("rejectSponsorReason");
+
+const rejectSponsorCustomReason =
+  document.getElementById(
+    "rejectSponsorCustomReason"
+  );
+
+const rejectSponsorError =
+  document.getElementById("rejectSponsorError");
+
+const cancelSponsorRejectBtn =
+  document.getElementById(
+    "cancelSponsorRejectBtn"
+  );
+
+const confirmSponsorRejectBtn =
+  document.getElementById(
+    "confirmSponsorRejectBtn"
+  );
 
     const statusMessage =
       document.getElementById("statusMessage");
@@ -586,11 +836,11 @@
                         </button>
 
                         <button
-                          class="action-btn reject-btn"
-                          onclick="rejectRequest('${escapeHtml(request.id)}')"
-                        >
-                          Reject
-                        </button>
+  class="action-btn reject-btn"
+  onclick="openRejectSponsorModal('${escapeHtml(request.id)}')"
+>
+  Reject
+</button>
                       `
                       : ""
                   }
@@ -728,67 +978,179 @@
   }
 }
 
-    async function rejectRequest(requestId) {
-  const confirmed = window.confirm(
-    "Reject this partnership application?"
-  );
+    function openRejectSponsorModal(requestId) {
+  pendingRejectSponsorId = requestId;
 
-  if (!confirmed) {
-    return;
+  rejectSponsorReason.value = "";
+  rejectSponsorCustomReason.value = "";
+  rejectSponsorCustomReason.hidden = true;
+  rejectSponsorError.textContent = "";
+
+  confirmSponsorRejectBtn.disabled = false;
+  confirmSponsorRejectBtn.textContent =
+    "Reject Application";
+
+  rejectSponsorModal.hidden = false;
+  document.body.style.overflow = "hidden";
+
+  rejectSponsorReason.focus();
+}
+
+function closeRejectSponsorModal() {
+  pendingRejectSponsorId = null;
+
+  rejectSponsorReason.value = "";
+  rejectSponsorCustomReason.value = "";
+  rejectSponsorCustomReason.hidden = true;
+  rejectSponsorError.textContent = "";
+
+  rejectSponsorModal.hidden = true;
+  document.body.style.overflow = "";
+}
+
+rejectSponsorReason.addEventListener(
+  "change",
+  () => {
+    const isOther =
+      rejectSponsorReason.value === "other";
+
+    rejectSponsorCustomReason.hidden =
+      !isOther;
+
+    rejectSponsorCustomReason.value = "";
+    rejectSponsorError.textContent = "";
+
+    if (isOther) {
+      rejectSponsorCustomReason.focus();
+    }
   }
+);
 
-  try {
-    const response = await fetch(
-      "/api/admin-sponsors",
-      {
-        method: "PATCH",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          requestId,
-          action: "reject",
-        }),
-      }
-    );
+cancelSponsorRejectBtn.addEventListener(
+  "click",
+  closeRejectSponsorModal
+);
 
-    const result = await response
-      .json()
-      .catch(() => ({}));
+rejectSponsorModal.addEventListener(
+  "click",
+  (event) => {
+    if (event.target === rejectSponsorModal) {
+      closeRejectSponsorModal();
+    }
+  }
+);
 
-    if (response.status === 401) {
-      sessionStorage.removeItem(
-        "thm_admin_authenticated"
-      );
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (
+      event.key === "Escape" &&
+      !rejectSponsorModal.hidden
+    ) {
+      closeRejectSponsorModal();
+    }
+  }
+);
 
-      window.location.href =
-        "admin-login.html";
+confirmSponsorRejectBtn.addEventListener(
+  "click",
+  async () => {
+    const selectedReason =
+      rejectSponsorReason.value;
+
+    let finalReason = selectedReason;
+
+    if (!pendingRejectSponsorId) {
+      rejectSponsorError.textContent =
+        "Unable to identify this application.";
 
       return;
     }
 
-    if (!response.ok) {
-      throw new Error(
-        result.error ||
-          "Unable to reject this partnership application."
-      );
+    if (!selectedReason) {
+      rejectSponsorError.textContent =
+        "Please select a reason for the rejection.";
+
+      return;
     }
 
-    await loadSponsorRequests();
-  } catch (error) {
-    console.error(
-      "Reject sponsor request error:",
-      error
-    );
+    if (selectedReason === "other") {
+      finalReason =
+        rejectSponsorCustomReason.value.trim();
 
-    window.alert(
-      error.message ||
-        "Unable to reject this partnership application."
-    );
+      if (!finalReason) {
+        rejectSponsorError.textContent =
+          "Please write the specific reason.";
+
+        rejectSponsorCustomReason.focus();
+        return;
+      }
+    }
+
+    rejectSponsorError.textContent = "";
+
+    confirmSponsorRejectBtn.disabled = true;
+    confirmSponsorRejectBtn.textContent =
+      "Rejecting...";
+
+    try {
+      const response = await fetch(
+        "/api/admin-sponsors",
+        {
+          method: "PATCH",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            requestId: pendingRejectSponsorId,
+            action: "reject",
+            rejectionReason: finalReason,
+          }),
+        }
+      );
+
+      const result = await response
+        .json()
+        .catch(() => ({}));
+
+      if (response.status === 401) {
+        sessionStorage.removeItem(
+          "thm_admin_authenticated"
+        );
+
+        window.location.href =
+          "admin-login.html";
+
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "Unable to reject this partnership application."
+        );
+      }
+
+      closeRejectSponsorModal();
+      await loadSponsorRequests();
+    } catch (error) {
+      console.error(
+        "Reject sponsor request error:",
+        error
+      );
+
+      rejectSponsorError.textContent =
+        error.message ||
+        "Unable to reject this partnership application.";
+    } finally {
+      confirmSponsorRejectBtn.disabled = false;
+      confirmSponsorRejectBtn.textContent =
+        "Reject Application";
+    }
   }
-}
+);
 
     document
       .querySelectorAll(".filter-btn")
