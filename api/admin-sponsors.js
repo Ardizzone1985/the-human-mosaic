@@ -197,6 +197,10 @@ export default async function handler(req, res) {
       body.action || ""
     ).trim();
 
+    const rejectionReason = String(
+  body.rejectionReason || ""
+).trim();
+
     if (!requestId) {
       return res.status(400).json({
         error: "Missing request ID",
@@ -208,6 +212,21 @@ export default async function handler(req, res) {
         error: "Invalid action",
       });
     }
+
+    if (
+  action === "reject" &&
+  !rejectionReason
+) {
+  return res.status(400).json({
+    error: "A rejection reason is required",
+  });
+}
+
+if (rejectionReason.length > 1000) {
+  return res.status(400).json({
+    error: "The rejection reason is too long",
+  });
+}
 
     const {
       data: sponsorRequest,
@@ -258,6 +277,7 @@ export default async function handler(req, res) {
       updateData = {
         status: "approved",
         payment_status: "pending",
+        rejection_reason: null,
         reviewed_at: reviewedAt,
         approved_placement:
           sponsorRequest.requested_placement ||
@@ -272,9 +292,11 @@ export default async function handler(req, res) {
       };
     } else {
       updateData = {
-        status: "rejected",
-        reviewed_at: reviewedAt,
-      };
+  status: "rejected",
+  payment_status: "not_requested",
+  rejection_reason: rejectionReason,
+  reviewed_at: reviewedAt,
+};
     }
 
     const {
