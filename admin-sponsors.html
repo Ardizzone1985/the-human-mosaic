@@ -809,6 +809,18 @@ const confirmSponsorRejectBtn =
                     : ""
                 }
 
+                ${
+  status === "rejected" &&
+  request.rejection_reason
+    ? `
+      <div class="message-box">
+        <strong>Rejection Reason</strong><br /><br />
+        ${escapeHtml(request.rejection_reason)}
+      </div>
+    `
+    : ""
+}
+
                 <div class="actions">
                   ${
                     websiteUrl
