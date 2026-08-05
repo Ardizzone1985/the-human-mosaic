@@ -390,6 +390,120 @@
   cursor: not-allowed;
 }
 
+    .admin-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 8, 5, 0.72);
+  backdrop-filter: blur(7px);
+}
+
+.admin-dialog-overlay[hidden] {
+  display: none;
+}
+
+.admin-dialog-box {
+  width: min(500px, 100%);
+  padding: 32px;
+  border: 1px solid #decda9;
+  border-radius: 24px;
+  background: #fffaf1;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.admin-dialog-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.admin-dialog-icon.success {
+  background: #e8f7ee;
+  color: #18794e;
+}
+
+.admin-dialog-icon.error {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.admin-dialog-icon.warning {
+  background: #fff4d6;
+  color: #8a5a00;
+}
+
+.admin-dialog-icon.confirm {
+  background: #f2e6ca;
+  color: #8a6116;
+}
+
+.admin-dialog-eyebrow {
+  margin: 0 0 10px;
+  color: #a67c31;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.admin-dialog-title {
+  margin: 0 0 14px;
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.admin-dialog-message {
+  margin: 0;
+  color: #62594e;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.admin-dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+.admin-dialog-cancel,
+.admin-dialog-confirm {
+  min-width: 120px;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-dialog-cancel {
+  border: 1px solid #352b20;
+  background: transparent;
+  color: #352b20;
+}
+
+.admin-dialog-confirm {
+  border: 1px solid #24180e;
+  background: #24180e;
+  color: #fff;
+}
+
+.admin-dialog-confirm.danger {
+  border-color: #b42318;
+  background: #b42318;
+}
+
     @media (max-width: 700px) {
       body {
         padding: 22px 14px;
@@ -476,6 +590,59 @@
 
     <div id="sponsorGrid" class="grid"></div>
   </div>
+
+  <div
+  id="adminDialog"
+  class="admin-dialog-overlay"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="adminDialogTitle"
+>
+  <div class="admin-dialog-box">
+    <div
+      id="adminDialogIcon"
+      class="admin-dialog-icon success"
+    >
+      ✓
+    </div>
+
+    <p class="admin-dialog-eyebrow">
+      The Human Mosaic Admin
+    </p>
+
+    <h2
+      id="adminDialogTitle"
+      class="admin-dialog-title"
+    >
+      Operation completed
+    </h2>
+
+    <p
+      id="adminDialogMessage"
+      class="admin-dialog-message"
+    ></p>
+
+    <div class="admin-dialog-actions">
+      <button
+        type="button"
+        id="adminDialogCancelBtn"
+        class="admin-dialog-cancel"
+        hidden
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="adminDialogConfirmBtn"
+        class="admin-dialog-confirm"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+</div>
 
   <div
   id="rejectSponsorModal"
@@ -599,6 +766,27 @@
     let currentStatus = "pending";
     let allRequests = [];
 
+    let adminDialogResolver = null;
+let adminDialogCanCancel = false;
+
+const adminDialog =
+  document.getElementById("adminDialog");
+
+const adminDialogIcon =
+  document.getElementById("adminDialogIcon");
+
+const adminDialogTitle =
+  document.getElementById("adminDialogTitle");
+
+const adminDialogMessage =
+  document.getElementById("adminDialogMessage");
+
+const adminDialogCancelBtn =
+  document.getElementById("adminDialogCancelBtn");
+
+const adminDialogConfirmBtn =
+  document.getElementById("adminDialogConfirmBtn");
+
     let pendingRejectSponsorId = null;
 
 const rejectSponsorModal =
@@ -670,6 +858,132 @@ const confirmSponsorRejectBtn =
           letter.toUpperCase()
         );
     }
+
+    function getAdminDialogAppearance(type) {
+  const appearances = {
+    success: {
+      icon: "✓",
+      className: "success",
+    },
+    error: {
+      icon: "!",
+      className: "error",
+    },
+    warning: {
+      icon: "!",
+      className: "warning",
+    },
+    confirm: {
+      icon: "?",
+      className: "confirm",
+    },
+  };
+
+  return appearances[type] || appearances.success;
+}
+
+function closeAdminDialog(result) {
+  adminDialog.hidden = true;
+  document.body.style.overflow = "";
+
+  const resolver = adminDialogResolver;
+
+  adminDialogResolver = null;
+  adminDialogCanCancel = false;
+
+  if (resolver) {
+    resolver(result);
+  }
+}
+
+function showAdminDialog({
+  type = "success",
+  title,
+  message,
+  confirmText = "OK",
+  cancelText = "Cancel",
+  showCancel = false,
+  danger = false,
+}) {
+  const appearance =
+    getAdminDialogAppearance(type);
+
+  adminDialogIcon.textContent =
+    appearance.icon;
+
+  adminDialogIcon.className =
+    `admin-dialog-icon ${appearance.className}`;
+
+  adminDialogTitle.textContent =
+    title || "The Human Mosaic";
+
+  adminDialogMessage.textContent =
+    message || "";
+
+  adminDialogConfirmBtn.textContent =
+    confirmText;
+
+  adminDialogConfirmBtn.classList.toggle(
+    "danger",
+    danger
+  );
+
+  adminDialogCancelBtn.textContent =
+    cancelText;
+
+  adminDialogCancelBtn.hidden =
+    !showCancel;
+
+  adminDialogCanCancel = showCancel;
+  adminDialog.hidden = false;
+
+  document.body.style.overflow = "hidden";
+
+  adminDialogConfirmBtn.focus();
+
+  return new Promise((resolve) => {
+    adminDialogResolver = resolve;
+  });
+}
+
+adminDialogConfirmBtn.addEventListener(
+  "click",
+  () => {
+    closeAdminDialog(true);
+  }
+);
+
+adminDialogCancelBtn.addEventListener(
+  "click",
+  () => {
+    closeAdminDialog(false);
+  }
+);
+
+adminDialog.addEventListener(
+  "click",
+  (event) => {
+    if (
+      event.target === adminDialog &&
+      adminDialogCanCancel
+    ) {
+      closeAdminDialog(false);
+    }
+  }
+);
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (
+      event.key === "Escape" &&
+      !adminDialog.hidden &&
+      adminDialogCanCancel
+    ) {
+      closeAdminDialog(false);
+    }
+  }
+);
 
     function updateStats() {
       countPending.textContent =
@@ -929,9 +1243,15 @@ const confirmSponsorRejectBtn =
 }
 
     async function approveRequest(requestId) {
-  const confirmed = window.confirm(
-    "Approve this partnership application?"
-  );
+  const confirmed = await showAdminDialog({
+    type: "confirm",
+    title: "Approve Partnership",
+    message:
+      "Are you sure you want to approve this partnership application?\n\nThe applicant will receive the official approval email.",
+    confirmText: "Approve",
+    cancelText: "Cancel",
+    showCancel: true,
+  });
 
   if (!confirmed) {
     return;
@@ -977,16 +1297,43 @@ const confirmSponsorRejectBtn =
     }
 
     await loadSponsorRequests();
+
+    if (result.emailSent) {
+      await showAdminDialog({
+        type: "success",
+        title: "Partnership Approved",
+        message:
+          "The partnership application has been approved successfully.\n\nThe official approval email was sent to the applicant.",
+        confirmText: "Done",
+      });
+    } else {
+      console.error(
+        "Approval email error:",
+        result.emailError
+      );
+
+      await showAdminDialog({
+        type: "warning",
+        title: "Approved, Email Not Sent",
+        message:
+          "The partnership application was approved, but the email could not be sent.\n\nPlease check the server logs before contacting the applicant manually.",
+        confirmText: "Understood",
+      });
+    }
   } catch (error) {
     console.error(
       "Approve sponsor request error:",
       error
     );
 
-    window.alert(
-      error.message ||
-        "Unable to approve this partnership application."
-    );
+    await showAdminDialog({
+      type: "error",
+      title: "Approval Failed",
+      message:
+        error.message ||
+        "Unable to approve this partnership application.",
+      confirmText: "Close",
+    });
   }
 }
 
@@ -1146,7 +1493,30 @@ confirmSponsorRejectBtn.addEventListener(
       }
 
       closeRejectSponsorModal();
-      await loadSponsorRequests();
+await loadSponsorRequests();
+
+if (result.emailSent) {
+  await showAdminDialog({
+    type: "success",
+    title: "Application Rejected",
+    message:
+      "The partnership application has been rejected successfully.\n\nThe applicant received an email containing the selected rejection reason.",
+    confirmText: "Done",
+  });
+} else {
+  console.error(
+    "Rejection email error:",
+    result.emailError
+  );
+
+  await showAdminDialog({
+    type: "warning",
+    title: "Rejected, Email Not Sent",
+    message:
+      "The partnership application was rejected, but the notification email could not be sent.\n\nThe rejection reason remains safely stored in the dashboard.",
+    confirmText: "Understood",
+  });
+}
     } catch (error) {
       console.error(
         "Reject sponsor request error:",
