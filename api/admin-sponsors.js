@@ -1,5 +1,9 @@
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import {
+  sendSponsorApprovedEmail,
+  sendSponsorRejectedEmail,
+} from "../lib/sponsor-emails.js";
 
 const ADMIN_SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
@@ -315,6 +319,54 @@ if (rejectionReason.length > 1000) {
         updateError
       );
 
+      let emailSent = false;
+let emailError = null;
+
+try {
+  if (action === "approve") {
+    await sendSponsorApprovedEmail({
+      email: sponsorRequest.email,
+      contactName: sponsorRequest.contact_name,
+      company: sponsorRequest.company,
+      planName:
+        sponsorRequest.sponsor_plans?.name ||
+        "Partnership plan",
+      preferredRoom:
+        sponsorRequest.preferred_room ||
+        sponsorRequest.sponsor_plans?.room,
+      approvedPlacement:
+        updatedRequest.approved_placement ||
+        sponsorRequest.requested_placement,
+      requestedDays:
+        sponsorRequest.requested_days ||
+        sponsorRequest.sponsor_plans?.duration_days,
+      quotedPriceCents:
+        updatedRequest.quoted_price_cents,
+      currency:
+        updatedRequest.currency || "EUR",
+      paymentUrl: null,
+    });
+  } else {
+    await sendSponsorRejectedEmail({
+      email: sponsorRequest.email,
+      contactName: sponsorRequest.contact_name,
+      company: sponsorRequest.company,
+      rejectionReason,
+    });
+  }
+
+  emailSent = true;
+} catch (error) {
+  emailError =
+    error.message ||
+    "Unable to send sponsor notification email";
+
+  console.error(
+    "Sponsor notification email error:",
+    error
+  );
+}
+
       return res.status(500).json({
         error:
           action === "approve"
@@ -324,9 +376,11 @@ if (rejectionReason.length > 1000) {
     }
 
     return res.status(200).json({
-      success: true,
-      request: updatedRequest,
-    });
+  success: true,
+  request: updatedRequest,
+  emailSent,
+  emailError,
+});
   }
 
   res.setHeader("Allow", "GET, PATCH");
