@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
+import { COUNTRIES } from "../../data/countries";
 
 const initialFormData = {
   company: "",
@@ -95,6 +96,10 @@ export default function SponsorApplicationModal({
       errors.website = "Please enter a complete link beginning with https://";
     }
   }
+
+      if (!formData.country) {
+  errors.country = "Please select a country.";
+}
 
   if (!formData.organization_type) {
     errors.organization_type = "Please select an organization type.";
@@ -363,17 +368,34 @@ onChange={handleChange}
             </label>
 
             <label style={field}>
-              <span style={label}>Country</span>
+  <span style={label}>Country *</span>
 
-              <input
-                type="text"
-                name="country"
-                style={input}
-                placeholder="Country"
-                value={formData.country}
-onChange={handleChange}
-              />
-            </label>
+  <select
+    name="country"
+    style={input}
+    value={formData.country}
+    onChange={handleChange}
+  >
+    <option value="" disabled>
+      Select country
+    </option>
+
+    {COUNTRIES.map((country) => (
+      <option
+        key={country}
+        value={country}
+      >
+        {country}
+      </option>
+    ))}
+  </select>
+
+  {formErrors.country && (
+    <div style={errorText}>
+      {formErrors.country}
+    </div>
+  )}
+</label>
 
             <label style={field}>
               <span style={label}>Organization Type *</span>
