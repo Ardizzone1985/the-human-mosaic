@@ -27,21 +27,35 @@ export default function SponsorPlanCard({
   if (!plan) return null;
 
   const {
-    id,
-    name,
-    room,
-    duration_days: durationDays,
-    price_cents: priceCents,
-    currency,
-    description,
-    is_featured: isFeatured,
-  } = plan;
+  id,
+  name,
+  room,
+  duration_days: durationDays,
+  price_cents: priceCents,
+  currency,
+  description,
+  is_featured: isFeatured,
+  max_slots: maxSlots = 0,
+  available_slots: availableSlots = 0,
+} = plan;
+
+const numericMaxSlots = Number(maxSlots) || 0;
+const numericAvailableSlots =
+  Number(availableSlots) || 0;
+
+const isFullyBooked =
+  numericMaxSlots > 0 &&
+  numericAvailableSlots <= 0;
 
   function handleApply() {
-    if (typeof onApply === "function") {
-      onApply(plan);
-    }
+  if (isFullyBooked) {
+    return;
   }
+
+  if (typeof onApply === "function") {
+    onApply(plan);
+  }
+}
 
   return (
     <article
@@ -67,6 +81,19 @@ export default function SponsorPlanCard({
       <div style={duration}>
         {durationDays} Days
       </div>
+
+      <div
+  style={{
+    ...availabilityBadge,
+    ...(isFullyBooked
+      ? availabilityBadgeFull
+      : {}),
+  }}
+>
+  {isFullyBooked
+    ? "FULLY BOOKED"
+    : `${numericAvailableSlots} OF ${numericMaxSlots} SPACES AVAILABLE`}
+</div>
 
       <p style={descriptionStyle}>
         {description}
@@ -95,17 +122,28 @@ export default function SponsorPlanCard({
       </div>
 
       <button
-        type="button"
-        style={{
-          ...applyButton,
-          ...(isFeatured ? featuredButton : {}),
-        }}
-        onClick={handleApply}
-        aria-label={`Apply for ${name}`}
-        data-plan-id={id}
-      >
-        APPLY FOR THIS PLAN
-      </button>
+  type="button"
+  style={{
+    ...applyButton,
+    ...(isFeatured ? featuredButton : {}),
+    ...(isFullyBooked
+      ? disabledApplyButton
+      : {}),
+  }}
+  onClick={handleApply}
+  disabled={isFullyBooked}
+  aria-disabled={isFullyBooked}
+  aria-label={
+    isFullyBooked
+      ? `${name} is fully booked`
+      : `Apply for ${name}`
+  }
+  data-plan-id={id}
+>
+  {isFullyBooked
+    ? "CURRENTLY UNAVAILABLE"
+    : "APPLY FOR THIS PLAN"}
+</button>
     </article>
   );
 }
@@ -224,6 +262,25 @@ const check = {
   color: "#9a7028",
   fontSize: "13px",
   fontWeight: 900,
+};
+
+const availabilityBadge = {
+  alignSelf: "flex-start",
+  marginTop: "14px",
+  padding: "8px 11px",
+  borderRadius: "999px",
+  border: "1px solid rgba(45, 125, 82, 0.25)",
+  background: "rgba(45, 125, 82, 0.10)",
+  color: "#276f4c",
+  fontSize: "10px",
+  fontWeight: 900,
+  letterSpacing: "0.09em",
+};
+
+const availabilityBadgeFull = {
+  border: "1px solid rgba(161, 47, 47, 0.24)",
+  background: "rgba(161, 47, 47, 0.09)",
+  color: "#a12f2f",
 };
 
 const priceArea = {
