@@ -304,22 +304,30 @@ if (rejectionReason.length > 1000) {
     }
 
     const {
-      data: updatedRequest,
-      error: updateError,
-    } = await supabaseAdmin
-      .from("sponsor_requests")
-      .update(updateData)
-      .eq("id", requestId)
-      .select("*")
-      .single();
+  data: updatedRequest,
+  error: updateError,
+} = await supabaseAdmin
+  .from("sponsor_requests")
+  .update(updateData)
+  .eq("id", requestId)
+  .select("*")
+  .single();
 
-    if (updateError) {
-      console.error(
-        "Sponsor request update error:",
-        updateError
-      );
+if (updateError) {
+  console.error(
+    "Sponsor request update error:",
+    updateError
+  );
 
-      let emailSent = false;
+  return res.status(500).json({
+    error:
+      action === "approve"
+        ? "Unable to approve sponsor request"
+        : "Unable to reject sponsor request",
+  });
+}
+
+let emailSent = false;
 let emailError = null;
 
 try {
@@ -367,15 +375,7 @@ try {
   );
 }
 
-      return res.status(500).json({
-        error:
-          action === "approve"
-            ? "Unable to approve sponsor request"
-            : "Unable to reject sponsor request",
-      });
-    }
-
-    return res.status(200).json({
+return res.status(200).json({
   success: true,
   request: updatedRequest,
   emailSent,
