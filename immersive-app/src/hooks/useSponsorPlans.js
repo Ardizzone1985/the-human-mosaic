@@ -13,11 +13,9 @@ export default function useSponsorPlans() {
       setLoading(true);
       setError(null);
 
-      const { data, error } = await supabase
-        .from("sponsor_plans")
-        .select("*")
-        .eq("is_active", true)
-        .order("sort_order", { ascending: true });
+      const { data, error } = await supabase.rpc(
+  "get_sponsor_plans_with_availability"
+);
 
       if (!mounted) return;
 
