@@ -11,7 +11,10 @@ export default function SponsorPanel({
     console.warn("SponsorPanel: missing placement");
   }
 
-  const sponsor = useSponsors(placement);
+  const {
+  sponsor,
+  loading,
+} = useSponsors(placement);
    
   return (
     <group position={position} rotation={rotation}>
@@ -51,12 +54,12 @@ export default function SponsorPanel({
       </mesh>
 
       {/* Placeholder title */}
-      {sponsor?.active ? (
+      {sponsor ? (
   <>
-  {sponsor.image && (
+  {sponsor.logo_url && (
   <SponsorArtwork
-    key={sponsor.image}
-    image={sponsor.image}
+    key={sponsor.logo_url}
+    image={sponsor.logo_url}
   />
 )}
 
@@ -69,7 +72,7 @@ export default function SponsorPanel({
     maxWidth={2.75}
     textAlign="center"
   >
-    {sponsor.title}
+    {sponsor.company || sponsor.title}
   </Text>
 </>
 ) : (
