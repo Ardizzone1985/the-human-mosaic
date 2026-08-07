@@ -333,3 +333,11 @@ const featuredButton = {
   background: "#d7b56d",
   color: "#1b1209",
 };
+
+const disabledApplyButton = {
+  background: "#b7b7b7",
+  color: "#ffffff",
+  cursor: "not-allowed",
+  opacity: 0.8,
+  boxShadow: "none",
+};
