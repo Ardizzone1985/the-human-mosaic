@@ -22,7 +22,10 @@ const ROOM_TEXT = {
   }
 };
 
-export default function InfoWall({ room = "Identity" }) {
+export default function InfoWall({
+  room = "Identity",
+  onSponsorClick,
+}) {
     const roomInfo = ROOM_TEXT[room] || ROOM_TEXT.Identity;
   const [doorHovered, setDoorHovered] = useState(false);
   const logoTexture = useTexture(logoImage);
@@ -132,18 +135,21 @@ fontSize={0.18}
   position={[2.5, 1.65, 0.22]}
   placement={getRoomSponsorPlacement(room, "top-left")}
   label="FUTURE AD SPACE"
+  onSponsorClick={onSponsorClick}
 />
 
 <SponsorPanel
   position={[5.9, 1.65, 0.22]}
   placement={getRoomSponsorPlacement(room, "top-right")}
   label="PARTNER SPACE"
+  onSponsorClick={onSponsorClick}
 />
 
 <SponsorPanel
   position={[2.5, -0.1, 0.22]}
   placement={getRoomSponsorPlacement(room, "bottom-left")}
   label="SPONSOR SPACE"
+  onSponsorClick={onSponsorClick}
 />
 
      {/* Exit door */}
