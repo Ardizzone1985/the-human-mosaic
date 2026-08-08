@@ -1319,6 +1319,12 @@ const isLobby = !currentRoom;
   onOpenCommunityWall={() =>
     setShowCommunityWall(true)
   }
+  onSponsorClick={(sponsor) => {
+    setSelectedSponsor({
+      ...sponsor,
+      room: "Lobby",
+    });
+  }}
 />
 
     <StreetViewControls
