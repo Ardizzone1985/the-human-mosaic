@@ -1164,6 +1164,14 @@ const isLobby = !currentRoom;
   onClose={() => setSelectedPhoto(null)}
 />
 
+      <SponsorModal
+  sponsor={selectedSponsor}
+  onClose={() => {
+    setSelectedSponsor(null);
+    document.body.style.cursor = "default";
+  }}
+/>
+
       <CommunityWallModal
   open={showCommunityWall}
   user={user}
@@ -1334,10 +1342,16 @@ const isLobby = !currentRoom;
   </>
 ) : (
   <Room
-   key={currentRoom}
+  key={currentRoom}
   room={currentRoom}
   theme={theme}
   onPhotoSelect={setSelectedPhoto}
+  onSponsorClick={(sponsor) => {
+    setSelectedSponsor({
+      ...sponsor,
+      room: currentRoom,
+    });
+  }}
 />
 )}
 </Canvas>
