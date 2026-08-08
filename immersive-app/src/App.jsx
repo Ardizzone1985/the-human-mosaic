@@ -22,6 +22,7 @@ import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
 import AppDialog from "./components/AppDialog.jsx";
 import AdvertisePage from "./components/sponsors/AdvertisePage.jsx";
+import SponsorModal from "./components/sponsors/SponsorModal.jsx";
 import MuseumIdentity from "./MuseumIdentity.jsx";
 import AvatarModal from "./AvatarModal.jsx";
 import UploadMemoryModal from "./UploadMemoryModal.jsx";
@@ -364,7 +365,12 @@ function FloorArrow({ point, onMove }) {
   );
 }
 
-function Room({ room, theme, onPhotoSelect }) {
+function Room({
+  room,
+  theme,
+  onPhotoSelect,
+  onSponsorClick,
+}) {
   const currentRoom = room;
   const [currentPointId, setCurrentPointId] = useState("center");
 const [targetPointId, setTargetPointId] = useState("center");
@@ -375,7 +381,10 @@ const [targetPointId, setTargetPointId] = useState("center");
     return (
     <>
       <RoomShell theme={theme} />
-      <InfoWall room={currentRoom} />
+      <InfoWall
+  room={currentRoom}
+  onSponsorClick={onSponsorClick}
+/>
 <LivePhotoWall
   key={`photo-wall-${currentRoom}`}
   room={currentRoom}
@@ -414,6 +423,7 @@ export default function App() {
 } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
   const [replacementMemory, setReplacementMemory] = useState(null);
   const [replacementSubmissionId, setReplacementSubmissionId] =
