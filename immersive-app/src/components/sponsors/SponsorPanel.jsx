@@ -6,6 +6,7 @@ export default function SponsorPanel({
   rotation = [0, 0, 0],
   label = "PARTNER SPACE",
   placement,
+  onSponsorClick,
 }) {
     if (!placement) {
     console.warn("SponsorPanel: missing placement");
@@ -15,9 +16,45 @@ export default function SponsorPanel({
   sponsor,
   loading,
 } = useSponsors(placement);
+
+  function handleSponsorClick(event) {
+  if (!sponsor) {
+    return;
+  }
+
+  event.stopPropagation();
+
+  if (typeof onSponsorClick === "function") {
+    onSponsorClick(sponsor);
+  }
+}
+
+function handlePointerOver(event) {
+  if (!sponsor) {
+    return;
+  }
+
+  event.stopPropagation();
+  document.body.style.cursor = "pointer";
+}
+
+function handlePointerOut(event) {
+  if (!sponsor) {
+    return;
+  }
+
+  event.stopPropagation();
+  document.body.style.cursor = "default";
+}
    
   return (
-    <group position={position} rotation={rotation}>
+    <group
+  position={position}
+  rotation={rotation}
+  onClick={handleSponsorClick}
+  onPointerOver={handlePointerOver}
+  onPointerOut={handlePointerOut}
+>
       {/* Outer wood frame */}
       <mesh>
         <boxGeometry args={[3.72, 1.68, 0.12]} />
