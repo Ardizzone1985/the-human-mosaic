@@ -20,12 +20,16 @@ export default function useSponsors(placement) {
 
       setLoading(true);
 
-      const { data, error } = await supabase
-        .from("sponsor_campaigns")
-        .select("*")
-        .eq("placement", placement)
-        .eq("status", "active")
-        .maybeSingle();
+      const now = new Date().toISOString();
+
+const { data, error } = await supabase
+  .from("sponsor_campaigns")
+  .select("*")
+  .eq("placement", placement)
+  .eq("status", "active")
+  .lte("starts_at", now)
+  .gt("ends_at", now)
+  .maybeSingle();
 
       if (!mounted) {
         return;
