@@ -1042,6 +1042,7 @@ color="#6b5a3f"
   placement="lobby-left"
   label="PARTNER SPACE"
   onSponsorClick={onSponsorClick}
+  layout="vertical"
 />
 
   {/* Community wall */}
@@ -1189,6 +1190,7 @@ color={
   placement="lobby-right"
   label="PARTNER SPACE"
   onSponsorClick={onSponsorClick}
+  layout="vertical"
 />
 </group>
 
