@@ -5,6 +5,7 @@ import logoImage from "./logo-cropped.png";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { supabase } from "./supabaseClient.js";
+import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
 
 function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
   const [featuredPhotos, setFeaturedPhotos] = useState([]);
@@ -448,6 +449,7 @@ function HumanityImpactDoor({
 
 export default function Lobby({
   onOpenCommunityWall,
+  onSponsorClick,
 }) {
     const [roomCounts, setRoomCounts] = useState({
     Identity: 0,
@@ -1035,20 +1037,12 @@ color="#6b5a3f"
 
     <group position={[11.72, 3.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
   {/* Left sponsor */}
-  <group position={[-4.2, 0, 0]}>
-    <mesh>
-      <boxGeometry args={[2.6, 4.2, 0.16]} />
-      <meshStandardMaterial color="#7f7a72" emissive="#d7c7a0" emissiveIntensity={0.03} roughness={0.5} />
-    </mesh>
-
-    <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
-      PARTNER SPACE
-    </Text>
-
-    <Text position={[0, 0.55, 0.12]} fontSize={0.12} color="#c9a96b" anchorX="center" maxWidth={2.1} textAlign="center">
-      Future sponsor / partner area
-    </Text>
-  </group>
+<SponsorPanel
+  position={[-4.2, 0, 0]}
+  placement="lobby-left"
+  label="PARTNER SPACE"
+  onSponsorClick={onSponsorClick}
+/>
 
   {/* Community wall */}
 <group
@@ -1190,20 +1184,12 @@ color={
 </group>
 
   {/* Right sponsor */}
-  <group position={[4.2, 0, 0]}>
-    <mesh>
-      <boxGeometry args={[2.6, 4.2, 0.16]} />
-      <meshStandardMaterial color="#7f7a72" emissive="#d7c7a0" emissiveIntensity={0.03} roughness={0.5} />
-    </mesh>
-
-    <Text position={[0, 1.25, 0.12]} fontSize={0.22} color="#f2c879" anchorX="center">
-      PARTNER SPACE
-    </Text>
-
-    <Text position={[0, 0.55, 0.12]} fontSize={0.12} color="#c9a96b" anchorX="center" maxWidth={2.1} textAlign="center">
-      Future sponsor / partner area
-    </Text>
-  </group>
+<SponsorPanel
+  position={[4.2, 0, 0]}
+  placement="lobby-right"
+  label="PARTNER SPACE"
+  onSponsorClick={onSponsorClick}
+/>
 </group>
 
       <FeaturedRoomPhoto
