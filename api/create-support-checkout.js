@@ -46,6 +46,7 @@ export default async function handler(req, res) {
       email,
       status,
       payment_status,
+      payment_expires_at,
       quoted_price_cents,
       currency,
       approved_placement,
@@ -82,6 +83,28 @@ export default async function handler(req, res) {
       error: 'This partnership has already been paid'
     });
   }
+
+      if (!sponsorRequest.payment_expires_at) {
+  return res.status(410).json({
+    error:
+      'This partnership payment window is no longer available.'
+  });
+}
+
+const paymentExpiresAt =
+  new Date(sponsorRequest.payment_expires_at);
+
+if (
+  Number.isNaN(paymentExpiresAt.getTime()) ||
+  paymentExpiresAt.getTime() <= Date.now()
+) {
+  return res.status(410).json({
+    error:
+      'This partnership payment window has expired. ' +
+      'The placement is now available again. ' +
+      'Please contact The Human Mosaic if you would like to submit a new application.'
+  });
+}
 
   const priceCents =
     Number(sponsorRequest.quoted_price_cents);
