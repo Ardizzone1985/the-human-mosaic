@@ -332,6 +332,10 @@ let emailError = null;
 
 try {
   if (action === "approve") {
+    const paymentUrl =
+  `https://thehumanmosaic.art/sponsor-payment.html` +
+  `?requestId=${encodeURIComponent(updatedRequest.id)}`;
+    
     await sendSponsorApprovedEmail({
       email: sponsorRequest.email,
       contactName: sponsorRequest.contact_name,
