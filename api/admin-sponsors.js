@@ -356,7 +356,7 @@ try {
         updatedRequest.quoted_price_cents,
       currency:
         updatedRequest.currency || "EUR",
-      paymentUrl: null,
+      paymentUrl,
     });
   } else {
     await sendSponsorRejectedEmail({
