@@ -178,10 +178,11 @@ async function activateSponsorCampaign(
   } = await supabase
     .from("sponsor_requests")
     .update({
-      payment_status: "paid",
-      updated_at:
-        new Date().toISOString(),
-    })
+  payment_status: "paid",
+  payment_expires_at: null,
+  updated_at:
+    new Date().toISOString(),
+})
     .eq("id", requestId);
 
   if (paymentUpdateError) {
