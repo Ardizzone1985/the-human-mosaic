@@ -278,11 +278,16 @@ if (rejectionReason.length > 1000) {
       const selectedPlan =
         sponsorRequest.sponsor_plans || null;
 
+      const paymentExpiresAt = new Date(
+  Date.now() + 48 * 60 * 60 * 1000
+).toISOString();
+
       updateData = {
         status: "approved",
         payment_status: "pending",
         rejection_reason: null,
         reviewed_at: reviewedAt,
+        payment_expires_at: paymentExpiresAt,
         approved_placement:
           sponsorRequest.requested_placement ||
           selectedPlan?.placement ||
