@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Partnership Payment — The Human Mosaic
+  </title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      background:
+        radial-gradient(
+          circle at top,
+          #2d251d 0%,
+          #17130f 48%,
+          #0f0d0b 100%
+        );
+      color: #1f1812;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .payment-card {
+      width: 100%;
+      max-width: 620px;
+      background: #fbf6ec;
+      border: 1px solid #d8bd80;
+      border-radius: 28px;
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 32px 40px 24px;
+      text-align: center;
+      border-bottom: 1px solid #e7d7b5;
+      background:
+        linear-gradient(
+          180deg,
+          #fffaf0 0%,
+          #f7edd9 100%
+        );
+    }
+
+    .brand {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: #a57723;
+    }
+
+    .tagline {
+      margin: 0;
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      color: #6b5945;
+      text-transform: uppercase;
+    }
+
+    .card-content {
+      padding: 42px 40px;
+      text-align: center;
+    }
+
+    .icon-wrap {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3dfae;
+      color: #8f641b;
+      font-size: 34px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: 1.08;
+      font-weight: 600;
+      color: #21170f;
+    }
+
+    .description {
+      max-width: 460px;
+      margin: 0 auto;
+      color: #685847;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .status-box {
+      margin: 30px auto 0;
+      padding: 20px 24px;
+      border-radius: 16px;
+      border: 1px solid #e4c989;
+      background: #fffaf0;
+    }
+
+    .status-title {
+      margin: 0 0 8px;
+      color: #8d641b;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .status-message {
+      margin: 0;
+      color: #4e4032;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      margin: 22px auto 0;
+      border: 4px solid #ead8af;
+      border-top-color: #9c6c1f;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error-box {
+      display: none;
+      margin-top: 28px;
+      padding: 20px;
+      background: #fff1ee;
+      border: 1px solid #e9aaa0;
+      border-radius: 16px;
+      color: #8e241b;
+      text-align: left;
+      line-height: 1.55;
+    }
+
+    .retry-button {
+      display: none;
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px 22px;
+      border: 0;
+      border-radius: 999px;
+      background: #2b1c10;
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .retry-button:hover {
+      opacity: 0.9;
+    }
+
+    .footer-note {
+      padding: 22px 40px 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #85735f;
+      line-height: 1.6;
+    }
+
+    .footer-note strong {
+      color: #544332;
+    }
+
+    @media (max-width: 640px) {
+      .payment-card {
+        border-radius: 22px;
+      }
+
+      .card-header,
+      .card-content,
+      .footer-note {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      h1 {
+        font-size: 31px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="payment-card">
+    <header class="card-header">
+      <p class="brand">
+        THE HUMAN MOSAIC
+      </p>
+
+      <p class="tagline">
+        One humanity. Millions of faces. One mosaic.
+      </p>
+    </header>
+
+    <section class="card-content">
+      <div class="icon-wrap">
+        🤝
+      </div>
+
+      <h1>
+        Partnership Payment
+      </h1>
+
+      <p class="description">
+        Your partnership application has been approved.
+        We are preparing your secure payment session.
+        You will be redirected to Stripe automatically.
+      </p>
+
+      <div class="status-box">
+        <p class="status-title">
+          Secure checkout
+        </p>
+
+        <p
+          class="status-message"
+          id="statusMessage"
+        >
+          Preparing your payment...
+        </p>
+
+        <div
+          class="spinner"
+          id="spinner"
+        ></div>
+      </div>
+
+      <div
+        class="error-box"
+        id="errorBox"
+      ></div>
+
+      <button
+        class="retry-button"
+        id="retryButton"
+        type="button"
+      >
+        Try Again
+      </button>
+    </section>
+
+    <footer class="footer-note">
+      Payments are processed securely by
+      <strong>Stripe</strong>.
+      <br />
+      The Human Mosaic never stores your card details.
+    </footer>
+  </main>
+
+  <script>
+    const statusMessage =
+      document.getElementById(
+        "statusMessage"
+      );
+
+    const spinner =
+      document.getElementById(
+        "spinner"
+      );
+
+    const errorBox =
+      document.getElementById(
+        "errorBox"
+      );
+
+    const retryButton =
+      document.getElementById(
+        "retryButton"
+      );
+
+    function showError(message) {
+      spinner.style.display = "none";
+
+      statusMessage.textContent =
+        "The secure payment could not be prepared.";
+
+      errorBox.textContent =
+        message ||
+        "Please try again or contact The Human Mosaic team.";
+
+      errorBox.style.display =
+        "block";
+
+      retryButton.style.display =
+        "block";
+    }
+
+    async function startSponsorCheckout() {
+      errorBox.style.display =
+        "none";
+
+      retryButton.style.display =
+        "none";
+
+      spinner.style.display =
+        "block";
+
+      statusMessage.textContent =
+        "Preparing your payment...";
+
+      try {
+        const params =
+          new URLSearchParams(
+            window.location.search
+          );
+
+        const requestId =
+          params.get("requestId");
+
+        if (!requestId) {
+          throw new Error(
+            "This payment link is incomplete or invalid."
+          );
+        }
+
+        const response =
+          await fetch(
+            "/api/create-support-checkout",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+
+              body: JSON.stringify({
+                type: "sponsor",
+                requestId,
+              }),
+            }
+          );
+
+        const result =
+          await response
+            .json()
+            .catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ||
+            "Unable to create the secure payment session."
+          );
+        }
+
+        if (!result.url) {
+          throw new Error(
+            "Stripe did not return a valid payment address."
+          );
+        }
+
+        statusMessage.textContent =
+          "Secure checkout ready. Redirecting to Stripe...";
+
+        window.location.assign(
+          result.url
+        );
+      } catch (error) {
+        console.error(
+          "Sponsor checkout error:",
+          error
+        );
+
+        showError(
+          error.message
+        );
+      }
+    }
+
+    retryButton.addEventListener(
+      "click",
+      startSponsorCheckout
+    );
+
+    startSponsorCheckout();
+  </script>
+</body>
+</html>
