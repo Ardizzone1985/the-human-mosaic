@@ -8,7 +8,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { amount } = req.body;
+    const {
+  amount,
+  type,
+  requestId,
+} = req.body || {};
+
+    if (type === "sponsor") {
+
+  // Continueremo qui nel prossimo step.
+
+}
 
     // Mappa prezzi
     const priceMap = {
