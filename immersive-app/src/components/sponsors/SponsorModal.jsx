@@ -1,3 +1,5 @@
+import { supabase } from "../../supabaseClient.js";
+
 export default function SponsorModal({
   sponsor,
   onClose,
@@ -15,17 +17,50 @@ export default function SponsorModal({
     room,
   } = sponsor;
 
-  function handleVisitWebsite() {
-    if (!website) {
-      return;
-    }
-
-    window.open(
-      website,
-      "_blank",
-      "noopener,noreferrer"
-    );
+  async function registerSponsorClick() {
+  if (!sponsor?.id) {
+    return;
   }
+
+  const clickKey =
+    `thmSponsorClicked_${sponsor.id}`;
+
+  if (sessionStorage.getItem(clickKey)) {
+    return;
+  }
+
+  sessionStorage.setItem(clickKey, "true");
+
+  const { error } = await supabase.rpc(
+    "increment_sponsor_click",
+    {
+      campaign_id: sponsor.id,
+    }
+  );
+
+  if (error) {
+    console.error(
+      "Sponsor click tracking error:",
+      error
+    );
+
+    sessionStorage.removeItem(clickKey);
+  }
+}
+
+  function handleVisitWebsite() {
+  if (!website) {
+    return;
+  }
+
+  window.open(
+    website,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+  registerSponsorClick();
+}
 
   return (
     <div style={overlay}>
