@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 export const config = {
   api: {
@@ -282,6 +283,9 @@ async function activateSponsorCampaign(
 
     company_slug:
       slugifyCompany(company),
+
+    portal_token:
+  crypto.randomBytes(32).toString("hex"),
 
     title:
       sponsorRequest
