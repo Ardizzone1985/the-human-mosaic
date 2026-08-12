@@ -1,5 +1,6 @@
 import { Text, useTexture } from "@react-three/drei";
 import useSponsors from "../../hooks/useSponsors.js";
+import { supabase } from "../../supabaseClient.js";
 
 export default function SponsorPanel({
   position = [0, 0, 0],
@@ -32,12 +33,45 @@ export default function SponsorPanel({
     ? [2.22, 3.72, 0.03]
     : [3.22, 1.22, 0.03];
 
+  async function registerSponsorView() {
+  if (!sponsor?.id) {
+    return;
+  }
+
+  const viewKey =
+    `thmSponsorViewed_${sponsor.id}`;
+
+  if (sessionStorage.getItem(viewKey)) {
+    return;
+  }
+
+  sessionStorage.setItem(viewKey, "true");
+
+  const { error } = await supabase.rpc(
+    "increment_sponsor_view",
+    {
+      campaign_id: sponsor.id,
+    }
+  );
+
+  if (error) {
+    console.error(
+      "Sponsor view tracking error:",
+      error
+    );
+
+    sessionStorage.removeItem(viewKey);
+  }
+}
+
   function handleSponsorClick(event) {
     if (!sponsor) {
       return;
     }
 
     event.stopPropagation();
+
+    registerSponsorView();
 
     if (typeof onSponsorClick === "function") {
       onSponsorClick(sponsor);
