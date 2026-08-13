@@ -284,14 +284,16 @@ const [showApplicationModal, setShowApplicationModal] = useState(false);
             </h2>
 
             <p style={darkIntro}>
-              Partnership opportunities will be available across selected
-              areas of the Lobby and the Identity, Love and Creativity rooms.
-              Every placement is reviewed before approval.
+              Premium partnership opportunities are available throughout
+              The Human Mosaic.
+
+              Every partnership is personally reviewed to ensure quality,
+              relevance and consistency within the museum experience.
             </p>
 
             <div style={partnerDashboardBox}>
   <div style={partnerDashboardBadge}>
-    INCLUDED · NO ADDITIONAL COST
+    INCLUDED WITH EVERY PARTNERSHIP
   </div>
 
   <div style={partnerDashboardLabel}>
@@ -975,8 +977,8 @@ const partnerDashboardHighlight = {
   maxWidth: "820px",
   margin: "18px auto 0",
   color: "#8a662c",
-  fontSize: "14px",
-  fontWeight: 700,
+  fontSize: "15px",
+  fontWeight: 600,
   lineHeight: 1.7,
   textAlign: "center",
 };
