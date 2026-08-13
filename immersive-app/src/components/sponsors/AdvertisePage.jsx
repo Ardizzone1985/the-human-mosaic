@@ -290,6 +290,10 @@ const [showApplicationModal, setShowApplicationModal] = useState(false);
             </p>
 
             <div style={partnerDashboardBox}>
+  <div style={partnerDashboardBadge}>
+    INCLUDED · NO ADDITIONAL COST
+  </div>
+
   <div style={partnerDashboardLabel}>
     INCLUDED WITH EVERY APPROVED PARTNERSHIP
   </div>
@@ -304,18 +308,50 @@ const [showApplicationModal, setShowApplicationModal] = useState(false);
     throughout the partnership period.
   </p>
 
+  <p style={partnerDashboardHighlight}>
+    Monitor your campaign performance with real-time analytics,
+    engagement metrics and campaign insights throughout your partnership.
+  </p>
+
   <div style={partnerDashboardGrid}>
-    <div>📊 Real-time campaign statistics</div>
-    <div>👁 Museum panel views</div>
-    <div>🔗 Website click tracking</div>
-    <div>📈 Click-through rate (CTR)</div>
-    <div>📅 Campaign duration and remaining days</div>
-    <div>🔒 Secure private access link</div>
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>▥</span>
+      <span>Real-time campaign statistics</span>
+    </div>
+
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>◉</span>
+      <span>Museum panel views</span>
+    </div>
+
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>↗</span>
+      <span>Website click tracking</span>
+    </div>
+
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>⌁</span>
+      <span>Click-through rate (CTR)</span>
+    </div>
+
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>◫</span>
+      <span>Campaign duration and remaining days</span>
+    </div>
+
+    <div style={partnerDashboardFeature}>
+      <span style={partnerDashboardIcon}>◇</span>
+      <span>Secure private access link</span>
+    </div>
   </div>
 
   <div style={partnerDashboardNote}>
-    Your private dashboard becomes available after the partnership
-    has been approved and payment has been completed.
+    <strong style={partnerDashboardNoteStrong}>
+      Included at no additional cost with every approved partnership.
+    </strong>
+    {" "}
+    Access is activated automatically once your partnership has been
+    approved and payment has been completed.
   </div>
 </div>
 
@@ -920,6 +956,58 @@ const partnerDashboardNote = {
   fontSize: "13px",
   lineHeight: 1.6,
   textAlign: "center",
+};
+
+const partnerDashboardBadge = {
+  width: "fit-content",
+  margin: "0 auto 18px",
+  padding: "8px 14px",
+  borderRadius: "999px",
+  border: "1px solid rgba(166,124,49,0.34)",
+  background: "rgba(166,124,49,0.08)",
+  color: "#8f6724",
+  fontSize: "10px",
+  fontWeight: 900,
+  letterSpacing: "0.14em",
+};
+
+const partnerDashboardHighlight = {
+  maxWidth: "820px",
+  margin: "18px auto 0",
+  color: "#8a662c",
+  fontSize: "14px",
+  fontWeight: 700,
+  lineHeight: 1.7,
+  textAlign: "center",
+};
+
+const partnerDashboardFeature = {
+  display: "flex",
+  alignItems: "center",
+  gap: "11px",
+  padding: "12px 14px",
+  borderRadius: "14px",
+  border: "1px solid rgba(166,124,49,0.12)",
+  background: "rgba(255,255,255,0.34)",
+};
+
+const partnerDashboardIcon = {
+  width: "24px",
+  height: "24px",
+  flexShrink: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "999px",
+  background: "rgba(166,124,49,0.10)",
+  color: "#9b7029",
+  fontSize: "13px",
+  fontWeight: 900,
+};
+
+const partnerDashboardNoteStrong = {
+  color: "#5b4220",
+  fontWeight: 800,
 };
 
 const loadingBox = {
