@@ -289,6 +289,36 @@ const [showApplicationModal, setShowApplicationModal] = useState(false);
               Every placement is reviewed before approval.
             </p>
 
+            <div style={partnerDashboardBox}>
+  <div style={partnerDashboardLabel}>
+    INCLUDED WITH EVERY APPROVED PARTNERSHIP
+  </div>
+
+  <h3 style={partnerDashboardTitle}>
+    Private Performance Dashboard
+  </h3>
+
+  <p style={partnerDashboardText}>
+    Every approved partner receives exclusive access to a secure
+    private dashboard where campaign performance can be monitored
+    throughout the partnership period.
+  </p>
+
+  <div style={partnerDashboardGrid}>
+    <div>📊 Real-time campaign statistics</div>
+    <div>👁 Museum panel views</div>
+    <div>🔗 Website click tracking</div>
+    <div>📈 Click-through rate (CTR)</div>
+    <div>📅 Campaign duration and remaining days</div>
+    <div>🔒 Secure private access link</div>
+  </div>
+
+  <div style={partnerDashboardNote}>
+    Your private dashboard becomes available after the partnership
+    has been approved and payment has been completed.
+  </div>
+</div>
+
             {loading ? (
   <div style={loadingBox}>
     Loading partnership opportunities...
@@ -833,6 +863,63 @@ const plansGrid = {
   gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
   gap: "28px",
   alignItems: "stretch",
+};
+
+const partnerDashboardBox = {
+  margin: "36px auto 0",
+  padding: "30px",
+  borderRadius: "24px",
+  border: "1px solid rgba(166,124,49,0.28)",
+  background:
+    "linear-gradient(145deg, rgba(215,181,109,0.10), rgba(255,255,255,0.82))",
+  boxShadow: "0 18px 50px rgba(66, 45, 22, 0.08)",
+};
+
+const partnerDashboardLabel = {
+  marginBottom: "12px",
+  color: "#a67c31",
+  fontSize: "11px",
+  fontWeight: 900,
+  letterSpacing: "0.18em",
+  textAlign: "center",
+};
+
+const partnerDashboardTitle = {
+  margin: "0 0 14px",
+  color: "#2c1d10",
+  fontFamily: "Georgia, 'Times New Roman', serif",
+  fontSize: "clamp(28px, 4vw, 40px)",
+  fontWeight: 500,
+  textAlign: "center",
+};
+
+const partnerDashboardText = {
+  maxWidth: "760px",
+  margin: "0 auto",
+  color: "#655746",
+  fontSize: "16px",
+  lineHeight: 1.7,
+  textAlign: "center",
+};
+
+const partnerDashboardGrid = {
+  marginTop: "26px",
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+  gap: "14px",
+  color: "#4b3a29",
+  fontSize: "14px",
+  lineHeight: 1.6,
+};
+
+const partnerDashboardNote = {
+  marginTop: "24px",
+  paddingTop: "18px",
+  borderTop: "1px solid rgba(166,124,49,0.18)",
+  color: "#7a674f",
+  fontSize: "13px",
+  lineHeight: 1.6,
+  textAlign: "center",
 };
 
 const loadingBox = {
