@@ -141,11 +141,12 @@ useEffect(() => {
     }
 
     const { data: comments, error: commentsError } = await supabase
-      .from("photo_comments")
-      .select("id, comment, created_at, user_id")
-      .eq("submission_id", selectedPhoto.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
+  .from("photo_comments")
+  .select("id, comment, created_at, user_id")
+  .eq("submission_id", selectedPhoto.id)
+  .eq("approval_status", "approved")
+  .order("created_at", { ascending: false })
+  .limit(50);
 
     if (commentsError) {
       console.error("Load comments error:", commentsError);
@@ -265,89 +266,142 @@ setTimeout(() => {
 }, 1000);
   }
 
-  async function handleSendComment() {  
-        if (!user) {
-  showDialog({
-    icon: "💬",
-    title: "Join the Conversation",
-    message:
-      "Sign in to comment on this memory and connect with the community.",
-    confirmText: "Login",
-    cancelText: "Close",
-    action: "login",
-  });
-  return;
-}
+  async function handleSendComment() {
+  if (!user) {
+    showDialog({
+      icon: "💬",
+      title: "Join the Conversation",
+      message:
+        "Sign in to comment on this memory and connect with the community.",
+      confirmText: "Login",
+      cancelText: "Close",
+      action: "login",
+    });
+    return;
+  }
 
-    if (!selectedPhoto?.id) return;
+  if (!selectedPhoto?.id) return;
 
-    if (!newComment.trim()) {
-  showDialog({
-    icon: "✦",
-    title: "Write Your Message",
-    message: "Please write a comment before publishing it.",
-    confirmText: "Close",
-  });
-  return;
-}
+  const commentText = newComment.trim();
 
-    const { data, error } = await supabase
-  .from("photo_comments")
-  .insert({
-    submission_id: selectedPhoto.id,
-    user_id: user.id,
-    comment: newComment.trim(),
-  })
-  .select("id, comment, created_at, user_id");
+  if (!commentText) {
+    showDialog({
+      icon: "✦",
+      title: "Write Your Message",
+      message: "Please write a comment before publishing it.",
+      confirmText: "Close",
+    });
+    return;
+  }
 
-const insertedComment = data?.[0];
-    
-    if (error) {
-  console.error("Send comment error:", error);
+  try {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
-  showDialog({
-    icon: "⚠️",
-    title: "Comment Not Published",
-    message:
-      "We could not publish your comment. Please try again in a moment.",
-    confirmText: "Close",
-  });
+    if (sessionError || !session?.access_token) {
+      showDialog({
+        icon: "⚠️",
+        title: "Session Required",
+        message:
+          "Your session has expired. Please sign in again before publishing a comment.",
+        confirmText: "Close",
+      });
+      return;
+    }
 
-  return;
-}
+    const response = await fetch("/api/comments/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({
+        submissionId: selectedPhoto.id,
+        comment: commentText,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("Send comment error:", result);
+
+      showDialog({
+        icon: "⚠️",
+        title: "Comment Not Published",
+        message:
+          result?.error ||
+          "We could not publish your comment. Please try again in a moment.",
+        confirmText: "Close",
+      });
+      return;
+    }
 
     setNewComment("");
 
-setPhotoComments((current) => [
-  {
-    ...insertedComment,
-    profile: {
-      nickname:
-        profile?.nickname ||
-        user?.user_metadata?.nickname ||
-        "Museum visitor",
-      country:
-        profile?.country ||
-        user?.user_metadata?.country ||
-        "Country unavailable",
-    },
-  },
-  ...current,
-]);
-    
-setSelectedPhoto((current) => {
-  if (!current) return current;
+    if (result.approvalStatus === "pending") {
+      showDialog({
+        icon: "🛡️",
+        title: "Comment Under Review",
+        message:
+          "Your comment has been submitted for review and is not publicly visible yet.",
+        confirmText: "Close",
+      });
+      return;
+    }
 
-  return {
-    ...current,
-    comments_count: Number(current.comments_count || 0) + 1,
-  };
-});
+    const insertedComment = result.comment;
 
-setTimeout(() => {
-  refreshSelectedPhoto(selectedPhoto.id);
-}, 1000);
+    if (!insertedComment) {
+      console.error("Comment API returned no comment:", result);
+      return;
+    }
+
+    setPhotoComments((current) => [
+      {
+        ...insertedComment,
+        comment: commentText,
+        user_id: user.id,
+        profile: {
+          nickname:
+            profile?.nickname ||
+            user?.user_metadata?.nickname ||
+            "Museum visitor",
+          country:
+            profile?.country ||
+            user?.user_metadata?.country ||
+            "Country unavailable",
+        },
+      },
+      ...current,
+    ]);
+
+    setSelectedPhoto((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        comments_count: Number(current.comments_count || 0) + 1,
+      };
+    });
+
+    setTimeout(() => {
+      refreshSelectedPhoto(selectedPhoto.id);
+    }, 1000);
+  } catch (error) {
+    console.error("Send comment request error:", error);
+
+    showDialog({
+      icon: "⚠️",
+      title: "Comment Not Published",
+      message:
+        "We could not publish your comment. Please try again in a moment.",
+      confirmText: "Close",
+    });
   }
+}
 
   return {
     newComment,
