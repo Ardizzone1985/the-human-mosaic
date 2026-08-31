@@ -12,6 +12,7 @@ export default function PhotoModal({
   onClose,
 }) {
   const [showComments, setShowComments] = useState(false);
+  const [isSendingComment, setIsSendingComment] = useState(false);
   if (!selectedPhoto) return null;
 
  return (
@@ -97,9 +98,28 @@ export default function PhotoModal({
             style={textareaStyle}
           />
 
-          <button onClick={handleSendComment} style={sendButton}>
-            Send comment
-          </button>
+          <button
+  type="button"
+  disabled={isSendingComment}
+  onClick={async () => {
+    if (isSendingComment) return;
+
+    setIsSendingComment(true);
+
+    try {
+      await handleSendComment();
+    } finally {
+      setIsSendingComment(false);
+    }
+  }}
+  style={{
+    ...sendButton,
+    opacity: isSendingComment ? 0.6 : 1,
+    cursor: isSendingComment ? "not-allowed" : "pointer",
+  }}
+>
+  {isSendingComment ? "Sending..." : "Send comment"}
+</button>
         </div>
 
         <button onClick={onClose} style={closeButton}>
