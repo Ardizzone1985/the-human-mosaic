@@ -362,7 +362,7 @@ function LoungeBarDoor({
         emissive="#fff4d8"
         emissiveIntensity={1.8}
       >
-        COMING{"\n"}SOON
+        COMING SOON
       </Text>
 
       <Text
