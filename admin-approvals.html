@@ -684,6 +684,17 @@ async function deleteProjectNews(id) {
     
     const grid = document.getElementById("grid");
     const statusBox = document.getElementById("status");
+    const commentsModerationList =
+  document.getElementById("commentsModerationList");
+
+const commentsModerationStatus =
+  document.getElementById("commentsModerationStatus");
+
+const commentPendingCount =
+  document.getElementById("commentPendingCount");
+
+const refreshCommentsBtn =
+  document.getElementById("refreshCommentsBtn");
   const rejectModal = document.getElementById("rejectModal");
 const rejectReason = document.getElementById("rejectReason");
 const cancelRejectBtn = document.getElementById("cancelRejectBtn");
@@ -792,6 +803,148 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
       const date = new Date(dateString);
       return date.toLocaleString();
     }
+
+    async function loadPhotoCommentsModeration() {
+  commentsModerationStatus.textContent = "Loading comments...";
+  commentsModerationList.innerHTML = "";
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=comments",
+      {
+        method: "GET",
+        credentials: "same-origin",
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Unable to load comments."
+      );
+    }
+
+    const comments = result.comments || [];
+
+    const pendingComments = comments.filter(
+      (item) => item.approval_status === "pending"
+    );
+
+    commentPendingCount.textContent =
+      pendingComments.length.toLocaleString();
+
+    if (pendingComments.length === 0) {
+      commentsModerationStatus.textContent =
+        "No pending photo comments.";
+
+      commentsModerationList.innerHTML = `
+        <div style="
+          border:1px solid #e5e5e5;
+          border-radius:14px;
+          padding:16px;
+          background:#fcfcfb;
+          color:#666;
+        ">
+          No comments currently require review.
+        </div>
+      `;
+
+      return;
+    }
+
+    commentsModerationStatus.textContent =
+      `${pendingComments.length} pending comment(s)`;
+
+    commentsModerationList.innerHTML =
+      pendingComments.map((item) => {
+        const categories =
+          item.moderation_categories || {};
+
+        const flaggedCategories = Object.entries(categories)
+          .filter(([, value]) => value === true)
+          .map(([key]) => key);
+
+        const categoryText =
+          flaggedCategories.length > 0
+            ? flaggedCategories.join(", ")
+            : "No flagged categories";
+
+        return `
+          <div style="
+            border:1px solid #ddd;
+            border-radius:16px;
+            padding:16px;
+            background:#fcfcfb;
+          ">
+            <div class="badges">
+              <span class="badge badge-status-pending">
+                Pending
+              </span>
+
+              ${
+                item.moderation_flagged
+                  ? `
+                    <span class="badge badge-status-rejected">
+                      AI Flagged
+                    </span>
+                  `
+                  : `
+                    <span class="badge badge-status-approved">
+                      AI Safe
+                    </span>
+                  `
+              }
+            </div>
+
+            <div class="meta">
+              <strong>Comment:</strong>
+            </div>
+
+            <div class="note-preview">
+              ${item.comment || "—"}
+            </div>
+
+            <div class="meta" style="margin-top:12px;">
+              <strong>Submission ID:</strong>
+              ${item.submission_id || "—"}
+            </div>
+
+            <div class="meta">
+              <strong>User ID:</strong>
+              ${item.user_id || "—"}
+            </div>
+
+            <div class="meta">
+              <strong>Submitted:</strong>
+              ${formatDate(item.created_at)}
+            </div>
+
+            <div class="meta">
+              <strong>AI Model:</strong>
+              ${item.moderation_model || "—"}
+            </div>
+
+            <div class="meta">
+              <strong>Flagged Categories:</strong>
+              ${categoryText}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+  } catch (error) {
+    console.error(
+      "Photo comments moderation load error:",
+      error
+    );
+
+    commentsModerationStatus.textContent =
+      "Unable to load photo comments.";
+
+    commentPendingCount.textContent = "—";
+  }
+}
 
     async function loadAdminStats() {
       const { data, error } = await supabaseClient
@@ -1357,6 +1510,12 @@ window.deleteProjectNews = deleteProjectNews;
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
     loadPublishedNews();
+    loadPhotoCommentsModeration();
+
+    refreshCommentsBtn.addEventListener(
+  "click",
+  loadPhotoCommentsModeration
+);
   </script>
 </body>
 </html>
