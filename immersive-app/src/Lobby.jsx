@@ -288,6 +288,155 @@ window.dispatchEvent(new PopStateEvent("popstate"));
 );
 }
 
+function LoungeBarDoor({
+  position,
+  rotation = [0, 0, 0],
+  color = "#d7b56d",
+}) {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* External frame */}
+      <mesh position={[0, 0, -0.28]}>
+        <boxGeometry args={[3.8, 6.1, 0.52]} />
+        <meshStandardMaterial
+          color="#6b4a1e"
+          emissive={color}
+          emissiveIntensity={0.22}
+          roughness={0.34}
+          metalness={0.28}
+        />
+      </mesh>
+
+      {/* Main door */}
+      <mesh position={[0, 0, 0.02]}>
+        <boxGeometry args={[2.95, 5.25, 0.46]} />
+        <meshStandardMaterial
+          color="#2a1208"
+          roughness={0.42}
+          metalness={0.22}
+          emissive={color}
+          emissiveIntensity={0.06}
+        />
+      </mesh>
+
+      {/* Inner panel */}
+      <mesh position={[0, 0, 0.28]}>
+        <boxGeometry args={[2.2, 4.4, 0.16]} />
+        <meshStandardMaterial
+          color="#0b0302"
+          roughness={0.7}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* Door handle */}
+      <mesh position={[0.82, 0, 0.38]}>
+        <sphereGeometry args={[0.08, 16, 16]} />
+        <meshStandardMaterial
+          color="#d7b56d"
+          emissive="#d7b56d"
+          emissiveIntensity={0.25}
+          metalness={0.8}
+          roughness={0.22}
+        />
+      </mesh>
+
+      {/* Golden upper detail */}
+      <mesh position={[0, 2.18, 0.24]}>
+        <boxGeometry args={[2.55, 0.08, 0.08]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={0.32}
+        />
+      </mesh>
+
+      <Text
+        position={[0, 3.45, 0.28]}
+        fontSize={0.48}
+        color="#fff4d8"
+        anchorX="center"
+        letterSpacing={0.15}
+        outlineWidth={0.01}
+        outlineColor="#d7b56d"
+        emissive="#fff4d8"
+        emissiveIntensity={1.8}
+      >
+        COMING{"\n"}SOON
+      </Text>
+
+      <Text
+        position={[0, 0.45, 0.4]}
+        fontSize={0.30}
+        color="#f2c879"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={2.1}
+        textAlign="center"
+        lineHeight={1.25}
+      >
+        LOUNGE BAR
+      </Text>
+
+      <Text
+        position={[0, -0.35, 0.4]}
+        fontSize={0.15}
+        color="#e7dcc8"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={1.9}
+        textAlign="center"
+        lineHeight={1.4}
+      >
+        A new museum experience awaits.
+      </Text>
+
+      {/* Decorative separator */}
+      <mesh position={[0, -0.72, 0.32]}>
+        <boxGeometry args={[1.55, 0.02, 0.02]} />
+        <meshStandardMaterial
+          color="#d7b56d"
+          emissive="#d7b56d"
+          emissiveIntensity={0.35}
+        />
+      </mesh>
+
+      {/* Floor glow */}
+      <mesh
+        position={[0, -2.58, 0.55]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
+        <circleGeometry args={[1.25, 48]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.07}
+        />
+      </mesh>
+
+      {/* Rear glow */}
+      <mesh position={[0, 0, -0.55]}>
+        <planeGeometry args={[2.8, 4.8]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.05}
+        />
+      </mesh>
+
+      <Text
+        position={[0, -2.85, 0.28]}
+        fontSize={0.11}
+        color="#9f8b6a"
+        anchorX="center"
+        letterSpacing={0.08}
+      >
+        FUTURE EXPERIENCE
+      </Text>
+    </group>
+  );
+}
+
 function HumanityImpactDoor({
   position,
   rotation = [0, 0, 0],
