@@ -1350,7 +1350,10 @@ const isLobby = !currentRoom;
 
   </>
 ) : currentRoom === "Humanity Impact" ? (
-  <HumanityImpactRoom />
+  <>
+    <HumanityImpactRoom />
+    <StreetViewLookControls />
+  </>
 ) : (
   <Room
   key={currentRoom}
