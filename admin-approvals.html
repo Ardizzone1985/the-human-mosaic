@@ -929,6 +929,22 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
               <strong>Flagged Categories:</strong>
               ${categoryText}
             </div>
+
+            <div class="actions" style="margin-top:16px;">
+  <button
+    class="approve-btn"
+    onclick="moderatePhotoComment('${item.id}', 'approve')"
+  >
+    Approve
+  </button>
+
+  <button
+    class="delete-btn"
+    onclick="moderatePhotoComment('${item.id}', 'reject')"
+  >
+    Reject
+  </button>
+</div>
           </div>
         `;
       }).join("");
@@ -943,6 +959,72 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
       "Unable to load photo comments.";
 
     commentPendingCount.textContent = "—";
+  }
+}
+
+    async function moderatePhotoComment(commentId, decision) {
+  if (!commentId) {
+    alert("Missing comment ID.");
+    return;
+  }
+
+  if (decision !== "approve" && decision !== "reject") {
+    alert("Invalid moderation decision.");
+    return;
+  }
+
+  const actionLabel =
+    decision === "approve" ? "approve" : "reject";
+
+  const confirmed = confirm(
+    `Are you sure you want to ${actionLabel} this comment?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=moderate-comment",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          commentId,
+          decision,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Unable to moderate comment."
+      );
+    }
+
+    await loadPhotoCommentsModeration();
+
+    alert(
+      decision === "approve"
+        ? "Comment approved successfully ✅"
+        : "Comment rejected successfully ✅"
+    );
+  } catch (error) {
+    console.error(
+      "Photo comment moderation error:",
+      error
+    );
+
+    alert(
+      error.message ||
+        "Unable to moderate this comment."
+    );
   }
 }
 
@@ -1506,6 +1588,7 @@ window.deletePhotoAndFreeSlot = deletePhotoAndFreeSlot;
 window.resendCertificate = resendCertificate;
     window.editProjectNews = editProjectNews;
 window.deleteProjectNews = deleteProjectNews;
+    window.moderatePhotoComment = moderatePhotoComment;
     
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
