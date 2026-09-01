@@ -8,6 +8,7 @@ import {
 import RoomShell from "./RoomShell.jsx";
 import LivePhotoWall from "./LivePhotoWall.jsx";
 import InfoWall from "./InfoWall.jsx";
+import HumanityImpactRoom from "./HumanityImpactRoom.jsx";
 import DynamicSectionManager from "./DynamicSectionManager.jsx";
 import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
