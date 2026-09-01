@@ -769,6 +769,8 @@ const currentRoom =
     ? "Love"
     : roomParam?.toLowerCase() === "creativity"
     ? "Creativity"
+    : roomParam?.toLowerCase() === "humanity-impact"
+    ? "Humanity Impact"
     : null;
 
 const theme =
@@ -1347,6 +1349,8 @@ const isLobby = !currentRoom;
 ))}
 
   </>
+) : currentRoom === "Humanity Impact" ? (
+  <HumanityImpactRoom />
 ) : (
   <Room
   key={currentRoom}
