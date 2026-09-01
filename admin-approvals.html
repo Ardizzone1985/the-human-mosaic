@@ -418,6 +418,53 @@
   <div id="publishedNewsList" style="display:grid; gap:12px;"></div>
 </div>
 
+    <!-- Photo Comments Moderation -->
+<div class="admin-stat-card" style="margin-bottom:24px;">
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+  ">
+    <div>
+      <div class="admin-stat-label">Photo Comments Moderation</div>
+      <div style="font-size:0.9rem; color:#666; margin-top:6px;">
+        Review comments flagged by AI before publication.
+      </div>
+    </div>
+
+    <div style="
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    ">
+      <span class="badge badge-status-pending">
+        Pending: <strong id="commentPendingCount">—</strong>
+      </span>
+
+      <button
+        type="button"
+        class="filter-btn"
+        id="refreshCommentsBtn"
+      >
+        Refresh Comments
+      </button>
+    </div>
+  </div>
+
+  <div id="commentsModerationStatus" class="status" style="margin-bottom:12px;">
+    Comments moderation ready.
+  </div>
+
+  <div
+    id="commentsModerationList"
+    style="display:grid; gap:12px;"
+  ></div>
+</div>
+
     <div id="status" class="status">Loading submissions...</div>
 
     <div class="status-filters" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
