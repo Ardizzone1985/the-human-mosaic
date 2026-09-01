@@ -1177,6 +1177,12 @@ color="#6b5a3f"
 </Text>
 </group>
 
+      <LoungeBarDoor
+  position={[-13.95, 1.45, -3.8]}
+  rotation={[0, Math.PI / 2, 0]}
+  color="#d7b56d"
+/>
+
       {/* Future Humanity Impact wall */}
 <HumanityImpactDoor
   position={[-13.95, 1.45, 3.8]}
