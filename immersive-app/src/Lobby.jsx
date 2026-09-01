@@ -442,11 +442,36 @@ function HumanityImpactDoor({
   rotation = [0, 0, 0],
   color = "#d7b56d",
 }) {
+    const [hovered, setHovered] = useState(false);
+
+  function enterHumanityImpact() {
+    window.dispatchEvent(new Event("startFadeOut"));
+
+    setTimeout(() => {
+      window.history.pushState({}, "", "/?room=humanity-impact");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    }, 900);
+  }
   return (
     <group
-      position={position}
-      rotation={rotation}
-    >
+  position={position}
+  rotation={rotation}
+  scale={hovered ? 1.06 : 1}
+  onPointerOver={(e) => {
+    e.stopPropagation();
+    setHovered(true);
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={(e) => {
+    e.stopPropagation();
+    setHovered(false);
+    document.body.style.cursor = "default";
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    enterHumanityImpact();
+  }}
+>
       {/* External frame */}
       <mesh position={[0, 0, -0.28]}>
         <boxGeometry args={[3.8, 6.1, 0.52]} />
@@ -519,8 +544,7 @@ function HumanityImpactDoor({
   emissive="#fff4d8"
   emissiveIntensity={1.8}
 >
-  COMING
-  SOON
+  ENTER
 </Text>
 
       <Text
@@ -590,7 +614,7 @@ function HumanityImpactDoor({
         anchorX="center"
         letterSpacing={0.08}
       >
-        FUTURE EXPERIENCE
+        CLICK TO ENTER
       </Text>
     </group>
   );
