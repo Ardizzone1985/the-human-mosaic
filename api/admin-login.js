@@ -147,6 +147,78 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
+    // POST ?action=moderate-comment
+    // Approve or reject a photo comment.
+    // ---------------------------------------------------------
+    if (
+      req.method === "POST" &&
+      req.query?.action === "moderate-comment"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      const { commentId, decision } = req.body || {};
+
+      if (!commentId) {
+        return res.status(400).json({
+          error: "Missing commentId",
+        });
+      }
+
+      if (decision !== "approve" && decision !== "reject") {
+        return res.status(400).json({
+          error: "Invalid decision",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const updateData =
+        decision === "approve"
+          ? {
+              approval_status: "approved",
+              approved_at: new Date().toISOString(),
+            }
+          : {
+              approval_status: "rejected",
+              approved_at: null,
+            };
+
+      const { data, error } = await supabase
+        .from("photo_comments")
+        .update(updateData)
+        .eq("id", commentId)
+        .select(
+          "id, submission_id, comment, approval_status, moderation_flagged, approved_at"
+        )
+        .maybeSingle();
+
+      if (error) {
+        console.error("Admin comment moderation error:", error);
+
+        return res.status(500).json({
+          error: "Failed to moderate comment",
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          error: "Comment not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        comment: data,
+      });
+    }
+
+    // ---------------------------------------------------------
     // POST
     // Existing admin login.
     // ---------------------------------------------------------
