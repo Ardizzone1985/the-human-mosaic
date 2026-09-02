@@ -131,7 +131,10 @@ const goldMaterial = (
   />
 );
 
-export default function RoomShell({ theme }) {
+export default function RoomShell({
+  theme,
+  hideFrontPanels = false,
+}) {
   const backWallTexture = useMemo(() => createMuseumWallTexture("#d8d0c3"), []);
 const sideWallTexture = useMemo(() => createMuseumWallTexture("#d1c8bb"), []);
 const ceilingTexture = useMemo(() => createCeilingTexture(), []);
@@ -311,30 +314,31 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
       </mesh>
 
       {/* Museum wall panels */}
-      {[-9, -4.5, 0, 4.5, 9].map((x) => (
-        <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
-          
-          <mesh position={[0, 2.95, 0.06]}>
-            <boxGeometry args={[2.9, 0.08, 0.08]} />
-            {goldMaterial}
-          </mesh>
+{!hideFrontPanels &&
+  [-9, -4.5, 0, 4.5, 9].map((x) => (
+    <group key={`back-panel-${x}`} position={[x, 3.1, -9.82]}>
+      
+      <mesh position={[0, 2.95, 0.06]}>
+        <boxGeometry args={[2.9, 0.08, 0.08]} />
+        {goldMaterial}
+      </mesh>
 
-          <mesh position={[0, -2.95, 0.06]}>
-            <boxGeometry args={[2.9, 0.08, 0.08]} />
-            {goldMaterial}
-          </mesh>
+      <mesh position={[0, -2.95, 0.06]}>
+        <boxGeometry args={[2.9, 0.08, 0.08]} />
+        {goldMaterial}
+      </mesh>
 
-          <mesh position={[-1.4, 0, 0.06]}>
-            <boxGeometry args={[0.08, 5.9, 0.08]} />
-            {goldMaterial}
-          </mesh>
+      <mesh position={[-1.4, 0, 0.06]}>
+        <boxGeometry args={[0.08, 5.9, 0.08]} />
+        {goldMaterial}
+      </mesh>
 
-          <mesh position={[1.4, 0, 0.06]}>
-            <boxGeometry args={[0.08, 5.9, 0.08]} />
-            {goldMaterial}
-          </mesh>
-        </group>
-      ))}
+      <mesh position={[1.4, 0, 0.06]}>
+        <boxGeometry args={[0.08, 5.9, 0.08]} />
+        {goldMaterial}
+      </mesh>
+    </group>
+  ))}
 
       {/* Cinematic wall light strips */}
       <mesh position={[-10.85, 3.4, -3]}>
