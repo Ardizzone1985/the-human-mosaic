@@ -489,6 +489,8 @@ closeDialog,
 } = usePhotoSocial(selectedPhoto, setSelectedPhoto);
   
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
+  const [humanityImpactTargetPointId, setHumanityImpactTargetPointId] =
+  useState("center");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
