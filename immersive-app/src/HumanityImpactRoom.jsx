@@ -61,7 +61,7 @@ export default function HumanityImpactRoom() {
 
       {/* HOME door */}
       <group
-        position={[0, 0.55, 10.72]}
+        position={[0, 0.55, 10.55]}
         rotation={[0, Math.PI, 0]}
         scale={doorHovered ? 1.06 : 1}
         onPointerOver={(e) => {
