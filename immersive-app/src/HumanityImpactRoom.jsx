@@ -25,27 +25,176 @@ export default function HumanityImpactRoom() {
     <>
       <RoomShell theme={impactTheme} />
 
-      {/* Temporary title — STEP 1 */}
-      <Text
-        position={[0, 5.8, -9.7]}
-        fontSize={0.62}
-        color="#d7b56d"
-        anchorX="center"
-        anchorY="middle"
-      >
-        HUMANITY IMPACT
-      </Text>
+      {/* HERO WALL — Humanity Impact */}
 
-      <Text
-        position={[0, 4.9, -9.7]}
-        fontSize={0.25}
-        color="#6b5a3f"
-        anchorX="center"
-        anchorY="middle"
-      >
-        Together we create real impact.
-      </Text>
+{/* Main dark museum panel */}
+<mesh position={[0, 4.3, -9.72]}>
+  <boxGeometry args={[12.8, 5.9, 0.18]} />
+  <meshStandardMaterial
+    color="#120d08"
+    roughness={0.46}
+    metalness={0.18}
+    emissive="#2a1606"
+    emissiveIntensity={0.08}
+  />
+</mesh>
 
+{/* Outer gold frame */}
+<mesh position={[0, 7.25, -9.60]}>
+  <boxGeometry args={[13.1, 0.08, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.65}
+    metalness={0.72}
+    roughness={0.22}
+  />
+</mesh>
+
+<mesh position={[0, 1.35, -9.60]}>
+  <boxGeometry args={[13.1, 0.08, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.72}
+    roughness={0.22}
+  />
+</mesh>
+
+<mesh position={[-6.52, 4.3, -9.60]}>
+  <boxGeometry args={[0.08, 5.95, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.72}
+    roughness={0.22}
+  />
+</mesh>
+
+<mesh position={[6.52, 4.3, -9.60]}>
+  <boxGeometry args={[0.08, 5.95, 0.08]} />
+  <meshStandardMaterial
+    color="#d7b56d"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.72}
+    roughness={0.22}
+  />
+</mesh>
+
+{/* Title */}
+<Text
+  position={[0, 6.35, -9.48]}
+  fontSize={0.62}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.08}
+>
+  HUMANITY IMPACT
+</Text>
+
+{/* Subtitle */}
+<Text
+  position={[0, 5.55, -9.48]}
+  fontSize={0.24}
+  color="#e5d6bb"
+  anchorX="center"
+  anchorY="middle"
+>
+  Together we create real impact.
+</Text>
+
+{/* Intro */}
+<Text
+  position={[0, 4.82, -9.48]}
+  fontSize={0.17}
+  color="#bda989"
+  anchorX="center"
+  anchorY="middle"
+  maxWidth={9.5}
+  textAlign="center"
+>
+  Every contribution to The Human Mosaic helps transform a global artwork into real-world action.
+</Text>
+
+{/* Divider */}
+<mesh position={[0, 4.18, -9.47]}>
+  <boxGeometry args={[9.8, 0.025, 0.03]} />
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={0.55}
+  />
+</mesh>
+
+{/* Placeholder labels */}
+<Text
+  position={[-4, 3.25, -9.46]}
+  fontSize={0.18}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.08}
+>
+  PEOPLE IN THE MOSAIC
+</Text>
+
+<Text
+  position={[0, 3.25, -9.46]}
+  fontSize={0.18}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.08}
+>
+  DONATIONS COMPLETED
+</Text>
+
+<Text
+  position={[4, 3.25, -9.46]}
+  fontSize={0.18}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+  letterSpacing={0.08}
+>
+  TOTAL DONATED
+</Text>
+
+{/* Temporary values */}
+<Text
+  position={[-4, 2.55, -9.46]}
+  fontSize={0.52}
+  color="#ffffff"
+  anchorX="center"
+  anchorY="middle"
+>
+  —
+</Text>
+
+<Text
+  position={[0, 2.55, -9.46]}
+  fontSize={0.52}
+  color="#ffffff"
+  anchorX="center"
+  anchorY="middle"
+>
+  —
+</Text>
+
+<Text
+  position={[4, 2.55, -9.46]}
+  fontSize={0.52}
+  color="#ffffff"
+  anchorX="center"
+  anchorY="middle"
+>
+  —
+</Text>
+      
       {/* Rear wall — HOME wall */}
 <mesh position={[0, 4, 10.85]}>
   <boxGeometry args={[22, 12, 0.28]} />
