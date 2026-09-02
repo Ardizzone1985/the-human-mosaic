@@ -23,8 +23,10 @@ export default function HumanityImpactRoom() {
 
   return (
     <>
-      <RoomShell theme={impactTheme} />
-
+      <RoomShell
+  theme={impactTheme}
+  hideFrontPanels={true}
+/>
       {/* HERO WALL — Humanity Impact */}
 
 {/* Main dark museum panel */}
