@@ -51,10 +51,12 @@ export default function HumanityImpactRoom() {
   <boxGeometry args={[22, 12, 0.28]} />
 
   <meshStandardMaterial
-    color="#1a1714"
-    roughness={0.72}
-    metalness={0.04}
-  />
+  color="#d8d0c3"
+  roughness={0.72}
+  metalness={0.04}
+  emissive="#f2efe8"
+  emissiveIntensity={0.02}
+/>
 </mesh>
 
       {/* HOME door */}
