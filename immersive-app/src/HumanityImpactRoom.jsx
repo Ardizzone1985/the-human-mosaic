@@ -5,6 +5,8 @@ import { supabase } from "./supabaseClient.js";
 
 export default function HumanityImpactRoom() {
   const [peopleInMosaic, setPeopleInMosaic] = useState(null);
+  const [donationsCompleted, setDonationsCompleted] = useState(null);
+const [totalDonated, setTotalDonated] = useState(null);
   const [doorHovered, setDoorHovered] = useState(false);
 
   function goHome() {
@@ -40,6 +42,32 @@ export default function HumanityImpactRoom() {
 
     loadPeopleInMosaic();
   }, []);
+
+  useEffect(() => {
+  async function loadImpactDonations() {
+    const { data, error } = await supabase
+      .from("impact_donations")
+      .select("amount, currency")
+      .eq("is_published", true);
+
+    if (error) {
+      console.error("Humanity Impact donations error:", error);
+      return;
+    }
+
+    const donations = data || [];
+
+    setDonationsCompleted(donations.length);
+
+    const total = donations.reduce((sum, donation) => {
+      return sum + Number(donation.amount || 0);
+    }, 0);
+
+    setTotalDonated(total);
+  }
+
+  loadImpactDonations();
+}, []);
 
   return (
     <>
@@ -206,9 +234,11 @@ export default function HumanityImpactRoom() {
   anchorX="center"
   anchorY="middle"
 >
-  —
+  {donationsCompleted === null
+    ? "—"
+    : donationsCompleted.toLocaleString("en-US")}
 </Text>
-
+      
 <Text
   position={[4, 2.55, -9.46]}
   fontSize={0.52}
@@ -216,7 +246,12 @@ export default function HumanityImpactRoom() {
   anchorX="center"
   anchorY="middle"
 >
-  —
+  {totalDonated === null
+    ? "—"
+    : `€${totalDonated.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })}`}
 </Text>
       
       {/* Rear wall — HOME wall */}
