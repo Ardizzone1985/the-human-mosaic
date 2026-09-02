@@ -46,6 +46,17 @@ export default function HumanityImpactRoom() {
         Together we create real impact.
       </Text>
 
+      {/* Rear wall — HOME wall */}
+<mesh position={[0, 4, 10.85]}>
+  <boxGeometry args={[22, 12, 0.28]} />
+
+  <meshStandardMaterial
+    color="#1a1714"
+    roughness={0.72}
+    metalness={0.04}
+  />
+</mesh>
+
       {/* HOME door */}
       <group
         position={[0, 0.55, 10.72]}
