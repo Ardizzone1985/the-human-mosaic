@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
+import { supabase } from "./supabaseClient.js";
 
 export default function HumanityImpactRoom() {
+  const [peopleInMosaic, setPeopleInMosaic] = useState(null);
   const [doorHovered, setDoorHovered] = useState(false);
 
   function goHome() {
@@ -20,6 +22,24 @@ export default function HumanityImpactRoom() {
     glow: "#d7b56d",
     side: "#6b5128",
   };
+
+    useEffect(() => {
+    async function loadPeopleInMosaic() {
+      const { count, error } = await supabase
+        .from("submissions")
+        .select("*", { count: "exact", head: true })
+        .eq("approval_status", "approved");
+
+      if (error) {
+        console.error("Humanity Impact people count error:", error);
+        return;
+      }
+
+      setPeopleInMosaic(count ?? 0);
+    }
+
+    loadPeopleInMosaic();
+  }, []);
 
   return (
     <>
@@ -174,7 +194,9 @@ export default function HumanityImpactRoom() {
   anchorX="center"
   anchorY="middle"
 >
-  —
+  {peopleInMosaic === null
+    ? "—"
+    : peopleInMosaic.toLocaleString("en-US")}
 </Text>
 
 <Text
