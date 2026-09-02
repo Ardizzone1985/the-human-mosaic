@@ -1354,7 +1354,25 @@ const isLobby = !currentRoom;
 ) : currentRoom === "Humanity Impact" ? (
   <>
     <HumanityImpactRoom />
+
+    <RoomCameraBounds />
+
+    <StreetViewControls
+      currentPointId="center"
+      targetPointId={humanityImpactTargetPointId}
+    />
+
     <StreetViewLookControls />
+
+    {ROOM_VIEWPOINTS.map((point) => (
+      <FloorArrow
+        key={point.id}
+        point={point}
+        onMove={(id) => {
+          setHumanityImpactTargetPointId(id);
+        }}
+      />
+    ))}
   </>
 ) : (
   <Room
