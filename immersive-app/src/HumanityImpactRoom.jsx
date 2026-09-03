@@ -992,6 +992,50 @@ const milestoneProgress =
   </Text>
 </group>
 
+      {/* IMPACT GLOBE — Center Sculpture */}
+
+<group position={[0, 3.15, 0]}>
+  {/* Outer dotted sphere */}
+  <mesh>
+    <sphereGeometry args={[1.45, 32, 32]} />
+
+    <meshBasicMaterial
+      color="#d7b56d"
+      wireframe
+      transparent
+      opacity={0.32}
+    />
+  </mesh>
+
+  {/* Inner glow */}
+  <mesh>
+    <sphereGeometry args={[1.12, 24, 24]} />
+
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={0.055}
+    />
+  </mesh>
+
+  {/* Central core */}
+  <mesh>
+    <sphereGeometry args={[0.11, 16, 16]} />
+
+    <meshBasicMaterial
+      color="#f4d68a"
+    />
+  </mesh>
+
+  {/* Soft halo */}
+  <pointLight
+    color="#d7b56d"
+    intensity={0.7}
+    distance={5}
+    decay={2}
+  />
+</group>
+
       {/* HOME door */}
       <group
         position={[0, 0.55, 10.55]}
