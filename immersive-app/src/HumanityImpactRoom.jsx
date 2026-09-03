@@ -1027,7 +1027,7 @@ const milestoneProgress =
 
 <group
   ref={globeRef}
-  position={[0, 3.15, 0]}
+  position={[0, 3.15, 1.2]}
 >
   {/* Golden particle sphere */}
   <points>
