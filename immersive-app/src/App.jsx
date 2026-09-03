@@ -632,20 +632,13 @@ useEffect(() => {
     ).get("room");
 
     /*
-     * A real browser / mobile Back action produces a trusted popstate.
-     * While the visitor is inside a museum room, prevent that action
-     * from bypassing the physical HOME door.
-     *
-     * Programmatic museum navigation uses dispatchEvent(new PopStateEvent),
-     * which is not trusted, so HOME navigation continues to work normally.
+     * Real browser/mobile Back:
+     * while inside a museum room, keep the visitor
+     * inside the same room.
      */
-    if (
-      event.isTrusted &&
-      roomParam &&
-      !nextRoom
-    ) {
+    if (event.isTrusted && roomParam) {
       window.history.pushState(
-        {},
+        { thmRoomGuard: true },
         "",
         `/?room=${encodeURIComponent(roomParam)}`
       );
@@ -653,6 +646,10 @@ useEffect(() => {
       return;
     }
 
+    /*
+     * Internal museum navigation:
+     * HOME doors and room navigation still work normally.
+     */
     setRoomParam(nextRoom);
   }
 
