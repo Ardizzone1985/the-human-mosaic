@@ -812,6 +812,186 @@ const milestoneProgress =
   </Text>
 </group>
 
+      {/* NEXT MILESTONE — Rear Wall Right */}
+
+<group
+  position={[5.2, 4.15, 10.66]}
+  rotation={[0, Math.PI, 0]}
+>
+  {/* Dark museum panel */}
+  <mesh>
+    <boxGeometry args={[6.2, 5.1, 0.16]} />
+    <meshStandardMaterial
+      color="#120d08"
+      roughness={0.48}
+      metalness={0.16}
+      emissive="#241407"
+      emissiveIntensity={0.07}
+    />
+  </mesh>
+
+  {/* Gold frame */}
+  <mesh position={[0, 2.57, 0.11]}>
+    <boxGeometry args={[6.35, 0.07, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.55}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[0, -2.57, 0.11]}>
+    <boxGeometry args={[6.35, 0.07, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[-3.17, 0, 0.11]}>
+    <boxGeometry args={[0.07, 5.15, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[3.17, 0, 0.11]}>
+    <boxGeometry args={[0.07, 5.15, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  {/* Heading */}
+  <Text
+    position={[0, 1.75, 0.16]}
+    fontSize={0.36}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.07}
+  >
+    NEXT MILESTONE
+  </Text>
+
+  <Text
+    position={[0, 1.25, 0.16]}
+    fontSize={0.15}
+    color="#d8c7ad"
+    anchorX="center"
+    anchorY="middle"
+  >
+    Our next step toward real-world impact.
+  </Text>
+
+  {/* Divider */}
+  <mesh position={[0, 0.72, 0.16]}>
+    <boxGeometry args={[4.8, 0.025, 0.025]} />
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={0.6}
+    />
+  </mesh>
+
+  {/* Current progress */}
+  <Text
+    position={[0, 0.15, 0.16]}
+    fontSize={0.38}
+    color="#ffffff"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {peopleInMosaic === null
+      ? "— / 1,000"
+      : `${peopleInMosaic.toLocaleString("en-US")} / 1,000`}
+  </Text>
+
+  <Text
+    position={[0, -0.28, 0.16]}
+    fontSize={0.14}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.08}
+  >
+    PARTICIPANTS
+  </Text>
+
+  {/* Progress bar background */}
+  <mesh position={[0, -0.88, 0.16]}>
+    <boxGeometry args={[4.8, 0.18, 0.035]} />
+    <meshBasicMaterial
+      color="#3a3024"
+      transparent
+      opacity={0.85}
+    />
+  </mesh>
+
+  {/* Progress bar fill */}
+  <mesh
+    position={[
+      -2.4 + (4.8 * milestoneProgress) / 200,
+      -0.88,
+      0.19,
+    ]}
+  >
+    <boxGeometry
+      args={[
+        (4.8 * milestoneProgress) / 100,
+        0.18,
+        0.04,
+      ]}
+    />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.7}
+      metalness={0.6}
+      roughness={0.2}
+    />
+  </mesh>
+
+  {/* Percentage */}
+  <Text
+    position={[0, -1.28, 0.16]}
+    fontSize={0.22}
+    color="#ffffff"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {peopleInMosaic === null
+      ? "—"
+      : `${milestoneProgress.toFixed(1)}%`}
+  </Text>
+
+  {/* Footer */}
+  <Text
+    position={[0, -1.75, 0.16]}
+    fontSize={0.14}
+    color="#bda989"
+    anchorX="center"
+    anchorY="middle"
+    maxWidth={5}
+    textAlign="center"
+  >
+    Every participant brings the Mosaic closer to the next impact milestone.
+  </Text>
+</group>
+
       {/* HOME door */}
       <group
         position={[0, 0.55, 10.55]}
