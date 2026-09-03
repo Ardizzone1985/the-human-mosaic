@@ -646,6 +646,166 @@ const [totalDonated, setTotalDonated] = useState(null);
 />
 </mesh>
 
+      {/* IMPACT TRANSPARENCY — Rear Wall Left */}
+
+<group
+  position={[-5.2, 4.15, 10.66]}
+  rotation={[0, Math.PI, 0]}
+>
+  {/* Dark museum panel */}
+  <mesh>
+    <boxGeometry args={[6.2, 5.1, 0.16]} />
+    <meshStandardMaterial
+      color="#120d08"
+      roughness={0.48}
+      metalness={0.16}
+      emissive="#241407"
+      emissiveIntensity={0.07}
+    />
+  </mesh>
+
+  {/* Gold frame */}
+  <mesh position={[0, 2.57, 0.11]}>
+    <boxGeometry args={[6.35, 0.07, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.55}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[0, -2.57, 0.11]}>
+    <boxGeometry args={[6.35, 0.07, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[-3.17, 0, 0.11]}>
+    <boxGeometry args={[0.07, 5.15, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[3.17, 0, 0.11]}>
+    <boxGeometry args={[0.07, 5.15, 0.07]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  {/* Heading */}
+  <Text
+    position={[0, 1.75, 0.16]}
+    fontSize={0.36}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.07}
+  >
+    IMPACT TRANSPARENCY
+  </Text>
+
+  <Text
+    position={[0, 1.25, 0.16]}
+    fontSize={0.15}
+    color="#d8c7ad"
+    anchorX="center"
+    anchorY="middle"
+  >
+    Every contribution. Clearly documented.
+  </Text>
+
+  {/* Divider */}
+  <mesh position={[0, 0.72, 0.16]}>
+    <boxGeometry args={[4.8, 0.025, 0.025]} />
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={0.6}
+    />
+  </mesh>
+
+  {/* Total donated */}
+  <Text
+    position={[-1.65, 0.15, 0.16]}
+    fontSize={0.14}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.06}
+  >
+    TOTAL DONATED
+  </Text>
+
+  <Text
+    position={[-1.65, -0.35, 0.16]}
+    fontSize={0.42}
+    color="#ffffff"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {totalDonated === null
+      ? "—"
+      : `€${totalDonated.toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        })}`}
+  </Text>
+
+  {/* Contributions */}
+  <Text
+    position={[1.65, 0.15, 0.16]}
+    fontSize={0.14}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.06}
+  >
+    CONTRIBUTIONS
+  </Text>
+
+  <Text
+    position={[1.65, -0.35, 0.16]}
+    fontSize={0.42}
+    color="#ffffff"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {donationsCompleted === null
+      ? "—"
+      : donationsCompleted.toLocaleString("en-US")}
+  </Text>
+
+  {/* Footer */}
+  <Text
+    position={[0, -1.45, 0.16]}
+    fontSize={0.14}
+    color="#bda989"
+    anchorX="center"
+    anchorY="middle"
+    maxWidth={5}
+    textAlign="center"
+  >
+    Published contributions are recorded in the Impact Journey.
+  </Text>
+</group>
+
       {/* HOME door */}
       <group
         position={[0, 0.55, 10.55]}
