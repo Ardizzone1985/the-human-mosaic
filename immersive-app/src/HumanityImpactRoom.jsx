@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Text } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import { supabase } from "./supabaseClient.js";
@@ -10,6 +10,29 @@ const [totalDonated, setTotalDonated] = useState(null);
   const [impactDonations, setImpactDonations] = useState([]);
   const [doorHovered, setDoorHovered] = useState(false);
   const milestoneTarget = 1000;
+  const globePoints = useMemo(() => {
+  const points = [];
+  const count = 420;
+  const radius = 1.45;
+
+  for (let i = 0; i < count; i++) {
+    const y = 1 - (i / (count - 1)) * 2;
+    const radiusAtY = Math.sqrt(1 - y * y);
+
+    const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+
+    const x = Math.cos(theta) * radiusAtY;
+    const z = Math.sin(theta) * radiusAtY;
+
+    points.push(
+      x * radius,
+      y * radius,
+      z * radius
+    );
+  }
+
+  return new Float32Array(points);
+}, []);
 
 const milestoneProgress =
   peopleInMosaic === null
@@ -995,43 +1018,46 @@ const milestoneProgress =
       {/* IMPACT GLOBE — Center Sculpture */}
 
 <group position={[0, 3.15, 0]}>
-  {/* Outer dotted sphere */}
-  <mesh>
-    <sphereGeometry args={[1.45, 32, 32]} />
+  {/* Golden particle sphere */}
+  <points>
+    <bufferGeometry>
+      <bufferAttribute
+        attach="attributes-position"
+        args={[globePoints, 3]}
+      />
+    </bufferGeometry>
 
-    <meshBasicMaterial
-      color="#d7b56d"
-      wireframe
+    <pointsMaterial
+      color="#e4c675"
+      size={0.055}
+      sizeAttenuation
       transparent
-      opacity={0.32}
+      opacity={0.88}
+      depthWrite={false}
     />
-  </mesh>
-
-  {/* Inner glow */}
-  <mesh>
-    <sphereGeometry args={[1.12, 24, 24]} />
-
-    <meshBasicMaterial
-      color="#d7b56d"
-      transparent
-      opacity={0.055}
-    />
-  </mesh>
+  </points>
 
   {/* Central core */}
   <mesh>
-    <sphereGeometry args={[0.11, 16, 16]} />
+    <sphereGeometry args={[0.09, 16, 16]} />
+    <meshBasicMaterial color="#f4d68a" />
+  </mesh>
 
+  {/* Subtle inner halo */}
+  <mesh>
+    <sphereGeometry args={[0.72, 20, 20]} />
     <meshBasicMaterial
-      color="#f4d68a"
+      color="#d7b56d"
+      transparent
+      opacity={0.025}
+      depthWrite={false}
     />
   </mesh>
 
-  {/* Soft halo */}
   <pointLight
     color="#d7b56d"
-    intensity={0.7}
-    distance={5}
+    intensity={0.45}
+    distance={4}
     decay={2}
   />
 </group>
