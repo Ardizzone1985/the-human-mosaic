@@ -439,6 +439,199 @@ const [totalDonated, setTotalDonated] = useState(null);
   );
 })}
 </group>
+
+      {/* OUR COMMITMENT — Right Wall */}
+
+<group
+  position={[10.72, 4.3, 0.2]}
+  rotation={[0, -Math.PI / 2, 0]}
+>
+  {/* Main dark museum panel */}
+  <mesh>
+    <boxGeometry args={[12.8, 6.6, 0.18]} />
+    <meshStandardMaterial
+      color="#120d08"
+      roughness={0.48}
+      metalness={0.16}
+      emissive="#241407"
+      emissiveIntensity={0.07}
+    />
+  </mesh>
+
+  {/* Gold frame */}
+  <mesh position={[0, 3.32, 0.12]}>
+    <boxGeometry args={[13.05, 0.08, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.55}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[0, -3.32, 0.12]}>
+    <boxGeometry args={[13.05, 0.08, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[-6.52, 0, 0.12]}>
+    <boxGeometry args={[0.08, 6.65, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[6.52, 0, 0.12]}>
+    <boxGeometry args={[0.08, 6.65, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  {/* Heading */}
+  <Text
+    position={[0, 2.55, 0.18]}
+    fontSize={0.52}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.08}
+  >
+    OUR COMMITMENT
+  </Text>
+
+  <Text
+    position={[0, 1.95, 0.18]}
+    fontSize={0.19}
+    color="#d8c7ad"
+    anchorX="center"
+    anchorY="middle"
+  >
+    Participation becomes real-world action.
+  </Text>
+
+  {/* Intro */}
+  <Text
+    position={[0, 1.15, 0.18]}
+    fontSize={0.17}
+    color="#bda989"
+    anchorX="center"
+    anchorY="middle"
+    maxWidth={9.5}
+    textAlign="center"
+    lineHeight={1.45}
+  >
+    The Human Mosaic is committed to transforming the growth of this global artwork into meaningful contributions for humanity and the planet.
+  </Text>
+
+  {/* Divider */}
+  <mesh position={[0, 0.35, 0.18]}>
+    <boxGeometry args={[9.8, 0.03, 0.03]} />
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={0.6}
+    />
+  </mesh>
+
+  {/* Milestone 1 */}
+  <group position={[-3.4, -1.05, 0.18]}>
+    <Text
+      position={[0, 0.45, 0]}
+      fontSize={0.30}
+      color="#ffffff"
+      anchorX="center"
+      anchorY="middle"
+    >
+      1,000
+    </Text>
+
+    <Text
+      position={[0, 0, 0]}
+      fontSize={0.16}
+      color="#f2c879"
+      anchorX="center"
+      anchorY="middle"
+      letterSpacing={0.08}
+    >
+      PARTICIPANTS
+    </Text>
+
+    <Text
+      position={[0, -0.52, 0]}
+      fontSize={0.14}
+      color="#d8c7ad"
+      anchorX="center"
+      anchorY="middle"
+      maxWidth={3.0}
+      textAlign="center"
+    >
+      A new impact milestone is activated.
+    </Text>
+  </group>
+
+  {/* Arrow / transformation */}
+  <Text
+    position={[0, -1.02, 0.18]}
+    fontSize={0.42}
+    color="#d7b56d"
+    anchorX="center"
+    anchorY="middle"
+  >
+    →
+  </Text>
+
+  {/* Impact outcome */}
+  <group position={[3.4, -1.05, 0.18]}>
+    <Text
+      position={[0, 0.45, 0]}
+      fontSize={0.26}
+      color="#ffffff"
+      anchorX="center"
+      anchorY="middle"
+    >
+      REAL IMPACT
+    </Text>
+
+    <Text
+      position={[0, -0.05, 0]}
+      fontSize={0.16}
+      color="#f2c879"
+      anchorX="center"
+      anchorY="middle"
+      letterSpacing={0.06}
+    >
+      HUMANITY + PLANET
+    </Text>
+
+    <Text
+      position={[0, -0.55, 0]}
+      fontSize={0.14}
+      color="#d8c7ad"
+      anchorX="center"
+      anchorY="middle"
+      maxWidth={3.2}
+      textAlign="center"
+    >
+      Contributions are directed toward humanitarian and environmental causes.
+    </Text>
+  </group>
+</group>
       
       {/* Rear wall — HOME wall */}
 <mesh position={[0, 4, 10.85]}>
