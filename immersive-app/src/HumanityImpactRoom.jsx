@@ -7,6 +7,7 @@ export default function HumanityImpactRoom() {
   const [peopleInMosaic, setPeopleInMosaic] = useState(null);
   const [donationsCompleted, setDonationsCompleted] = useState(null);
 const [totalDonated, setTotalDonated] = useState(null);
+  const [impactDonations, setImpactDonations] = useState([]);
   const [doorHovered, setDoorHovered] = useState(false);
 
   function goHome() {
@@ -47,8 +48,9 @@ const [totalDonated, setTotalDonated] = useState(null);
   async function loadImpactDonations() {
     const { data, error } = await supabase
       .from("impact_donations")
-      .select("amount, currency")
-      .eq("is_published", true);
+      .select("id, organization_name, donation_date, amount, currency")
+.eq("is_published", true)
+.order("donation_date", { ascending: true });
 
     if (error) {
       console.error("Humanity Impact donations error:", error);
@@ -56,6 +58,7 @@ const [totalDonated, setTotalDonated] = useState(null);
     }
 
     const donations = data || [];
+    setImpactDonations(donations);
 
     setDonationsCompleted(donations.length);
 
@@ -350,83 +353,91 @@ const [totalDonated, setTotalDonated] = useState(null);
     />
   </mesh>
 
-  {/* Timeline point 1 */}
-  <mesh position={[-3.2, 0.2, 0.23]}>
-    <sphereGeometry args={[0.13, 24, 24]} />
-    <meshStandardMaterial
-      color="#f2c879"
-      emissive="#d7b56d"
-      emissiveIntensity={0.75}
-      metalness={0.65}
-      roughness={0.2}
-    />
-  </mesh>
+  {/* Dynamic Impact Journey */}
+{impactDonations.map((donation, index) => {
+  const count = impactDonations.length;
 
-  <Text
-    position={[-3.2, -0.45, 0.20]}
-    fontSize={0.20}
-    color="#f2c879"
-    anchorX="center"
-  >
-    06 JUNE 2026
-  </Text>
+  const x =
+    count === 1
+      ? 0
+      : -4.2 + (index * 8.4) / (count - 1);
 
-  <Text
-    position={[-3.2, -1.0, 0.20]}
-    fontSize={0.24}
-    color="#ffffff"
-    anchorX="center"
-  >
-    SAVE THE CHILDREN
-  </Text>
+  const [year, month, day] =
+    donation.donation_date.split("-");
 
-  <Text
-    position={[-3.2, -1.48, 0.20]}
-    fontSize={0.32}
-    color="#ffffff"
-    anchorX="center"
-  >
-    €15
-  </Text>
+  const monthNames = [
+    "JANUARY",
+    "FEBRUARY",
+    "MARCH",
+    "APRIL",
+    "MAY",
+    "JUNE",
+    "JULY",
+    "AUGUST",
+    "SEPTEMBER",
+    "OCTOBER",
+    "NOVEMBER",
+    "DECEMBER",
+  ];
 
-  {/* Timeline point 2 */}
-  <mesh position={[3.2, 0.2, 0.23]}>
-    <sphereGeometry args={[0.13, 24, 24]} />
-    <meshStandardMaterial
-      color="#f2c879"
-      emissive="#d7b56d"
-      emissiveIntensity={0.75}
-      metalness={0.65}
-      roughness={0.2}
-    />
-  </mesh>
+  const formattedDate =
+    `${day} ${monthNames[Number(month) - 1]} ${year}`;
 
-  <Text
-    position={[3.2, -0.45, 0.20]}
-    fontSize={0.20}
-    color="#f2c879"
-    anchorX="center"
-  >
-    06 JUNE 2026
-  </Text>
+  const amount = Number(donation.amount || 0);
 
-  <Text
-    position={[3.2, -1.0, 0.20]}
-    fontSize={0.24}
-    color="#ffffff"
-    anchorX="center"
-  >
-    WWF
-  </Text>
+  return (
+    <group key={donation.id}>
+      {/* Timeline point */}
+      <mesh position={[x, 0.2, 0.23]}>
+        <sphereGeometry args={[0.13, 24, 24]} />
+        <meshStandardMaterial
+          color="#f2c879"
+          emissive="#d7b56d"
+          emissiveIntensity={0.75}
+          metalness={0.65}
+          roughness={0.2}
+        />
+      </mesh>
 
-  <Text
-    position={[3.2, -1.48, 0.20]}
-    fontSize={0.32}
-    color="#ffffff"
-    anchorX="center"
-  >
-    €30
-  </Text>
+      {/* Date */}
+      <Text
+        position={[x, -0.45, 0.20]}
+        fontSize={0.20}
+        color="#f2c879"
+        anchorX="center"
+      >
+        {formattedDate}
+      </Text>
+
+      {/* Organization */}
+      <Text
+        position={[x, -1.0, 0.20]}
+        fontSize={0.24}
+        color="#ffffff"
+        anchorX="center"
+        maxWidth={3.2}
+        textAlign="center"
+      >
+        {donation.organization_name.toUpperCase()}
+      </Text>
+
+      {/* Amount */}
+      <Text
+        position={[x, -1.48, 0.20]}
+        fontSize={0.32}
+        color="#ffffff"
+        anchorX="center"
+      >
+        {donation.currency === "EUR"
+          ? `€${amount.toLocaleString("en-US", {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            })}`
+          : `${amount.toLocaleString("en-US")} ${donation.currency}`}
+      </Text>
+    </group>
+  );
+})}
 </group>
       
       {/* Rear wall — HOME wall */}
