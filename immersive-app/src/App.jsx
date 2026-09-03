@@ -490,7 +490,7 @@ closeDialog,
   
   const [lobbyTargetPointId, setLobbyTargetPointId] = useState("center");
   const [humanityImpactTargetPointId, setHumanityImpactTargetPointId] =
-  useState("center");
+  useState("back");
   const [showMobileTutorial, setShowMobileTutorial] = useState(() => {
   return localStorage.getItem("humanMosaicMobileTutorialSeen") !== "true";
 });
@@ -1358,9 +1358,9 @@ const isLobby = !currentRoom;
     <RoomCameraBounds />
 
     <StreetViewControls
-      currentPointId="center"
-      targetPointId={humanityImpactTargetPointId}
-    />
+  currentPointId="back"
+  targetPointId={humanityImpactTargetPointId}
+/>
 
     <StreetViewLookControls />
 
