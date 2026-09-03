@@ -626,13 +626,45 @@ useEffect(() => {
 });
 
 useEffect(() => {
-  function handleRouteChange() {
-    setRoomParam(new URLSearchParams(window.location.search).get("room"));
+  function handleRouteChange(event) {
+    const nextRoom = new URLSearchParams(
+      window.location.search
+    ).get("room");
+
+    /*
+     * A real browser / mobile Back action produces a trusted popstate.
+     * While the visitor is inside a museum room, prevent that action
+     * from bypassing the physical HOME door.
+     *
+     * Programmatic museum navigation uses dispatchEvent(new PopStateEvent),
+     * which is not trusted, so HOME navigation continues to work normally.
+     */
+    if (
+      event.isTrusted &&
+      roomParam &&
+      !nextRoom
+    ) {
+      window.history.pushState(
+        {},
+        "",
+        `/?room=${encodeURIComponent(roomParam)}`
+      );
+
+      return;
+    }
+
+    setRoomParam(nextRoom);
   }
 
   window.addEventListener("popstate", handleRouteChange);
-  return () => window.removeEventListener("popstate", handleRouteChange);
-}, []);
+
+  return () => {
+    window.removeEventListener(
+      "popstate",
+      handleRouteChange
+    );
+  };
+}, [roomParam]);
 
   useEffect(() => {
   setFadeIn(false);
