@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Text } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import { supabase } from "./supabaseClient.js";
+import { useFrame } from "@react-three/fiber";
 
 export default function HumanityImpactRoom() {
   const [peopleInMosaic, setPeopleInMosaic] = useState(null);
@@ -9,6 +10,7 @@ export default function HumanityImpactRoom() {
 const [totalDonated, setTotalDonated] = useState(null);
   const [impactDonations, setImpactDonations] = useState([]);
   const [doorHovered, setDoorHovered] = useState(false);
+  const globeRef = useRef();
   const milestoneTarget = 1000;
   const globePoints = useMemo(() => {
   const points = [];
@@ -100,6 +102,12 @@ const milestoneProgress =
 
   loadImpactDonations();
 }, []);
+
+  useFrame((_, delta) => {
+  if (!globeRef.current) return;
+
+  globeRef.current.rotation.y += delta * 0.08;
+});
 
   return (
     <>
@@ -1017,7 +1025,10 @@ const milestoneProgress =
 
       {/* IMPACT GLOBE — Center Sculpture */}
 
-<group position={[0, 3.15, 0]}>
+<group
+  ref={globeRef}
+  position={[0, 3.15, 0]}
+>
   {/* Golden particle sphere */}
   <points>
     <bufferGeometry>
