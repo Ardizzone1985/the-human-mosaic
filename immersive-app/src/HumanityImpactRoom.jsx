@@ -9,6 +9,12 @@ export default function HumanityImpactRoom() {
 const [totalDonated, setTotalDonated] = useState(null);
   const [impactDonations, setImpactDonations] = useState([]);
   const [doorHovered, setDoorHovered] = useState(false);
+  const milestoneTarget = 1000;
+
+const milestoneProgress =
+  peopleInMosaic === null
+    ? 0
+    : Math.min((peopleInMosaic / milestoneTarget) * 100, 100);
 
   function goHome() {
     window.dispatchEvent(new Event("startFadeOut"));
