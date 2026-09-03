@@ -253,6 +253,181 @@ const [totalDonated, setTotalDonated] = useState(null);
         maximumFractionDigits: 2,
       })}`}
 </Text>
+
+      {/* IMPACT JOURNEY — Left Wall */}
+
+{/* Main timeline panel */}
+<group
+  position={[-10.72, 4.3, 0.2]}
+  rotation={[0, Math.PI / 2, 0]}
+>
+  {/* Dark museum panel */}
+  <mesh>
+    <boxGeometry args={[12.8, 6.6, 0.18]} />
+    <meshStandardMaterial
+      color="#120d08"
+      roughness={0.48}
+      metalness={0.16}
+      emissive="#241407"
+      emissiveIntensity={0.07}
+    />
+  </mesh>
+
+  {/* Gold frame */}
+  <mesh position={[0, 3.32, 0.12]}>
+    <boxGeometry args={[13.05, 0.08, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.55}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[0, -3.32, 0.12]}>
+    <boxGeometry args={[13.05, 0.08, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[-6.52, 0, 0.12]}>
+    <boxGeometry args={[0.08, 6.65, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  <mesh position={[6.52, 0, 0.12]}>
+    <boxGeometry args={[0.08, 6.65, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.4}
+      metalness={0.7}
+      roughness={0.22}
+    />
+  </mesh>
+
+  {/* Heading */}
+  <Text
+    position={[0, 2.55, 0.18]}
+    fontSize={0.52}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.08}
+  >
+    IMPACT JOURNEY
+  </Text>
+
+  <Text
+    position={[0, 1.95, 0.18]}
+    fontSize={0.19}
+    color="#d8c7ad"
+    anchorX="center"
+    anchorY="middle"
+  >
+    Real actions. Real contributions. Real impact.
+  </Text>
+
+  {/* Timeline */}
+  <mesh position={[0, 0.2, 0.18]}>
+    <boxGeometry args={[9.8, 0.035, 0.035]} />
+    <meshBasicMaterial
+      color="#d7b56d"
+      transparent
+      opacity={0.65}
+    />
+  </mesh>
+
+  {/* Timeline point 1 */}
+  <mesh position={[-3.2, 0.2, 0.23]}>
+    <sphereGeometry args={[0.13, 24, 24]} />
+    <meshStandardMaterial
+      color="#f2c879"
+      emissive="#d7b56d"
+      emissiveIntensity={0.75}
+      metalness={0.65}
+      roughness={0.2}
+    />
+  </mesh>
+
+  <Text
+    position={[-3.2, -0.45, 0.20]}
+    fontSize={0.20}
+    color="#f2c879"
+    anchorX="center"
+  >
+    06 JUNE 2026
+  </Text>
+
+  <Text
+    position={[-3.2, -1.0, 0.20]}
+    fontSize={0.24}
+    color="#ffffff"
+    anchorX="center"
+  >
+    SAVE THE CHILDREN
+  </Text>
+
+  <Text
+    position={[-3.2, -1.48, 0.20]}
+    fontSize={0.32}
+    color="#ffffff"
+    anchorX="center"
+  >
+    €15
+  </Text>
+
+  {/* Timeline point 2 */}
+  <mesh position={[3.2, 0.2, 0.23]}>
+    <sphereGeometry args={[0.13, 24, 24]} />
+    <meshStandardMaterial
+      color="#f2c879"
+      emissive="#d7b56d"
+      emissiveIntensity={0.75}
+      metalness={0.65}
+      roughness={0.2}
+    />
+  </mesh>
+
+  <Text
+    position={[3.2, -0.45, 0.20]}
+    fontSize={0.20}
+    color="#f2c879"
+    anchorX="center"
+  >
+    06 JUNE 2026
+  </Text>
+
+  <Text
+    position={[3.2, -1.0, 0.20]}
+    fontSize={0.24}
+    color="#ffffff"
+    anchorX="center"
+  >
+    WWF
+  </Text>
+
+  <Text
+    position={[3.2, -1.48, 0.20]}
+    fontSize={0.32}
+    color="#ffffff"
+    anchorX="center"
+  >
+    €30
+  </Text>
+</group>
       
       {/* Rear wall — HOME wall */}
 <mesh position={[0, 4, 10.85]}>
