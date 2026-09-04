@@ -1024,6 +1024,15 @@ const milestoneProgress =
   </Text>
 </group>
 
+      {/* PARTNER SPACE — Left Side */}
+<SponsorPanel
+  position={[-10.58, 3.35, 8.15]}
+  rotation={[0, Math.PI / 2, 0]}
+  label="PARTNER SPACE"
+  placement="humanity-impact-left"
+  layout="vertical"
+/>
+
       {/* IMPACT GLOBE — Center Sculpture */}
 
 <group
