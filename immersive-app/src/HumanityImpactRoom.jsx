@@ -1033,6 +1033,15 @@ const milestoneProgress =
   layout="vertical"
 />
 
+      {/* PARTNER SPACE — Right Side */}
+<SponsorPanel
+  position={[10.58, 3.35, 8.15]}
+  rotation={[0, -Math.PI / 2, 0]}
+  label="PARTNER SPACE"
+  placement="humanity-impact-right"
+  layout="vertical"
+/>
+
       {/* IMPACT GLOBE — Center Sculpture */}
 
 <group
