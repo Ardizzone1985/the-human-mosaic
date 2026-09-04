@@ -523,6 +523,51 @@ async function activateSponsorCampaign(
         campaign.ends_at,
     }
   );
+  /*
+ * Send the private Sponsor Dashboard link
+ * only after the campaign has been created successfully.
+ *
+ * Email failure must never invalidate the payment
+ * or the active campaign.
+ */
+try {
+  await sendSponsorActivationEmail({
+    email:
+      sponsorRequest.email,
+
+    contactName:
+      sponsorRequest.contact_name,
+
+    company,
+
+    planName:
+      sponsorRequest
+        .sponsor_plans
+        ?.name ||
+      `${company} Partner`,
+
+    placement,
+
+    startsAt:
+      campaign.starts_at,
+
+    endsAt:
+      campaign.ends_at,
+
+    portalToken:
+      campaign.portal_token,
+  });
+
+  console.log(
+    "✅ Sponsor activation email processed:",
+    sponsorRequest.email
+  );
+} catch (emailError) {
+  console.error(
+    "❌ Sponsor activation email error:",
+    emailError
+  );
+}
 }
 
 export default async function handler(
