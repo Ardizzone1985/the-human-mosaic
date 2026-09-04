@@ -390,30 +390,66 @@ if (rejectionReason.length > 1000) {
     let updateData;
 
     if (action === "approve") {
-      const selectedPlan =
-        sponsorRequest.sponsor_plans || null;
+  const selectedPlan =
+    sponsorRequest.sponsor_plans || null;
 
-      const paymentExpiresAt = new Date(
-  Date.now() + 48 * 60 * 60 * 1000
-).toISOString();
+  const paymentExpiresAt = new Date(
+    Date.now() + 48 * 60 * 60 * 1000
+  ).toISOString();
 
-      updateData = {
-        status: "approved",
-        payment_status: "pending",
-        rejection_reason: null,
-        reviewed_at: reviewedAt,
-        payment_expires_at: paymentExpiresAt,
-        approved_placement:
-          sponsorRequest.requested_placement ||
-          selectedPlan?.placement ||
-          null,
-        quoted_price_cents:
-          selectedPlan?.price_cents ?? null,
-        currency:
-          selectedPlan?.currency ||
-          sponsorRequest.currency ||
-          "EUR",
-      };
+  let approvedPlacement =
+    sponsorRequest.requested_placement ||
+    selectedPlan?.placement ||
+    null;
+
+  /*
+   * Humanity Impact has two distinct physical
+   * Partner Spaces. Assign the first currently
+   * available one automatically.
+   */
+  if (
+    selectedPlan?.room === "humanity-impact"
+  ) {
+    try {
+      approvedPlacement =
+        await getAvailableHumanityImpactPlacement(
+          supabaseAdmin,
+          sponsorRequest.id
+        );
+    } catch (error) {
+      console.error(
+        "Humanity Impact placement assignment error:",
+        error
+      );
+
+      return res.status(500).json({
+        error:
+          "Unable to verify Humanity Impact availability",
+      });
+    }
+
+    if (!approvedPlacement) {
+      return res.status(409).json({
+        error:
+          "No Humanity Impact Partner Space is currently available",
+      });
+    }
+  }
+
+  updateData = {
+    status: "approved",
+    payment_status: "pending",
+    rejection_reason: null,
+    reviewed_at: reviewedAt,
+    payment_expires_at: paymentExpiresAt,
+    approved_placement: approvedPlacement,
+    quoted_price_cents:
+      selectedPlan?.price_cents ?? null,
+    currency:
+      selectedPlan?.currency ||
+      sponsorRequest.currency ||
+      "EUR",
+  };
     } else {
       updateData = {
   status: "rejected",
