@@ -124,6 +124,121 @@ async function getRequestBody(req) {
   return {};
 }
 
+async function getAvailableHumanityImpactPlacement(
+  supabaseAdmin,
+  currentRequestId = null
+) {
+  const humanityImpactPlacements = [
+    "humanity-impact-left",
+    "humanity-impact-right",
+  ];
+
+  const now = new Date().toISOString();
+
+  /*
+   * Load approved Humanity Impact requests that may
+   * currently reserve one of the two physical placements.
+   */
+  let requestsQuery = supabaseAdmin
+    .from("sponsor_requests")
+    .select(`
+      id,
+      approved_placement,
+      payment_status,
+      payment_expires_at
+    `)
+    .eq("status", "approved")
+    .in(
+      "approved_placement",
+      humanityImpactPlacements
+    );
+
+  if (currentRequestId) {
+    requestsQuery = requestsQuery.neq(
+      "id",
+      currentRequestId
+    );
+  }
+
+  const {
+    data: approvedRequests,
+    error: requestsError,
+  } = await requestsQuery;
+
+  if (requestsError) {
+    console.error(
+      "Humanity Impact placement lookup error:",
+      requestsError
+    );
+
+    throw new Error(
+      "Unable to verify Humanity Impact availability"
+    );
+  }
+
+  const occupiedPlacements = new Set();
+
+  for (const request of approvedRequests || []) {
+    /*
+     * An approved request with a still-valid payment
+     * window temporarily reserves its placement.
+     */
+    if (
+      request.payment_status === "pending" &&
+      request.payment_expires_at &&
+      request.payment_expires_at > now
+    ) {
+      occupiedPlacements.add(
+        request.approved_placement
+      );
+
+      continue;
+    }
+
+    /*
+     * A paid request occupies the placement only while
+     * its corresponding campaign is currently active.
+     */
+    if (request.payment_status === "paid") {
+      const {
+        data: activeCampaign,
+        error: campaignError,
+      } = await supabaseAdmin
+        .from("sponsor_campaigns")
+        .select("id")
+        .eq("request_id", request.id)
+        .eq("status", "active")
+        .lte("starts_at", now)
+        .gt("ends_at", now)
+        .maybeSingle();
+
+      if (campaignError) {
+        console.error(
+          "Humanity Impact campaign lookup error:",
+          campaignError
+        );
+
+        throw new Error(
+          "Unable to verify Humanity Impact campaign availability"
+        );
+      }
+
+      if (activeCampaign) {
+        occupiedPlacements.add(
+          request.approved_placement
+        );
+      }
+    }
+  }
+
+  return (
+    humanityImpactPlacements.find(
+      (placement) =>
+        !occupiedPlacements.has(placement)
+    ) || null
+  );
+}
+
 export default async function handler(req, res) {
   if (!isValidAdminSession(req)) {
     return res.status(401).json({
