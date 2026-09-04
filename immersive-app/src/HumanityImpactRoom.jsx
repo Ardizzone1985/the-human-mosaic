@@ -3,6 +3,7 @@ import { Text } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import { supabase } from "./supabaseClient.js";
 import { useFrame } from "@react-three/fiber";
+import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
 
 export default function HumanityImpactRoom() {
   const [peopleInMosaic, setPeopleInMosaic] = useState(null);
