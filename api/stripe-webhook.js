@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { Resend } from "resend";
 
 export const config = {
   api: {
@@ -110,6 +111,172 @@ function slugifyCompany(value) {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+async function sendSponsorActivationEmail({
+  email,
+  contactName,
+  company,
+  planName,
+  placement,
+  startsAt,
+  endsAt,
+  portalToken,
+}) {
+  if (!email || !portalToken) {
+    console.error(
+      "❌ Missing sponsor email or portal token"
+    );
+    return;
+  }
+
+  const resendApiKey =
+    process.env.RESEND_API_KEY;
+
+  if (!resendApiKey) {
+    console.error(
+      "❌ Missing RESEND_API_KEY — sponsor activation email not sent"
+    );
+    return;
+  }
+
+  const resend =
+    new Resend(resendApiKey);
+
+  const portalUrl =
+    `https://thehumanmosaic.art/sponsor-portal.html?token=${encodeURIComponent(
+      portalToken
+    )}`;
+
+  const formatDate = (value) =>
+    new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(value));
+
+  await resend.emails.send({
+    from:
+      "The Human Mosaic <info@mail.thehumanmosaic.art>",
+
+    to: [email],
+
+    subject:
+      "Your partnership is now live — The Human Mosaic",
+
+    html: `
+      <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.6;color:#1f1f1f;max-width:680px;margin:0 auto;padding:24px;">
+        <div style="background:#ffffff;border:1px solid #e8e8e8;border-radius:20px;padding:32px;">
+
+          <p style="font-size:12px;letter-spacing:0.14em;color:#777;margin:0 0 18px;">
+            ONE HUMANITY. MILLIONS OF FACES. ONE MOSAIC.
+          </p>
+
+          <h2 style="margin:0 0 18px;font-size:28px;line-height:1.2;">
+            Your partnership is now live
+          </h2>
+
+          <p>
+            Hello ${contactName || company || "Partner"},
+          </p>
+
+          <p style="color:#555;">
+            Thank you for supporting
+            <strong>The Human Mosaic</strong>.
+            Your partnership campaign is now active.
+          </p>
+
+          <hr style="border:none;border-top:1px solid #e3e3e3;margin:24px 0;">
+
+          <p>
+            <strong>Organization:</strong>
+            ${company || "—"}
+          </p>
+
+          <p>
+            <strong>Partnership:</strong>
+            ${planName || "The Human Mosaic Partner"}
+          </p>
+
+          <p>
+            <strong>Placement:</strong>
+            ${placement || "—"}
+          </p>
+
+          <p>
+            <strong>Campaign period:</strong>
+            ${formatDate(startsAt)} – ${formatDate(endsAt)}
+          </p>
+
+          <hr style="border:none;border-top:1px solid #e3e3e3;margin:24px 0;">
+
+          <h3 style="margin-bottom:8px;">
+            Private Performance Dashboard
+          </h3>
+
+          <p style="color:#555;">
+            Follow your campaign performance, including
+            views, website clicks and click-through rate.
+          </p>
+
+          <p style="margin:24px 0;">
+            <a
+              href="${portalUrl}"
+              style="display:inline-block;padding:14px 22px;background:#111;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;"
+            >
+              OPEN PRIVATE DASHBOARD
+            </a>
+          </p>
+
+          <p style="font-size:14px;color:#666;">
+            This dashboard link is private. Please keep it
+            secure and do not share it publicly.
+          </p>
+
+          <p style="margin-top:24px;">
+            For questions or support:
+            <a
+              href="mailto:info@thehumanmosaic.art"
+              style="color:#111;text-decoration:none;font-weight:700;"
+            >
+              info@thehumanmosaic.art
+            </a>
+          </p>
+
+          <p style="margin-top:24px;font-weight:700;">
+            — The Human Mosaic
+          </p>
+
+        </div>
+      </div>
+    `,
+
+    text: `
+Your partnership is now live
+
+Hello ${contactName || company || "Partner"},
+
+Thank you for supporting The Human Mosaic.
+Your partnership campaign is now active.
+
+Organization: ${company || "—"}
+Partnership: ${planName || "The Human Mosaic Partner"}
+Placement: ${placement || "—"}
+Campaign period: ${formatDate(startsAt)} – ${formatDate(endsAt)}
+
+Private Performance Dashboard:
+${portalUrl}
+
+Follow your campaign performance, including views, website clicks and click-through rate.
+
+This dashboard link is private. Please keep it secure and do not share it publicly.
+
+Support: info@thehumanmosaic.art
+
+— The Human Mosaic
+    `.trim(),
+  });
 }
 
 async function activateSponsorCampaign(
