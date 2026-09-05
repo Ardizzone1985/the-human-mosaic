@@ -1432,10 +1432,54 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
 }
 
     function editImpactDonation(id) {
-  console.log(
-    "Impact donation edit requested:",
-    id
+  const donation = impactDonationsData.find(
+    (item) => item.id === id
   );
+
+  if (!donation) {
+    alert("Donation not found.");
+    return;
+  }
+
+  document.getElementById("editingImpactDonationId").value =
+    donation.id;
+
+  document.getElementById("impactTitle").value =
+    donation.title || "";
+
+  document.getElementById("impactOrganization").value =
+    donation.organization_name || "";
+
+  document.getElementById("impactCause").value =
+    donation.cause || "";
+
+  document.getElementById("impactDonationDate").value =
+    donation.donation_date || "";
+
+  document.getElementById("impactAmount").value =
+    donation.amount ?? "";
+
+  document.getElementById("impactCurrency").value =
+    donation.currency || "EUR";
+
+  document.getElementById("impactDescription").value =
+    donation.description || "";
+
+  document.getElementById("impactPublished").checked =
+    Boolean(donation.is_published);
+
+  document.getElementById("addImpactDonationBtn").textContent =
+    "Update Donation";
+
+  document.getElementById("impactDonationStatus").textContent =
+    "Editing donation...";
+
+  document
+    .getElementById("impactTitle")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
 }
 
 async function toggleImpactDonationPublication(id) {
