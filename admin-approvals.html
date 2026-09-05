@@ -1451,7 +1451,9 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
     donation.organization_name || "";
 
   document.getElementById("impactCause").value =
-    donation.cause || "";
+  typeof donation.cause === "string"
+    ? donation.cause
+    : "";
 
   document.getElementById("impactDonationDate").value =
     donation.donation_date || "";
@@ -1463,7 +1465,9 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
     donation.currency || "EUR";
 
   document.getElementById("impactDescription").value =
-    donation.description || "";
+  typeof donation.description === "string"
+    ? donation.description
+    : "";
 
   document.getElementById("impactPublished").checked =
     Boolean(donation.is_published);
