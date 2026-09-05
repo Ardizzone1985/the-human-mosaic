@@ -1017,6 +1017,11 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
       return date.toLocaleString();
     }
 
+    let impactDonationsData = [];
+let impactDonationsPage = 1;
+
+const IMPACT_DONATIONS_PER_PAGE = 10;
+
     async function loadImpactDonations() {
   const list = document.getElementById("impactDonationsList");
   const status = document.getElementById("impactDonationStatus");
@@ -1042,115 +1047,13 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
       );
     }
 
-    const donations = result.donations || [];
+    impactDonationsData = result.donations || [];
+    impactDonationsPage = 1;
 
-    if (donations.length === 0) {
-      list.innerHTML = "No impact donations recorded yet.";
-      status.textContent = "Ready.";
-      return;
-    }
-
-    list.innerHTML = donations
-      .map((item) => {
-        const amount = Number(item.amount || 0);
-
-        const formattedAmount = new Intl.NumberFormat(
-          "en-US",
-          {
-            style: "currency",
-            currency: item.currency || "EUR",
-          }
-        ).format(amount);
-
-        const formattedDate = item.donation_date
-          ? new Date(
-              `${item.donation_date}T00:00:00`
-            ).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })
-          : "—";
-
-        const publicationBadge = item.is_published
-          ? `
-              <span class="badge badge-status-approved">
-                Published
-              </span>
-            `
-          : `
-              <span class="badge badge-status-pending">
-                Draft
-              </span>
-            `;
-
-        return `
-          <div style="
-            border:1px solid #ddd;
-            border-radius:14px;
-            padding:16px;
-            background:#fcfcfb;
-          ">
-            <div style="
-              display:flex;
-              justify-content:space-between;
-              align-items:flex-start;
-              gap:14px;
-              flex-wrap:wrap;
-            ">
-              <div>
-                <strong style="font-size:1rem;">
-                  ${item.title || "Untitled donation"}
-                </strong>
-
-                <div class="meta" style="margin-top:8px;">
-                  <strong>Organization:</strong>
-                  ${item.organization_name || "—"}
-                </div>
-
-                <div class="meta">
-                  <strong>Date:</strong>
-                  ${formattedDate}
-                </div>
-
-                <div class="meta">
-                  <strong>Amount:</strong>
-                  ${formattedAmount}
-                </div>
-
-                ${
-                  item.cause
-                    ? `
-                        <div class="meta">
-                          <strong>Cause:</strong>
-                          ${item.cause}
-                        </div>
-                      `
-                    : ""
-                }
-
-                ${
-                  item.description
-                    ? `
-                        <div class="note-preview">
-                          ${item.description}
-                        </div>
-                      `
-                    : ""
-                }
-              </div>
-
-              <div>
-                ${publicationBadge}
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .join("");
+    renderImpactDonationsPage();
 
     status.textContent =
-      `${donations.length} contribution(s) loaded.`;
+      `${impactDonationsData.length} contribution(s) loaded.`;
 
   } catch (error) {
     console.error(
@@ -1164,6 +1067,224 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
     status.textContent =
       "Unable to load contributions.";
   }
+}
+
+    function renderImpactDonationsPage() {
+  const list = document.getElementById("impactDonationsList");
+
+  if (!list) return;
+
+  const donations = impactDonationsData;
+
+  if (donations.length === 0) {
+    list.innerHTML = "No impact donations recorded yet.";
+    return;
+  }
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      donations.length / IMPACT_DONATIONS_PER_PAGE
+    )
+  );
+
+  if (impactDonationsPage > totalPages) {
+    impactDonationsPage = totalPages;
+  }
+
+  const startIndex =
+    (impactDonationsPage - 1) *
+    IMPACT_DONATIONS_PER_PAGE;
+
+  const endIndex = Math.min(
+    startIndex + IMPACT_DONATIONS_PER_PAGE,
+    donations.length
+  );
+
+  const pageItems = donations.slice(
+    startIndex,
+    endIndex
+  );
+
+  const cardsHtml = pageItems
+    .map((item) => {
+      const amount = Number(item.amount || 0);
+
+      const formattedAmount =
+        new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: item.currency || "EUR",
+        }).format(amount);
+
+      const formattedDate = item.donation_date
+        ? new Date(
+            `${item.donation_date}T00:00:00`
+          ).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })
+        : "—";
+
+      const publicationBadge = item.is_published
+        ? `
+            <span class="badge badge-status-approved">
+              Published
+            </span>
+          `
+        : `
+            <span class="badge badge-status-pending">
+              Draft
+            </span>
+          `;
+
+      return `
+        <div style="
+          border:1px solid #ddd;
+          border-radius:14px;
+          padding:16px;
+          background:#fcfcfb;
+        ">
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:14px;
+            flex-wrap:wrap;
+          ">
+            <div>
+              <strong style="font-size:1rem;">
+                ${item.title || "Untitled donation"}
+              </strong>
+
+              <div class="meta" style="margin-top:8px;">
+                <strong>Organization:</strong>
+                ${item.organization_name || "—"}
+              </div>
+
+              <div class="meta">
+                <strong>Date:</strong>
+                ${formattedDate}
+              </div>
+
+              <div class="meta">
+                <strong>Amount:</strong>
+                ${formattedAmount}
+              </div>
+
+              ${
+                item.cause
+                  ? `
+                      <div class="meta">
+                        <strong>Cause:</strong>
+                        ${item.cause}
+                      </div>
+                    `
+                  : ""
+              }
+
+              ${
+                item.description
+                  ? `
+                      <div class="note-preview">
+                        ${item.description}
+                      </div>
+                    `
+                  : ""
+              }
+            </div>
+
+            <div>
+              ${publicationBadge}
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  const paginationHtml = `
+    <div style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:4px;
+      padding-top:12px;
+    ">
+      <div style="
+        font-size:0.9rem;
+        color:#666;
+      ">
+        Showing ${startIndex + 1}–${endIndex}
+        of ${donations.length}
+      </div>
+
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+      ">
+        <button
+          type="button"
+          class="filter-btn"
+          onclick="changeImpactDonationsPage(-1)"
+          ${impactDonationsPage === 1 ? "disabled" : ""}
+        >
+          Previous
+        </button>
+
+        <span style="
+          font-size:0.9rem;
+          font-weight:700;
+        ">
+          Page ${impactDonationsPage} of ${totalPages}
+        </span>
+
+        <button
+          type="button"
+          class="filter-btn"
+          onclick="changeImpactDonationsPage(1)"
+          ${
+            impactDonationsPage === totalPages
+              ? "disabled"
+              : ""
+          }
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  `;
+
+  list.innerHTML =
+    cardsHtml + paginationHtml;
+}
+
+    function changeImpactDonationsPage(direction) {
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      impactDonationsData.length /
+      IMPACT_DONATIONS_PER_PAGE
+    )
+  );
+
+  const nextPage =
+    impactDonationsPage + direction;
+
+  if (
+    nextPage < 1 ||
+    nextPage > totalPages
+  ) {
+    return;
+  }
+
+  impactDonationsPage = nextPage;
+
+  renderImpactDonationsPage();
 }
 
     async function loadPhotoCommentsModeration() {
@@ -1951,6 +2072,8 @@ window.resendCertificate = resendCertificate;
     window.editProjectNews = editProjectNews;
 window.deleteProjectNews = deleteProjectNews;
     window.moderatePhotoComment = moderatePhotoComment;
+    window.changeImpactDonationsPage =
+  changeImpactDonationsPage;
     
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
