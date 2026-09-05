@@ -103,6 +103,48 @@ function getSupabaseAdmin() {
 
 export default async function handler(req, res) {
   try {
+        // ---------------------------------------------------------
+    // GET ?action=impact-donations
+    // Load Humanity Impact donations for the authenticated admin.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "impact-donations"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .from("impact_donations")
+        .select(
+          "id, title, organization_name, cause, description, amount, currency, donation_date, is_published, created_at, updated_at"
+        )
+        .order("donation_date", { ascending: false })
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(
+          "Admin impact donations query error:",
+          error
+        );
+
+        return res.status(500).json({
+          error: "Failed to load impact donations",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        donations: data || [],
+      });
+    }
     // ---------------------------------------------------------
     // GET ?action=comments
     // Load comments for the authenticated admin.
