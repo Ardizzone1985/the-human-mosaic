@@ -375,13 +375,13 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
       </mesh>
 
       {/* Ceiling spotlight rails */}
-<mesh position={[0, 10.34, -3]}>
-  <boxGeometry args={[16, 0.06, 0.12]} />
+<mesh position={[-4, 10.34, 1]}>
+  <boxGeometry args={[0.12, 0.06, 16]} />
   {goldMaterial}
 </mesh>
 
-<mesh position={[0, 10.34, 5]}>
-  <boxGeometry args={[16, 0.06, 0.12]} />
+<mesh position={[4, 10.34, 1]}>
+  <boxGeometry args={[0.12, 0.06, 16]} />
   {goldMaterial}
 </mesh>
 
