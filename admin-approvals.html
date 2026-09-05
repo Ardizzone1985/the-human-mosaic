@@ -1069,6 +1069,120 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
   }
 }
 
+    async function createImpactDonation() {
+  const title =
+    document.getElementById("impactTitle").value.trim();
+
+  const organizationName =
+    document.getElementById("impactOrganization").value.trim();
+
+  const cause =
+    document.getElementById("impactCause").value.trim();
+
+  const donationDate =
+    document.getElementById("impactDonationDate").value;
+
+  const amount =
+    document.getElementById("impactAmount").value;
+
+  const currency =
+    document.getElementById("impactCurrency").value.trim();
+
+  const description =
+    document.getElementById("impactDescription").value.trim();
+
+  const isPublished =
+    document.getElementById("impactPublished").checked;
+
+  const button =
+    document.getElementById("addImpactDonationBtn");
+
+  const status =
+    document.getElementById("impactDonationStatus");
+
+  if (
+    !title ||
+    !organizationName ||
+    !donationDate ||
+    !amount ||
+    !currency
+  ) {
+    alert(
+      "Please complete Title, Organization, Donation Date, Amount and Currency."
+    );
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Adding...";
+  status.textContent = "Saving donation...";
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=create-impact-donation",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          organizationName,
+          cause,
+          description,
+          amount,
+          currency,
+          donationDate,
+          isPublished,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Unable to create impact donation."
+      );
+    }
+
+    document.getElementById("impactTitle").value = "";
+    document.getElementById("impactOrganization").value = "";
+    document.getElementById("impactCause").value = "";
+    document.getElementById("impactDonationDate").value = "";
+    document.getElementById("impactAmount").value = "";
+    document.getElementById("impactCurrency").value = "EUR";
+    document.getElementById("impactDescription").value = "";
+    document.getElementById("impactPublished").checked = true;
+
+    await loadImpactDonations();
+
+    status.textContent =
+      "Donation added successfully ✅";
+
+    alert("Donation added successfully ✅");
+
+  } catch (error) {
+    console.error(
+      "Impact donation create error:",
+      error
+    );
+
+    status.textContent =
+      "Unable to add donation.";
+
+    alert(
+      error.message ||
+      "Unable to add this donation."
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Add Donation";
+  }
+}
+
     function renderImpactDonationsPage() {
   const list = document.getElementById("impactDonationsList");
 
@@ -2030,6 +2144,13 @@ rejectionReason:
       sessionStorage.removeItem("thm_admin_authenticated");
       window.location.href = "admin-login.html";
     });
+
+    document
+  .getElementById("addImpactDonationBtn")
+  .addEventListener(
+    "click",
+    createImpactDonation
+  );
 
     const roomFilterButtons = document.querySelectorAll('.filters .filter-btn');
 roomFilterButtons.forEach(button => {
