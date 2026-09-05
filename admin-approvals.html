@@ -1436,11 +1436,97 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
   );
 }
 
-function toggleImpactDonationPublication(id) {
-  console.log(
-    "Impact donation publication toggle requested:",
-    id
+async function toggleImpactDonationPublication(id) {
+  const donation = impactDonationsData.find(
+    (item) => item.id === id
   );
+
+  if (!donation) {
+    alert("Donation not found.");
+    return;
+  }
+
+  const nextPublishedState = !donation.is_published;
+
+  const actionLabel = nextPublishedState
+    ? "publish"
+    : "unpublish";
+
+  const confirmed = window.confirm(
+    `Are you sure you want to ${actionLabel} "${donation.title}"?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const status =
+    document.getElementById("impactDonationStatus");
+
+  if (status) {
+    status.textContent =
+      nextPublishedState
+        ? "Publishing donation..."
+        : "Unpublishing donation...";
+  }
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=update-impact-donation",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: donation.id,
+          title: donation.title,
+          organizationName: donation.organization_name,
+          cause: donation.cause,
+          description: donation.description,
+          amount: donation.amount,
+          currency: donation.currency,
+          donationDate: donation.donation_date,
+          isPublished: nextPublishedState,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "Unable to update donation publication."
+      );
+    }
+
+    await loadImpactDonations();
+
+    if (status) {
+      status.textContent =
+        nextPublishedState
+          ? "Donation published successfully ✅"
+          : "Donation unpublished successfully ✅";
+    }
+
+  } catch (error) {
+    console.error(
+      "Impact donation publication update error:",
+      error
+    );
+
+    if (status) {
+      status.textContent =
+        "Unable to update donation.";
+    }
+
+    alert(
+      error.message ||
+      "Unable to update this donation."
+    );
+  }
 }
 
     async function loadPhotoCommentsModeration() {
