@@ -576,33 +576,64 @@ function HumanityImpactDoor({
         />
       </mesh>
 
-      <Text
-  position={[0, 3.45, 0.28]}
-  fontSize={0.48}
-  color="#fff4d8"
-  anchorX="center"
-  letterSpacing={0.15}
-  outlineWidth={0.01}
-  outlineColor="#d7b56d"
-  emissive="#fff4d8"
-  emissiveIntensity={1.8}
->
-  ENTER
-</Text>
+      {/* Museum plaque — HUMANITY IMPACT */}
+<group position={[0, 3.85, 0.28]}>
 
-      <Text
-        position={[0, 0.45, 0.4]}
-        fontSize={0.30}
-        color="#f2c879"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={2.1}
-        textAlign="center"
-        lineHeight={1.25}
-      >
-        HUMANITY IMPACT
-      </Text>
+  {/* Gold outer frame */}
+  <mesh position={[0, 0, -0.03]}>
+    <boxGeometry args={[3.35, 0.78, 0.12]} />
+    <meshStandardMaterial
+      color="#8b6428"
+      emissive="#d7b56d"
+      emissiveIntensity={0.22}
+      metalness={0.55}
+      roughness={0.3}
+    />
+  </mesh>
 
+  {/* Dark plaque */}
+  <mesh position={[0, 0, 0.04]}>
+    <boxGeometry args={[3.15, 0.58, 0.10]} />
+    <meshStandardMaterial
+      color="#120b05"
+      roughness={0.48}
+      metalness={0.18}
+    />
+  </mesh>
+
+  {/* Left decorative gold line */}
+  <mesh position={[-1.36, 0, 0.11]}>
+    <boxGeometry args={[0.18, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
+  {/* Right decorative gold line */}
+  <mesh position={[1.36, 0, 0.11]}>
+    <boxGeometry args={[0.18, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 0, 0.12]}
+    fontSize={0.24}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.10}
+  >
+    HUMANITY IMPACT
+  </Text>
+
+</group>
+     
       <Text
         position={[0, -0.35, 0.4]}
         fontSize={0.15}
