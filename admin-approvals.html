@@ -1081,6 +1081,13 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
 }
 
     async function createImpactDonation() {
+  const editingId =
+    document.getElementById(
+      "editingImpactDonationId"
+    ).value.trim();
+
+  const isEditing = Boolean(editingId);
+
   const title =
     document.getElementById("impactTitle").value.trim();
 
@@ -1125,28 +1132,46 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
   }
 
   button.disabled = true;
-  button.textContent = "Adding...";
-  status.textContent = "Saving donation...";
+
+  button.textContent =
+    isEditing
+      ? "Updating..."
+      : "Adding...";
+
+  status.textContent =
+    isEditing
+      ? "Updating donation..."
+      : "Saving donation...";
 
   try {
+    const endpoint = isEditing
+      ? "/api/admin-login?action=update-impact-donation"
+      : "/api/admin-login?action=create-impact-donation";
+
+    const payload = {
+      title,
+      organizationName,
+      cause,
+      description,
+      amount,
+      currency,
+      donationDate,
+      isPublished,
+    };
+
+    if (isEditing) {
+      payload.id = editingId;
+    }
+
     const response = await fetch(
-      "/api/admin-login?action=create-impact-donation",
+      endpoint,
       {
         method: "POST",
         credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title,
-          organizationName,
-          cause,
-          description,
-          amount,
-          currency,
-          donationDate,
-          isPublished,
-        }),
+        body: JSON.stringify(payload),
       }
     );
 
@@ -1154,9 +1179,16 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
 
     if (!response.ok) {
       throw new Error(
-        result.error || "Unable to create impact donation."
+        result.error ||
+        (isEditing
+          ? "Unable to update impact donation."
+          : "Unable to create impact donation.")
       );
     }
+
+    document.getElementById(
+      "editingImpactDonationId"
+    ).value = "";
 
     document.getElementById("impactTitle").value = "";
     document.getElementById("impactOrganization").value = "";
@@ -1167,25 +1199,41 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
     document.getElementById("impactDescription").value = "";
     document.getElementById("impactPublished").checked = true;
 
+    document.getElementById(
+      "cancelImpactDonationEditBtn"
+    ).style.display = "none";
+
     await loadImpactDonations();
 
     status.textContent =
-      "Donation added successfully ✅";
+      isEditing
+        ? "Donation updated successfully ✅"
+        : "Donation added successfully ✅";
 
-    alert("Donation added successfully ✅");
+    alert(
+      isEditing
+        ? "Donation updated successfully ✅"
+        : "Donation added successfully ✅"
+    );
 
   } catch (error) {
     console.error(
-      "Impact donation create error:",
+      isEditing
+        ? "Impact donation update error:"
+        : "Impact donation create error:",
       error
     );
 
     status.textContent =
-      "Unable to add donation.";
+      isEditing
+        ? "Unable to update donation."
+        : "Unable to add donation.";
 
     alert(
       error.message ||
-      "Unable to add this donation."
+      (isEditing
+        ? "Unable to update this donation."
+        : "Unable to add this donation.")
     );
 
   } finally {
