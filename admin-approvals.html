@@ -1308,9 +1308,37 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
               }
             </div>
 
-            <div>
-              ${publicationBadge}
-            </div>
+            <div style="
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+">
+  ${publicationBadge}
+
+  <div style="
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  ">
+    <button
+      type="button"
+      class="filter-btn"
+      onclick="editImpactDonation('${item.id}')"
+    >
+      Edit
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn"
+      onclick="toggleImpactDonationPublication('${item.id}')"
+    >
+      ${item.is_published ? "Unpublish" : "Publish"}
+    </button>
+  </div>
+</div>
           </div>
         </div>
       `;
@@ -1399,6 +1427,20 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
   impactDonationsPage = nextPage;
 
   renderImpactDonationsPage();
+}
+
+    function editImpactDonation(id) {
+  console.log(
+    "Impact donation edit requested:",
+    id
+  );
+}
+
+function toggleImpactDonationPublication(id) {
+  console.log(
+    "Impact donation publication toggle requested:",
+    id
+  );
 }
 
     async function loadPhotoCommentsModeration() {
@@ -2195,6 +2237,10 @@ window.deleteProjectNews = deleteProjectNews;
     window.moderatePhotoComment = moderatePhotoComment;
     window.changeImpactDonationsPage =
   changeImpactDonationsPage;
+    window.editImpactDonation =
+  editImpactDonation;
+window.toggleImpactDonationPublication =
+  toggleImpactDonationPublication;
     
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
