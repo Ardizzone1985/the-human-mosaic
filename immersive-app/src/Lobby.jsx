@@ -744,8 +744,9 @@ color="#6b5a3f"
   A permanent global immersive artwork
 </Text>
 
-      <group
-  position={[-12.7, 1.7, 10.55]}
+      {/* EXIT — Full museum door */}
+<group
+  position={[-12.7, 1.80, 10.55]}
   rotation={[0, Math.PI, 0]}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
@@ -761,47 +762,73 @@ color="#6b5a3f"
     }, 700);
   }}
 >
-  <mesh position={[0, 0, -0.04]}>
-    <boxGeometry args={[2.4, 3.8, 0.14]} />
+  {/* External museum frame */}
+  <mesh position={[0, 0, -0.28]}>
+    <boxGeometry args={[3.8, 6.1, 0.52]} />
     <meshStandardMaterial
-      color="#3a2418"
-      emissive="#8a4b12"
-      emissiveIntensity={0.16}
+      color="#6b4a1e"
+      emissive="#d7b56d"
+      emissiveIntensity={0.22}
+      roughness={0.34}
+      metalness={0.28}
+    />
+  </mesh>
+
+  {/* Main door */}
+  <mesh position={[0, 0, 0.02]}>
+    <boxGeometry args={[2.95, 5.25, 0.46]} />
+    <meshStandardMaterial
+      color="#2a1208"
       roughness={0.42}
-      metalness={0.18}
+      metalness={0.22}
+      emissive="#d7b56d"
+      emissiveIntensity={0.06}
     />
   </mesh>
 
-  <mesh position={[0, 0, 0.08]}>
-    <boxGeometry args={[1.8, 3.0, 0.08]} />
+  {/* Inner dark panel */}
+  <mesh position={[0, 0, 0.28]}>
+    <boxGeometry args={[2.2, 4.4, 0.16]} />
     <meshStandardMaterial
-      color="#140805"
-      roughness={0.62}
-      metalness={0.12}
+      color="#0b0302"
+      roughness={0.7}
+      metalness={0.1}
     />
   </mesh>
 
-  <mesh position={[0.48, 0, 0.16]}>
-    <sphereGeometry args={[0.045, 16, 16]} />
+  {/* Handle */}
+  <mesh position={[0.82, 0, 0.38]}>
+    <sphereGeometry args={[0.08, 16, 16]} />
     <meshStandardMaterial
       color="#d7b56d"
       emissive="#d7b56d"
-      emissiveIntensity={0.35}
-      metalness={0.7}
-      roughness={0.25}
+      emissiveIntensity={0.3}
+      metalness={0.8}
+      roughness={0.22}
+    />
+  </mesh>
+
+  {/* Upper golden detail */}
+  <mesh position={[0, 2.18, 0.24]}>
+    <boxGeometry args={[2.55, 0.08, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.32}
     />
   </mesh>
 
   <Text
-  position={[0, 2.25, 0.18]}
-  fontSize={0.22}
-  color="#5b4630"
-  anchorX="center"
-  anchorY="middle"
-  letterSpacing={0.08}
->
-  EXIT
-</Text>
+    position={[0, 3.45, 0.28]}
+    fontSize={0.38}
+    color="#fff4d8"
+    anchorX="center"
+    letterSpacing={0.15}
+    outlineWidth={0.008}
+    outlineColor="#d7b56d"
+  >
+    EXIT
+  </Text>
 </group>
 
       {/* Welcome Wall - Project News Panel */}
