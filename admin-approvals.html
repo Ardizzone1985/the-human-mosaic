@@ -602,6 +602,15 @@
       Add Donation
     </button>
 
+    <button
+  id="cancelImpactDonationEditBtn"
+  type="button"
+  class="filter-btn"
+  style="display:none;"
+>
+  Cancel Edit
+</button>
+
     <span
       id="impactDonationStatus"
       class="status"
@@ -1431,6 +1440,33 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
   renderImpactDonationsPage();
 }
 
+    function cancelImpactDonationEdit() {
+  document.getElementById(
+    "editingImpactDonationId"
+  ).value = "";
+
+  document.getElementById("impactTitle").value = "";
+  document.getElementById("impactOrganization").value = "";
+  document.getElementById("impactCause").value = "";
+  document.getElementById("impactDonationDate").value = "";
+  document.getElementById("impactAmount").value = "";
+  document.getElementById("impactCurrency").value = "EUR";
+  document.getElementById("impactDescription").value = "";
+  document.getElementById("impactPublished").checked = true;
+
+  document.getElementById(
+    "addImpactDonationBtn"
+  ).textContent = "Add Donation";
+
+  document.getElementById(
+    "cancelImpactDonationEditBtn"
+  ).style.display = "none";
+
+  document.getElementById(
+    "impactDonationStatus"
+  ).textContent = "Ready.";
+}
+
     function editImpactDonation(id) {
   const donation = impactDonationsData.find(
     (item) => item.id === id
@@ -1474,6 +1510,10 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
 
   document.getElementById("addImpactDonationBtn").textContent =
     "Update Donation";
+
+      document.getElementById(
+  "cancelImpactDonationEditBtn"
+).style.display = "inline-block";
 
   document.getElementById("impactDonationStatus").textContent =
     "Editing donation...";
@@ -2328,6 +2368,13 @@ rejectionReason:
   .addEventListener(
     "click",
     createImpactDonation
+  );
+
+    document
+  .getElementById("cancelImpactDonationEditBtn")
+  .addEventListener(
+    "click",
+    cancelImpactDonationEdit
   );
 
     const roomFilterButtons = document.querySelectorAll('.filters .filter-btn');
