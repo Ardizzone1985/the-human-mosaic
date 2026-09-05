@@ -352,7 +352,7 @@ function LoungeBarDoor({
       </mesh>
 
       {/* Museum plaque — COMING SOON */}
-<group position={[0, 3.45, 0.28]}>
+<group position={[0, 3.85, 0.28]}>
 
   {/* Gold outer frame */}
   <mesh position={[0, 0, -0.03]}>
@@ -377,8 +377,8 @@ function LoungeBarDoor({
   </mesh>
 
   {/* Decorative gold lines */}
-  <mesh position={[-1.23, 0, 0.11]}>
-    <boxGeometry args={[0.38, 0.025, 0.025]} />
+  <mesh position={[-1.36, 0, 0.11]}>
+  <boxGeometry args={[0.18, 0.025, 0.025]} />
     <meshStandardMaterial
       color="#d7b56d"
       emissive="#d7b56d"
@@ -386,8 +386,8 @@ function LoungeBarDoor({
     />
   </mesh>
 
-  <mesh position={[1.23, 0, 0.11]}>
-    <boxGeometry args={[0.38, 0.025, 0.025]} />
+  <mesh position={[1.36, 0, 0.11]}>
+  <boxGeometry args={[0.18, 0.025, 0.025]} />
     <meshStandardMaterial
       color="#d7b56d"
       emissive="#d7b56d"
