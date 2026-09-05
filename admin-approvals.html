@@ -1017,6 +1017,155 @@ cancelRejectBtn.addEventListener("click", closeRejectModal);
       return date.toLocaleString();
     }
 
+    async function loadImpactDonations() {
+  const list = document.getElementById("impactDonationsList");
+  const status = document.getElementById("impactDonationStatus");
+
+  if (!list || !status) return;
+
+  list.innerHTML = "Loading donations...";
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=impact-donations",
+      {
+        method: "GET",
+        credentials: "same-origin",
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error || "Unable to load impact donations."
+      );
+    }
+
+    const donations = result.donations || [];
+
+    if (donations.length === 0) {
+      list.innerHTML = "No impact donations recorded yet.";
+      status.textContent = "Ready.";
+      return;
+    }
+
+    list.innerHTML = donations
+      .map((item) => {
+        const amount = Number(item.amount || 0);
+
+        const formattedAmount = new Intl.NumberFormat(
+          "en-US",
+          {
+            style: "currency",
+            currency: item.currency || "EUR",
+          }
+        ).format(amount);
+
+        const formattedDate = item.donation_date
+          ? new Date(
+              `${item.donation_date}T00:00:00`
+            ).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
+          : "—";
+
+        const publicationBadge = item.is_published
+          ? `
+              <span class="badge badge-status-approved">
+                Published
+              </span>
+            `
+          : `
+              <span class="badge badge-status-pending">
+                Draft
+              </span>
+            `;
+
+        return `
+          <div style="
+            border:1px solid #ddd;
+            border-radius:14px;
+            padding:16px;
+            background:#fcfcfb;
+          ">
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:flex-start;
+              gap:14px;
+              flex-wrap:wrap;
+            ">
+              <div>
+                <strong style="font-size:1rem;">
+                  ${item.title || "Untitled donation"}
+                </strong>
+
+                <div class="meta" style="margin-top:8px;">
+                  <strong>Organization:</strong>
+                  ${item.organization_name || "—"}
+                </div>
+
+                <div class="meta">
+                  <strong>Date:</strong>
+                  ${formattedDate}
+                </div>
+
+                <div class="meta">
+                  <strong>Amount:</strong>
+                  ${formattedAmount}
+                </div>
+
+                ${
+                  item.cause
+                    ? `
+                        <div class="meta">
+                          <strong>Cause:</strong>
+                          ${item.cause}
+                        </div>
+                      `
+                    : ""
+                }
+
+                ${
+                  item.description
+                    ? `
+                        <div class="note-preview">
+                          ${item.description}
+                        </div>
+                      `
+                    : ""
+                }
+              </div>
+
+              <div>
+                ${publicationBadge}
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    status.textContent =
+      `${donations.length} contribution(s) loaded.`;
+
+  } catch (error) {
+    console.error(
+      "Impact donations load error:",
+      error
+    );
+
+    list.innerHTML =
+      "Unable to load impact donations.";
+
+    status.textContent =
+      "Unable to load contributions.";
+  }
+}
+
     async function loadPhotoCommentsModeration() {
   commentsModerationStatus.textContent = "Loading comments...";
   commentsModerationList.innerHTML = "";
@@ -1807,6 +1956,7 @@ window.deleteProjectNews = deleteProjectNews;
     loadAdminStats();
     loadPublishedNews();
     loadPhotoCommentsModeration();
+    loadImpactDonations();
 
     refreshCommentsBtn.addEventListener(
   "click",
