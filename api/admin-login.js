@@ -287,6 +287,168 @@ export default async function handler(req, res) {
         donation: data,
       });
     }
+
+        // ---------------------------------------------------------
+    // POST ?action=update-impact-donation
+    // Update a Humanity Impact donation as authenticated admin.
+    // ---------------------------------------------------------
+    if (
+      req.method === "POST" &&
+      req.query?.action === "update-impact-donation"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      const {
+        id,
+        title,
+        organizationName,
+        cause,
+        description,
+        amount,
+        currency,
+        donationDate,
+        isPublished,
+      } = req.body || {};
+
+      const cleanId =
+        typeof id === "string" ? id.trim() : "";
+
+      const cleanTitle =
+        typeof title === "string" ? title.trim() : "";
+
+      const cleanOrganizationName =
+        typeof organizationName === "string"
+          ? organizationName.trim()
+          : "";
+
+      const cleanCause =
+        typeof cause === "string" && cause.trim()
+          ? cause.trim()
+          : null;
+
+      const cleanDescription =
+        typeof description === "string" && description.trim()
+          ? description.trim()
+          : null;
+
+      const numericAmount = Number(amount);
+
+      const cleanCurrency =
+        typeof currency === "string"
+          ? currency.trim().toUpperCase()
+          : "";
+
+      const cleanDonationDate =
+        typeof donationDate === "string"
+          ? donationDate.trim()
+          : "";
+
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+          cleanId
+        )
+      ) {
+        return res.status(400).json({
+          error: "Invalid donation ID",
+        });
+      }
+
+      if (!cleanTitle) {
+        return res.status(400).json({
+          error: "Title is required",
+        });
+      }
+
+      if (!cleanOrganizationName) {
+        return res.status(400).json({
+          error: "Organization name is required",
+        });
+      }
+
+      if (
+        !Number.isFinite(numericAmount) ||
+        numericAmount <= 0
+      ) {
+        return res.status(400).json({
+          error: "Amount must be greater than zero",
+        });
+      }
+
+      if (!/^[A-Z]{3}$/.test(cleanCurrency)) {
+        return res.status(400).json({
+          error: "Currency must be a valid 3-letter code",
+        });
+      }
+
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(cleanDonationDate)) {
+        return res.status(400).json({
+          error: "Donation date must use YYYY-MM-DD format",
+        });
+      }
+
+      const parsedDate = new Date(
+        `${cleanDonationDate}T00:00:00Z`
+      );
+
+      if (
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !==
+          cleanDonationDate
+      ) {
+        return res.status(400).json({
+          error: "Invalid donation date",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .from("impact_donations")
+        .update({
+          title: cleanTitle,
+          organization_name: cleanOrganizationName,
+          cause: cleanCause,
+          description: cleanDescription,
+          amount: numericAmount,
+          currency: cleanCurrency,
+          donation_date: cleanDonationDate,
+          is_published: isPublished === true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", cleanId)
+        .select(
+          "id, title, organization_name, cause, description, amount, currency, donation_date, is_published, created_at, updated_at"
+        )
+        .maybeSingle();
+
+      if (error) {
+        console.error(
+          "Admin impact donation update error:",
+          error
+        );
+
+        return res.status(500).json({
+          error: "Failed to update impact donation",
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          error: "Impact donation not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        donation: data,
+      });
+    }
     
     // ---------------------------------------------------------
     // GET ?action=comments
