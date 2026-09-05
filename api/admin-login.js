@@ -449,6 +449,72 @@ export default async function handler(req, res) {
         donation: data,
       });
     }
+
+        // ---------------------------------------------------------
+    // POST ?action=delete-impact-donation
+    // Delete a Humanity Impact donation as authenticated admin.
+    // ---------------------------------------------------------
+    if (
+      req.method === "POST" &&
+      req.query?.action === "delete-impact-donation"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      const { id } = req.body || {};
+
+      const cleanId =
+        typeof id === "string" ? id.trim() : "";
+
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+          cleanId
+        )
+      ) {
+        return res.status(400).json({
+          error: "Invalid donation ID",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .from("impact_donations")
+        .delete()
+        .eq("id", cleanId)
+        .select("id, title")
+        .maybeSingle();
+
+      if (error) {
+        console.error(
+          "Admin impact donation delete error:",
+          error
+        );
+
+        return res.status(500).json({
+          error: "Failed to delete impact donation",
+        });
+      }
+
+      if (!data) {
+        return res.status(404).json({
+          error: "Impact donation not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        deletedDonation: data,
+      });
+    }
+
+    // ---------------------------------------------------------
+    // GET ?action=comments
     
     // ---------------------------------------------------------
     // GET ?action=comments
