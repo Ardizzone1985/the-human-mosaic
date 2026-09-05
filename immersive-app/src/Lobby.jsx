@@ -861,17 +861,63 @@ color="#6b5a3f"
     />
   </mesh>
 
+  {/* Museum plaque — EXIT */}
+<group position={[0, 3.85, 0.28]}>
+
+  {/* Gold outer frame */}
+  <mesh position={[0, 0, -0.03]}>
+    <boxGeometry args={[1.85, 0.78, 0.12]} />
+    <meshStandardMaterial
+      color="#8b6428"
+      emissive="#d7b56d"
+      emissiveIntensity={0.22}
+      metalness={0.55}
+      roughness={0.3}
+    />
+  </mesh>
+
+  {/* Dark plaque */}
+  <mesh position={[0, 0, 0.04]}>
+    <boxGeometry args={[1.65, 0.58, 0.10]} />
+    <meshStandardMaterial
+      color="#120b05"
+      roughness={0.48}
+      metalness={0.18}
+    />
+  </mesh>
+
+  {/* Left decorative gold line */}
+  <mesh position={[-0.68, 0, 0.11]}>
+    <boxGeometry args={[0.16, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
+  {/* Right decorative gold line */}
+  <mesh position={[0.68, 0, 0.11]}>
+    <boxGeometry args={[0.16, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
   <Text
-    position={[0, 3.45, 0.28]}
-    fontSize={0.38}
-    color="#fff4d8"
+    position={[0, 0, 0.12]}
+    fontSize={0.27}
+    color="#f2c879"
     anchorX="center"
-    letterSpacing={0.15}
-    outlineWidth={0.008}
-    outlineColor="#d7b56d"
+    anchorY="middle"
+    letterSpacing={0.12}
   >
     EXIT
   </Text>
+
+</group>
 </group>
 
       {/* Welcome Wall - Project News Panel */}
