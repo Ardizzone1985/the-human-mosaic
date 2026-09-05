@@ -351,19 +351,62 @@ function LoungeBarDoor({
         />
       </mesh>
 
-      <Text
-        position={[0, 3.45, 0.28]}
-        fontSize={0.48}
-        color="#fff4d8"
-        anchorX="center"
-        letterSpacing={0.15}
-        outlineWidth={0.01}
-        outlineColor="#d7b56d"
-        emissive="#fff4d8"
-        emissiveIntensity={1.8}
-      >
-        COMING SOON
-      </Text>
+      {/* Museum plaque — COMING SOON */}
+<group position={[0, 3.45, 0.28]}>
+
+  {/* Gold outer frame */}
+  <mesh position={[0, 0, -0.03]}>
+    <boxGeometry args={[3.35, 0.78, 0.12]} />
+    <meshStandardMaterial
+      color="#8b6428"
+      emissive="#d7b56d"
+      emissiveIntensity={0.22}
+      metalness={0.55}
+      roughness={0.3}
+    />
+  </mesh>
+
+  {/* Dark plaque */}
+  <mesh position={[0, 0, 0.04]}>
+    <boxGeometry args={[3.15, 0.58, 0.10]} />
+    <meshStandardMaterial
+      color="#120b05"
+      roughness={0.48}
+      metalness={0.18}
+    />
+  </mesh>
+
+  {/* Decorative gold lines */}
+  <mesh position={[-1.23, 0, 0.11]}>
+    <boxGeometry args={[0.38, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
+  <mesh position={[1.23, 0, 0.11]}>
+    <boxGeometry args={[0.38, 0.025, 0.025]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#d7b56d"
+      emissiveIntensity={0.45}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 0, 0.12]}
+    fontSize={0.27}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+    letterSpacing={0.12}
+  >
+    COMING SOON
+  </Text>
+
+</group>
 
       <Text
         position={[0, 0.45, 0.4]}
