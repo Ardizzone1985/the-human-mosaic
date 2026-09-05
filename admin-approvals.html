@@ -418,6 +418,219 @@
   <div id="publishedNewsList" style="display:grid; gap:12px;"></div>
 </div>
 
+    <!-- Humanity Impact Donations -->
+<div class="admin-stat-card" style="margin-bottom:24px;">
+  <div class="admin-stat-label">Humanity Impact Donations</div>
+
+  <div style="
+    font-size:0.9rem;
+    color:#666;
+    margin-top:6px;
+    margin-bottom:18px;
+  ">
+    Add and publish real contributions shown inside the Humanity Impact Room.
+  </div>
+
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:14px;
+  ">
+
+    <div>
+      <label for="impactTitle" style="display:block; font-weight:700; margin-bottom:6px;">
+        Title
+      </label>
+
+      <input
+        id="impactTitle"
+        type="text"
+        placeholder="Donation to Save the Children"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+        "
+      >
+    </div>
+
+    <div>
+      <label for="impactOrganization" style="display:block; font-weight:700; margin-bottom:6px;">
+        Organization
+      </label>
+
+      <input
+        id="impactOrganization"
+        type="text"
+        placeholder="Save the Children"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+        "
+      >
+    </div>
+
+    <div>
+      <label for="impactCause" style="display:block; font-weight:700; margin-bottom:6px;">
+        Cause
+      </label>
+
+      <input
+        id="impactCause"
+        type="text"
+        placeholder="Children"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+        "
+      >
+    </div>
+
+    <div>
+      <label for="impactDonationDate" style="display:block; font-weight:700; margin-bottom:6px;">
+        Donation Date
+      </label>
+
+      <input
+        id="impactDonationDate"
+        type="date"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+        "
+      >
+    </div>
+
+    <div>
+      <label for="impactAmount" style="display:block; font-weight:700; margin-bottom:6px;">
+        Amount
+      </label>
+
+      <input
+        id="impactAmount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        placeholder="15.00"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+        "
+      >
+    </div>
+
+    <div>
+      <label for="impactCurrency" style="display:block; font-weight:700; margin-bottom:6px;">
+        Currency
+      </label>
+
+      <input
+        id="impactCurrency"
+        type="text"
+        maxlength="3"
+        value="EUR"
+        style="
+          width:100%;
+          padding:12px;
+          border:1px solid #ddd;
+          border-radius:12px;
+          text-transform:uppercase;
+        "
+      >
+    </div>
+
+  </div>
+
+  <div style="margin-top:14px;">
+    <label for="impactDescription" style="display:block; font-weight:700; margin-bottom:6px;">
+      Description
+    </label>
+
+    <textarea
+      id="impactDescription"
+      rows="3"
+      placeholder="Optional description..."
+      style="
+        width:100%;
+        padding:12px;
+        border:1px solid #ddd;
+        border-radius:12px;
+        resize:vertical;
+      "
+    ></textarea>
+  </div>
+
+  <label style="
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:14px;
+    font-weight:700;
+    cursor:pointer;
+  ">
+    <input
+      id="impactPublished"
+      type="checkbox"
+      checked
+    >
+    Publish immediately in Humanity Impact Room
+  </label>
+
+  <div style="
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-top:18px;
+  ">
+    <button
+      type="button"
+      class="approve-btn"
+      id="addImpactDonationBtn"
+    >
+      Add Donation
+    </button>
+
+    <span
+      id="impactDonationStatus"
+      class="status"
+      style="margin:0;"
+    >
+      Ready.
+    </span>
+  </div>
+
+  <div style="
+    border-top:1px solid #e5e5e5;
+    margin-top:24px;
+    padding-top:20px;
+  ">
+    <div class="admin-stat-label">
+      Impact Contributions
+    </div>
+
+    <div
+      id="impactDonationsList"
+      style="
+        display:grid;
+        gap:12px;
+        margin-top:12px;
+      "
+    >
+      Donations will appear here.
+    </div>
+  </div>
+</div>
+
     <!-- Photo Comments Moderation -->
 <div class="admin-stat-card" style="margin-bottom:24px;">
   <div style="
