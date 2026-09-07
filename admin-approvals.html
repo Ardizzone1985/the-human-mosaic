@@ -1396,6 +1396,14 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
     >
       ${item.is_published ? "Unpublish" : "Publish"}
     </button>
+
+    <button
+  type="button"
+  class="delete-btn"
+  onclick="deleteImpactDonation('${item.id}')"
+>
+  Delete
+</button>
   </div>
 </div>
           </div>
@@ -1572,6 +1580,92 @@ const IMPACT_DONATIONS_PER_PAGE = 10;
       behavior: "smooth",
       block: "center"
     });
+}
+
+    async function deleteImpactDonation(id) {
+  const donation = impactDonationsData.find(
+    (item) => item.id === id
+  );
+
+  if (!donation) {
+    alert("Donation not found.");
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Delete "${donation.title}" permanently?\n\nThis action cannot be undone.`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  const secondConfirmation = window.confirm(
+    `Final confirmation: permanently delete "${donation.title}"?`
+  );
+
+  if (!secondConfirmation) {
+    return;
+  }
+
+  const status =
+    document.getElementById("impactDonationStatus");
+
+  if (status) {
+    status.textContent = "Deleting donation...";
+  }
+
+  try {
+    const response = await fetch(
+      "/api/admin-login?action=delete-impact-donation",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: donation.id,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "Unable to delete impact donation."
+      );
+    }
+
+    cancelImpactDonationEdit();
+
+    await loadImpactDonations();
+
+    if (status) {
+      status.textContent =
+        "Donation deleted successfully ✅";
+    }
+
+    alert("Donation deleted successfully ✅");
+
+  } catch (error) {
+    console.error(
+      "Impact donation delete error:",
+      error
+    );
+
+    if (status) {
+      status.textContent =
+        "Unable to delete donation.";
+    }
+
+    alert(
+      error.message ||
+      "Unable to delete this donation."
+    );
+  }
 }
 
 async function toggleImpactDonationPublication(id) {
@@ -2472,6 +2566,8 @@ window.deleteProjectNews = deleteProjectNews;
   editImpactDonation;
 window.toggleImpactDonationPublication =
   toggleImpactDonationPublication;
+    window.deleteImpactDonation =
+  deleteImpactDonation;
     
     loadSubmissions(currentStatus, currentRoom, currentAi);
     loadAdminStats();
