@@ -3,9 +3,18 @@ const COLUMNS = 10;
 
 export default function PrototypeWall() {
   const slots = Array.from(
-    { length: ROWS * COLUMNS },
-    (_, index) => index + 1
-  );
+  { length: ROWS * COLUMNS },
+  (_, index) => {
+    const row = Math.floor(index / COLUMNS) + 1;
+    const column = (index % COLUMNS) + 1;
+
+    return {
+      index: index + 1,
+      row,
+      column,
+    };
+  }
+);
 
   return (
     <div
@@ -37,7 +46,7 @@ export default function PrototypeWall() {
       >
         {slots.map((slot) => (
           <div
-            key={slot}
+            key={slot.index}
             style={{
               width: "48px",
               height: "48px",
@@ -51,7 +60,7 @@ export default function PrototypeWall() {
               boxSizing: "border-box",
             }}
           >
-            {slot}
+            {slot.row}-{slot.column}
           </div>
         ))}
       </div>
