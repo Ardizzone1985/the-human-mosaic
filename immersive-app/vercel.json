@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/gallery-v2",
+      "destination": "/index.html"
+    }
+  ]
+}
