@@ -29,19 +29,7 @@ height: "100vh",
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
   {TARGET_CAPACITY.toLocaleString()} slots
 </p>
-
-      <pre
-  style={{
-    background: "#1a1a1a",
-    padding: "12px",
-    borderRadius: "8px",
-    fontSize: "12px",
-    overflowX: "auto",
-  }}
->
-  {JSON.stringify(mappedTestSlots, null, 2)}
-</pre>
-
+     
       <div
         style={{
           display: "flex",
