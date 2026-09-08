@@ -12,6 +12,8 @@ export default function GalleryV2Prototype() {
     <div
   style={{
     minHeight: "100vh",
+    overflowY: "auto",
+height: "100vh",
     background: "#111",
     color: "#fff",
     padding: "24px",
