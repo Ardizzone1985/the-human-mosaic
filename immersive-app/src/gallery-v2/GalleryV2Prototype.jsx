@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PrototypeWall from "./PrototypeWall";
 
+const MAX_SECTIONS = 1667;
+
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
 
@@ -26,7 +28,9 @@ export default function GalleryV2Prototype() {
 
         <button
           onClick={() =>
-            setActiveSection((current) => current + 1)
+            setActiveSection((current) =>
+  Math.min(MAX_SECTIONS, current + 1)
+)
           }
         >
           Next Section
