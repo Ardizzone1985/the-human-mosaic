@@ -23,3 +23,36 @@ export function galleryPositionFromIndex(index) {
     column
   );
 }
+
+export function sortSlotsForGallery(slots) {
+  const wallOrder = {
+    "Front Wall": 1,
+    "Left Wall": 2,
+    "Right Wall": 3,
+  };
+
+  return [...slots].sort((a, b) => {
+    if (a.room !== b.room) {
+      return String(a.room).localeCompare(String(b.room));
+    }
+
+    const wallA = wallOrder[a.wall] ?? 999;
+    const wallB = wallOrder[b.wall] ?? 999;
+
+    if (wallA !== wallB) {
+      return wallA - wallB;
+    }
+
+    if (a.section !== b.section) {
+      return String(a.section).localeCompare(String(b.section), undefined, {
+        numeric: true,
+      });
+    }
+
+    if (a.row_number !== b.row_number) {
+      return Number(a.row_number) - Number(b.row_number);
+    }
+
+    return Number(a.col_number) - Number(b.col_number);
+  });
+}
