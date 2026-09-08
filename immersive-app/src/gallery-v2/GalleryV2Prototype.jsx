@@ -1,5 +1,7 @@
 import { useState } from "react";
 import PrototypeWall from "./PrototypeWall";
+import { mappingTestSlots } from "./mappingTestData";
+import { mapSlotsToGallery } from "./slotMapping";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
@@ -7,6 +9,7 @@ const TARGET_CAPACITY = 1000000;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
+const mappedTestSlots = mapSlotsToGallery(mappingTestSlots);
 
   return (
     <div
@@ -26,6 +29,18 @@ height: "100vh",
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
   {TARGET_CAPACITY.toLocaleString()} slots
 </p>
+
+      <pre
+  style={{
+    background: "#1a1a1a",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "12px",
+    overflowX: "auto",
+  }}
+>
+  {JSON.stringify(mappedTestSlots, null, 2)}
+</pre>
 
       <div
         style={{
