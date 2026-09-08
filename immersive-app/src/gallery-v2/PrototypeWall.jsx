@@ -10,6 +10,7 @@ const slotsInSection = Math.min(
   SLOTS_PER_SECTION,
   Math.max(0, TARGET_CAPACITY - sectionStartIndex)
 );
+  const activeRows = Math.ceil(slotsInSection / COLUMNS);
   const slots = Array.from(
   { length: slotsInSection },
   (_, index) => {
@@ -39,7 +40,7 @@ const slotsInSection = Math.min(
 </h2>
 
       <p style={{ marginTop: 0, opacity: 0.75 }}>
-        {ROWS} rows × {COLUMNS} columns = {slots.length} slots
+        {activeRows} rows × {COLUMNS} columns = {slots.length} slots
       </p>
 
       <div
