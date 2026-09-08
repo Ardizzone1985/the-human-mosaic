@@ -2,6 +2,8 @@ import { useState } from "react";
 import PrototypeWall from "./PrototypeWall";
 
 const MAX_SECTIONS = 1667;
+const SLOTS_PER_SECTION = 600;
+const TOTAL_CAPACITY = MAX_SECTIONS * SLOTS_PER_SECTION;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
@@ -10,6 +12,10 @@ export default function GalleryV2Prototype() {
     <div>
       <h1>Gallery v2 Prototype</h1>
       <p>Isolated development environment.</p>
+      <p>
+  Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
+  {TOTAL_CAPACITY.toLocaleString()} slots
+</p>
 
       <div
         style={{
