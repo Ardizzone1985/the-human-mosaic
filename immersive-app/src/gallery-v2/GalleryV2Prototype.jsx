@@ -6,7 +6,7 @@ export default function GalleryV2Prototype() {
       <h1>Gallery v2 Prototype</h1>
       <p>Isolated development environment.</p>
 
-      <PrototypeWall />
+      <PrototypeWall sectionNumber={1} />
     </div>
   );
 }
