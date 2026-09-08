@@ -12,6 +12,7 @@ export default function PrototypeWall({ sectionNumber = 1 }) {
       index: index + 1,
       row,
       column,
+      galleryKey: `S${sectionNumber}-R${row}-C${column}`,
     };
   }
 );
