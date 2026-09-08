@@ -1,9 +1,17 @@
 const ROWS = 60;
 const COLUMNS = 10;
+const TARGET_CAPACITY = 1000000;
+const SLOTS_PER_SECTION = ROWS * COLUMNS;
 
 export default function PrototypeWall({ sectionNumber = 1 }) {
+  const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
+
+const slotsInSection = Math.min(
+  SLOTS_PER_SECTION,
+  Math.max(0, TARGET_CAPACITY - sectionStartIndex)
+);
   const slots = Array.from(
-  { length: ROWS * COLUMNS },
+  { length: slotsInSection },
   (_, index) => {
     const row = Math.floor(index / COLUMNS) + 1;
     const column = (index % COLUMNS) + 1;
