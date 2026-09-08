@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrototypeWall from "./PrototypeWall";
+import { supabase } from "../supabaseClient";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
@@ -7,6 +8,29 @@ const TARGET_CAPACITY = 1000000;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
+
+  const [realSlots, setRealSlots] = useState([]);
+
+useEffect(() => {
+  async function loadSlots() {
+    const { data, error } = await supabase
+      .from("slots")
+      .select(
+        "slot_code, room, wall, section, row_number, col_number"
+      )
+      .eq("room", "Identity")
+      .limit(10);
+
+    if (error) {
+      console.error("Gallery v2 slot load error:", error);
+      return;
+    }
+
+    setRealSlots(data ?? []);
+  }
+
+  loadSlots();
+}, []);
 
   return (
     <div
