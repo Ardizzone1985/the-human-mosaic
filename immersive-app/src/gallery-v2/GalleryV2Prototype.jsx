@@ -49,6 +49,10 @@ export default function GalleryV2Prototype() {
         >
           Next Section
         </button>
+
+        <button onClick={() => setActiveSection(MAX_SECTIONS)}>
+  Last Section
+</button>
       </div>
 
       <PrototypeWall sectionNumber={activeSection} />
