@@ -1,5 +1,6 @@
 const ROWS = 60;
 const COLUMNS = 10;
+const SECTION_NUMBER = 1;
 
 export default function PrototypeWall() {
   const slots = Array.from(
@@ -26,8 +27,8 @@ export default function PrototypeWall() {
       }}
     >
       <h2 style={{ marginBottom: "8px" }}>
-        Gallery v2 — Prototype Wall
-      </h2>
+  Gallery v2 — Section {SECTION_NUMBER}
+</h2>
 
       <p style={{ marginTop: 0, opacity: 0.75 }}>
         {ROWS} rows × {COLUMNS} columns = {slots.length} slots
