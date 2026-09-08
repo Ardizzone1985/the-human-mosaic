@@ -56,3 +56,16 @@ export function sortSlotsForGallery(slots) {
     return Number(a.col_number) - Number(b.col_number);
   });
 }
+
+export function mapSlotsToGallery(slots) {
+  const sortedSlots = sortSlotsForGallery(slots);
+
+  return sortedSlots.map((slot, index) => {
+    const galleryPosition = galleryPositionFromIndex(index);
+
+    return {
+      ...slot,
+      galleryPosition,
+    };
+  });
+}
