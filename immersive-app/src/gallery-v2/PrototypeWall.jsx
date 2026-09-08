@@ -61,7 +61,7 @@ export default function PrototypeWall({ sectionNumber = 1 }) {
               boxSizing: "border-box",
             }}
           >
-            {slot.row}-{slot.column}
+            {slot.galleryKey}
           </div>
         ))}
       </div>
