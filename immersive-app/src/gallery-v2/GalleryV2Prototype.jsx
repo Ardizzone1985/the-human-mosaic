@@ -188,6 +188,12 @@ height: "100vh",
   Loaded Identity slots: {realSlots.length} — Mapped: {mappedRealSlots.length}
 </p>
 
+      {realSlots.length === 1000 && (
+  <p>
+    ⚠ Supabase query returned exactly 1000 rows.
+  </p>
+)}
+
       <p>
   Identity / Front Wall / F1 slots:{" "}
   {f1SlotCount === null ? "Loading..." : f1SlotCount}
