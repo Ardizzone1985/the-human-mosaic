@@ -22,7 +22,11 @@ useEffect(() => {
         "slot_code, room, wall, section, row_number, col_number"
       )
       .eq("room", "Identity")
-      .limit(10);
+.order("wall", { ascending: true })
+.order("section", { ascending: true })
+.order("row_number", { ascending: true })
+.order("col_number", { ascending: true })
+.limit(10);
 
     if (error) {
       console.error("Gallery v2 slot load error:", error);
