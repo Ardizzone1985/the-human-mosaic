@@ -46,6 +46,11 @@ height: "100vh",
 >
       <h1>Gallery v2 Prototype</h1>
       <p>Isolated development environment.</p>
+      
+      <p>
+  Loaded Identity slots: {realSlots.length}
+</p>
+      
       <p>
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
   {TARGET_CAPACITY.toLocaleString()} slots
