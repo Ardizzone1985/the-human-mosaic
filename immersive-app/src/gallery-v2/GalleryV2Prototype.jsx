@@ -12,6 +12,7 @@ export default function GalleryV2Prototype() {
 
   const [realSlots, setRealSlots] = useState([]);
   const [f1SlotCount, setF1SlotCount] = useState(null);
+  const [f2SlotCount, setF2SlotCount] = useState(null);
   const [f2FirstSlots, setF2FirstSlots] = useState([]);
   const mappedRealSlots = mapSlotsToGallery(realSlots);
   const firstMappedSlot = mappedRealSlots[0];
@@ -58,6 +59,24 @@ useEffect(() => {
 
 countF1Slots();
 
+  async function countF2Slots() {
+  const { count, error } = await supabase
+    .from("slots")
+    .select("*", { count: "exact", head: true })
+    .eq("room", "Identity")
+    .eq("wall", "Front Wall")
+    .eq("section", "F2");
+
+  if (error) {
+    console.error("Gallery v2 F2 count error:", error);
+    return;
+  }
+
+  setF2SlotCount(count);
+}
+
+countF2Slots();
+
   async function loadF2FirstSlots() {
   const { data, error } = await supabase
     .from("slots")
@@ -102,6 +121,11 @@ height: "100vh",
       <p>
   Identity / Front Wall / F1 slots:{" "}
   {f1SlotCount === null ? "Loading..." : f1SlotCount}
+</p>
+
+      <p>
+  Identity / Front Wall / F2 slots:{" "}
+  {f2SlotCount === null ? "Loading..." : f2SlotCount}
 </p>
 
       {f2FirstSlots.length > 0 && (
