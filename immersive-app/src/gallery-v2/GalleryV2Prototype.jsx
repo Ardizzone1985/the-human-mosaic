@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import PrototypeWall from "./PrototypeWall";
 import { supabase } from "../supabaseClient";
-import { mapSlotsToGallery } from "./slotMapping";
+import {
+  mapSlotsToGallery,
+  getLegacyIdentitySection,
+} from "./slotMapping";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
@@ -9,6 +12,7 @@ const TARGET_CAPACITY = 1000000;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
+  const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
   const [f1SlotCount, setF1SlotCount] = useState(null);
@@ -253,6 +257,13 @@ height: "100vh",
       <p>
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
   {TARGET_CAPACITY.toLocaleString()} slots
+</p>
+
+      <p>
+  Legacy source:{" "}
+  {activeLegacySection
+    ? `${activeLegacySection.wall} / ${activeLegacySection.section}`
+    : "Expansion area"}
 </p>
      
       <div
