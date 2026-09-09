@@ -9,6 +9,10 @@ export default function PrototypeWall({
 }) {
   const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
 
+  const mappedSlotsForSection = mappedSlots.filter(
+  (slot) => slot.galleryPosition?.sectionNumber === sectionNumber
+);
+
 const slotsInSection = Math.min(
   SLOTS_PER_SECTION,
   Math.max(0, TARGET_CAPACITY - sectionStartIndex)
@@ -57,25 +61,35 @@ const slotsInSection = Math.min(
           border: "2px solid #b89b5e",
         }}
       >
-        {slots.map((slot) => (
-          <div
-            key={slot.index}
-            style={{
-              width: "48px",
-              height: "48px",
-              background: "#f7f5ef",
-              border: "1px solid #aaa",
-              color: "#222",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "10px",
-              boxSizing: "border-box",
-            }}
-          >
-            {slot.galleryKey}
-          </div>
-        ))}
+        {slots.map((slot) => {
+  const realSlot = mappedSlotsForSection.find(
+    (mappedSlot) =>
+      mappedSlot.galleryPosition?.row === slot.row &&
+      mappedSlot.galleryPosition?.column === slot.column
+  );
+
+  return (
+    <div
+      key={slot.index}
+      style={{
+        width: "48px",
+        height: "48px",
+        background: "#f7f5ef",
+        border: "1px solid #aaa",
+        color: "#222",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "10px",
+        boxSizing: "border-box",
+        textAlign: "center",
+        padding: "2px",
+      }}
+    >
+      {realSlot ? realSlot.slot_code : slot.galleryKey}
+    </div>
+  );
+})}
       </div>
     </div>
   );
