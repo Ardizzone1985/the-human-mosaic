@@ -208,6 +208,16 @@ height: "100vh",
   {identitySlotCount === null ? "Loading..." : identitySlotCount}
 </p>
 
+      <p>
+  Identity / Left Wall / L1 slots:{" "}
+  {l1SlotCount === null ? "Loading..." : l1SlotCount}
+</p>
+
+<p>
+  Identity / Right Wall / R1 slots:{" "}
+  {r1SlotCount === null ? "Loading..." : r1SlotCount}
+</p>
+
       {f2FirstSlots.length > 0 && (
   <p>
     First F2 slots:{" "}
