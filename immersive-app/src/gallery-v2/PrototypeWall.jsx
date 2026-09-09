@@ -3,7 +3,10 @@ const COLUMNS = 10;
 const TARGET_CAPACITY = 1000000;
 const SLOTS_PER_SECTION = ROWS * COLUMNS;
 
-export default function PrototypeWall({ sectionNumber = 1 }) {
+export default function PrototypeWall({
+  sectionNumber = 1,
+  mappedSlots = [],
+}) {
   const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
 
 const slotsInSection = Math.min(
