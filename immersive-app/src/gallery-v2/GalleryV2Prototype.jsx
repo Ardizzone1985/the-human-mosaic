@@ -33,7 +33,7 @@ useEffect(() => {
 .order("section", { ascending: true })
 .order("row_number", { ascending: true })
 .order("col_number", { ascending: true })
-.limit(600);
+.limit(1200);
 
     if (error) {
       console.error("Gallery v2 slot load error:", error);
