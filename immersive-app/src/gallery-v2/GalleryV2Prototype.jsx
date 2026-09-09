@@ -237,7 +237,10 @@ height: "100vh",
       {mappedRealSlots.length > 0 && (
   <p>
     First 10 sequence:{" "}
-    {mappedRealSlots.map((slot) => slot.slot_code).join(" | ")}
+    {mappedRealSlots
+      .slice(0, 10)
+      .map((slot) => slot.slot_code)
+      .join(" | ")}
   </p>
 )}
       
