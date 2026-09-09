@@ -57,11 +57,13 @@ export function sortSlotsForGallery(slots) {
   });
 }
 
-export function mapSlotsToGallery(slots) {
+export function mapSlotsToGallery(slots, startIndex = 0) {
   const sortedSlots = sortSlotsForGallery(slots);
 
   return sortedSlots.map((slot, index) => {
-    const galleryPosition = galleryPositionFromIndex(index);
+    const galleryPosition = galleryPositionFromIndex(
+      startIndex + index
+    );
 
     return {
       ...slot,
