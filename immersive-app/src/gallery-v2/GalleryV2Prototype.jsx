@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PrototypeWall from "./PrototypeWall";
 import { supabase } from "../supabaseClient";
+import { mapSlotsToGallery } from "./slotMapping";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
@@ -10,6 +11,7 @@ export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
 
   const [realSlots, setRealSlots] = useState([]);
+  const mappedRealSlots = mapSlotsToGallery(realSlots);
 
 useEffect(() => {
   async function loadSlots() {
@@ -48,7 +50,7 @@ height: "100vh",
       <p>Isolated development environment.</p>
       
       <p>
-  Loaded Identity slots: {realSlots.length}
+  Loaded Identity slots: {realSlots.length} — Mapped: {mappedRealSlots.length}
 </p>
       
       <p>
