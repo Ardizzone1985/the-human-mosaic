@@ -69,3 +69,28 @@ export function mapSlotsToGallery(slots) {
     };
   });
 }
+
+export function getLegacyIdentitySection(gallerySectionNumber) {
+  if (gallerySectionNumber >= 1 && gallerySectionNumber <= 10) {
+    return {
+      wall: "Front Wall",
+      section: `F${gallerySectionNumber}`,
+    };
+  }
+
+  if (gallerySectionNumber >= 11 && gallerySectionNumber <= 16) {
+    return {
+      wall: "Left Wall",
+      section: `L${gallerySectionNumber - 10}`,
+    };
+  }
+
+  if (gallerySectionNumber >= 17 && gallerySectionNumber <= 22) {
+    return {
+      wall: "Right Wall",
+      section: `R${gallerySectionNumber - 16}`,
+    };
+  }
+
+  return null;
+}
