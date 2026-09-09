@@ -276,7 +276,10 @@ height: "100vh",
 </button>
       </div>
 
-      <PrototypeWall sectionNumber={activeSection} />
+      <PrototypeWall
+  sectionNumber={activeSection}
+  mappedSlots={mappedRealSlots}
+/>
     </div>
   );
 }
