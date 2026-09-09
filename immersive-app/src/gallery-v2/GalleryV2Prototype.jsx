@@ -15,6 +15,8 @@ export default function GalleryV2Prototype() {
   const [f2SlotCount, setF2SlotCount] = useState(null);
   const [f10SlotCount, setF10SlotCount] = useState(null);
   const [identitySlotCount, setIdentitySlotCount] = useState(null);
+  const [l1SlotCount, setL1SlotCount] = useState(null);
+const [r1SlotCount, setR1SlotCount] = useState(null);
   const [f2FirstSlots, setF2FirstSlots] = useState([]);
   const mappedRealSlots = mapSlotsToGallery(realSlots);
   const firstMappedSlot = mappedRealSlots[0];
@@ -112,6 +114,38 @@ countF10Slots();
 }
 
 countIdentitySlots();
+
+  async function countSideWallSamples() {
+  const [leftResult, rightResult] = await Promise.all([
+    supabase
+      .from("slots")
+      .select("*", { count: "exact", head: true })
+      .eq("room", "Identity")
+      .eq("wall", "Left Wall")
+      .eq("section", "L1"),
+
+    supabase
+      .from("slots")
+      .select("*", { count: "exact", head: true })
+      .eq("room", "Identity")
+      .eq("wall", "Right Wall")
+      .eq("section", "R1"),
+  ]);
+
+  if (leftResult.error) {
+    console.error("Gallery v2 L1 count error:", leftResult.error);
+  } else {
+    setL1SlotCount(leftResult.count);
+  }
+
+  if (rightResult.error) {
+    console.error("Gallery v2 R1 count error:", rightResult.error);
+  } else {
+    setR1SlotCount(rightResult.count);
+  }
+}
+
+countSideWallSamples();
 
   async function loadF2FirstSlots() {
   const { data, error } = await supabase
