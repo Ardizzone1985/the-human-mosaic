@@ -12,6 +12,7 @@ export default function GalleryV2Prototype() {
 
   const [realSlots, setRealSlots] = useState([]);
   const [f1SlotCount, setF1SlotCount] = useState(null);
+  const [f2FirstSlots, setF2FirstSlots] = useState([]);
   const mappedRealSlots = mapSlotsToGallery(realSlots);
   const firstMappedSlot = mappedRealSlots[0];
 
@@ -56,6 +57,27 @@ useEffect(() => {
 }
 
 countF1Slots();
+
+  async function loadF2FirstSlots() {
+  const { data, error } = await supabase
+    .from("slots")
+    .select("slot_code, row_number, col_number")
+    .eq("room", "Identity")
+    .eq("wall", "Front Wall")
+    .eq("section", "F2")
+    .order("row_number", { ascending: true })
+    .order("col_number", { ascending: true })
+    .limit(2);
+
+  if (error) {
+    console.error("Gallery v2 F2 boundary error:", error);
+    return;
+  }
+
+  setF2FirstSlots(data ?? []);
+}
+
+loadF2FirstSlots();
 }, []);
 
   return (
@@ -81,6 +103,13 @@ height: "100vh",
   Identity / Front Wall / F1 slots:{" "}
   {f1SlotCount === null ? "Loading..." : f1SlotCount}
 </p>
+
+      {f2FirstSlots.length > 0 && (
+  <p>
+    First F2 slots:{" "}
+    {f2FirstSlots.map((slot) => slot.slot_code).join(" | ")}
+  </p>
+)}
 
       {firstMappedSlot && (
   <p>
