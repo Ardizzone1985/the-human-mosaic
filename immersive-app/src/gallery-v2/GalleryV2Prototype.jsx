@@ -12,6 +12,7 @@ export default function GalleryV2Prototype() {
 
   const [realSlots, setRealSlots] = useState([]);
   const mappedRealSlots = mapSlotsToGallery(realSlots);
+  const firstMappedSlot = mappedRealSlots[0];
 
 useEffect(() => {
   async function loadSlots() {
@@ -52,6 +53,15 @@ height: "100vh",
       <p>
   Loaded Identity slots: {realSlots.length} — Mapped: {mappedRealSlots.length}
 </p>
+
+      {firstMappedSlot && (
+  <p>
+    First real slot: <strong>{firstMappedSlot.slot_code}</strong>
+    {" → "}
+    Gallery position:{" "}
+    <strong>{firstMappedSlot.galleryPosition.galleryKey}</strong>
+  </p>
+)}
       
       <p>
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
