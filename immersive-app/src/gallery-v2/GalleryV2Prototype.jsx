@@ -26,7 +26,7 @@ useEffect(() => {
 .order("section", { ascending: true })
 .order("row_number", { ascending: true })
 .order("col_number", { ascending: true })
-.limit(10);
+.limit(12);
 
     if (error) {
       console.error("Gallery v2 slot load error:", error);
