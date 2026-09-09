@@ -66,6 +66,13 @@ height: "100vh",
     <strong>{firstMappedSlot.galleryPosition.galleryKey}</strong>
   </p>
 )}
+
+      {mappedRealSlots.length > 0 && (
+  <p>
+    First 10 sequence:{" "}
+    {mappedRealSlots.map((slot) => slot.slot_code).join(" | ")}
+  </p>
+)}
       
       <p>
   Section {activeSection} of {MAX_SECTIONS} — Total Room Capacity:{" "}
