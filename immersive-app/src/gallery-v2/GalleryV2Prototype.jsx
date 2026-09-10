@@ -14,9 +14,8 @@ export default function GalleryV2Prototype() {
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
-  const [sectionLoadType, setSectionLoadType] = useState(null);  
-  const mappedRealSlots = realSlots;
-  const firstMappedSlot = mappedRealSlots[0];
+  const [sectionLoadType, setSectionLoadType] = useState(null);    
+  const firstMappedSlot = realSlots[0];
 
 useEffect(() => {
   async function loadSlots() {
@@ -51,7 +50,7 @@ height: "100vh",
       <p>Isolated development environment.</p>
       
       <p>
-  Loaded Identity slots: {realSlots.length} — Mapped: {mappedRealSlots.length}
+  Loaded Identity slots: {realSlots.length}
 </p>
 
       <p>
@@ -67,10 +66,10 @@ height: "100vh",
   </p>
 )}
 
-      {mappedRealSlots.length > 0 && (
+      {realSlots.length > 0 && (
   <p>
     First 10 sequence:{" "}
-    {mappedRealSlots
+    {realSlots
       .slice(0, 10)
       .map((slot) => slot.slot_code)
       .join(" | ")}
@@ -121,7 +120,7 @@ height: "100vh",
 
       <PrototypeWall
   sectionNumber={activeSection}
-  mappedSlots={mappedRealSlots}
+  mappedSlots={realSlots}
 />
     </div>
   );
