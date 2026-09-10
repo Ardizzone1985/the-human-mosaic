@@ -187,38 +187,8 @@ height: "100vh",
       <p>
   Data source type: {sectionLoadType ?? "Loading..."}
 </p>
-     
-      <p>
-  Identity / Front Wall / F1 slots:{" "}
-  {f1SlotCount === null ? "Loading..." : f1SlotCount}
-</p>
-
-      <p>
-  Identity / Front Wall / F2 slots:{" "}
-  {f2SlotCount === null ? "Loading..." : f2SlotCount}
-</p>
-
-      <p>
-  Identity / Front Wall / F10 slots:{" "}
-  {f10SlotCount === null ? "Loading..." : f10SlotCount}
-</p>
-
-      <p>
-  Total Identity slots:{" "}
-  {identitySlotCount === null ? "Loading..." : identitySlotCount}
-</p>
-
-      <p>
-  Identity / Left Wall / L1 slots:{" "}
-  {l1SlotCount === null ? "Loading..." : l1SlotCount}
-</p>
-
-<p>
-  Identity / Right Wall / R1 slots:{" "}
-  {r1SlotCount === null ? "Loading..." : r1SlotCount}
-</p>
-
-      {f2FirstSlots.length > 0 && (
+   
+        {f2FirstSlots.length > 0 && (
   <p>
     First F2 slots:{" "}
     {f2FirstSlots.map((slot) => slot.slot_code).join(" | ")}
