@@ -5,6 +5,7 @@ import {
   mapSlotsToGallery,
   getLegacyIdentitySection,
 } from "./slotMapping";
+import { loadIdentityGallerySection } from "./galleryDataSource";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
@@ -15,6 +16,7 @@ export default function GalleryV2Prototype() {
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
+  const [sectionLoadType, setSectionLoadType] = useState(null);
   const [f1SlotCount, setF1SlotCount] = useState(null);
   const [f2SlotCount, setF2SlotCount] = useState(null);
   const [f10SlotCount, setF10SlotCount] = useState(null);
@@ -30,32 +32,16 @@ const [r1SlotCount, setR1SlotCount] = useState(null);
 
 useEffect(() => {
   async function loadSlots() {
-    if (!activeLegacySection) {
-  setRealSlots([]);
-  return;
-}
+  try {
+    const result = await loadIdentityGallerySection(activeSection);
 
-setRealSlots([]);
-
-const { data, error } = await supabase
-  .from("slots")
-  .select(
-    "slot_code, room, wall, section, row_number, col_number"
-  )
-  .eq("room", "Identity")
-  .eq("wall", activeLegacySection.wall)
-  .eq("section", activeLegacySection.section)
-  .order("row_number", { ascending: true })
-  .order("col_number", { ascending: true })
-  .limit(600);
-
-    if (error) {
-      console.error("Gallery v2 slot load error:", error);
-      return;
-    }
-
-    setRealSlots(data ?? []);
+    setSectionLoadType(result.type);
+    setRealSlots(result.slots);
+  } catch (error) {
+    console.error("Gallery v2 slot load error:", error);
+    setRealSlots([]);
   }
+}
 
   loadSlots();
 
@@ -200,6 +186,10 @@ height: "100vh",
       
       <p>
   Loaded Identity slots: {realSlots.length} — Mapped: {mappedRealSlots.length}
+</p>
+
+      <p>
+  Data source type: {sectionLoadType ?? "Loading..."}
 </p>
 
       {realSlots.length === 1000 && (
