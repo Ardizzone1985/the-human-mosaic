@@ -187,13 +187,7 @@ height: "100vh",
       <p>
   Data source type: {sectionLoadType ?? "Loading..."}
 </p>
-
-      {realSlots.length === 1000 && (
-  <p>
-    ⚠ Supabase query returned exactly 1000 rows.
-  </p>
-)}
-
+     
       <p>
   Identity / Front Wall / F1 slots:{" "}
   {f1SlotCount === null ? "Loading..." : f1SlotCount}
