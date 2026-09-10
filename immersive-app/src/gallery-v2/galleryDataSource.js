@@ -45,3 +45,23 @@ export async function loadIdentityGallerySection(sectionNumber) {
     ),
   };
 }
+
+export async function loadSubmissionById(submissionId) {
+  if (!submissionId) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("submissions")
+    .select(
+      "submission_id, slot_code, approval_status, image_url, image_file_name"
+    )
+    .eq("submission_id", submissionId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? null;
+}
