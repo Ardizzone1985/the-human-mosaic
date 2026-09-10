@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import PrototypeWall from "./PrototypeWall";
 import { supabase } from "../supabaseClient";
 import {
-  mapSlotsToGallery,
   getLegacyIdentitySection,
 } from "./slotMapping";
 import { loadIdentityGallerySection } from "./galleryDataSource";
@@ -24,10 +23,7 @@ export default function GalleryV2Prototype() {
   const [l1SlotCount, setL1SlotCount] = useState(null);
 const [r1SlotCount, setR1SlotCount] = useState(null);
   const [f2FirstSlots, setF2FirstSlots] = useState([]);
-  const mappedRealSlots = mapSlotsToGallery(
-  realSlots,
-  (activeSection - 1) * SLOTS_PER_SECTION
-);
+  const mappedRealSlots = realSlots;
   const firstMappedSlot = mappedRealSlots[0];
 
 useEffect(() => {
