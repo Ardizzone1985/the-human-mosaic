@@ -20,7 +20,8 @@ export async function loadIdentityGallerySection(sectionNumber) {
   const { data, error } = await supabase
     .from("slots")
     .select(
-      "slot_code, room, wall, section, row_number, col_number"
+  "slot_code, room, wall, section, row_number, col_number, status, submission_id"
+)
     )
     .eq("room", "Identity")
     .eq("wall", legacySource.wall)
