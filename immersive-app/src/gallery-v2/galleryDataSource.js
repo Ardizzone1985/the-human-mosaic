@@ -22,7 +22,6 @@ export async function loadIdentityGallerySection(sectionNumber) {
     .select(
   "slot_code, room, wall, section, row_number, col_number, status, submission_id"
 )
-    )
     .eq("room", "Identity")
     .eq("wall", legacySource.wall)
     .eq("section", legacySource.section)
