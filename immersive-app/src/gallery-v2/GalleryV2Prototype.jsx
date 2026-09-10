@@ -14,6 +14,7 @@ const TARGET_CAPACITY = 1000000;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
+  const [firstSubmission, setFirstSubmission] = useState(null);
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
