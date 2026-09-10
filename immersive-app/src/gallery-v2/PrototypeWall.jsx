@@ -74,9 +74,9 @@ const slotsInSection = Math.min(
       style={{
         width: "48px",
         height: "48px",
-        background: "#f7f5ef",
-        border: "1px solid #aaa",
-        color: "#222",
+        background: realSlot ? "#f7f5ef" : "#d9d9d9",
+        border: realSlot ? "1px solid #b89b5e" : "1px dashed #888",
+        color: realSlot ? "#222" : "#555",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
