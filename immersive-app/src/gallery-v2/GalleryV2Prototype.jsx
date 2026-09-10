@@ -3,7 +3,10 @@ import PrototypeWall from "./PrototypeWall";
 import {
   getLegacyIdentitySection,
 } from "./slotMapping";
-import { loadIdentityGallerySection } from "./galleryDataSource";
+import {
+  loadIdentityGallerySection,
+  loadSubmissionById,
+} from "./galleryDataSource";
 
 const MAX_SECTIONS = 1667;
 const SLOTS_PER_SECTION = 600;
