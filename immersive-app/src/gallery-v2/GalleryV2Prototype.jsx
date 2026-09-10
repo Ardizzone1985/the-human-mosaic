@@ -16,12 +16,6 @@ export default function GalleryV2Prototype() {
 
   const [realSlots, setRealSlots] = useState([]);
   const [sectionLoadType, setSectionLoadType] = useState(null);
-  const [f1SlotCount, setF1SlotCount] = useState(null);
-  const [f2SlotCount, setF2SlotCount] = useState(null);
-  const [f10SlotCount, setF10SlotCount] = useState(null);
-  const [identitySlotCount, setIdentitySlotCount] = useState(null);
-  const [l1SlotCount, setL1SlotCount] = useState(null);
-const [r1SlotCount, setR1SlotCount] = useState(null);
   const [f2FirstSlots, setF2FirstSlots] = useState([]);
   const mappedRealSlots = realSlots;
   const firstMappedSlot = mappedRealSlots[0];
@@ -40,108 +34,6 @@ useEffect(() => {
 }
 
   loadSlots();
-
-  async function countF1Slots() {
-  const { count, error } = await supabase
-    .from("slots")
-    .select("*", { count: "exact", head: true })
-    .eq("room", "Identity")
-    .eq("wall", "Front Wall")
-    .eq("section", "F1");
-
-  if (error) {
-    console.error("Gallery v2 F1 count error:", error);
-    return;
-  }
-
-  setF1SlotCount(count);
-}
-
-countF1Slots();
-
-  async function countF2Slots() {
-  const { count, error } = await supabase
-    .from("slots")
-    .select("*", { count: "exact", head: true })
-    .eq("room", "Identity")
-    .eq("wall", "Front Wall")
-    .eq("section", "F2");
-
-  if (error) {
-    console.error("Gallery v2 F2 count error:", error);
-    return;
-  }
-
-  setF2SlotCount(count);
-}
-
-countF2Slots();
-
-  async function countF10Slots() {
-  const { count, error } = await supabase
-    .from("slots")
-    .select("*", { count: "exact", head: true })
-    .eq("room", "Identity")
-    .eq("wall", "Front Wall")
-    .eq("section", "F10");
-
-  if (error) {
-    console.error("Gallery v2 F10 count error:", error);
-    return;
-  }
-
-  setF10SlotCount(count);
-}
-
-countF10Slots();
-
-  async function countIdentitySlots() {
-  const { count, error } = await supabase
-    .from("slots")
-    .select("*", { count: "exact", head: true })
-    .eq("room", "Identity");
-
-  if (error) {
-    console.error("Gallery v2 Identity count error:", error);
-    return;
-  }
-
-  setIdentitySlotCount(count);
-}
-
-countIdentitySlots();
-
-  async function countSideWallSamples() {
-  const [leftResult, rightResult] = await Promise.all([
-    supabase
-      .from("slots")
-      .select("*", { count: "exact", head: true })
-      .eq("room", "Identity")
-      .eq("wall", "Left Wall")
-      .eq("section", "L1"),
-
-    supabase
-      .from("slots")
-      .select("*", { count: "exact", head: true })
-      .eq("room", "Identity")
-      .eq("wall", "Right Wall")
-      .eq("section", "R1"),
-  ]);
-
-  if (leftResult.error) {
-    console.error("Gallery v2 L1 count error:", leftResult.error);
-  } else {
-    setL1SlotCount(leftResult.count);
-  }
-
-  if (rightResult.error) {
-    console.error("Gallery v2 R1 count error:", rightResult.error);
-  } else {
-    setR1SlotCount(rightResult.count);
-  }
-}
-
-countSideWallSamples();
 
   async function loadF2FirstSlots() {
   const { data, error } = await supabase
