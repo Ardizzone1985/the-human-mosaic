@@ -66,6 +66,16 @@ height: "100vh",
   </p>
 )}
 
+      {firstMappedSlot && (
+  <p>
+    First slot status:{" "}
+    <strong>{firstMappedSlot.status ?? "none"}</strong>
+    {" — "}
+    Submission ID:{" "}
+    <strong>{firstMappedSlot.submission_id ?? "none"}</strong>
+  </p>
+)}
+
       {realSlots.length > 0 && (
   <p>
     First 10 sequence:{" "}
