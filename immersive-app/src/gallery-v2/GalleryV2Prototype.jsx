@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import PrototypeWall from "./PrototypeWall";
-import { supabase } from "../supabaseClient";
 import {
   getLegacyIdentitySection,
 } from "./slotMapping";
@@ -15,8 +14,7 @@ export default function GalleryV2Prototype() {
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
-  const [sectionLoadType, setSectionLoadType] = useState(null);
-  const [f2FirstSlots, setF2FirstSlots] = useState([]);
+  const [sectionLoadType, setSectionLoadType] = useState(null);  
   const mappedRealSlots = realSlots;
   const firstMappedSlot = mappedRealSlots[0];
 
@@ -35,26 +33,6 @@ useEffect(() => {
 
   loadSlots();
 
-  async function loadF2FirstSlots() {
-  const { data, error } = await supabase
-    .from("slots")
-    .select("slot_code, row_number, col_number")
-    .eq("room", "Identity")
-    .eq("wall", "Front Wall")
-    .eq("section", "F2")
-    .order("row_number", { ascending: true })
-    .order("col_number", { ascending: true })
-    .limit(2);
-
-  if (error) {
-    console.error("Gallery v2 F2 boundary error:", error);
-    return;
-  }
-
-  setF2FirstSlots(data ?? []);
-}
-
-loadF2FirstSlots();
 }, [activeSection]);
 
   return (
@@ -79,14 +57,7 @@ height: "100vh",
       <p>
   Data source type: {sectionLoadType ?? "Loading..."}
 </p>
-   
-        {f2FirstSlots.length > 0 && (
-  <p>
-    First F2 slots:{" "}
-    {f2FirstSlots.map((slot) => slot.slot_code).join(" | ")}
-  </p>
-)}
-
+         
       {firstMappedSlot && (
   <p>
     First real slot: <strong>{firstMappedSlot.slot_code}</strong>
