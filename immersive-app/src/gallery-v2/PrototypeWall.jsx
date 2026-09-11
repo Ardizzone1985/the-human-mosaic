@@ -70,12 +70,7 @@ const slotsInSection = Math.min(
     (mappedSlot) =>
       mappedSlot.galleryPosition?.row === slot.row &&
       mappedSlot.galleryPosition?.column === slot.column
-  );
-        const isFirstPhotoSlot =
-  sectionNumber === 1 &&
-  slot.row === 1 &&
-  slot.column === 1 &&
-  firstSubmissionImageUrl;
+  );        
 
         const approvedSubmission = realSlot
   ? sectionSubmissions.find(
