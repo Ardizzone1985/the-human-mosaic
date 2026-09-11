@@ -230,8 +230,7 @@ height: "100vh",
 
       <PrototypeWall
   sectionNumber={activeSection}
-  mappedSlots={realSlots}
-        firstSubmissionImageUrl={firstSubmissionImageUrl}
+  mappedSlots={realSlots}        
         sectionSubmissions={sectionSubmissions}
 />
     </div>
