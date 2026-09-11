@@ -7,8 +7,7 @@ const SLOTS_PER_SECTION = ROWS * COLUMNS;
 
 export default function PrototypeWall({
   sectionNumber = 1,
-  mappedSlots = [],
-  firstSubmissionImageUrl = null,
+  mappedSlots = [],  
   sectionSubmissions = [],
 }) {
   const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
