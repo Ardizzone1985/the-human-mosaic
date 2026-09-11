@@ -6,6 +6,7 @@ import {
 import {
   loadIdentityGallerySection,
   loadSubmissionById,
+  getSubmissionImageUrl,
 } from "./galleryDataSource";
 
 const MAX_SECTIONS = 1667;
@@ -15,6 +16,10 @@ const TARGET_CAPACITY = 1000000;
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
   const [firstSubmission, setFirstSubmission] = useState(null);
+  const firstSubmissionImageUrl =
+  firstSubmission?.approval_status === "approved"
+    ? getSubmissionImageUrl(firstSubmission.image_file_name)
+    : null;
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
@@ -122,6 +127,13 @@ height: "100vh",
       <strong>{firstSubmission.image_file_name ?? "none"}</strong>
     </p>
   </>
+)}
+
+      {firstSubmission && (
+  <p>
+    Resolved image URL:{" "}
+    <strong>{firstSubmissionImageUrl ?? "none"}</strong>
+  </p>
 )}
 
       {realSlots.length > 0 && (
