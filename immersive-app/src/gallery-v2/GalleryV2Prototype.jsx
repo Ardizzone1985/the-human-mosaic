@@ -20,6 +20,7 @@ export default function GalleryV2Prototype() {
   firstSubmission?.approval_status === "approved"
     ? getSubmissionImageUrl(firstSubmission.image_file_name)
     : null;
+  const [sectionSubmissions, setSectionSubmissions] = useState([]);
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
   const [realSlots, setRealSlots] = useState([]);
