@@ -4,9 +4,10 @@ import {
   getLegacyIdentitySection,
 } from "./slotMapping";
 import {
+  getSubmissionImageUrl,
+  loadApprovedSubmissionsForSlots,
   loadIdentityGallerySection,
   loadSubmissionById,
-  getSubmissionImageUrl,
 } from "./galleryDataSource";
 
 const MAX_SECTIONS = 1667;
