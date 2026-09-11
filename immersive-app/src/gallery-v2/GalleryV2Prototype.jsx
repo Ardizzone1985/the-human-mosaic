@@ -105,6 +105,25 @@ height: "100vh",
   </p>
 )}
 
+      {firstSubmission && (
+  <>
+    <p>
+      Submission approval:{" "}
+      <strong>{firstSubmission.approval_status ?? "none"}</strong>
+    </p>
+
+    <p>
+      Image URL:{" "}
+      <strong>{firstSubmission.image_url ?? "none"}</strong>
+    </p>
+
+    <p>
+      Image file name:{" "}
+      <strong>{firstSubmission.image_file_name ?? "none"}</strong>
+    </p>
+  </>
+)}
+
       {realSlots.length > 0 && (
   <p>
     First 10 sequence:{" "}
