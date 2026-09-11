@@ -65,3 +65,15 @@ export async function loadSubmissionById(submissionId) {
 
   return data ?? null;
 }
+
+export function getSubmissionImageUrl(imageFileName) {
+  if (!imageFileName) {
+    return null;
+  }
+
+  const { data } = supabase.storage
+    .from("images")
+    .getPublicUrl(imageFileName);
+
+  return data?.publicUrl ?? null;
+}
