@@ -1,3 +1,5 @@
+import { getSubmissionImageUrl } from "./galleryDataSource";
+
 const ROWS = 60;
 const COLUMNS = 10;
 const TARGET_CAPACITY = 1000000;
@@ -80,6 +82,10 @@ const slotsInSection = Math.min(
       (submission) =>
         submission.slot_code === realSlot.slot_code
     )
+  : null;
+
+        const approvedImageUrl = approvedSubmission
+  ? getSubmissionImageUrl(approvedSubmission)
   : null;
 
   return (
