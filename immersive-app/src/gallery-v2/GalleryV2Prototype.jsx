@@ -46,6 +46,25 @@ useEffect(() => {
 }, [activeSection]);
 
   useEffect(() => {
+  async function loadSectionSubmissions() {
+    try {
+      const submissions =
+        await loadApprovedSubmissionsForSlots(realSlots);
+
+      setSectionSubmissions(submissions);
+    } catch (error) {
+      console.error(
+        "Gallery v2 section submissions load error:",
+        error
+      );
+      setSectionSubmissions([]);
+    }
+  }
+
+  loadSectionSubmissions();
+}, [realSlots]);
+
+  useEffect(() => {
   async function loadFirstSubmission() {
     if (!firstMappedSlot?.submission_id) {
       setFirstSubmission(null);
@@ -91,6 +110,10 @@ height: "100vh",
 
       <p>
   Data source type: {sectionLoadType ?? "Loading..."}
+</p>
+
+      <p>
+  Approved submissions in section: {sectionSubmissions.length}
 </p>
          
       {firstMappedSlot && (
