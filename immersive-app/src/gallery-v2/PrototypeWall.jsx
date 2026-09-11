@@ -7,6 +7,7 @@ export default function PrototypeWall({
   sectionNumber = 1,
   mappedSlots = [],
   firstSubmissionImageUrl = null,
+  sectionSubmissions = [],
 }) {
   const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
 
@@ -73,6 +74,13 @@ const slotsInSection = Math.min(
   slot.row === 1 &&
   slot.column === 1 &&
   firstSubmissionImageUrl;
+
+        const approvedSubmission = realSlot
+  ? sectionSubmissions.find(
+      (submission) =>
+        submission.slot_code === realSlot.slot_code
+    )
+  : null;
 
   return (
     <div
