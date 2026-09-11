@@ -6,6 +6,7 @@ const SLOTS_PER_SECTION = ROWS * COLUMNS;
 export default function PrototypeWall({
   sectionNumber = 1,
   mappedSlots = [],
+  firstSubmissionImageUrl = null,
 }) {
   const sectionStartIndex = (sectionNumber - 1) * SLOTS_PER_SECTION;
 
@@ -67,6 +68,11 @@ const slotsInSection = Math.min(
       mappedSlot.galleryPosition?.row === slot.row &&
       mappedSlot.galleryPosition?.column === slot.column
   );
+        const isFirstPhotoSlot =
+  sectionNumber === 1 &&
+  slot.row === 1 &&
+  slot.column === 1 &&
+  firstSubmissionImageUrl;
 
   return (
     <div
@@ -86,7 +92,20 @@ const slotsInSection = Math.min(
         padding: "2px",
       }}
     >
-      {realSlot ? realSlot.slot_code : slot.galleryKey}
+      {isFirstPhotoSlot ? (
+  <img
+    src={firstSubmissionImageUrl}
+    alt={realSlot?.slot_code ?? slot.galleryKey}
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      display: "block",
+    }}
+  />
+) : (
+  realSlot ? realSlot.slot_code : slot.galleryKey
+)}
     </div>
   );
 })}
