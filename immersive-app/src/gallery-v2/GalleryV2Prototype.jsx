@@ -232,6 +232,7 @@ height: "100vh",
   sectionNumber={activeSection}
   mappedSlots={realSlots}
         firstSubmissionImageUrl={firstSubmissionImageUrl}
+        sectionSubmissions={sectionSubmissions}
 />
     </div>
   );
