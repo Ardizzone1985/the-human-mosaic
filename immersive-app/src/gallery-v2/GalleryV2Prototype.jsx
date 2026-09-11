@@ -38,6 +38,31 @@ useEffect(() => {
 
 }, [activeSection]);
 
+  useEffect(() => {
+  async function loadFirstSubmission() {
+    if (!firstMappedSlot?.submission_id) {
+      setFirstSubmission(null);
+      return;
+    }
+
+    try {
+      const submission = await loadSubmissionById(
+        firstMappedSlot.submission_id
+      );
+
+      setFirstSubmission(submission);
+    } catch (error) {
+      console.error(
+        "Gallery v2 submission load error:",
+        error
+      );
+      setFirstSubmission(null);
+    }
+  }
+
+  loadFirstSubmission();
+}, [firstMappedSlot?.submission_id]);
+
   return (
     <div
   style={{
