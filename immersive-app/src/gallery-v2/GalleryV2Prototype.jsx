@@ -136,6 +136,21 @@ height: "100vh",
   </p>
 )}
 
+      {firstSubmissionImageUrl && (
+  <div style={{ marginBottom: "20px" }}>
+    <img
+      src={firstSubmissionImageUrl}
+      alt={firstSubmission?.slot_code ?? "Gallery prototype"}
+      style={{
+        width: "160px",
+        height: "160px",
+        objectFit: "cover",
+        border: "2px solid #b89b5e",
+      }}
+    />
+  </div>
+)}
+
       {realSlots.length > 0 && (
   <p>
     First 10 sequence:{" "}
