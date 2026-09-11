@@ -106,9 +106,9 @@ const slotsInSection = Math.min(
         padding: "2px",
       }}
     >
-      {isFirstPhotoSlot ? (
+      {approvedImageUrl ? (
   <img
-    src={firstSubmissionImageUrl}
+    src={approvedImageUrl}
     alt={realSlot?.slot_code ?? slot.galleryKey}
     style={{
       width: "100%",
