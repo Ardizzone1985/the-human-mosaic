@@ -77,3 +77,27 @@ export function getSubmissionImageUrl(imageFileName) {
 
   return data?.publicUrl ?? null;
 }
+
+export async function loadApprovedSubmissionsForSlots(slots) {
+  const submissionIds = slots
+    .map((slot) => slot.submission_id)
+    .filter(Boolean);
+
+  if (submissionIds.length === 0) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("submissions")
+    .select(
+      "submission_id, slot_code, approval_status, image_url, image_file_name"
+    )
+    .in("submission_id", submissionIds)
+    .eq("approval_status", "approved");
+
+  if (error) {
+    throw error;
+  }
+
+  return data ?? [];
+}
