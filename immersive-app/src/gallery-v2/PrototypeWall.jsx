@@ -84,8 +84,8 @@ const slotsInSection = Math.min(
     )
   : null;
 
-        const approvedImageUrl = approvedSubmission
-  ? getSubmissionImageUrl(approvedSubmission)
+        const approvedImageUrl = approvedSubmission?.image_file_name
+  ? getSubmissionImageUrl(approvedSubmission.image_file_name)
   : null;
 
   return (
