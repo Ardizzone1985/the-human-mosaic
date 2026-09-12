@@ -37,9 +37,11 @@ export default function GallerySlot({
             display: "block",
           }}
         />
-      ) : (
-        realSlot?.slot_code ?? slot.galleryKey
-      )}
+      ) : realSlot ? (
+  ""
+) : (
+  slot.galleryKey
+)}
     </div>
   );
 }
