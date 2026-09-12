@@ -1,3 +1,4 @@
+import GallerySlot from "./GallerySlot";
 import { getSubmissionImageUrl } from "./galleryDataSource";
 
 const ROWS = 60;
@@ -83,37 +84,12 @@ const slotsInSection = Math.min(
   : null;
 
   return (
-    <div
-      key={slot.index}
-      style={{
-        width: "48px",
-        height: "48px",
-        background: realSlot ? "#f7f5ef" : "#d9d9d9",
-        border: realSlot ? "1px solid #b89b5e" : "1px dashed #888",
-        color: realSlot ? "#222" : "#555",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "10px",
-        boxSizing: "border-box",
-        textAlign: "center",
-        padding: "2px",
-      }}
-    >
-      {approvedImageUrl ? (
-  <img
-    src={approvedImageUrl}
-    alt={realSlot?.slot_code ?? slot.galleryKey}
-    style={{
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      display: "block",
-    }}
-  />
-) : (
-  realSlot ? realSlot.slot_code : slot.galleryKey
-)}
+    <GallerySlot
+  key={slot.index}
+  slot={slot}
+  realSlot={realSlot}
+  imageUrl={approvedImageUrl}
+/>      
     </div>
   );
 })}
