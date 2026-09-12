@@ -89,9 +89,8 @@ const slotsInSection = Math.min(
   slot={slot}
   realSlot={realSlot}
   imageUrl={approvedImageUrl}
-/>      
-    </div>
-  );
+/>     
+      );
 })}
       </div>
     </div>
