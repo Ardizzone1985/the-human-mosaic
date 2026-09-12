@@ -4,10 +4,8 @@ import {
   getLegacyIdentitySection,
 } from "./slotMapping";
 import {
-  getSubmissionImageUrl,
-  loadApprovedSubmissionsForSlots,
-  loadIdentityGallerySection,
-  loadSubmissionById,
+    loadApprovedSubmissionsForSlots,
+  loadIdentityGallerySection, 
 } from "./galleryDataSource";
 
 const MAX_SECTIONS = 1667;
@@ -16,11 +14,7 @@ const TARGET_CAPACITY = 1000000;
 
 export default function GalleryV2Prototype() {
   const [activeSection, setActiveSection] = useState(1);
-  const [firstSubmission, setFirstSubmission] = useState(null);
-  const firstSubmissionImageUrl =
-  firstSubmission?.approval_status === "approved"
-    ? getSubmissionImageUrl(firstSubmission.image_file_name)
-    : null;
+  
   const [sectionSubmissions, setSectionSubmissions] = useState([]);
   const activeLegacySection = getLegacyIdentitySection(activeSection);
 
@@ -63,32 +57,7 @@ useEffect(() => {
 
   loadSectionSubmissions();
 }, [realSlots]);
-
-  useEffect(() => {
-  async function loadFirstSubmission() {
-    if (!firstMappedSlot?.submission_id) {
-      setFirstSubmission(null);
-      return;
-    }
-
-    try {
-      const submission = await loadSubmissionById(
-        firstMappedSlot.submission_id
-      );
-
-      setFirstSubmission(submission);
-    } catch (error) {
-      console.error(
-        "Gallery v2 submission load error:",
-        error
-      );
-      setFirstSubmission(null);
-    }
-  }
-
-  loadFirstSubmission();
-}, [firstMappedSlot?.submission_id]);
-
+ 
   return (
     <div
   style={{
