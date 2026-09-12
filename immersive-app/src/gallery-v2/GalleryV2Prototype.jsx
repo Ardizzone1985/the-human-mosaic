@@ -102,48 +102,7 @@ height: "100vh",
     Submission ID:{" "}
     <strong>{firstMappedSlot.submission_id ?? "none"}</strong>
   </p>
-)}
-
-      {firstSubmission && (
-  <>
-    <p>
-      Submission approval:{" "}
-      <strong>{firstSubmission.approval_status ?? "none"}</strong>
-    </p>
-
-    <p>
-      Image URL:{" "}
-      <strong>{firstSubmission.image_url ?? "none"}</strong>
-    </p>
-
-    <p>
-      Image file name:{" "}
-      <strong>{firstSubmission.image_file_name ?? "none"}</strong>
-    </p>
-  </>
-)}
-
-      {firstSubmission && (
-  <p>
-    Resolved image URL:{" "}
-    <strong>{firstSubmissionImageUrl ?? "none"}</strong>
-  </p>
-)}
-
-      {firstSubmissionImageUrl && (
-  <div style={{ marginBottom: "20px" }}>
-    <img
-      src={firstSubmissionImageUrl}
-      alt={firstSubmission?.slot_code ?? "Gallery prototype"}
-      style={{
-        width: "160px",
-        height: "160px",
-        objectFit: "cover",
-        border: "2px solid #b89b5e",
-      }}
-    />
-  </div>
-)}
+)}    
 
       {realSlots.length > 0 && (
   <p>
