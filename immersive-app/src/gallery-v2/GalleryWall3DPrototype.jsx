@@ -10,7 +10,7 @@ export default function GalleryWall3DPrototype() {
         background: "#111",
       }}
     >
-      <Canvas camera={{ position: [0, 2, 6], fov: 50 }}>
+      <Canvas camera={{ position: [0, 2, 9], fov: 50 }}>
         <ambientLight intensity={1.2} />
         <directionalLight
           position={[4, 6, 4]}
