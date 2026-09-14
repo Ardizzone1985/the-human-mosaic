@@ -1,6 +1,6 @@
 export default function GalleryWall3D() {
   return (
-    <mesh position={[0, 4, -4]}>
+    <mesh position={[0, 2, -4]}>
       <planeGeometry args={[14, 8]} />
 
       <meshStandardMaterial
