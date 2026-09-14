@@ -3,6 +3,10 @@
     {
       "source": "/gallery-v2",
       "destination": "/index.html"
+    },
+    {
+      "source": "/gallery-v2-3d",
+      "destination": "/index.html"
     }
   ]
 }
