@@ -16,7 +16,7 @@ export default function GalleryWall3D() {
       return (
         <mesh
           key={index}
-          position={[x, 4.6, -3.95]}
+          position={[x, 3.8, -3.95]}
         >
           <planeGeometry args={[1, 1]} />
           <meshStandardMaterial
