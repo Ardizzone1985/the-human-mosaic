@@ -18,7 +18,20 @@ export default function GalleryWall3DPrototype() {
         />
 
         <GalleryWall3D />
+
+        <mesh
+  position={[0, -2, 1]}
+  rotation={[-Math.PI / 2, 0, 0]}
+>
+  <planeGeometry args={[14, 14]} />
+  <meshStandardMaterial
+    color="#d8d2c5"
+    roughness={0.8}
+    metalness={0.05}
+  />
+</mesh>
       </Canvas>
     </div>
   );
 }
+
