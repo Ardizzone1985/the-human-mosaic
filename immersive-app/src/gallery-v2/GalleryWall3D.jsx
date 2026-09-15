@@ -18,7 +18,11 @@ const SLOTS_PER_VIEW = 40;
   Array.from({ length: 10 }).map((_, column) => {
     const x = -5.85 + column * 1.3;
     const y = 3.8 - row * 1.3;
-    const slotNumber = row * 10 + column + 1;
+    const slotNumber =
+  (viewNumber - 1) * SLOTS_PER_VIEW +
+  row * 10 +
+  column +
+  1;
 
     return (
   <group
