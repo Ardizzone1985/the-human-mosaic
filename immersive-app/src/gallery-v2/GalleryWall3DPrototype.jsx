@@ -17,7 +17,7 @@ export default function GalleryWall3DPrototype() {
           intensity={1.5}
         />
 
-        <GalleryWall3D sectionNumber={2} />
+        <GalleryWall3D sectionNumber={1667} />
 
         {/* pavimento */}
         <mesh
