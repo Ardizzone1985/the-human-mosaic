@@ -16,6 +16,16 @@ const SLOTS_PER_VIEW = 40;
     </mesh>
 
     <Text
+  position={[0, 3.25, -3.9]}
+  fontSize={0.32}
+  color="#222222"
+  anchorX="center"
+  anchorY="middle"
+>
+  {`SECTION ${sectionNumber}`}
+</Text>
+
+    <Text
   position={[-2, -1.8, -3.9]}
   fontSize={0.28}
   color="#222222"
