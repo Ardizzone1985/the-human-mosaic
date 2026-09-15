@@ -19,18 +19,30 @@ export default function GalleryWall3D() {
     const slotNumber = row * 10 + column + 1;
 
     return (
-      <mesh
-        key={`${row}-${column}`}
-        position={[x, y, -3.95]}
-      >
-        <planeGeometry args={[1, 1]} />
-        <meshStandardMaterial
-          color="#f7f5ef"
-          roughness={0.7}
-          metalness={0.05}
-        />
-      </mesh>
-    );
+  <group
+    key={`${row}-${column}`}
+    position={[x, y, -3.95]}
+  >
+    <mesh>
+      <planeGeometry args={[1, 1]} />
+      <meshStandardMaterial
+        color="#f7f5ef"
+        roughness={0.7}
+        metalness={0.05}
+      />
+    </mesh>
+
+    <Text
+      position={[0, 0, 0.02]}
+      fontSize={0.22}
+      color="#222222"
+      anchorX="center"
+      anchorY="middle"
+    >
+      {slotNumber}
+    </Text>
+  </group>
+);
   })
 )}
   </>
