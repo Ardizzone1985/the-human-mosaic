@@ -28,6 +28,16 @@ const SLOTS_PER_VIEW = 40;
   Previous View
 </Text>
 
+    <mesh
+  position={[-2, -1.8, -3.88]}
+  onClick={() =>
+    setViewNumber((current) => Math.max(1, current - 1))
+  }
+>
+  <planeGeometry args={[2.2, 0.6]} />
+  <meshBasicMaterial transparent opacity={0} />
+</mesh>
+
     {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
     const x = -5.85 + column * 1.3;
