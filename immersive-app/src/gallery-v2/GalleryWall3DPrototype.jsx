@@ -20,8 +20,10 @@ export default function GalleryWall3DPrototype() {
           intensity={1.5}
         />
 
-        <GalleryWall3D sectionNumber={sectionNumber} />
-
+        <GalleryWall3D
+  key={sectionNumber}
+  sectionNumber={sectionNumber}
+/>
         <mesh
   position={[0, -1.55, -3.8]}
   onClick={() =>
@@ -53,8 +55,7 @@ export default function GalleryWall3DPrototype() {
   anchorX="center"
   anchorY="middle"
   onClick={() => {
-    setSectionNumber((current) => Math.min(1667, current + 1));
-    setViewNumber(1);
+    setSectionNumber((current) => Math.min(1667, current + 1));    
   }}
 >
   Next Section
