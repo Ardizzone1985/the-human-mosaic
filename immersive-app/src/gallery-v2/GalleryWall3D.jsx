@@ -4,6 +4,7 @@ import { Text } from "@react-three/drei";
 export default function GalleryWall3D({ sectionNumber = 1 }) {
   const [viewNumber, setViewNumber] = useState(15);
 const SLOTS_PER_VIEW = 40;
+  const MAX_VIEW = sectionNumber === 1667 ? 10 : 15;
   return (
   <>
     <mesh position={[0, 2, -4]}>
@@ -61,7 +62,7 @@ const SLOTS_PER_VIEW = 40;
 <mesh
   position={[2, -1.8, -3.88]}
   onClick={() =>
-    setViewNumber((current) => Math.min(15, current + 1))
+    setViewNumber((current) => Math.min(MAX_VIEW, current + 1))
   }
 >
   <planeGeometry args={[2.2, 0.6]} />
