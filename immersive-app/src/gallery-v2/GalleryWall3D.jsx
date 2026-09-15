@@ -10,23 +10,26 @@ export default function GalleryWall3D() {
       />
     </mesh>
 
-    {Array.from({ length: 10 }).map((_, index) => {
-      const x = -5.85 + index * 1.3;
+    {Array.from({ length: 2 }).map((_, row) =>
+  Array.from({ length: 10 }).map((_, column) => {
+    const x = -5.85 + column * 1.3;
+    const y = 3.8 - row * 1.3;
 
-      return (
-        <mesh
-          key={index}
-          position={[x, 3.8, -3.95]}
-        >
-          <planeGeometry args={[1, 1]} />
-          <meshStandardMaterial
-            color="#f7f5ef"
-            roughness={0.7}
-            metalness={0.05}
-          />
-        </mesh>
-      );
-    })}
+    return (
+      <mesh
+        key={`${row}-${column}`}
+        position={[x, y, -3.95]}
+      >
+        <planeGeometry args={[1, 1]} />
+        <meshStandardMaterial
+          color="#f7f5ef"
+          roughness={0.7}
+          metalness={0.05}
+        />
+      </mesh>
+    );
+  })
+)}
   </>
 );
 }
