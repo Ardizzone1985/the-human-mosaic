@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 
 export default function GalleryWall3D() {
-  const viewNumber = 2;
+  const viewNumber = 15;
 const SLOTS_PER_VIEW = 40;
   return (
   <>
