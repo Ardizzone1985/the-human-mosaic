@@ -14,6 +14,7 @@ export default function GalleryWall3D() {
   Array.from({ length: 10 }).map((_, column) => {
     const x = -5.85 + column * 1.3;
     const y = 3.8 - row * 1.3;
+    const slotNumber = row * 10 + column + 1;
 
     return (
       <mesh
