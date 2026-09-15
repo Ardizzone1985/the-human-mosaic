@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import GalleryWall3D from "./GalleryWall3D";
 
 export default function GalleryWall3DPrototype() {
+  const [sectionNumber, setSectionNumber] = useState(1667);
   return (
     <div
       style={{
