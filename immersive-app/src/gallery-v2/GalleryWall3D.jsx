@@ -16,7 +16,7 @@ const SLOTS_PER_VIEW = 40;
     </mesh>
 
     <Text
-  position={[-2, -2.2, -3.9]}
+  position={[-2, -1.8, -3.9]}
   fontSize={0.28}
   color="#222222"
   anchorX="center"
