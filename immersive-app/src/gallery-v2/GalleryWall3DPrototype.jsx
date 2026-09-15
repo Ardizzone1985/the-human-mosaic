@@ -46,6 +46,20 @@ export default function GalleryWall3DPrototype() {
   Previous Section
 </Text>
 
+        <Text
+  position={[1.5, -2, -3.85]}
+  fontSize={0.22}
+  color="#222222"
+  anchorX="center"
+  anchorY="middle"
+  onClick={() => {
+    setSectionNumber((current) => Math.min(1667, current + 1));
+    setViewNumber(1);
+  }}
+>
+  Next Section
+</Text>
+
         {/* pavimento */}
         <mesh
   position={[0, -2, 1]}
