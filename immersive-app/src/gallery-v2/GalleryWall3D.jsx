@@ -15,6 +15,19 @@ const SLOTS_PER_VIEW = 40;
       />
     </mesh>
 
+    <Text
+  position={[-2, -2.2, -3.9]}
+  fontSize={0.28}
+  color="#222222"
+  anchorX="center"
+  anchorY="middle"
+  onClick={() =>
+    setViewNumber((current) => Math.max(1, current - 1))
+  }
+>
+  Previous View
+</Text>
+
     {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
     const x = -5.85 + column * 1.3;
