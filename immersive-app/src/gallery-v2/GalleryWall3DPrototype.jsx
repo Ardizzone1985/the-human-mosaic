@@ -32,6 +32,16 @@ export default function GalleryWall3DPrototype() {
   <meshBasicMaterial transparent opacity={0} />
 </mesh>
 
+        <Text
+  position={[0, -1.55, -3.79]}
+  fontSize={0.28}
+  color="#222222"
+  anchorX="center"
+  anchorY="middle"
+>
+  Previous Section
+</Text>
+
         {/* pavimento */}
         <mesh
   position={[0, -2, 1]}
