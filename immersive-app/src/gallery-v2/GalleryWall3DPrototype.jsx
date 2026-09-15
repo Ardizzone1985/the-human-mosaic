@@ -21,6 +21,16 @@ export default function GalleryWall3DPrototype() {
 
         <GalleryWall3D sectionNumber={sectionNumber} />
 
+        <mesh
+  position={[0, -1.55, -3.8]}
+  onClick={() =>
+    setSectionNumber((current) => Math.max(1, current - 1))
+  }
+>
+  <planeGeometry args={[2.2, 0.55]} />
+  <meshBasicMaterial transparent opacity={0} />
+</mesh>
+
         {/* pavimento */}
         <mesh
   position={[0, -2, 1]}
