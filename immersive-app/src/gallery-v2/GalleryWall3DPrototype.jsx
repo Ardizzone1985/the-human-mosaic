@@ -38,9 +38,10 @@ export default function GalleryWall3DPrototype() {
   color="#222222"
   anchorX="center"
   anchorY="middle"
-          onClick={() =>
-  setSectionNumber((current) => Math.max(1, current - 1))
-}
+          onClick={(event) => {
+  event.stopPropagation();
+  setSectionNumber((current) => Math.max(1, current - 1));
+}}
 >
   Previous Section
 </Text>
