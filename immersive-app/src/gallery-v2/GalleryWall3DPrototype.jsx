@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import GalleryWall3D from "./GalleryWall3D";
 
@@ -17,7 +18,7 @@ export default function GalleryWall3DPrototype() {
           intensity={1.5}
         />
 
-        <GalleryWall3D sectionNumber={1667} />
+        <GalleryWall3D sectionNumber={sectionNumber} />
 
         {/* pavimento */}
         <mesh
