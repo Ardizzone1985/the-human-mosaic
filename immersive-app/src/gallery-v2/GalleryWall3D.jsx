@@ -73,6 +73,7 @@ const SLOTS_PER_VIEW = 40;
     const x = -5.85 + column * 1.3;
     const y = 3.8 - row * 1.3;
     const slotNumber =
+  (sectionNumber - 1) * 600 +
   (viewNumber - 1) * SLOTS_PER_VIEW +
   row * 10 +
   column +
