@@ -4,7 +4,7 @@ import { Text } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
 export default function GalleryWall3DPrototype() {
-  const [sectionNumber, setSectionNumber] = useState(1667);
+  const [sectionNumber, setSectionNumber] = useState(1);
   return (
     <div
       style={{
