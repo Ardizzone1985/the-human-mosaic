@@ -49,7 +49,7 @@ export default function GalleryWall3DPrototype() {
 </Text>
 
         <Text
-  position={[0, -2.3, -3.85]}
+  position={[0, -1.15, -3.85]}
   fontSize={0.18}
   color="#222222"
   anchorX="center"
