@@ -12,8 +12,8 @@ export default function GalleryPhotoGrid3D({
   <group
     position={
       wall === "Left"
-        ? [-3.05, 0, -3.05]
-        : [0, 0, 0]
+  ? [-3.05, 0, -6]
+  : [0, 0, 0]
     }
     rotation={
       wall === "Left"
