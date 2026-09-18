@@ -11,13 +11,17 @@ export default function GalleryPhotoWall3D({
   position={
   wall === "Left"
     ? [-7, 2, 1]
+    : wall === "Right"
+    ? [7, 2, 1]
     : [0, 2, -6]
 }
-  rotation={
-    wall === "Left"
-      ? [0, Math.PI / 2, 0]
-      : [0, 0, 0]
-  }
+rotation={
+  wall === "Left"
+    ? [0, Math.PI / 2, 0]
+    : wall === "Right"
+    ? [0, -Math.PI / 2, 0]
+    : [0, 0, 0]
+}
 >
       <mesh>
         <planeGeometry args={[14, 8]} />
