@@ -49,6 +49,17 @@ export default function GalleryPhotoGrid3D({
           );
         })
       )}
-        </group>
+        <group
+  position={
+    wall === "Left"
+      ? [-3.05, 0, -3.05]
+      : [0, 0, 0]
+  }
+  rotation={
+    wall === "Left"
+      ? [0, Math.PI / 2, 0]
+      : [0, 0, 0]
+  }
+>
   );
 }
