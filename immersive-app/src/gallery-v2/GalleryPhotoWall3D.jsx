@@ -10,7 +10,7 @@ export default function GalleryPhotoWall3D({
   <group
   position={
     wall === "Left"
-      ? [-7, 2, -6]
+      ? [-7, 2, -4]
       : [0, 2, -4]
   }
   rotation={
