@@ -7,7 +7,7 @@ export default function GalleryPhotoWall3D({
   viewNumber = 1,
 }) {
   return (
-    <group>
+  <group position={[0, 2, -4]}>
       <mesh>
         <planeGeometry args={[14, 8]} />
         <meshStandardMaterial
@@ -17,12 +17,14 @@ export default function GalleryPhotoWall3D({
         />
       </mesh>
 
-      <GalleryPhotoGrid3D
-        room={room}
-        wall={wall}
-        sectionNumber={sectionNumber}
-        viewNumber={viewNumber}
-      />
+      <group position={[0, -2, 0.05]}>
+  <GalleryPhotoGrid3D
+    room={room}
+    wall={wall}
+    sectionNumber={sectionNumber}
+    viewNumber={viewNumber}
+  />
+</group>
     </group>
   );
 }
