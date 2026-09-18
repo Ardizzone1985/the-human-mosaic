@@ -10,17 +10,17 @@ export default function GalleryPhotoGrid3D({
 
   return (
   <group
-    position={
-      wall === "Left"
-  ? [-3.05, 0, -6]
-  : [0, 0, 0]
-    }
-    rotation={
-      wall === "Left"
-        ? [0, Math.PI / 2, 0]
-        : [0, 0, 0]
-    }
-  >
+  position={
+    wall === "Left"
+      ? [-6.95, 0, -6]
+      : [0, 0, -3.95]
+  }
+  rotation={
+    wall === "Left"
+      ? [0, Math.PI / 2, 0]
+      : [0, 0, 0]
+  }
+>
       {Array.from({ length: 4 }).map((_, row) =>
         Array.from({ length: 10 }).map((_, column) => {
           const x = -5.85 + column * 1.3;
@@ -36,7 +36,7 @@ export default function GalleryPhotoGrid3D({
           return (
             <group
               key={`${row}-${column}`}
-              position={[x, y, -3.95]}
+              position={[x, y, 0]}
             >
               <mesh>
                 <planeGeometry args={[1, 1]} />
