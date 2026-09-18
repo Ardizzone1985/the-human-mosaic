@@ -73,6 +73,7 @@ const SLOTS_PER_VIEW = 40;
     <GalleryPhotoGrid3D
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
+  wall="Front"
 />
   </>
 );
