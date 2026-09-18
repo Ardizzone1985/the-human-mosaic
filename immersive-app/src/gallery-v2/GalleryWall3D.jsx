@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Text } from "@react-three/drei";
 import GalleryPhotoWall3D from "./GalleryPhotoWall3D";
+import GalleryPhotoGrid3D from "./GalleryPhotoGrid3D";
 
 export default function GalleryWall3D({ sectionNumber = 1 }) {
   const [viewNumber, setViewNumber] = useState(1);
