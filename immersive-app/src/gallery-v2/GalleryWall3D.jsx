@@ -71,9 +71,10 @@ const SLOTS_PER_VIEW = 40;
 </mesh>
 
     <GalleryPhotoGrid3D
+  room="Identity"
+  wall="Front"
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
-  wall="Front"
 />
   </>
 );
