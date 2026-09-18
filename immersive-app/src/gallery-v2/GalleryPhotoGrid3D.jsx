@@ -9,7 +9,18 @@ export default function GalleryPhotoGrid3D({
   const SLOTS_PER_VIEW = 40;
 
   return (
-  <group>
+  <group
+    position={
+      wall === "Left"
+        ? [-3.05, 0, -3.05]
+        : [0, 0, 0]
+    }
+    rotation={
+      wall === "Left"
+        ? [0, Math.PI / 2, 0]
+        : [0, 0, 0]
+    }
+  >
       {Array.from({ length: 4 }).map((_, row) =>
         Array.from({ length: 10 }).map((_, column) => {
           const x = -5.85 + column * 1.3;
@@ -49,17 +60,6 @@ export default function GalleryPhotoGrid3D({
           );
         })
       )}
-        <group
-  position={
-    wall === "Left"
-      ? [-3.05, 0, -3.05]
-      : [0, 0, 0]
-  }
-  rotation={
-    wall === "Left"
-      ? [0, Math.PI / 2, 0]
-      : [0, 0, 0]
-  }
->
+        </group>
   );
 }
