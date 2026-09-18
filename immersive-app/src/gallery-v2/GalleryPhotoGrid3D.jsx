@@ -1,9 +1,10 @@
 import { Text } from "@react-three/drei";
 
 export default function GalleryPhotoGrid3D({
+  room = "Identity",
+  wall = "Front",
   sectionNumber,
   viewNumber,
-  wall = "Front",
 }) {
   const SLOTS_PER_VIEW = 40;
 
