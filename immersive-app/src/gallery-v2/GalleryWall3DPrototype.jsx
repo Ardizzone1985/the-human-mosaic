@@ -97,6 +97,7 @@ export default function GalleryWall3DPrototype() {
 </mesh>
 
         {/* parete sinistra */}
+        {/*
         <mesh
   position={[-7, 2, -6]}
   rotation={[0, Math.PI / 2, 0]}
@@ -108,6 +109,7 @@ export default function GalleryWall3DPrototype() {
     metalness={0.05}
   />
 </mesh>
+*/}
 
         {/* parete destra */}
 <mesh
