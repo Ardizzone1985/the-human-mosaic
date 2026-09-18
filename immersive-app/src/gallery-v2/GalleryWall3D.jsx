@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Text } from "@react-three/drei";
 import GalleryPhotoWall3D from "./GalleryPhotoWall3D";
-import GalleryPhotoGrid3D from "./GalleryPhotoGrid3D";
 
 export default function GalleryWall3D({ sectionNumber = 1 }) {
   const [viewNumber, setViewNumber] = useState(1);
@@ -62,14 +61,7 @@ const SLOTS_PER_VIEW = 40;
   <planeGeometry args={[2.2, 0.6]} />
   <meshBasicMaterial transparent opacity={0} />
 </mesh>
-
-    <GalleryPhotoGrid3D
-  room="Identity"
-  wall="Front"
-  sectionNumber={sectionNumber}
-  viewNumber={viewNumber}
-/>
-
+    
     <GalleryPhotoWall3D
   room="Identity"
   wall="Front"
