@@ -94,20 +94,7 @@ export default function GalleryWall3DPrototype() {
     roughness={0.8}
     metalness={0.05}
   />
-</mesh>
-       
-        {/* parete destra */}
-<mesh
-  position={[7, 2, -6]}
-  rotation={[0, -Math.PI / 2, 0]}
->
-  <planeGeometry args={[14, 8]} />
-  <meshStandardMaterial
-    color="#d8d2c5"
-    roughness={0.8}
-    metalness={0.05}
-  />
-</mesh>
+</mesh>              
       </Canvas>
     </div>
   );
