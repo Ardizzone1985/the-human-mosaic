@@ -7,7 +7,18 @@ export default function GalleryPhotoWall3D({
   viewNumber = 1,
 }) {
   return (
-  <group position={[0, 2, -4]}>
+  <group
+  position={
+    wall === "Left"
+      ? [-7, 2, -6]
+      : [0, 2, -4]
+  }
+  rotation={
+    wall === "Left"
+      ? [0, Math.PI / 2, 0]
+      : [0, 0, 0]
+  }
+>
       <mesh>
         <planeGeometry args={[14, 8]} />
         <meshStandardMaterial
