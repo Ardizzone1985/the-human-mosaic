@@ -76,6 +76,13 @@ const SLOTS_PER_VIEW = 40;
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
 />
+
+    <GalleryPhotoGrid3D
+  room="Identity"
+  wall="Left"
+  sectionNumber={sectionNumber}
+  viewNumber={viewNumber}
+/>
   </>
 );
 }
