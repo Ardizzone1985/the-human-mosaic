@@ -9,7 +9,7 @@ export default function GalleryPhotoGrid3D({
   const SLOTS_PER_VIEW = 40;
 
   return (
-    <>
+  <group>
       {Array.from({ length: 4 }).map((_, row) =>
         Array.from({ length: 10 }).map((_, column) => {
           const x = -5.85 + column * 1.3;
@@ -49,6 +49,6 @@ export default function GalleryPhotoGrid3D({
           );
         })
       )}
-    </>
+        </group>
   );
 }
