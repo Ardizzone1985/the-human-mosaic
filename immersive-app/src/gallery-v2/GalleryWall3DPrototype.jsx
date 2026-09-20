@@ -111,6 +111,19 @@ export default function GalleryWall3DPrototype() {
     metalness={0.05}
   />
 </mesh>
+
+        <Text
+  position={[0, 4.8, 15.94]}
+  rotation={[0, Math.PI, 0]}
+  fontSize={0.42}
+  color="#4f4638"
+  anchorX="center"
+  anchorY="middle"
+>
+  {`SECTION ${sectionNumber}  ·  VIEW ${viewNumber} / ${
+    sectionNumber === 1667 ? 4 : 5
+  }`}
+</Text>
       </Canvas>
     </div>
   );
