@@ -10,18 +10,8 @@ export default function GalleryWall3D({
   const MAX_VIEW = sectionNumber === 1667 ? 4 : 5;
   return (
   <>
-    
-    <Text
-  position={[0, 3.25, -3.9]}
-  fontSize={0.32}
-  color="#222222"
-  anchorX="center"
-  anchorY="middle"
->
-  {`SECTION ${sectionNumber}`}
-</Text>
-    
-    <mesh
+   
+       <mesh
   position={[-2, -1.8, -3.88]}
   onClick={() =>
     setViewNumber((current) => Math.max(1, current - 1))
