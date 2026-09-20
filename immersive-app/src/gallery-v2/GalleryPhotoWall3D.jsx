@@ -9,10 +9,10 @@ export default function GalleryPhotoWall3D({
   return (
   <group
   position={
-  wall === "Left"
-  ? [-7, 2, 5]
+ wall === "Left"
+  ? [-11, 2, 5]
   : wall === "Right"
-  ? [7, 2, 5]
+  ? [11, 2, 5]
   : [0, 2, -6]
 }
 rotation={
