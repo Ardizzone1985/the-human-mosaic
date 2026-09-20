@@ -6,7 +6,7 @@ export default function GalleryPhotoGrid3D({
   sectionNumber,
   viewNumber,
 }) {
-  const SLOTS_PER_VIEW = 40;
+  const SLOTS_PER_VIEW = 120;
 
   return (
   <group>
