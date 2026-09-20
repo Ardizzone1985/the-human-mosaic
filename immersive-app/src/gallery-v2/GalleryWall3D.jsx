@@ -20,20 +20,7 @@ export default function GalleryWall3D({
 >
   {`SECTION ${sectionNumber}`}
 </Text>
-
-    <Text
-  position={[-2, -1.8, -3.9]}
-  fontSize={0.28}
-  color="#222222"
-  anchorX="center"
-  anchorY="middle"
-  onClick={() =>
-    setViewNumber((current) => Math.max(1, current - 1))
-  }
->
-  Previous View
-</Text>
-
+    
     <mesh
   position={[-2, -1.8, -3.88]}
   onClick={() =>
