@@ -10,16 +10,6 @@ export default function GalleryWall3D({
   const MAX_VIEW = sectionNumber === 1667 ? 4 : 5;
   return (
   <>
-   
-       <mesh
-  position={[-2, -1.8, -3.88]}
-  onClick={() =>
-    setViewNumber((current) => Math.max(1, current - 1))
-  }
->
-  <planeGeometry args={[2.2, 0.6]} />
-  <meshBasicMaterial transparent opacity={0} />
-</mesh>
     
     <GalleryPhotoWall3D
   room="Identity"
