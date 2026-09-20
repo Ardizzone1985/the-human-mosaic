@@ -94,7 +94,20 @@ export default function GalleryWall3DPrototype() {
     roughness={0.8}
     metalness={0.05}
   />
-</mesh>              
+</mesh>
+
+        {/* INFO WALL */}
+<mesh
+  position={[0, 2, 16]}
+  rotation={[0, Math.PI, 0]}
+>
+  <planeGeometry args={[22, 8]} />
+  <meshStandardMaterial
+    color="#e8e3d8"
+    roughness={0.75}
+    metalness={0.05}
+  />
+</mesh>
       </Canvas>
     </div>
   );
