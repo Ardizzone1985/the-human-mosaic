@@ -5,6 +5,7 @@ import GalleryWall3D from "./GalleryWall3D";
 
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
+  const [viewNumber, setViewNumber] = useState(1);
   return (
     <div
       style={{
