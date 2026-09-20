@@ -12,7 +12,7 @@ export default function GalleryPhotoGrid3D({
   <group>
       {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
-          const x = -5.85 + column * 1.3;
+          const x = -8.1 + column * 1.8;
           const y = 3.8 - row * 1.3;
 
           const slotNumber =
