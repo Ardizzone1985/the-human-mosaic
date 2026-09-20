@@ -84,11 +84,11 @@ export default function GalleryWall3DPrototype() {
 </Text>
 
         {/* pavimento */}
-        <mesh
-  position={[0, -2, 1]}
+<mesh
+  position={[0, -2, 5]}
   rotation={[-Math.PI / 2, 0, 0]}
 >
-  <planeGeometry args={[14, 14]} />
+  <planeGeometry args={[22, 22]} />
   <meshStandardMaterial
     color="#d8d2c5"
     roughness={0.8}
