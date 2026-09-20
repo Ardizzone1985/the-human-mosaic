@@ -15,12 +15,16 @@ export default function GalleryPhotoGrid3D({
           const x = -8.1 + column * 1.8;
           const y = 4.05 - row * 1.65;
 
-          const slotNumber =
-            (sectionNumber - 1) * 600 +
-            (viewNumber - 1) * SLOTS_PER_VIEW +
-            row * 10 +
-            column +
-            1;
+          const wallOffset =
+  wall === "Left" ? 40 : 0;
+
+const slotNumber =
+  (sectionNumber - 1) * 600 +
+  (viewNumber - 1) * SLOTS_PER_VIEW +
+  wallOffset +
+  row * 10 +
+  column +
+  1;
 
           return (
             <group
