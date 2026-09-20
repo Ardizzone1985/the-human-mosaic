@@ -20,16 +20,6 @@ export default function GalleryWall3D({
   <planeGeometry args={[2.2, 0.6]} />
   <meshBasicMaterial transparent opacity={0} />
 </mesh>
-   
-<mesh
-  position={[2, -1.8, -3.88]}
-  onClick={() =>
-    setViewNumber((current) => Math.min(MAX_VIEW, current + 1))
-  }
->
-  <planeGeometry args={[2.2, 0.6]} />
-  <meshBasicMaterial transparent opacity={0} />
-</mesh>
     
     <GalleryPhotoWall3D
   room="Identity"
