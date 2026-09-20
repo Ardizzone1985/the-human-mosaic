@@ -16,7 +16,11 @@ export default function GalleryPhotoGrid3D({
           const y = 4.05 - row * 1.65;
 
           const wallOffset =
-  wall === "Left" ? 40 : 0;
+  wall === "Left"
+    ? 40
+    : wall === "Right"
+    ? 80
+    : 0;
 
 const slotNumber =
   (sectionNumber - 1) * 600 +
