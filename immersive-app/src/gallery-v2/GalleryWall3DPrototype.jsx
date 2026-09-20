@@ -37,20 +37,6 @@ export default function GalleryWall3DPrototype() {
 />
 
         <Text
-  position={[0, -1.15, -3.85]}
-  fontSize={0.18}
-  color="#222222"
-  anchorX="center"
-  anchorY="middle"
-  onClick={(event) => {
-    event.stopPropagation();
-    setSectionNumber(1667);
-  }}
->
-  Go to Section 1667
-</Text>
-
-        <Text
   position={[1.5, -2, -3.85]}
   fontSize={0.22}
   color="#222222"
