@@ -1,10 +1,12 @@
-import { useState } from "react";
 import { Text } from "@react-three/drei";
 import GalleryPhotoWall3D from "./GalleryPhotoWall3D";
 
-export default function GalleryWall3D({ sectionNumber = 1 }) {
-  const [viewNumber, setViewNumber] = useState(1);
-const SLOTS_PER_VIEW = 40;
+export default function GalleryWall3D({
+  sectionNumber = 1,
+  viewNumber,
+  setViewNumber,
+}) {
+  const SLOTS_PER_VIEW = 40;
   const MAX_VIEW = sectionNumber === 1667 ? 4 : 5;
   return (
   <>
