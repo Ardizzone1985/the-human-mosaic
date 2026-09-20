@@ -11,7 +11,7 @@ export default function GalleryPhotoGrid3D({
   return (
   <group>
       {Array.from({ length: 4 }).map((_, row) =>
-  Array.from({ length: wall === "Front" ? 14 : 10 }).map((_, column) => {
+  Array.from({ length: 10 }).map((_, column) => {
           const x =
   wall === "Front"
     ? -8.45 + column * 1.3
