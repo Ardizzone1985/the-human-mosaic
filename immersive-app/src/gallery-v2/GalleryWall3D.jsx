@@ -30,17 +30,7 @@ export default function GalleryWall3D({
   <planeGeometry args={[2.2, 0.6]} />
   <meshBasicMaterial transparent opacity={0} />
 </mesh>
-
-    <Text
-  position={[2, -1.8, -3.9]}
-  fontSize={0.28}
-  color="#222222"
-  anchorX="center"
-  anchorY="middle"
->
-  Next View
-</Text>
-
+   
 <mesh
   position={[2, -1.8, -3.88]}
   onClick={() =>
