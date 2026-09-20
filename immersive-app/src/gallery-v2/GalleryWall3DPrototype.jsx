@@ -35,29 +35,6 @@ export default function GalleryWall3DPrototype() {
   viewNumber={viewNumber}
   setViewNumber={setViewNumber}
 />
-        <mesh
-  position={[0, -1.55, -3.8]}
-  onClick={() =>
-    setSectionNumber((current) => Math.max(1, current - 1))
-  }
->
-  <planeGeometry args={[2.2, 0.55]} />
-  <meshBasicMaterial transparent opacity={0} />
-</mesh>
-
-        <Text
-  position={[0, -1.55, -3.79]}
-  fontSize={0.28}
-  color="#222222"
-  anchorX="center"
-  anchorY="middle"
-          onClick={(event) => {
-  event.stopPropagation();
-  setSectionNumber((current) => Math.max(1, current - 1));
-}}
->
-  Previous Section
-</Text>
 
         <Text
   position={[0, -1.15, -3.85]}
