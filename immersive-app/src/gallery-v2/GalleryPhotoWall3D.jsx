@@ -24,7 +24,9 @@ rotation={
 }
 >
       <mesh>
-        <planeGeometry args={[14, 8]} />
+  <planeGeometry
+    args={wall === "Front" ? [22, 8] : [14, 8]}
+  />
         <meshStandardMaterial
           color="#e8e3d8"
           roughness={0.75}
