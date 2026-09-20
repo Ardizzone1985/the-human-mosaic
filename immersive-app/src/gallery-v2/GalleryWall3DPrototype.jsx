@@ -32,6 +32,8 @@ export default function GalleryWall3DPrototype() {
         <GalleryWall3D
   key={sectionNumber}
   sectionNumber={sectionNumber}
+  viewNumber={viewNumber}
+  setViewNumber={setViewNumber}
 />
         <mesh
   position={[0, -1.55, -3.8]}
