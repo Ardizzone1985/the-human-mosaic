@@ -14,7 +14,7 @@ export default function GalleryWall3DPrototype() {
         background: "#111",
       }}
     >
-      <Canvas camera={{ position: [0, 2, 9], fov: 50 }}>
+      <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
         <OrbitControls
   enablePan={false}
   enableZoom={false}
