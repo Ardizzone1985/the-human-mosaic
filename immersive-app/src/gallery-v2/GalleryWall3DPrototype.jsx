@@ -74,6 +74,46 @@ export default function GalleryWall3DPrototype() {
     sectionNumber === 1667 ? 4 : 5
   }`}
 </Text>
+
+        <Html
+  position={[2.2, 1.2, 15.9]}
+  rotation={[0, Math.PI, 0]}
+  transform
+  distanceFactor={8}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      padding: "10px 14px",
+      background: "rgba(25, 20, 15, 0.88)",
+      border: "1px solid #b98942",
+      borderRadius: "6px",
+      color: "#f2c879",
+      fontFamily: "Arial, sans-serif",
+      whiteSpace: "nowrap",
+    }}
+  >
+    <span>SECTION</span>
+
+    <input
+      type="number"
+      min="1"
+      max="1667"
+      defaultValue={sectionNumber}
+      style={{
+        width: "70px",
+        padding: "6px",
+        border: "1px solid #b98942",
+        borderRadius: "4px",
+        background: "#f7f5ef",
+        color: "#222",
+        textAlign: "center",
+      }}
+    />
+  </div>
+</Html>
       </Canvas>
     </div>
   );
