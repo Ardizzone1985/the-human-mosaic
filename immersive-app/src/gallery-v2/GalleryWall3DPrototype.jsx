@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Text, OrbitControls } from "@react-three/drei";
+import { Text, OrbitControls, Html } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
 export default function GalleryWall3DPrototype() {
