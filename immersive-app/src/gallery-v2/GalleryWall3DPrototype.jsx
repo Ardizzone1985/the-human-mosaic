@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Text, OrbitControls, Html } from "@react-three/drei";
+import { Text, Html } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
 export default function GalleryWall3DPrototype() {
@@ -15,14 +15,7 @@ export default function GalleryWall3DPrototype() {
       }}
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
-        <OrbitControls
-  enablePan={false}
-  enableZoom={false}
-  enableDamping
-  dampingFactor={0.08}
-  target={[0, 2, -4]}
-/>
-        
+                
         <ambientLight intensity={1.2} />
         <directionalLight
           position={[4, 6, 4]}
