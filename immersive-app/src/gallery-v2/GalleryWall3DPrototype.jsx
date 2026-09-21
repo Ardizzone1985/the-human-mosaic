@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Text, Html } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
