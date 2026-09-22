@@ -186,8 +186,7 @@ export default function GalleryWall3DPrototype() {
         targetPointId={targetPointId}
         />
 
-        {GALLERY_VIEWPOINTS
-  .filter((point) => point.id !== "center")
+        {GALLERY_VIEWPOINTS  
   .map((point) => (
     <FloorArrow
       key={point.id}
