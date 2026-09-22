@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
 import { Text, Html } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
@@ -106,6 +107,36 @@ const GALLERY_VIEWPOINTS = [
   { id: "backLeft", position: [-6.2, 2.05, 12.2] },
   { id: "backRight", position: [6.2, 2.05, 12.2] },
 ];
+
+function StreetViewControls({ currentPointId, targetPointId }) {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    const startPoint = GALLERY_VIEWPOINTS.find(
+      (point) => point.id === currentPointId
+    );
+
+    if (!startPoint) return;
+
+    camera.position.set(...startPoint.position);
+    camera.rotation.order = "YXZ";
+  }, [camera, currentPointId]);
+
+  useFrame(() => {
+    const targetPoint = GALLERY_VIEWPOINTS.find(
+      (point) => point.id === targetPointId
+    );
+
+    if (!targetPoint) return;
+
+    camera.position.lerp(
+      new THREE.Vector3(...targetPoint.position),
+      0.06
+    );
+  });
+
+  return null;
+}
 
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
