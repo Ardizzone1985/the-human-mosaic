@@ -3,6 +3,98 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Text, Html } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 
+function StreetViewLookControls() {
+  const { camera, gl } = useThree();
+  const dragging = useRef(false);
+  const lastX = useRef(0);
+  const lastY = useRef(0);
+  const yaw = useRef(0);
+  const pitch = useRef(0);
+
+  useEffect(() => {
+    camera.rotation.order = "YXZ";
+
+    function start(x, y) {
+      dragging.current = true;
+      lastX.current = x;
+      lastY.current = y;
+    }
+
+    function move(x, y) {
+      if (!dragging.current) return;
+
+      const dx = x - lastX.current;
+      const dy = y - lastY.current;
+
+      lastX.current = x;
+      lastY.current = y;
+
+      yaw.current -= dx * 0.004;
+      pitch.current -= dy * 0.004;
+
+      pitch.current = Math.max(
+        -Math.PI / 3.2,
+        Math.min(Math.PI / 3.2, pitch.current)
+      );
+
+      camera.rotation.y = yaw.current;
+      camera.rotation.x = pitch.current;
+    }
+
+    function end() {
+      dragging.current = false;
+    }
+
+    function onMouseDown(e) {
+      start(e.clientX, e.clientY);
+    }
+
+    function onMouseMove(e) {
+      move(e.clientX, e.clientY);
+    }
+
+    function onMouseUp() {
+      end();
+    }
+
+    function onTouchStart(e) {
+      if (e.touches.length !== 1) return;
+      start(e.touches[0].clientX, e.touches[0].clientY);
+    }
+
+    function onTouchMove(e) {
+      if (e.touches.length !== 1) return;
+      move(e.touches[0].clientX, e.touches[0].clientY);
+    }
+
+    function onTouchEnd() {
+      end();
+    }
+
+    const el = gl.domElement;
+
+    el.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: true });
+    el.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      el.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [camera, gl]);
+
+  return null;
+}
+
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
@@ -15,6 +107,7 @@ export default function GalleryWall3DPrototype() {
       }}
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
+        <StreetViewLookControls />
                 
         <ambientLight intensity={1.2} />
         <directionalLight
