@@ -141,6 +141,8 @@ function StreetViewControls({ currentPointId, targetPointId }) {
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
+  const [currentPointId] = useState("center");
+  const [targetPointId, setTargetPointId] = useState("center");
   return (
     <div
       style={{
@@ -151,6 +153,11 @@ export default function GalleryWall3DPrototype() {
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
         <StreetViewLookControls />
+        
+        <StreetViewControls
+        currentPointId={currentPointId}
+        targetPointId={targetPointId}
+        />
                 
         <ambientLight intensity={1.2} />
         <directionalLight
