@@ -186,12 +186,17 @@ export default function GalleryWall3DPrototype() {
         targetPointId={targetPointId}
         />
 
-        <FloorArrow
-  point={GALLERY_VIEWPOINTS.find((point) => point.id === "front")}
-  onMove={(id) => {
-    setTargetPointId(id);
-  }}
-/>
+        {GALLERY_VIEWPOINTS
+  .filter((point) => point.id !== "center")
+  .map((point) => (
+    <FloorArrow
+      key={point.id}
+      point={point}
+      onMove={(id) => {
+        setTargetPointId(id);
+      }}
+    />
+  ))}
                 
         <ambientLight intensity={1.2} />
         <directionalLight
