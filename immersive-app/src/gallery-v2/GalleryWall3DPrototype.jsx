@@ -185,6 +185,13 @@ export default function GalleryWall3DPrototype() {
         currentPointId={currentPointId}
         targetPointId={targetPointId}
         />
+
+        <FloorArrow
+  point={GALLERY_VIEWPOINTS.find((point) => point.id === "front")}
+  onMove={(id) => {
+    setTargetPointId(id);
+  }}
+/>
                 
         <ambientLight intensity={1.2} />
         <directionalLight
