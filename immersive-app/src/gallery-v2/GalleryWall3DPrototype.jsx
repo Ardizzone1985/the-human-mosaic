@@ -95,6 +95,18 @@ function StreetViewLookControls() {
   return null;
 }
 
+const GALLERY_VIEWPOINTS = [
+  { id: "center", position: [0, 2.05, 5] },
+  { id: "front", position: [0, 2.05, -2.8] },
+  { id: "back", position: [0, 2.05, 12.8] },
+  { id: "left", position: [-7.2, 2.05, 5] },
+  { id: "right", position: [7.2, 2.05, 5] },
+  { id: "frontLeft", position: [-6.2, 2.05, -2.2] },
+  { id: "frontRight", position: [6.2, 2.05, -2.2] },
+  { id: "backLeft", position: [-6.2, 2.05, 12.2] },
+  { id: "backRight", position: [6.2, 2.05, 12.2] },
+];
+
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
