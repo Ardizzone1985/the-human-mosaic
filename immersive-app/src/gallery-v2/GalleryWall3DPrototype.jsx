@@ -215,7 +215,7 @@ export default function GalleryWall3DPrototype() {
   position={[0, -2, 5]}
   rotation={[-Math.PI / 2, 0, 0]}
 >
-  <planeGeometry args={[22, 22]} />
+  <planeGeometry args={[30, 30]} />
   <meshStandardMaterial
     color="#d8d2c5"
     roughness={0.8}
