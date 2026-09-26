@@ -24,7 +24,7 @@ rotation={
 }
 >
       <mesh>
-  <planeGeometry args={[22, 8]} />
+  <planeGeometry args={[30, 8]} />
         <meshStandardMaterial
           color="#e8e3d8"
           roughness={0.75}
