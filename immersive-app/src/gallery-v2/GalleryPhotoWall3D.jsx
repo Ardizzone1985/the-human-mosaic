@@ -13,7 +13,7 @@ export default function GalleryPhotoWall3D({
   ? [-15, 2, 5]
   : wall === "Right"
   ? [15, 2, 5]
-  : [0, 2, -6]
+  : [0, 2, -10]
 }
 rotation={
   wall === "Left"
