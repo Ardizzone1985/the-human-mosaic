@@ -225,7 +225,7 @@ export default function GalleryWall3DPrototype() {
 
         {/* INFO WALL */}
 <mesh
-  position={[0, 2, 16]}
+  position={[0, 2, 20]}
   rotation={[0, Math.PI, 0]}
 >
   <planeGeometry args={[22, 8]} />
