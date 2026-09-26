@@ -225,10 +225,10 @@ export default function GalleryWall3DPrototype() {
 
         {/* INFO WALL */}
 <mesh
-  position={[0, 2, 20]}
+  position={[0, 3, 20]}
   rotation={[0, Math.PI, 0]}
 >
-  <planeGeometry args={[30, 8]} />
+  <planeGeometry args={[30, 10]} />
   <meshStandardMaterial
     color="#e8e3d8"
     roughness={0.75}
