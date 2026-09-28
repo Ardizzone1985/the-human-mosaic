@@ -303,6 +303,21 @@ export default function GalleryWall3DPrototype() {
     textAlign: "center",
   }}
 />
+
+    <button
+  type="button"
+  style={{
+    padding: "6px 12px",
+    border: "1px solid #b98942",
+    borderRadius: "4px",
+    background: "#b98942",
+    color: "#17130f",
+    fontWeight: "700",
+    cursor: "pointer",
+  }}
+>
+  GO
+</button>
   </div>
 </Html>
       </Canvas>
