@@ -286,6 +286,9 @@ export default function GalleryWall3DPrototype() {
         textAlign: "center",
       }}
     />
+
+    <span>VIEW</span>
+    
   </div>
 </Html>
       </Canvas>
