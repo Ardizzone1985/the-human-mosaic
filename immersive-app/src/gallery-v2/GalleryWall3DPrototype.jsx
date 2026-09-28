@@ -296,7 +296,13 @@ export default function GalleryWall3DPrototype() {
   min="1"
   max={sectionNumber === 1667 ? 4 : 5}
   value={viewInput}
-  onChange={(e) => setViewInput(e.target.value)}
+  onChange={(e) => {
+  const value = e.target.value;
+
+  if (value === "" || /^[1-5]$/.test(value)) {
+    setViewInput(value);
+  }
+}}
   style={{
     width: "50px",
     padding: "6px",
