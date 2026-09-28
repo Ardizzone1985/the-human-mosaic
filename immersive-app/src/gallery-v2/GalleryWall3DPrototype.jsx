@@ -169,6 +169,7 @@ export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
   const [sectionInput, setSectionInput] = useState("1");
+  const [viewInput, setViewInput] = useState("1");
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
   return (
@@ -294,7 +295,8 @@ export default function GalleryWall3DPrototype() {
   type="number"
   min="1"
   max={sectionNumber === 1667 ? 4 : 5}
-  defaultValue={viewNumber}
+  value={viewInput}
+  onChange={(e) => setViewInput(e.target.value)}
   style={{
     width: "50px",
     padding: "6px",
