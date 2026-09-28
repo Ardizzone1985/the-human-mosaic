@@ -237,7 +237,7 @@ export default function GalleryWall3DPrototype() {
 </mesh>
 
         <Text
-  position={[0, 4.8, 15.94]}
+  position={[0, 4.8, 19.94]}
   rotation={[0, Math.PI, 0]}
   fontSize={0.42}
   color="#4f4638"
