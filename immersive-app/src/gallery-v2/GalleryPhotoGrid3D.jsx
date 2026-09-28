@@ -13,7 +13,7 @@ export default function GalleryPhotoGrid3D({
       {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
           const x = -11.25 + column * 2.5;
-          const y = 4.05 - row * 1.65;
+          const y = 4.2 - row * 2.0;
 
           const wallOffset =
   wall === "Left"
