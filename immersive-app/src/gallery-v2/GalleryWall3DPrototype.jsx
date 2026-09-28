@@ -288,7 +288,21 @@ export default function GalleryWall3DPrototype() {
     />
 
     <span>VIEW</span>
-    
+    <input
+  type="number"
+  min="1"
+  max={sectionNumber === 1667 ? 4 : 5}
+  defaultValue={viewNumber}
+  style={{
+    width: "50px",
+    padding: "6px",
+    border: "1px solid #b98942",
+    borderRadius: "4px",
+    background: "#f7f5ef",
+    color: "#222",
+    textAlign: "center",
+  }}
+/>
   </div>
 </Html>
       </Canvas>
