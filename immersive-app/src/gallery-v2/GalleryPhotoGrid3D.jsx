@@ -36,7 +36,7 @@ const slotNumber =
               position={[x, y, 0]}
             >
               <mesh>
-                <planeGeometry args={[1, 1]} />
+                <planeGeometry args={[1.3, 1.3]} />
                 <meshStandardMaterial
                   color="#f7f5ef"
                   roughness={0.7}
