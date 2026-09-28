@@ -12,7 +12,7 @@ export default function GalleryPhotoGrid3D({
   <group>
       {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
-          const x = -8.1 + column * 1.8;
+          const x = -11.25 + column * 2.5;
           const y = 4.05 - row * 1.65;
 
           const wallOffset =
