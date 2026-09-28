@@ -168,6 +168,7 @@ function FloorArrow({ point, onMove }) {
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
+  const [sectionInput, setSectionInput] = useState("1");
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
   return (
@@ -275,7 +276,8 @@ export default function GalleryWall3DPrototype() {
       type="number"
       min="1"
       max="1667"
-      defaultValue={sectionNumber}
+      value={sectionInput}
+      onChange={(e) => setSectionInput(e.target.value)}
       style={{
         width: "70px",
         padding: "6px",
