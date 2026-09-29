@@ -327,6 +327,26 @@ export default function GalleryWall3DPrototype() {
 
     <button
   type="button"
+      onClick={() => {
+  const nextSection = Number(sectionInput);
+  const nextView = Number(viewInput);
+
+  if (!nextSection || !nextView) return;
+
+  const maxView = nextSection === 1667 ? 4 : 5;
+
+  if (
+    nextSection < 1 ||
+    nextSection > 1667 ||
+    nextView < 1 ||
+    nextView > maxView
+  ) {
+    return;
+  }
+
+  setSectionNumber(nextSection);
+  setViewNumber(nextView);
+}}
   style={{
     padding: "6px 12px",
     border: "1px solid #b98942",
