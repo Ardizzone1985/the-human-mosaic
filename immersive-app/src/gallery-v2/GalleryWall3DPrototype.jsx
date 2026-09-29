@@ -171,7 +171,7 @@ function InfoWallLogo() {
 
   return (
   <mesh
-    position={[-8.5, 5.5, 19.88]}
+    position={[8.5, 5.5, 19.88]}
     rotation={[0, Math.PI, 0]}
   >
     <planeGeometry args={[5.5, 2.75]} />
