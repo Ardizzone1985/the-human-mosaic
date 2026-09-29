@@ -320,6 +320,15 @@ function InfoWallLogo() {
     />
   </mesh>
 
+      <mesh position={[-0.82, -0.05, 0.08]}>
+  <sphereGeometry args={[0.09, 20, 20]} />
+  <meshStandardMaterial
+    color="#d4af37"
+    metalness={0.75}
+    roughness={0.25}
+  />
+</mesh>
+
   <Text
     position={[0, 0.15, 0.03]}
     fontSize={0.34}
