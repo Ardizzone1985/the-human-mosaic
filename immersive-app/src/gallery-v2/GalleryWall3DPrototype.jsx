@@ -264,6 +264,30 @@ function InfoWallLogo() {
     PARTNER SPACE
   </Text>
 </group>
+
+    <group
+  position={[-5.5, 1.3, 19.86]}
+  rotation={[0, Math.PI, 0]}
+>
+  <mesh>
+    <planeGeometry args={[2.8, 2.8]} />
+    <meshStandardMaterial
+      color="#d8d0c4"
+      roughness={0.65}
+      metalness={0.05}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 0, 0.03]}
+    fontSize={0.22}
+    color="#8a6a2f"
+    anchorX="center"
+    anchorY="middle"
+  >
+    SPONSOR SPACE
+  </Text>
+</group>
   </>
 );
 }
