@@ -290,7 +290,7 @@ function InfoWallLogo() {
 </group>
 
     <group
-  position={[-9, 1.3, 19.84]}
+  position={[-9, 0.1, 19.84]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
