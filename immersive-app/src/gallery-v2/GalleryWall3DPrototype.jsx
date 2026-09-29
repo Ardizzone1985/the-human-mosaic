@@ -166,6 +166,12 @@ function FloorArrow({ point, onMove }) {
   );
 }
 
+function InfoWallLogo() {
+  const logoTexture = useTexture(logoImage);
+
+  return null;
+}
+
 export default function GalleryWall3DPrototype() {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
@@ -183,6 +189,7 @@ export default function GalleryWall3DPrototype() {
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
         <StreetViewLookControls />
+        <InfoWallLogo />
         
         <StreetViewControls
         currentPointId={currentPointId}
