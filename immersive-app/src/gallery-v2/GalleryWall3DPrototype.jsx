@@ -216,6 +216,31 @@ function InfoWallLogo() {
 >
   Explore. Discover. Be part of the story.
 </Text>
+
+    <group
+  position={[-5.5, 4.8, 19.86]}
+  rotation={[0, Math.PI, 0]}
+>
+  <mesh>
+    <planeGeometry args={[4.2, 1.8]} />
+    <meshStandardMaterial
+      color="#d8d0c4"
+      roughness={0.65}
+      metalness={0.05}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 0, -0.03]}
+    rotation={[0, Math.PI, 0]}
+    fontSize={0.22}
+    color="#8a6a2f"
+    anchorX="center"
+    anchorY="middle"
+  >
+    FUTURE AD SPACE
+  </Text>
+</group>
   </>
 );
 }
