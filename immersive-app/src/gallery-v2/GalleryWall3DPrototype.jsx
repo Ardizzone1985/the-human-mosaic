@@ -239,6 +239,7 @@ function InfoWallLogo() {
   >
     FUTURE AD SPACE
   </Text>
+      </group>
 
       <group
   position={[-9, 4.8, 19.86]}
