@@ -205,6 +205,17 @@ function InfoWallLogo() {
 >
   A permanent immersive digital museum where every image becomes part of a global human mosaic.
 </Text>
+
+    <Text
+  position={[10.5, 1.75, 19.87]}
+  rotation={[0, Math.PI, 0]}
+  fontSize={0.19}
+  color="#8a6a2f"
+  anchorX="left"
+  anchorY="middle"
+>
+  Explore. Discover. Be part of the story.
+</Text>
   </>
 );
 }
