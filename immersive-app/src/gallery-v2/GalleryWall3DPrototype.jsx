@@ -311,6 +311,16 @@ function InfoWallLogo() {
     metalness={0.15}
   />
 </mesh>
+
+      <Text
+  position={[0, 3.15, 0.04]}
+  fontSize={0.34}
+  color="#f2c879"
+  anchorX="center"
+  anchorY="middle"
+>
+  HOME
+</Text>
       
       <mesh position={[0, 0, -0.04]}>
   <planeGeometry args={[3.05, 4.85]} />
