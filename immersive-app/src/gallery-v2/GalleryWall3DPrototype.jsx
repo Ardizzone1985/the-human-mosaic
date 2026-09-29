@@ -263,7 +263,6 @@ function InfoWallLogo() {
     PARTNER SPACE
   </Text>
 </group>
-</group>
   </>
 );
 }
