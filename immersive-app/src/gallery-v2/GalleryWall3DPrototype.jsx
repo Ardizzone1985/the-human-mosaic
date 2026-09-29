@@ -278,7 +278,18 @@ export default function GalleryWall3DPrototype() {
       min="1"
       max="1667"
       value={sectionInput}
-      onChange={(e) => setSectionInput(e.target.value)}
+      onChange={(e) => {
+  const value = e.target.value;
+
+  if (
+    value === "" ||
+    (/^\d{1,4}$/.test(value) &&
+      Number(value) >= 1 &&
+      Number(value) <= 1667)
+  ) {
+    setSectionInput(value);
+  }
+}}
       style={{
         width: "70px",
         padding: "6px",
