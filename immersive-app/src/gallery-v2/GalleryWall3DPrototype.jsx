@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { Text, Html } from "@react-three/drei";
+import { Text, Html, useTexture } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
+import logoImage from "../logo-cropped.png";
 
 function StreetViewLookControls() {
   const { camera, gl } = useThree();
