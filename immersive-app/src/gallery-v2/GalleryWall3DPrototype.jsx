@@ -288,6 +288,40 @@ function InfoWallLogo() {
     SPONSOR SPACE
   </Text>
 </group>
+
+    <group
+  position={[-9, 1.3, 19.84]}
+  rotation={[0, Math.PI, 0]}
+>
+  <mesh>
+    <planeGeometry args={[2.8, 2.8]} />
+    <meshStandardMaterial
+      color="#1b1712"
+      roughness={0.55}
+      metalness={0.12}
+    />
+  </mesh>
+
+  <Text
+    position={[0, 0.15, 0.03]}
+    fontSize={0.34}
+    color="#f2c879"
+    anchorX="center"
+    anchorY="middle"
+  >
+    HOME
+  </Text>
+
+  <Text
+    position={[0, -0.35, 0.03]}
+    fontSize={0.16}
+    color="#b98942"
+    anchorX="center"
+    anchorY="middle"
+  >
+    RETURN TO LOBBY
+  </Text>
+</group>
   </>
 );
 }
