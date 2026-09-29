@@ -370,6 +370,16 @@ export default function GalleryWall3DPrototype() {
   const [viewInput, setViewInput] = useState("1");
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
+
+  function goHome() {
+  window.dispatchEvent(new Event("startFadeOut"));
+
+  setTimeout(() => {
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, 450);
+}
+  
     return (
     <div
       style={{
