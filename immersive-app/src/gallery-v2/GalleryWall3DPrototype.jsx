@@ -231,8 +231,7 @@ function InfoWallLogo() {
   </mesh>
 
   <Text
-    position={[0, 0, -0.03]}
-    rotation={[0, Math.PI, 0]}
+    position={[0, 0, 0.03]}
     fontSize={0.22}
     color="#8a6a2f"
     anchorX="center"
