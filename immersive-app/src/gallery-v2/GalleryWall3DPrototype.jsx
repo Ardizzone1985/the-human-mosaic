@@ -170,16 +170,29 @@ function InfoWallLogo() {
   const logoTexture = useTexture(logoImage);
 
   return (
-  <mesh
-    position={[8.5, 5.5, 19.88]}
-    rotation={[0, Math.PI, 0]}
-  >
-    <planeGeometry args={[5.5, 2.75]} />
-    <meshBasicMaterial
-      map={logoTexture}
-      transparent
-    />
-  </mesh>
+  <>
+    <mesh
+      position={[8.5, 5.5, 19.88]}
+      rotation={[0, Math.PI, 0]}
+    >
+      <planeGeometry args={[5.5, 2.75]} />
+      <meshBasicMaterial
+        map={logoTexture}
+        transparent
+      />
+    </mesh>
+
+    <Text
+      position={[10.5, 3.65, 19.87]}
+      rotation={[0, Math.PI, 0]}
+      fontSize={0.42}
+      color="#4f4638"
+      anchorX="left"
+      anchorY="middle"
+    >
+      IDENTITY ROOM
+    </Text>
+  </>
 );
 }
 
