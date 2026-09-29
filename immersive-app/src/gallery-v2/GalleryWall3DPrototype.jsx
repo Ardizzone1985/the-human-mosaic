@@ -292,6 +292,16 @@ function InfoWallLogo() {
     <group
   position={[-9, 0.1, 19.84]}
   rotation={[0, Math.PI, 0]}
+      onClick={(e) => {
+    e.stopPropagation();
+    goHome();
+  }}
+  onPointerOver={() => {
+    document.body.style.cursor = "pointer";
+  }}
+  onPointerOut={() => {
+    document.body.style.cursor = "default";
+  }}
 >
 
       <mesh position={[0, 3.15, 0.015]}>
