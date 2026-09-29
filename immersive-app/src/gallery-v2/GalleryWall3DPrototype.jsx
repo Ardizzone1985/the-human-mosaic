@@ -293,6 +293,15 @@ function InfoWallLogo() {
   position={[-9, 0.1, 19.84]}
   rotation={[0, Math.PI, 0]}
 >
+<mesh position={[0, 0, -0.02]}>
+  <planeGeometry args={[2.75, 4.55]} />
+  <meshStandardMaterial
+    color="#8a652d"
+    roughness={0.42}
+    metalness={0.38}
+  />
+</mesh>
+      
   <mesh>
     <planeGeometry args={[2.4, 4.2]} />
     <meshStandardMaterial
