@@ -328,26 +328,7 @@ function InfoWallLogo() {
     roughness={0.25}
   />
 </mesh>
-
-  <Text
-    position={[0, 0.15, 0.03]}
-    fontSize={0.34}
-    color="#f2c879"
-    anchorX="center"
-    anchorY="middle"
-  >
-    HOME
-  </Text>
-
-  <Text
-    position={[0, -0.35, 0.03]}
-    fontSize={0.16}
-    color="#b98942"
-    anchorX="center"
-    anchorY="middle"
-  >
-    RETURN TO LOBBY
-  </Text>
+  
 </group>
   </>
 );
