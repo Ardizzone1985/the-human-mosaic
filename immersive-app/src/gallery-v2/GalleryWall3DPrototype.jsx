@@ -237,7 +237,7 @@ function InfoWallLogo() {
     anchorX="center"
     anchorY="middle"
   >
-    FUTURE AD SPACE
+    SPONSOR SPACE
   </Text>
       </group>
 
@@ -261,7 +261,7 @@ function InfoWallLogo() {
     anchorX="center"
     anchorY="middle"
   >
-    PARTNER SPACE
+    SPONSOR SPACE
   </Text>
 </group>
 
