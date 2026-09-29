@@ -173,8 +173,7 @@ export default function GalleryWall3DPrototype() {
   const [viewInput, setViewInput] = useState("1");
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
-  const logoTexture = useTexture(logoImage);
-  return (
+    return (
     <div
       style={{
         width: "100vw",
