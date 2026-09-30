@@ -170,8 +170,7 @@ function goHome() {
   window.dispatchEvent(new Event("startFadeOut"));
 
   setTimeout(() => {
-    window.history.pushState({}, "", "/");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    window.location.href = "/";
   }, 450);
 }
 
