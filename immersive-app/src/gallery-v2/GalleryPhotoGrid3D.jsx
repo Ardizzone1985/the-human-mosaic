@@ -98,7 +98,7 @@ const submission = submissions.find(
 );
 
           return (
-      <group>
+      <group
   key={`${row}-${column}`}
   position={[x, y, 0]}
   onClick={(event) => {
