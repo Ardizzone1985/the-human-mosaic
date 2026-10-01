@@ -10,6 +10,50 @@ export default function GalleryPhotoGrid3D({
 }) {
   const SLOTS_PER_VIEW = 120;
 
+  const [submissions, setSubmissions] = useState([]);
+
+useEffect(() => {
+  let cancelled = false;
+
+  async function loadSubmissions() {
+    const wallName =
+      wall === "Front"
+        ? "Front Wall"
+        : wall === "Left"
+        ? "Left Wall"
+        : wall === "Right"
+        ? "Right Wall"
+        : wall;
+
+    const { data, error } = await supabase
+      .from("submissions")
+      .select(
+        "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, section_number, view_number, approval_status"
+      )
+      .eq("room", room)
+      .eq("wall", wallName)
+      .eq("section_number", sectionNumber)
+      .eq("view_number", viewNumber)
+      .eq("approval_status", "approved");
+
+    if (error) {
+      console.error("Gallery V2 submissions error:", error);
+      return;
+    }
+
+    if (!cancelled) {
+      setSubmissions(data ?? []);
+      console.log("Gallery V2 submissions:", data ?? []);
+    }
+  }
+
+  loadSubmissions();
+
+  return () => {
+    cancelled = true;
+  };
+}, [room, wall, sectionNumber, viewNumber]);
+
   return (
   <group>
       {Array.from({ length: 4 }).map((_, row) =>
