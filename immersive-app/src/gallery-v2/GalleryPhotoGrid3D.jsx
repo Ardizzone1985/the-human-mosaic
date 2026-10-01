@@ -1,6 +1,7 @@
 import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient.js";
+import AppDialog from "../components/AppDialog.jsx";
 
 function GallerySlotPhoto({ imageUrl }) {
   const texture = useTexture(imageUrl);
@@ -96,7 +97,8 @@ const submission = submissions.find(
 );
 
           return (
-            <group
+  <>
+    <group>
   key={`${row}-${column}`}
   position={[x, y, 0]}
   onClick={(event) => {
@@ -168,5 +170,17 @@ console.log("Gallery V2 empty slot selected:", slotData);
 )}
     
         </group>
+
+    <AppDialog
+  open={!!selectedSlot}
+  icon="✦"
+  title="Claim This Position"
+  message="Sign in to reserve this position and become part of The Human Mosaic."
+  confirmText="Login"
+  cancelText="Close"
+  onCancel={() => setSelectedSlot(null)}
+  onConfirm={() => {}}
+/>
+</>
   );
 }
