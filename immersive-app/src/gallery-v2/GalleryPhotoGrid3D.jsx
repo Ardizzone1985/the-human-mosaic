@@ -2,6 +2,17 @@ import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient.js";
 
+function GallerySlotPhoto({ imageUrl }) {
+  const texture = useTexture(imageUrl);
+
+  return (
+    <mesh position={[0, 0, 0.015]}>
+      <planeGeometry args={[1.3, 1.3]} />
+      <meshBasicMaterial map={texture} />
+    </mesh>
+  );
+}
+
 export default function GalleryPhotoGrid3D({
   room = "Identity",
   wall = "Front",
