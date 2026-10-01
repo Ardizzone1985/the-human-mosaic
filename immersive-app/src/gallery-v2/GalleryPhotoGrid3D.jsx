@@ -1,4 +1,4 @@
-import { Text } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient.js";
 
