@@ -68,7 +68,8 @@ useEffect(() => {
 }, [room, wall, sectionNumber, viewNumber]);
 
   return (
-  <group>
+  <>
+    <group>
       {Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
           const x = -11.25 + column * 2.5;
@@ -97,8 +98,7 @@ const submission = submissions.find(
 );
 
           return (
-  <>
-    <group>
+      <group>
   key={`${row}-${column}`}
   position={[x, y, 0]}
   onClick={(event) => {
