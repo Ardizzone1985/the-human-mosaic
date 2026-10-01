@@ -5,6 +5,7 @@ export default function GalleryWall3D({
   sectionNumber = 1,
   viewNumber,
   setViewNumber,
+  onEmptySlotClick,
 }) {
   const SLOTS_PER_VIEW = 40;
   const MAX_VIEW = sectionNumber === 1667 ? 4 : 5;
