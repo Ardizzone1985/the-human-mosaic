@@ -108,15 +108,24 @@ const submission = submissions.find(
                 />
               </mesh>
 
-              <Text
-                position={[0, 0, 0.02]}
-                fontSize={0.22}
-                color="#222222"
-                anchorX="center"
-                anchorY="middle"
-              >
-                {slotNumber}
-              </Text>
+              {submission ? (
+  <GallerySlotPhoto
+    imageUrl={
+      submission.image_url ||
+      `https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/${submission.image_file_name}`
+    }
+  />
+) : (
+  <Text
+    position={[0, 0, 0.02]}
+    fontSize={0.22}
+    color="#222222"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {slotNumber}
+  </Text>
+)}
             </group>
           );
         })
