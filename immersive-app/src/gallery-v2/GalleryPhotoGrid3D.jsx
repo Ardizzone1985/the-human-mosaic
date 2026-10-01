@@ -96,9 +96,24 @@ const submission = submissions.find(
 
           return (
             <group
-              key={`${row}-${column}`}
-              position={[x, y, 0]}
-            >
+  key={`${row}-${column}`}
+  position={[x, y, 0]}
+  onClick={(event) => {
+    event.stopPropagation();
+
+    if (submission) return;
+
+    console.log("Gallery V2 empty slot selected:", {
+      room,
+      wall,
+      sectionNumber,
+      viewNumber,
+      row: row + 1,
+      column: column + 1,
+      slotCode: expectedSlotCode,
+    });
+  }}
+>
               <mesh>
                 <planeGeometry args={[1.3, 1.3]} />
                 <meshStandardMaterial
