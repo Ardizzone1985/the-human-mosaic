@@ -104,15 +104,19 @@ const submission = submissions.find(
 
     if (submission) return;
 
-    console.log("Gallery V2 empty slot selected:", {
-      room,
-      wall,
-      sectionNumber,
-      viewNumber,
-      row: row + 1,
-      column: column + 1,
-      slotCode: expectedSlotCode,
-    });
+const slotData = {
+  room,
+  wall,
+  sectionNumber,
+  viewNumber,
+  row: row + 1,
+  column: column + 1,
+  slotCode: expectedSlotCode,
+};
+
+setSelectedSlot(slotData);
+
+console.log("Gallery V2 empty slot selected:", slotData);
   }}
 >
               <mesh>
