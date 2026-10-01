@@ -76,6 +76,13 @@ const slotNumber =
   column +
   1;
 
+    const expectedSlotCode =
+  `${room}-S${sectionNumber}-V${viewNumber}-${wall.charAt(0)}-R${row + 1}-C${column + 1}`;
+
+const submission = submissions.find(
+  (item) => item.slot_code === expectedSlotCode
+);
+
           return (
             <group
               key={`${row}-${column}`}
