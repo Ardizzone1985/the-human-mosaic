@@ -122,7 +122,11 @@ console.log("Gallery V2 empty slot selected:", slotData);
               <mesh>
                 <planeGeometry args={[1.3, 1.3]} />
                 <meshStandardMaterial
-                  color="#f7f5ef"
+                  color={
+  selectedSlot?.slotCode === expectedSlotCode
+    ? "#d6bd78"
+    : "#f7f5ef"
+}
                   roughness={0.7}
                   metalness={0.05}
                 />
