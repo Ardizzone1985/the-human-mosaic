@@ -430,6 +430,7 @@ export default function GalleryWall3DPrototype() {
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   setViewNumber={setViewNumber}
+  onEmptySlotClick={setSelectedSlot}
 />
 
         {/* pavimento */}
