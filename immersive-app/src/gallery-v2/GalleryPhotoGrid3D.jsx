@@ -158,20 +158,7 @@ console.log("Gallery V2 empty slot selected:", slotData);
             </group>
           );
         })
-      )}
-
-    {selectedSlot && (
-  <Text
-    position={[0, -2.2, 0.05]}
-    fontSize={0.32}
-    color="#8a6a20"
-    anchorX="center"
-    anchorY="middle"
-  >
-    SELECT THIS POSITION
-  </Text>
-)}
-    
+      )}   
         </group>
 </>
   );
