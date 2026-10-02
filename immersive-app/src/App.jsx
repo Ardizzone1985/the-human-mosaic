@@ -1268,7 +1268,7 @@ const isLobby = !currentRoom;
       }}
     >
 
-      {currentRoom === "Identity" ? (
+      {(currentRoom === "Identity" || currentRoom === "Love") ? (
   <GalleryWall3DPrototype room={currentRoom} />
 ) : (
       
