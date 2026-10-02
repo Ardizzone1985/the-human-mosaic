@@ -14,7 +14,7 @@ export default function GalleryWall3D({
   <>
     
     <GalleryPhotoWall3D
-  room="Identity"
+  room={room}
   wall="Front"
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
