@@ -28,6 +28,7 @@ import MuseumIdentity from "./MuseumIdentity.jsx";
 import AvatarModal from "./AvatarModal.jsx";
 import UploadMemoryModal from "./UploadMemoryModal.jsx";
 import museumLogoUrl from "./logo-cropped.png";
+import GalleryWall3DPrototype from "./gallery-v2/GalleryWall3DPrototype.jsx";
 
 function parseSlotCode(slotCode) {
   if (!slotCode) return null;
