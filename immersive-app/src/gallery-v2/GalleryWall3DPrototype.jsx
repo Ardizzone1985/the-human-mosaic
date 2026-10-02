@@ -382,7 +382,9 @@ function InfoWallLogo() {
 );
 }
 
-export default function GalleryWall3DPrototype() {
+export default function GalleryWall3DPrototype({
+  room = "Identity",
+}) {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
   const [sectionInput, setSectionInput] = useState("1");
