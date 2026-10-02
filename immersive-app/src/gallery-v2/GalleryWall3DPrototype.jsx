@@ -403,7 +403,7 @@ export default function GalleryWall3DPrototype({
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
         <StreetViewLookControls />
-        <InfoWallLogo />
+        <InfoWallLogo room={room} />
         
         <StreetViewControls
         currentPointId={currentPointId}
