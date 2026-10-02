@@ -2,6 +2,7 @@ import { Text } from "@react-three/drei";
 import GalleryPhotoWall3D from "./GalleryPhotoWall3D";
 
 export default function GalleryWall3D({
+  room = "Identity",
   sectionNumber = 1,
   viewNumber,
   setViewNumber,
