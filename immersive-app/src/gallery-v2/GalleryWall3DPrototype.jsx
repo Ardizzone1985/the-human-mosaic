@@ -175,7 +175,7 @@ function goHome() {
   }, 450);
 }
 
-function InfoWallLogo() {
+function InfoWallLogo({ room = "Identity" }) {
   const logoTexture = useTexture(logoImage);
 
   return (
