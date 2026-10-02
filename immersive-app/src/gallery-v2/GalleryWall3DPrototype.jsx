@@ -582,7 +582,18 @@ export default function GalleryWall3DPrototype() {
 </button>
   </div>
 </Html>
-      </Canvas>
+            </Canvas>
+
+      <AppDialog
+        open={!!selectedSlot}
+        icon="✦"
+        title="Claim This Position"
+        message="Sign in to reserve this position and become part of The Human Mosaic."
+        confirmText="Login"
+        cancelText="Close"
+        onCancel={() => setSelectedSlot(null)}
+        onConfirm={() => {}}
+      />
     </div>
   );
 }
