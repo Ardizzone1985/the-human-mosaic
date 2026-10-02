@@ -1267,6 +1267,11 @@ const isLobby = !currentRoom;
         background: "#050505"
       }}
     >
+
+      {currentRoom === "Identity" ? (
+  <GalleryWall3DPrototype room={currentRoom} />
+) : (
+      
       <Canvas
   camera={{ position: [0, 1.75, 8.8], fov: 58 }}
   shadows={false}
@@ -1419,6 +1424,7 @@ const isLobby = !currentRoom;
 />
 )}
 </Canvas>
+      )}
          </div>
       </>
   );
