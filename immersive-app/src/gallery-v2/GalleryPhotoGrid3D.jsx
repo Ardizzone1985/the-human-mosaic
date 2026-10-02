@@ -170,17 +170,6 @@ console.log("Gallery V2 empty slot selected:", slotData);
 )}
     
         </group>
-
-    <AppDialog
-  open={!!selectedSlot}
-  icon="✦"
-  title="Claim This Position"
-  message="Sign in to reserve this position and become part of The Human Mosaic."
-  confirmText="Login"
-  cancelText="Close"
-  onCancel={() => setSelectedSlot(null)}
-  onConfirm={() => {}}
-/>
 </>
   );
 }
