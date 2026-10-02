@@ -36,11 +36,12 @@ rotation={
 
       <group position={[0, -2, 0.05]}>
   <GalleryPhotoGrid3D
-    room={room}
-    wall={wall}
-    sectionNumber={sectionNumber}
-    viewNumber={viewNumber}
-  />
+  room={room}
+  wall={wall}
+  sectionNumber={sectionNumber}
+  viewNumber={viewNumber}
+  onEmptySlotClick={onEmptySlotClick}
+/>
 </group>
     </group>
   );
