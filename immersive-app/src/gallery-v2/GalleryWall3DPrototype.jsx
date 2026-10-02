@@ -429,6 +429,7 @@ export default function GalleryWall3DPrototype({
 
         <GalleryWall3D
   key={sectionNumber}
+  room={room}
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   setViewNumber={setViewNumber}
