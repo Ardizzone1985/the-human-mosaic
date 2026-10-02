@@ -5,7 +5,9 @@ export default function GalleryPhotoWall3D({
   wall = "Front",
   sectionNumber = 1,
   viewNumber = 1,
+  onEmptySlotClick,
 }) {
+  
   return (
   <group
   position={
