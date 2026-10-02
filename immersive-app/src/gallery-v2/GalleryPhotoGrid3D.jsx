@@ -119,7 +119,8 @@ const slotData = {
 };
 
 setSelectedSlot(slotData);
-
+onEmptySlotClick?.(slotData);
+    
 console.log("Gallery V2 empty slot selected:", slotData);
   }}
 >
