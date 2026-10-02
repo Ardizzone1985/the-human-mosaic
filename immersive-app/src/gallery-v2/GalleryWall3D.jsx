@@ -22,7 +22,7 @@ export default function GalleryWall3D({
 />
 
     <GalleryPhotoWall3D
-  room="Identity"
+  room={room}
   wall="Left"
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
