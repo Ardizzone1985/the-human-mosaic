@@ -17,6 +17,7 @@ export default function GalleryWall3D({
   wall="Front"
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
+  onEmptySlotClick={onEmptySlotClick}
 />
 
     <GalleryPhotoWall3D
