@@ -199,7 +199,7 @@ function InfoWallLogo({ room = "Identity" }) {
       anchorX="left"
       anchorY="middle"
     >
-      IDENTITY ROOM
+      {`${room.toUpperCase()} ROOM`}
     </Text>
 
     <Text
