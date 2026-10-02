@@ -19,7 +19,9 @@ export default function GalleryPhotoGrid3D({
   wall = "Front",
   sectionNumber,
   viewNumber,
+  onEmptySlotClick,
 }) {
+  
   const SLOTS_PER_VIEW = 120;
 
   const [submissions, setSubmissions] = useState([]);
