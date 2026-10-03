@@ -602,14 +602,31 @@ export default function GalleryWall3DPrototype({
   confirmText={user ? "Continue" : "Login"}
   cancelText="Close"
   onCancel={() => setSelectedSlot(null)}
-  onConfirm={() => {
-    if (user) {
+  onConfirm={async () => {
+  if (user) {
+    const slotCode = selectedSlot?.slotCode;
+
+    if (!slotCode) {
+      console.error("Gallery V2: missing slotCode");
       return;
     }
 
-    setSelectedSlot(null);
-    onLoginRequest?.();
-  }}
+    const { data, error } = await supabase.rpc("reserve_app_slot", {
+      p_slot_code: slotCode,
+    });
+
+    if (error) {
+      console.error("Gallery V2 reservation error:", error);
+      return;
+    }
+
+    console.log("Gallery V2 reservation result:", data);
+    return;
+  }
+
+  setSelectedSlot(null);
+  onLoginRequest?.();
+}}
 />
     </div>
   );
