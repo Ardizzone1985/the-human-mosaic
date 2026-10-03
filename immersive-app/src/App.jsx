@@ -1275,6 +1275,7 @@ const isLobby = !currentRoom;
 ) ? (
   <GalleryWall3DPrototype
   room={currentRoom}
+  user={user}
   onLoginRequest={() => setAuthMode("login")}
 />
 ) : (
