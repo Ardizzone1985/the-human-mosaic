@@ -596,7 +596,10 @@ export default function GalleryWall3DPrototype({
         confirmText="Login"
         cancelText="Close"
         onCancel={() => setSelectedSlot(null)}
-        onConfirm={() => {}}
+        onConfirm={() => {
+  setSelectedSlot(null);
+  onLoginRequest?.();
+}}
       />
     </div>
   );
