@@ -34,6 +34,7 @@ export default function GalleryWall3D({
   wall="Right"
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
+  onEmptySlotClick={onEmptySlotClick}
 />
   </>
 );
