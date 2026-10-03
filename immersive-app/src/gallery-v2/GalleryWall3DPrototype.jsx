@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { Text, Html, useTexture } from "@react-three/drei";
 import GalleryWall3D from "./GalleryWall3D";
 import AppDialog from "../components/AppDialog.jsx";
+import { supabase } from "../supabaseClient.js";
 import logoImage from "../logo-cropped.png";
 
 function StreetViewLookControls() {
