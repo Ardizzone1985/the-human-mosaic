@@ -115,6 +115,7 @@ const slotData = {
   viewNumber,
   row: row + 1,
   column: column + 1,
+  slotNumber,
   slotCode: expectedSlotCode,
 };
 
