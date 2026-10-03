@@ -395,6 +395,7 @@ export default function GalleryWall3DPrototype({
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [reservationCreated, setReservationCreated] = useState(false);
   
     return (
     <div
