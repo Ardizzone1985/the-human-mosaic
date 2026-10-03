@@ -601,7 +601,20 @@ export default function GalleryWall3DPrototype({
   }
   confirmText={user ? "Continue" : "Login"}
   cancelText="Close"
-  onCancel={() => setSelectedSlot(null)}
+  onCancel={async () => {
+  if (user && selectedSlot?.slotCode) {
+    const { error } = await supabase.rpc("release_my_app_slot", {
+      p_slot_code: selectedSlot.slotCode,
+    });
+
+    if (error) {
+      console.error("Gallery V2 release error:", error);
+      return;
+    }
+  }
+
+  setSelectedSlot(null);
+}}
   onConfirm={async () => {
   if (user) {
     const slotCode = selectedSlot?.slotCode;
