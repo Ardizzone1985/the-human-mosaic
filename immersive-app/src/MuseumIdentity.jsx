@@ -414,14 +414,7 @@ const [loadingCommunityFavorites, setLoadingCommunityFavorites] =
         </section>
 
         <section style={actionsSection}>
-          <button
-            type="button"
-            style={uploadButton}
-            onClick={onUpload}
-          >
-            Upload a Memory
-          </button>
-
+          
           <div style={secondaryActions}>
             <button
   type="button"
