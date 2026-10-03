@@ -1273,7 +1273,10 @@ const isLobby = !currentRoom;
   currentRoom === "Love" ||
   currentRoom === "Creativity"
 ) ? (
-  <GalleryWall3DPrototype room={currentRoom} />
+  <GalleryWall3DPrototype
+  room={currentRoom}
+  onLoginRequest={() => setAuthMode("login")}
+/>
 ) : (
       
       <Canvas
