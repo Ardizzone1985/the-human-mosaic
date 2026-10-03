@@ -597,6 +597,10 @@ export default function GalleryWall3DPrototype({
         cancelText="Close"
         onCancel={() => setSelectedSlot(null)}
         onConfirm={() => {
+  console.log("CLAIM LOGIN CLICK", {
+    hasOnLoginRequest: typeof onLoginRequest === "function",
+  });
+
   onLoginRequest?.();
 }}
       />
