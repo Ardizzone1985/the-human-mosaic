@@ -384,6 +384,7 @@ function InfoWallLogo({ room = "Identity" }) {
 
 export default function GalleryWall3DPrototype({
   room = "Identity",
+   user,
   onLoginRequest,
 }) {
   const [sectionNumber, setSectionNumber] = useState(1);
