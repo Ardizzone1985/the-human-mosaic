@@ -601,7 +601,13 @@ export default function GalleryWall3DPrototype({
       ? `Hello! Would you like to reserve position ${selectedSlot?.slotNumber ?? ""}?`
       : "Sign in to reserve this position and become part of The Human Mosaic."
   }
-  confirmText={user ? "Continue" : "Login"}
+  confirmText={
+  user
+    ? checkoutLoading
+      ? "Opening secure checkout..."
+      : "Continue"
+    : "Login"
+}
   cancelText="Close"
   onCancel={async () => {
   if (user && reservationCreated && selectedSlot?.slotCode) {
