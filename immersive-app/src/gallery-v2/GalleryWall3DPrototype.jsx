@@ -640,8 +640,41 @@ const checkoutSpot = String(selectedSlot?.slotNumber);
 
     setReservationCreated(true);
 
-    console.log("Gallery V2 reservation result:", data);
-    return;
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+
+const accessToken = session?.access_token;
+
+if (!accessToken) {
+  console.error("Gallery V2 checkout: missing access token");
+  return;
+}
+
+const response = await fetch("/api/create-app-checkout-session", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  },
+  body: JSON.stringify({
+    room,
+    wall: checkoutWall,
+    section: checkoutSection,
+    spot: checkoutSpot,
+    slotCode,
+  }),
+});
+
+const checkoutData = await response.json();
+
+if (!response.ok || !checkoutData?.url) {
+  console.error("Gallery V2 checkout error:", checkoutData);
+  return;
+}
+
+window.location.href = checkoutData.url;
+return;
   }
 
   setSelectedSlot(null);
