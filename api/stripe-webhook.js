@@ -809,27 +809,53 @@ export default async function handler(
             customerEmail:
               session.metadata
                 ?.email ||
-              session
-                .customer_details
-                ?.email ||
-              null,
+              if (session.payment_status === "paid") {
+  await markSlotAsPaid(
+    supabase,
+    {
+      slotCode,
 
-            room:
-              session.metadata
-                ?.room ||
-              null,
+      sessionId:
+        session.id,
 
-            fullName:
-              session.metadata
-                ?.fullName ||
-              null,
+      paymentStatus:
+        session.payment_status,
 
-            country:
-              session.metadata
-                ?.country ||
-              null,
-          }
-        );
+      customerEmail:
+        session.metadata
+          ?.email ||
+        session
+          .customer_details
+          ?.email ||
+        null,
+
+      room:
+        session.metadata
+          ?.room ||
+        null,
+
+      fullName:
+        session.metadata
+          ?.fullName ||
+        null,
+
+      country:
+        session.metadata
+          ?.country ||
+        null,
+    }
+  );
+} else {
+  console.log(
+    "ℹ️ Photo checkout completed but payment is not yet paid:",
+    {
+      sessionId: session.id,
+      slotCode,
+      paymentStatus:
+        session.payment_status || null,
+    }
+  );
+}
       }
     }
 
