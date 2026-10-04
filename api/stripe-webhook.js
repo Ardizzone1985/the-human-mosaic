@@ -841,6 +841,9 @@ export default async function handler(
   );
 }
 
+      }
+    }
+
     /*
      * PAYMENT INTENT
      */
