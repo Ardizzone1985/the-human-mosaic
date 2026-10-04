@@ -4,6 +4,7 @@ export default function AppDialog({
   title = "The Human Mosaic",
   message,
   confirmText = "Close",
+  confirmDisabled = false,
   cancelText,
   onConfirm,
   onCancel,
