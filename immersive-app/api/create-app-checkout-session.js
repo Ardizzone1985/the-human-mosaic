@@ -232,8 +232,9 @@ export default async function handler(req, res) {
       `&session_id={CHECKOUT_SESSION_ID}`;
 
     const cancelUrl =
-      `${APP_URL}/?payment=cancelled` +
-      `&slotCode=${encodeURIComponent(slotCode)}`;
+  `${APP_URL}/?room=${encodeURIComponent(room)}` +
+  `&galleryPayment=cancelled` +
+  `&slotCode=${encodeURIComponent(slotCode)}`;
 
     const session =
       await stripe.checkout.sessions.create({
