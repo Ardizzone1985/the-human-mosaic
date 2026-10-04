@@ -793,23 +793,7 @@ export default async function handler(
           }
         );
 
-        await markSlotAsPaid(
-          supabase,
-          {
-            slotCode,
-
-            sessionId:
-              session.id,
-
-            paymentStatus:
-              session
-                .payment_status ||
-              "paid",
-
-            customerEmail:
-              session.metadata
-                ?.email ||
-              if (session.payment_status === "paid") {
+        if (session.payment_status === "paid") {
   await markSlotAsPaid(
     supabase,
     {
@@ -856,8 +840,6 @@ export default async function handler(
     }
   );
 }
-      }
-    }
 
     /*
      * PAYMENT INTENT
