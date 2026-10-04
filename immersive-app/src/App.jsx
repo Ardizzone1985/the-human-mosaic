@@ -482,10 +482,12 @@ export default function App() {
   }
 
   return {
-    status,
-    slotCode:
-      params.get("slotCode") || "",
-  };
+  status,
+  sessionId:
+    params.get("session_id") || "",
+  slotCode:
+    params.get("slotCode") || "",
+};
 });
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showCommunityWall, setShowCommunityWall] = useState(false);
