@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
+    "stripe": "^18.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.8",
     "react": "^18.3.1",
