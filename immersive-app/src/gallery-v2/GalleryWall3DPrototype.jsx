@@ -614,6 +614,7 @@ export default function GalleryWall3DPrototype({
     }
   }
 
+    setReservationCreated(false);
   setSelectedSlot(null);
 }}
   onConfirm={async () => {
