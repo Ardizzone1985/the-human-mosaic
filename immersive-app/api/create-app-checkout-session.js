@@ -228,9 +228,11 @@ export default async function handler(req, res) {
       CHECKOUT_MINUTES * 60;
 
     const successUrl =
-      `${APP_URL}/?payment=success` +
-      `&session_id={CHECKOUT_SESSION_ID}`;
-
+  `${APP_URL}/?room=${encodeURIComponent(room)}` +
+  `&galleryPayment=success` +
+  `&session_id={CHECKOUT_SESSION_ID}` +
+  `&slotCode=${encodeURIComponent(slotCode)}`;
+    
     const cancelUrl =
   `${APP_URL}/?room=${encodeURIComponent(room)}` +
   `&galleryPayment=cancelled` +
