@@ -634,6 +634,8 @@ export default function GalleryWall3DPrototype({
       return;
     }
 
+    setReservationCreated(true);
+
     console.log("Gallery V2 reservation result:", data);
     return;
   }
