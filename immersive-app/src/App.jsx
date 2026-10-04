@@ -467,6 +467,26 @@ export default function App() {
         params.get("slotCode") || "",
     };
   });
+  const [galleryPaymentReturn] = useState(() => {
+  const params = new URLSearchParams(
+    window.location.search
+  );
+
+  const status = params.get("galleryPayment");
+
+  if (
+    status !== "success" &&
+    status !== "cancelled"
+  ) {
+    return null;
+  }
+
+  return {
+    status,
+    slotCode:
+      params.get("slotCode") || "",
+  };
+});
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showCommunityWall, setShowCommunityWall] = useState(false);
 const [savingAvatar, setSavingAvatar] = useState(false);
