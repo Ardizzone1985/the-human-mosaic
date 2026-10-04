@@ -619,7 +619,11 @@ export default function GalleryWall3DPrototype({
   setSelectedSlot(null);
 }}
   onConfirm={async () => {
+  if (checkoutLoading) return;
+
   if (user) {
+    setCheckoutLoading(true);
+
     const slotCode = selectedSlot?.slotCode;
     const checkoutWall = `${selectedSlot?.wall} Wall`;
 const checkoutSection = `S${selectedSlot?.sectionNumber}`;
