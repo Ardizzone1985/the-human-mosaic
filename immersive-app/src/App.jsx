@@ -632,6 +632,65 @@ closeDialog,
   setShowMuseumIdentity(false);
   setShowUploadMemoryModal(true);
 }, [paymentReturn, loadingAuth, user]);
+
+  useEffect(() => {
+  if (
+    !galleryPaymentReturn ||
+    galleryPaymentReturn.status !== "cancelled" ||
+    loadingAuth ||
+    !user
+  ) {
+    return;
+  }
+
+  let cancelled = false;
+
+  async function releaseCancelledGallerySlot() {
+    const slotCode = galleryPaymentReturn.slotCode;
+
+    if (!slotCode) {
+      return;
+    }
+
+    const { error } = await supabase.rpc(
+      "release_my_app_slot",
+      {
+        p_slot_code: slotCode,
+      }
+    );
+
+    if (cancelled) return;
+
+    if (error) {
+      console.error(
+        "Gallery cancelled reservation release error:",
+        error
+      );
+      return;
+    }
+
+    const cleanUrl = new URL(window.location.href);
+
+    cleanUrl.searchParams.delete("galleryPayment");
+    cleanUrl.searchParams.delete("slotCode");
+
+    window.history.replaceState(
+      {},
+      document.title,
+      `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+    );
+  }
+
+  releaseCancelledGallerySlot();
+
+  return () => {
+    cancelled = true;
+  };
+}, [
+  galleryPaymentReturn,
+  loadingAuth,
+  user,
+]);
   
 useEffect(() => {
   setTimeout(() => {
