@@ -620,6 +620,9 @@ export default function GalleryWall3DPrototype({
   onConfirm={async () => {
   if (user) {
     const slotCode = selectedSlot?.slotCode;
+    const checkoutWall = `${selectedSlot?.wall} Wall`;
+const checkoutSection = `S${selectedSlot?.sectionNumber}`;
+const checkoutSpot = String(selectedSlot?.slotNumber);
 
     if (!slotCode) {
       console.error("Gallery V2: missing slotCode");
