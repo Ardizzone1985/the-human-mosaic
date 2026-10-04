@@ -608,6 +608,7 @@ export default function GalleryWall3DPrototype({
       : "Continue"
     : "Login"
 }
+  confirmDisabled={user && checkoutLoading}
   cancelText="Close"
   onCancel={async () => {
   if (user && reservationCreated && selectedSlot?.slotCode) {
