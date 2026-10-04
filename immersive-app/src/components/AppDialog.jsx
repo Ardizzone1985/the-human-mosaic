@@ -44,6 +44,7 @@ export default function AppDialog({
             type="button"
             style={primaryButton}
             onClick={onConfirm}
+            disabled={confirmDisabled}
           >
             {confirmText}
           </button>
