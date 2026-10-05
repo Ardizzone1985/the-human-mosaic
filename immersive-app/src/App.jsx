@@ -754,12 +754,26 @@ closeDialog,
     if (cancelled) return;
 
     if (response.status === 202) {
-      console.log(
-        "Gallery payment confirmed by Stripe; webhook still pending.",
-        result
-      );
-      return;
-    }
+  console.log(
+    `Gallery payment confirmed by Stripe; webhook still pending. Attempt ${attempt}/6`,
+    result
+  );
+
+  if (attempt < 6) {
+    window.setTimeout(() => {
+      if (!cancelled) {
+        verifyGalleryPayment(attempt + 1);
+      }
+    }, 2000);
+  } else {
+    console.error(
+      "Gallery payment verification timed out while waiting for the webhook.",
+      result
+    );
+  }
+
+  return;
+}
 
     if (!response.ok || !result?.paid) {
       console.error(
