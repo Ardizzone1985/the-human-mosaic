@@ -770,9 +770,13 @@ closeDialog,
     }
 
     console.log(
-      "Gallery payment verified successfully:",
-      result
-    );
+  "Gallery payment verified successfully:",
+  result
+);
+
+setShowWelcomeGate(false);
+setShowMuseumIdentity(false);
+setShowUploadMemoryModal(true);
   }
 
   verifyGalleryPayment();
