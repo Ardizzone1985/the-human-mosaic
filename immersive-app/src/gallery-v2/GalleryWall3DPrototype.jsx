@@ -685,6 +685,18 @@ if (!response.ok || !checkoutData?.url) {
   return;
 }
 
+sessionStorage.setItem(
+  "thm_app_checkout",
+  JSON.stringify({
+    room,
+    wall: checkoutWall,
+    section: checkoutSection,
+    spot: checkoutSpot,
+    slotCode,
+    sessionId: checkoutData.sessionId || "",
+  })
+);
+
 window.location.href = checkoutData.url;
 return;
   }
