@@ -706,7 +706,7 @@ closeDialog,
 
   let cancelled = false;
 
-  async function verifyGalleryPayment() {
+  async function verifyGalleryPayment(attempt = 1) {
     const sessionId =
       galleryPaymentReturn.sessionId;
 
