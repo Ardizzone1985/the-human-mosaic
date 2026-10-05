@@ -693,6 +693,98 @@ closeDialog,
   loadingAuth,
   user,
 ]);
+
+  useEffect(() => {
+  if (
+    !galleryPaymentReturn ||
+    galleryPaymentReturn.status !== "success" ||
+    loadingAuth ||
+    !user
+  ) {
+    return;
+  }
+
+  let cancelled = false;
+
+  async function verifyGalleryPayment() {
+    const sessionId =
+      galleryPaymentReturn.sessionId;
+
+    const slotCode =
+      galleryPaymentReturn.slotCode;
+
+    if (!sessionId || !slotCode) {
+      console.error(
+        "Gallery payment return is missing sessionId or slotCode."
+      );
+      return;
+    }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const accessToken =
+      session?.access_token;
+
+    if (!accessToken) {
+      console.error(
+        "Gallery payment verification: missing access token."
+      );
+      return;
+    }
+
+    const response = await fetch(
+      "/api/verify-payment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          sessionId,
+          slotCode,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (cancelled) return;
+
+    if (response.status === 202) {
+      console.log(
+        "Gallery payment confirmed by Stripe; webhook still pending.",
+        result
+      );
+      return;
+    }
+
+    if (!response.ok || !result?.paid) {
+      console.error(
+        "Gallery payment verification failed:",
+        result
+      );
+      return;
+    }
+
+    console.log(
+      "Gallery payment verified successfully:",
+      result
+    );
+  }
+
+  verifyGalleryPayment();
+
+  return () => {
+    cancelled = true;
+  };
+}, [
+  galleryPaymentReturn,
+  loadingAuth,
+  user,
+]);
   
 useEffect(() => {
   setTimeout(() => {
