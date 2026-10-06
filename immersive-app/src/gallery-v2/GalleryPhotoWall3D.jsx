@@ -6,6 +6,7 @@ export default function GalleryPhotoWall3D({
   sectionNumber = 1,
   viewNumber = 1,
   onEmptySlotClick,
+  onPhotoSelect,
 }) {
   
   return (
@@ -41,6 +42,7 @@ rotation={
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   onEmptySlotClick={onEmptySlotClick}
+  onPhotoSelect={onPhotoSelect}
 />
 </group>
     </group>
