@@ -106,6 +106,7 @@ const messageStyle = {
   color: "#d5d5d5",
   fontSize: "16px",
   lineHeight: 1.6,
+  whiteSpace: "pre-line",
 };
 
 const actions = {
