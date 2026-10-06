@@ -7,6 +7,7 @@ export default function GalleryWall3D({
   viewNumber,
   setViewNumber,
   onEmptySlotClick,
+  onPhotoSelect,
 }) {
   const SLOTS_PER_VIEW = 40;
   const MAX_VIEW = sectionNumber === 1667 ? 4 : 5;
@@ -19,6 +20,7 @@ export default function GalleryWall3D({
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   onEmptySlotClick={onEmptySlotClick}
+  onPhotoSelect={onPhotoSelect}
 />
 
     <GalleryPhotoWall3D
@@ -27,6 +29,7 @@ export default function GalleryWall3D({
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   onEmptySlotClick={onEmptySlotClick}
+  onPhotoSelect={onPhotoSelect}
 />
 
     <GalleryPhotoWall3D
@@ -35,6 +38,7 @@ export default function GalleryWall3D({
   sectionNumber={sectionNumber}
   viewNumber={viewNumber}
   onEmptySlotClick={onEmptySlotClick}
+  onPhotoSelect={onPhotoSelect}
 />
   </>
 );
