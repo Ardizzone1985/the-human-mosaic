@@ -743,9 +743,9 @@ closeDialog,
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          sessionId,
-          slotCode,
-        }),
+  session_id: sessionId,
+  slotCode,
+}),
       }
     );
 
