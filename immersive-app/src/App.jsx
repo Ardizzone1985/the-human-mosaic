@@ -694,126 +694,24 @@ closeDialog,
   user,
 ]);
 
-  useEffect(() => {
+useEffect(() => {
   if (
     !galleryPaymentReturn ||
     galleryPaymentReturn.status !== "success" ||
-    loadingAuth ||
-    !user
+    loadingAuth
   ) {
     return;
   }
 
-  let cancelled = false;
-
-  async function verifyGalleryPayment(attempt = 1) {
-    const sessionId =
-      galleryPaymentReturn.sessionId;
-
-    const slotCode =
-      galleryPaymentReturn.slotCode;
-
-    if (!sessionId || !slotCode) {
-      console.error(
-        "Gallery payment return is missing sessionId or slotCode."
-      );
-      return;
-    }
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    const accessToken =
-      session?.access_token;
-
-    if (!accessToken) {
-      console.error(
-        "Gallery payment verification: missing access token."
-      );
-      return;
-    }
-
-    const response = await fetch(
-      "/api/verify-payment",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-  session_id: sessionId,
-  slotCode,
-}),
-      }
-    );
-
-    const result = await response.json();
-
-    if (cancelled) return;
-
-    if (response.status === 202) {
-  console.log(
-    `Gallery payment confirmed by Stripe; webhook still pending. Attempt ${attempt}/6`,
-    result
-  );
-
-  if (attempt < 6) {
-    window.setTimeout(() => {
-      if (!cancelled) {
-        verifyGalleryPayment(attempt + 1);
-      }
-    }, 2000);
-  } else {
-    console.error(
-      "Gallery payment verification timed out while waiting for the webhook.",
-      result
-    );
+  if (!user) {
+    setShowWelcomeGate(false);
+    setAuthMode("login");
+    return;
   }
 
-  return;
-}
-
-    if (
-  !response.ok ||
-  result?.success !== true ||
-  result?.paymentConfirmed !== true
-) {
-  console.error(
-    "Gallery payment verification failed:",
-    result
-  );
-  return;
-}
-
-    console.log(
-  "Gallery payment verified successfully:",
-  result
-);
-
-    const cleanUrl = new URL(window.location.href);
-
-cleanUrl.searchParams.delete("galleryPayment");
-cleanUrl.searchParams.delete("session_id");
-cleanUrl.searchParams.delete("slotCode");
-
-window.history.replaceState(
-  {},
-  document.title,
-  `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
-);
-
-setShowWelcomeGate(false);
-setShowMuseumIdentity(false);
-setShowUploadMemoryModal(true);
-  }
-
-  verifyGalleryPayment();
-
-  return () => {
-    cancelled = true;
-  };
+  setShowWelcomeGate(false);
+  setShowMuseumIdentity(false);
+  setShowUploadMemoryModal(true);
 }, [
   galleryPaymentReturn,
   loadingAuth,
