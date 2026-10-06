@@ -597,10 +597,14 @@ export default function GalleryWall3DPrototype({
   icon="✦"
   title={user ? "Reserve This Position" : "Claim This Position"}
   message={
-    user
-      ? `Hello! Would you like to reserve position ${selectedSlot?.slotNumber ?? ""}?`
-      : "Sign in to reserve this position and become part of The Human Mosaic."
-  }
+  user
+    ? `${room.toUpperCase()} ROOM
+${selectedSlot?.wall ?? ""} Wall · Section ${selectedSlot?.sectionNumber ?? ""} · View ${selectedSlot?.viewNumber ?? ""}
+Position ${selectedSlot?.slotNumber ?? ""}
+
+Would you like to reserve this position?`
+    : "Sign in to reserve this position and become part of The Human Mosaic."
+}
   confirmText={
   user
     ? checkoutLoading
