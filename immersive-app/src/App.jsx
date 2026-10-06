@@ -792,6 +792,18 @@ closeDialog,
   result
 );
 
+    const cleanUrl = new URL(window.location.href);
+
+cleanUrl.searchParams.delete("galleryPayment");
+cleanUrl.searchParams.delete("session_id");
+cleanUrl.searchParams.delete("slotCode");
+
+window.history.replaceState(
+  {},
+  document.title,
+  `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`
+);
+
 setShowWelcomeGate(false);
 setShowMuseumIdentity(false);
 setShowUploadMemoryModal(true);
