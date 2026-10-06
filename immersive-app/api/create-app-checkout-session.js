@@ -208,6 +208,14 @@ export default async function handler(req, res) {
         `€${finalPrice} — one-time participation fee`;
     }
 
+    if (previewOnly === true) {
+  return res.status(200).json({
+    price: finalPrice,
+    formattedPrice,
+    earlyAccessActive,
+  });
+}
+
     const metadata = {
       source: "immersive_app",
       userId: user.id,
