@@ -775,13 +775,17 @@ closeDialog,
   return;
 }
 
-    if (!response.ok || !result?.paid) {
-      console.error(
-        "Gallery payment verification failed:",
-        result
-      );
-      return;
-    }
+    if (
+  !response.ok ||
+  result?.success !== true ||
+  result?.paymentConfirmed !== true
+) {
+  console.error(
+    "Gallery payment verification failed:",
+    result
+  );
+  return;
+}
 
     console.log(
   "Gallery payment verified successfully:",
