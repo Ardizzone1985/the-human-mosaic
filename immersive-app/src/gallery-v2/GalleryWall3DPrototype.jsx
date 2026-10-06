@@ -385,8 +385,9 @@ function InfoWallLogo({ room = "Identity" }) {
 
 export default function GalleryWall3DPrototype({
   room = "Identity",
-   user,
+  user,
   onLoginRequest,
+  onPhotoSelect,
 }) {
   const [sectionNumber, setSectionNumber] = useState(1);
   const [viewNumber, setViewNumber] = useState(1);
@@ -439,6 +440,7 @@ export default function GalleryWall3DPrototype({
   viewNumber={viewNumber}
   setViewNumber={setViewNumber}
   onEmptySlotClick={setSelectedSlot}
+  onPhotoSelect={onPhotoSelect}
 />
 
         {/* pavimento */}
