@@ -20,6 +20,7 @@ export default function GalleryPhotoGrid3D({
   sectionNumber,
   viewNumber,
   onEmptySlotClick,
+  onPhotoSelect,
 }) {
   
   const SLOTS_PER_VIEW = 120;
@@ -106,7 +107,10 @@ const submission = submissions.find(
   onClick={(event) => {
     event.stopPropagation();
 
-    if (submission) return;
+    if (submission) {
+  onPhotoSelect?.(submission);
+  return;
+}
 
 const slotData = {
   room,
