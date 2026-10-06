@@ -77,7 +77,6 @@ export default async function handler(req, res) {
   email,
   country,
   note,
-  previewOnly = false,
 } = req.body || {};
 
     if (
@@ -207,15 +206,7 @@ export default async function handler(req, res) {
       formattedPrice =
         `€${finalPrice} — one-time participation fee`;
     }
-
-    if (previewOnly === true) {
-  return res.status(200).json({
-    price: finalPrice,
-    formattedPrice,
-    earlyAccessActive,
-  });
-}
-
+    
     const metadata = {
       source: "immersive_app",
       userId: user.id,
