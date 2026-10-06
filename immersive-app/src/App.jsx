@@ -1385,6 +1385,7 @@ const isLobby = !currentRoom;
   room={currentRoom}
   user={user}
   onLoginRequest={() => setAuthMode("login")}
+  onPhotoSelect={setSelectedPhoto}
 />
 ) : (
       
