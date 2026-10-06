@@ -1188,7 +1188,9 @@ const isLobby = !currentRoom;
 
       <UploadMemoryModal
   open={showUploadMemoryModal}
-  paymentReturn={paymentReturn}
+  paymentReturn={
+  galleryPaymentReturn || paymentReturn
+}
   onPaymentReturnHandled={
     handlePaymentReturnHandled
   }
