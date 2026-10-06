@@ -68,16 +68,17 @@ export default async function handler(req, res) {
     }
 
     const {
-      room,
-      wall,
-      section,
-      spot,
-      slotCode,
-      fullName,
-      email,
-      country,
-      note,
-    } = req.body || {};
+  room,
+  wall,
+  section,
+  spot,
+  slotCode,
+  fullName,
+  email,
+  country,
+  note,
+  previewOnly = false,
+} = req.body || {};
 
     if (
       !room ||
