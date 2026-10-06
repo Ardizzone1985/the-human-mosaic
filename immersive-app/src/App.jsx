@@ -889,6 +889,7 @@ async function handleUseMuseumLogo() {
   );
 
   cleanUrl.searchParams.delete("payment");
+  cleanUrl.searchParams.delete("galleryPayment");
   cleanUrl.searchParams.delete("session_id");
   cleanUrl.searchParams.delete("slotCode");
 
