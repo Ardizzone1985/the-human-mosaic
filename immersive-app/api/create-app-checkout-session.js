@@ -226,10 +226,12 @@ if (profileError) {
       section,
       spot,
       slotCode,
-      fullName: String(fullName || "").slice(0, 500),
-      email: String(user.email || "").slice(0, 500),
-      country: String(country || "").slice(0, 500),
-      note: String(note || "").slice(0, 500),
+      fullName: `${userProfile?.first_name || ""} ${userProfile?.last_name || ""}`
+  .trim()
+  .slice(0, 500),
+email: String(user.email || "").slice(0, 500),
+country: String(userProfile?.country || "").slice(0, 500),
+note: String(note || "").slice(0, 500),
       formattedPrice,
       earlyAccess: earlyAccessActive ? "true" : "false",
     };
