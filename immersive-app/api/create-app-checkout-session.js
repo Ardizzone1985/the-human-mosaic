@@ -67,6 +67,17 @@ export default async function handler(req, res) {
       });
     }
 
+    const { data: userProfile, error: profileError } =
+  await supabaseAdmin
+    .from("user_profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+if (profileError) {
+  throw profileError;
+}
+
     const {
   room,
   wall,
