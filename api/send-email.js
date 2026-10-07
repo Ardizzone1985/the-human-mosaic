@@ -523,7 +523,8 @@ const pdfBytes = await certificateResponse.arrayBuffer();
             <p><strong>Room:</strong> ${body.room}</p>
             <p><strong>Wall:</strong> ${body.wall || '—'}</p>
             <p><strong>Section:</strong> ${body.section || '—'}</p>
-            <p><strong>Spot:</strong> ${body.spot}</p>
+<p><strong>View:</strong> ${body.view || '—'}</p>
+<p><strong>Position:</strong> ${body.position || '—'}</p>
 
             <hr style="border: none; border-top: 1px solid #e3e3e3; margin: 24px 0;">
 
@@ -623,7 +624,8 @@ Submission ID: ${body.submissionId}
 Room: ${body.room}
 Wall: ${body.wall || '—'}
 Section: ${body.section || '—'}
-Spot: ${body.spot}
+View: ${body.view || '—'}
+Position: ${body.position || '—'}
 
 View your contribution in the live gallery:
 ${galleryLink}
