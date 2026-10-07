@@ -216,7 +216,7 @@ export default async function handler(req, res) {
       spot,
       slotCode,
       fullName: String(fullName || "").slice(0, 500),
-      email: String(email || user.email || "").slice(0, 500),
+      email: String(user.email || "").slice(0, 500),
       country: String(country || "").slice(0, 500),
       note: String(note || "").slice(0, 500),
       formattedPrice,
