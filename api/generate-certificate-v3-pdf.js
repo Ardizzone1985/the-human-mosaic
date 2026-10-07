@@ -119,22 +119,30 @@ const positionText = String(position || spot || "").toUpperCase().trim();
     color: textDark
   });
 
-  // Section / Spot
-  page.drawText(`SECTION ${sectionText}`, {
-    x: 312,
-    y: 202,
-    size: 10.5,
-    font: fontBold,
-    color: textDark
-  });
+  // Section / View / Position
+page.drawText(`SECTION ${sectionText}`, {
+  x: 300,
+  y: 202,
+  size: 10.5,
+  font: fontBold,
+  color: textDark
+});
 
-  page.drawText(`SPOT ${spotText}`, {
-    x: 465,
-    y: 202,
-    size: 10.5,
-    font: fontBold,
-    color: textDark
-  });
+page.drawText(`VIEW ${viewText}`, {
+  x: 410,
+  y: 202,
+  size: 10.5,
+  font: fontBold,
+  color: textDark
+});
+
+page.drawText(`POSITION ${positionText}`, {
+  x: 490,
+  y: 202,
+  size: 10.5,
+  font: fontBold,
+  color: textDark
+});
 
   // Certificate ID
   drawCentered(
