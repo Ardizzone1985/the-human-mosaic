@@ -44,7 +44,7 @@ useEffect(() => {
     const { data, error } = await supabase
       .from("submissions")
       .select(
-  "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, country, note, section_number, view_number, approval_status"
+  "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, country, note, likes_count, views_count, comments_count, section_number, view_number, approval_status"
 )
       .eq("room", room)
       .eq("wall", wallName)
