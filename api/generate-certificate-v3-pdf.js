@@ -11,8 +11,17 @@ async function getJsonBody(req) {
 }
 
 async function generateCertificatePdf(data, req) {
-  const { name, room, wall, section, spot, id, country } = data;
-
+  const {
+  name,
+  room,
+  wall,
+  section,
+  view,
+  position,
+  spot,
+  id,
+  country
+} = data;
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([842, 595]);
   const { width } = page.getSize();
@@ -63,7 +72,8 @@ async function generateCertificatePdf(data, req) {
   const roomText = String(room || "").toUpperCase().trim();
   const wallText = String(wall || "").toUpperCase().trim();
   const sectionText = String(section || "").toUpperCase().trim();
-  const spotText = String(spot || "").toUpperCase().trim();
+  const viewText = String(view || "").toUpperCase().trim();
+const positionText = String(position || spot || "").toUpperCase().trim();
   const shortId = String(id || "").toUpperCase().trim();
 
   let countryText = String(country || "UNKNOWN").toUpperCase().trim();
