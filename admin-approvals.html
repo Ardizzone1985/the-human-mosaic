@@ -2144,10 +2144,10 @@ ${showResendReplacementEmail ? `
   }
 
   const { data: slot, error: slotError } = await supabaseClient
-    .from("slots")
-    .select("payment_confirmed")
-    .eq("slot_code", submission.slot_code)
-    .single();
+  .from("slots")
+  .select("payment_confirmed, section_number, view_number, row_number, col_number, wall")
+  .eq("slot_code", submission.slot_code)
+  .single();
 
   if (slotError || !slot) {
     alert("Unable to verify payment status.");
@@ -2159,6 +2159,18 @@ ${showResendReplacementEmail ? `
     alert("Cannot approve this submission because payment is not confirmed.");
     return;
   }
+
+     const wallOffset =
+  slot.wall === "Left Wall" ? 40 :
+  slot.wall === "Right Wall" ? 80 :
+  0;
+
+const position =
+  ((slot.section_number - 1) * 600) +
+  ((slot.view_number - 1) * 120) +
+  wallOffset +
+  ((slot.row_number - 1) * 10) +
+  slot.col_number;
 
   const { error } = await supabaseClient
     .from("submissions")
@@ -2181,15 +2193,17 @@ ${showResendReplacementEmail ? `
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    submissionId: submission.submission_id,
-    fullName: submission.full_name,
-    email: submission.email,
-    country: submission.country,
-    room: submission.room,
-    wall: submission.wall,
-    section: submission.section,
-    spot: submission.spot
-  })
+  submissionId: submission.submission_id,
+  fullName: submission.full_name,
+  email: submission.email,
+  country: submission.country,
+  room: submission.room,
+  wall: submission.wall,
+  section: slot.section_number,
+  view: slot.view_number,
+  position: position,
+  spot: submission.spot
+})
 });
   } catch (err) {
     console.error("Email send error:", err);
