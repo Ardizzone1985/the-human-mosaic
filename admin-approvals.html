@@ -2255,6 +2255,30 @@ ${showResendReplacementEmail ? `
     return;
   }
 
+      const { data: slot, error: slotError } = await supabaseClient
+  .from("slots")
+  .select("section_number, view_number, row_number, col_number, wall")
+  .eq("slot_code", submission.slot_code)
+  .single();
+
+if (slotError || !slot) {
+  alert("Unable to load Gallery V2 position data.");
+  console.error(slotError);
+  return;
+}
+
+const wallOffset =
+  slot.wall === "Left Wall" ? 40 :
+  slot.wall === "Right Wall" ? 80 :
+  0;
+
+const position =
+  ((slot.section_number - 1) * 600) +
+  ((slot.view_number - 1) * 120) +
+  wallOffset +
+  ((slot.row_number - 1) * 10) +
+  slot.col_number;
+
   try {
     const response = await fetch("/api/generate-certificate-v3-pdf", {
       method: "POST",
@@ -2267,7 +2291,7 @@ ${showResendReplacementEmail ? `
   wall: submission.wall,
   section: submission.section_number ?? submission.section,
   view: submission.view_number ?? "",
-  position: submission.spot ?? "",
+  position: position,
   id: submission.submission_id,
   country: submission.country
 })
