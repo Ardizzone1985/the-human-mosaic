@@ -476,14 +476,16 @@ Support: info@thehumanmosaic.art
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    name: body.fullName,
-    room: body.room,
-    wall: body.wall,
-    section: body.section,
-    spot: body.spot,
-    id: body.submissionId,
-    country: body.country
-  })
+  name: body.fullName,
+  room: body.room,
+  wall: body.wall,
+  section: body.section,
+  view: body.view,
+  position: body.position,
+  spot: body.spot,
+  id: body.submissionId,
+  country: body.country
+})
 });
 
 if (!certificateResponse.ok) {
