@@ -95,8 +95,19 @@ useEffect(() => {
     }
 
     if (!cancelled) {
-      setSlots(data ?? []);
-    }
+  setSlots(data ?? []);
+
+  console.log("Gallery V2 slots loaded:", {
+    room,
+    wall: wallName,
+    sectionNumber,
+    viewNumber,
+    count: data?.length ?? 0,
+    tobySlot: data?.find(
+      (slot) => slot.slot_code === "Creativity-S1-V1-R-R1-C5"
+    )
+  });
+}
   }
 
   loadSlots();
