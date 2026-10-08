@@ -195,7 +195,11 @@ console.log("Gallery V2 empty slot selected:", slotData);
                 <planeGeometry args={[1.3, 1.3]} />
                 <meshStandardMaterial
                   color={
-  selectedSlot?.slotCode === expectedSlotCode
+  submission
+    ? "#f7f5ef"
+    : isUnavailable
+    ? "#aaa49a"
+    : selectedSlot?.slotCode === expectedSlotCode
     ? "#d6bd78"
     : "#f7f5ef"
 }
