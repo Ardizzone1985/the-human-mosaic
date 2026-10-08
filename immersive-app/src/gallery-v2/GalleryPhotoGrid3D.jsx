@@ -26,7 +26,8 @@ export default function GalleryPhotoGrid3D({
   const SLOTS_PER_VIEW = 120;
 
   const [submissions, setSubmissions] = useState([]);
-  const [selectedSlot, setSelectedSlot] = useState(null);
+const [slots, setSlots] = useState([]);
+const [selectedSlot, setSelectedSlot] = useState(null);
 
 useEffect(() => {
   let cancelled = false;
