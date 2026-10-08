@@ -216,15 +216,29 @@ console.log("Gallery V2 empty slot selected:", slotData);
     }
   />
 ) : (
+  <group>
   <Text
-    position={[0, 0, 0.02]}
+    position={[0, isUnavailable ? 0.13 : 0, 0.02]}
     fontSize={0.22}
-    color="#222222"
+    color={isUnavailable ? "#ffffff" : "#222222"}
     anchorX="center"
     anchorY="middle"
   >
     {slotNumber}
   </Text>
+
+  {isUnavailable && (
+    <Text
+      position={[0, -0.18, 0.02]}
+      fontSize={0.17}
+      color="#ffffff"
+      anchorX="center"
+      anchorY="middle"
+    >
+      BOOKED
+    </Text>
+  )}
+</group>
 )}
             </group>
           );
