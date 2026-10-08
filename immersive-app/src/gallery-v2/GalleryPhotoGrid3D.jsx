@@ -71,6 +71,41 @@ useEffect(() => {
   };
 }, [room, wall, sectionNumber, viewNumber]);
 
+  useEffect(() => {
+  let cancelled = false;
+
+  async function loadSlots() {
+    const wallName =
+      wall === "Front" ? "Front Wall" :
+      wall === "Left" ? "Left Wall" :
+      wall === "Right" ? "Right Wall" :
+      wall;
+
+    const { data, error } = await supabase
+      .from("slots")
+      .select("slot_code, status")
+      .eq("room", room)
+      .eq("wall", wallName)
+      .eq("section_number", sectionNumber)
+      .eq("view_number", viewNumber);
+
+    if (error) {
+      console.error("Gallery V2 slots error:", error);
+      return;
+    }
+
+    if (!cancelled) {
+      setSlots(data ?? []);
+    }
+  }
+
+  loadSlots();
+
+  return () => {
+    cancelled = true;
+  };
+}, [room, wall, sectionNumber, viewNumber]);
+
   return (
   <>
     <group>
