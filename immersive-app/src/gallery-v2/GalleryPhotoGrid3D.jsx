@@ -147,6 +147,12 @@ const submission = submissions.find(
   (item) => item.slot_code === expectedSlotCode
 );
 
+    const slot = slots.find(
+  (item) => item.slot_code === expectedSlotCode
+);
+
+const isUnavailable = !slot || slot.status !== "available";
+
           return (
       <group
   key={`${row}-${column}`}
@@ -156,6 +162,15 @@ const submission = submissions.find(
 
     if (submission) {
   onPhotoSelect?.(submission);
+  return;
+}
+
+    if (isUnavailable) {
+  console.log(
+    "Gallery V2 position unavailable:",
+    expectedSlotCode,
+    slot?.status ?? "not found"
+  );
   return;
 }
 
