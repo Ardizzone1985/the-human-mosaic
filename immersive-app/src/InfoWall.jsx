@@ -8,16 +8,19 @@ import { getRoomSponsorPlacement } from "./data/sponsorPlacements.js";
 const ROOM_TEXT = {
   Identity: {
     title: "IDENTITY ROOM",
+    price: "€5 Early Access · €15 Standard",
     description:
       "Share the roots of your identity: your culture, traditions, heritage, meaningful places, monuments and the stories that connect you to where you come from."
   },
   Love: {
     title: "LOVE ROOM",
+    price: "€5 Early Access · €15 Standard",
     description:
       "Celebrate what you love: family, friends, pets, meaningful relationships, special memories and the passions that make your life extraordinary."
   },
   Creativity: {
     title: "CREATIVITY ROOM",
+    price: "€10 Early Access · €20 Standard",
     description:
       "Express your imagination through original artwork, artistic photography, paintings, drawings, digital creations and other forms of visual creativity."
   }
