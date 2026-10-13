@@ -4,23 +4,25 @@ import logoImage from "./logo-cropped.png";
 import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
 import { getRoomSponsorPlacement } from "./data/sponsorPlacements.js";
 
+
 const ROOM_TEXT = {
   Identity: {
     title: "IDENTITY ROOM",
     description:
-      "A permanent immersive digital museum where every image becomes part of a global human mosaic."
+      "Share the roots of your identity: your culture, traditions, heritage, meaningful places, monuments and the stories that connect you to where you come from."
   },
   Love: {
     title: "LOVE ROOM",
     description:
-      "A room dedicated to emotional bonds, people, pets, passions and meaningful moments."
+      "Celebrate what you love: family, friends, pets, meaningful relationships, special memories and the passions that make your life extraordinary."
   },
   Creativity: {
     title: "CREATIVITY ROOM",
     description:
-      "A space for artworks, visual expression, photography, imagination and creative identity."
+      "Express your imagination through original artwork, artistic photography, paintings, drawings, digital creations and other forms of visual creativity."
   }
 };
+
 
 export default function InfoWall({
   room = "Identity",
