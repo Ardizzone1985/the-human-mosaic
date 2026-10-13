@@ -521,6 +521,25 @@ export default function GalleryWall3DPrototype({
   position={[0, 4.8, 19.94]}
   rotation={[0, Math.PI, 0]}
 >
+
+    {/* PREMIUM MUSEUM FRAME */}
+  <mesh position={[0, -1.35, -0.025]}>
+    <planeGeometry args={[7.8, 5.4]} />
+    <meshStandardMaterial
+      color="#a98245"
+      metalness={0.55}
+      roughness={0.35}
+    />
+  </mesh>
+
+  <mesh position={[0, -1.35, -0.015]}>
+    <planeGeometry args={[7.68, 5.28]} />
+    <meshStandardMaterial
+      color="#e8e3d8"
+      roughness={0.85}
+    />
+  </mesh>
+  
   <Text
     position={[0, 0.45, 0.02]}
     fontSize={0.22}
