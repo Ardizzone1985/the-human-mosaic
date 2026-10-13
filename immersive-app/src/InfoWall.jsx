@@ -125,6 +125,18 @@ fontSize={0.21}
         {roomInfo.description}
       </Text>
 
+      {/* Room participation price */}
+<Text
+  position={[-5.85, -0.78, 0.24]}
+  fontSize={0.19}
+  color="#805a22"
+  anchorX="left"
+  anchorY="middle"
+  maxWidth={6.3}
+>
+  {roomInfo.price}
+</Text>
+
       <Text
         position={[-5.85, -1.05, 0.09]}
 fontSize={0.18}
