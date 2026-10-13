@@ -516,18 +516,41 @@ export default function GalleryWall3DPrototype({
   />
 </mesh>
 
-        <Text
+        {/* PREMIUM SECTION / VIEW DISPLAY */}
+<group
   position={[0, 4.8, 19.94]}
   rotation={[0, Math.PI, 0]}
-  fontSize={0.42}
-  color="#4f4638"
-  anchorX="center"
-  anchorY="middle"
 >
-  {`SECTION ${sectionNumber}  ·  VIEW ${viewNumber} / ${
-    sectionNumber === 1667 ? 4 : 5
-  }`}
-</Text>
+  <Text
+    position={[0, 0.45, 0.02]}
+    fontSize={0.22}
+    color="#a67c3d"
+    anchorX="center"
+    anchorY="middle"
+  >
+    YOU ARE EXPLORING
+  </Text>
+
+  <Text
+    position={[0, -0.15, 0.02]}
+    fontSize={0.72}
+    color="#403526"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {`SECTION ${sectionNumber}`}
+  </Text>
+
+  <Text
+    position={[0, -0.85, 0.02]}
+    fontSize={0.46}
+    color="#8a642f"
+    anchorX="center"
+    anchorY="middle"
+  >
+    {`VIEW ${viewNumber} / ${sectionNumber === 1667 ? 4 : 5}`}
+  </Text>
+</group>
 
         <Html
   position={[2.2, 0.2, 19.9]}
