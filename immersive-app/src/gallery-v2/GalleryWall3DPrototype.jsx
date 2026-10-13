@@ -224,7 +224,7 @@ function InfoWallLogo({ room = "Identity" }) {
 </Text>
 
     <Text
-  position={[10.5, 1.75, 19.87]}
+  position={[10.5, 1.15, 19.87]}
   rotation={[0, Math.PI, 0]}
   fontSize={0.19}
   color="#8a6a2f"
