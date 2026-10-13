@@ -213,7 +213,14 @@ function InfoWallLogo({ room = "Identity" }) {
   maxWidth={7}
   lineHeight={1.35}
 >
-  A permanent immersive digital museum where every image becomes part of a global human mosaic.
+  {{
+    Identity:
+      "Share a photograph that represents your identity, roots, culture, traditions, or a place that tells your story.",
+    Love:
+      "Celebrate love in all its forms: family, friends, pets, meaningful relationships, and the passions closest to your heart.",
+    Creativity:
+      "Express your imagination through art, photography, drawings, and original creative works that reflect your unique vision."
+  }[room] || ""}
 </Text>
 
     <Text
