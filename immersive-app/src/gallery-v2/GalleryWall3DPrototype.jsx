@@ -553,7 +553,7 @@ export default function GalleryWall3DPrototype({
 </group>
 
         <Html
-  position={[2.2, 0.2, 19.9]}
+  position={[0, 1.4, 19.9]}
   rotation={[0, Math.PI, 0]}
   transform
   distanceFactor={8}
