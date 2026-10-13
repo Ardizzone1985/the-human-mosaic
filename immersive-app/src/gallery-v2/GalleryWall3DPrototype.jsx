@@ -193,7 +193,7 @@ function InfoWallLogo({ room = "Identity" }) {
     </mesh>
 
     <Text
-      position={[10.5, 3.65, 19.87]}
+      position={[12, 3.65, 19.87]}
       rotation={[0, Math.PI, 0]}
       fontSize={0.42}
       color="#4f4638"
@@ -204,7 +204,7 @@ function InfoWallLogo({ room = "Identity" }) {
     </Text>
 
     <Text
-  position={[10.5, 2.85, 19.87]}
+  position={[12, 2.85, 19.87]}
   rotation={[0, Math.PI, 0]}
   fontSize={0.30}
   color="#403526"
@@ -224,7 +224,7 @@ function InfoWallLogo({ room = "Identity" }) {
 </Text>
 
     <Text
-  position={[10.5, 1.15, 19.87]}
+  position={[12, 1.15, 19.87]}
   rotation={[0, Math.PI, 0]}
   fontSize={0.19}
   color="#8a6a2f"
