@@ -523,8 +523,8 @@ export default function GalleryWall3DPrototype({
 >
 
     {/* PREMIUM MUSEUM FRAME */}
-  <mesh position={[0, -1.35, -0.025]}>
-    <planeGeometry args={[7.8, 5.4]} />
+  <mesh position={[0, -1.1, -0.025]}>
+    <planeGeometry args={[7.8, 4.9]} />
     <meshStandardMaterial
       color="#a98245"
       metalness={0.55}
@@ -532,8 +532,8 @@ export default function GalleryWall3DPrototype({
     />
   </mesh>
 
-  <mesh position={[0, -1.35, -0.015]}>
-    <planeGeometry args={[7.68, 5.28]} />
+  <mesh position={[0, -1.1, -0.015]}>
+    <planeGeometry args={[7.68, 4.78]} />
     <meshStandardMaterial
       color="#e8e3d8"
       roughness={0.85}
