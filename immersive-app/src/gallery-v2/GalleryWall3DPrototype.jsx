@@ -236,7 +236,7 @@ function InfoWallLogo({ room = "Identity" }) {
 
         {/* ROOM PRICING PANEL */}
     <group
-      position={[10.5, -0.65, 19.78]}
+      position={[8.5, -0.65, 19.78]}
       rotation={[0, Math.PI, 0]}
     >
       <mesh>
