@@ -234,6 +234,46 @@ function InfoWallLogo({ room = "Identity" }) {
   Explore. Discover. Be part of the story.
 </Text>
 
+        {/* ROOM PRICING PANEL */}
+    <group
+      position={[8.5, 0.15, 19.78]}
+      rotation={[0, Math.PI, 0]}
+    >
+      <mesh>
+        <planeGeometry args={[5.5, 1.25]} />
+        <meshBasicMaterial color="#1b1712" />
+      </mesh>
+
+      <Text
+        position={[0, 0.35, 0.03]}
+        fontSize={0.22}
+        color="#d7b56d"
+        anchorX="center"
+      >
+        YOUR PLACE IN THE MOSAIC
+      </Text>
+
+      <Text
+        position={[0, -0.02, 0.03]}
+        fontSize={0.32}
+        color="#ffffff"
+        anchorX="center"
+      >
+        {room === "Creativity" ? "€10" : "€5"} EARLY ACCESS
+      </Text>
+
+      <Text
+        position={[0, -0.38, 0.03]}
+        fontSize={0.18}
+        color="#c7b99f"
+        anchorX="center"
+      >
+        {room === "Creativity"
+          ? "Standard price: €20"
+          : "Standard price: €15"}
+      </Text>
+    </group>
+
     <group
   position={[-5.5, 4.8, 19.86]}
   rotation={[0, Math.PI, 0]}
