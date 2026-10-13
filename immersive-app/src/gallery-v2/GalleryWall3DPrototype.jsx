@@ -182,7 +182,7 @@ function InfoWallLogo({ room = "Identity" }) {
   return (
   <>
     <mesh
-      position={[8.5, 5.5, 19.88]}
+      position={[10, 5.5, 19.88]}
       rotation={[0, Math.PI, 0]}
     >
       <planeGeometry args={[5.5, 2.75]} />
