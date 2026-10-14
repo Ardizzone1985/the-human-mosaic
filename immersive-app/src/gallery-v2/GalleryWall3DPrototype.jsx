@@ -568,6 +568,33 @@ export default function GalleryWall3DPrototype({
   </group>
 ))}
 
+        {/* PREMIUM CEILING PERIMETER TRIM */}
+<group>
+  {/* Front and back bronze profiles */}
+  {[-10, 20].map((z) => (
+    <mesh key={`trim-z-${z}`} position={[0, 7.94, z]}>
+      <boxGeometry args={[30, 0.10, 0.10]} />
+      <meshStandardMaterial
+        color="#a88955"
+        metalness={0.45}
+        roughness={0.4}
+      />
+    </mesh>
+  ))}
+
+  {/* Left and right bronze profiles */}
+  {[-15, 15].map((x) => (
+    <mesh key={`trim-x-${x}`} position={[x, 7.94, 5]}>
+      <boxGeometry args={[0.10, 0.10, 30]} />
+      <meshStandardMaterial
+        color="#a88955"
+        metalness={0.45}
+        roughness={0.4}
+      />
+    </mesh>
+  ))}
+</group>
+
         {/* INFO WALL */}
 <mesh
   position={[0, 3, 20]}
