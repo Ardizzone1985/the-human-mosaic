@@ -569,6 +569,13 @@ export default function GalleryWall3DPrototype({
   >
     {`VIEW ${viewNumber} / ${sectionNumber === 1667 ? 4 : 5}`}
   </Text>
+
+  {/* PREMIUM GOLD DIVIDER */}
+<mesh position={[0, -1.55, 0.025]}>
+  <planeGeometry args={[4.8, 0.025]} />
+  <meshBasicMaterial color="#b98942" />
+</mesh>
+  
 </group>
 
         <Html
