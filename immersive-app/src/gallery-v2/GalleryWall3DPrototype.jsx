@@ -538,6 +538,36 @@ export default function GalleryWall3DPrototype({
   />
 </mesh>
 
+        {/* PREMIUM CEILING LED STRIPS */}
+{[-5, 5].map((x) => (
+  <group key={x}>
+    {/* Recessed dark frame */}
+    <mesh
+      position={[x, 7.975, 5]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      <planeGeometry args={[0.28, 22]} />
+      <meshBasicMaterial
+        color="#b8aa92"
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+
+    {/* Warm LED surface */}
+    <mesh
+      position={[x, 7.96, 5]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      <planeGeometry args={[0.16, 21.8]} />
+      <meshBasicMaterial
+        color="#fff3d8"
+        toneMapped={false}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  </group>
+))}
+
         {/* INFO WALL */}
 <mesh
   position={[0, 3, 20]}
