@@ -497,16 +497,17 @@ export default function GalleryWall3DPrototype({
   onPhotoSelect={onPhotoSelect}
 />
 
-        {/* pavimento */}
+        {/* PREMIUM MUSEUM FLOOR */}
 <mesh
   position={[0, -2, 5]}
   rotation={[-Math.PI / 2, 0, 0]}
+  receiveShadow
 >
   <planeGeometry args={[30, 30]} />
   <meshStandardMaterial
-    color="#d8d2c5"
-    roughness={0.8}
-    metalness={0.05}
+    color="#eee8dc"
+    roughness={0.58}
+    metalness={0.02}
   />
 </mesh>
 
