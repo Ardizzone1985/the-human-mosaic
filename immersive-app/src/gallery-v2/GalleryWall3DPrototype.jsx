@@ -7,6 +7,36 @@ import AppDialog from "../components/AppDialog.jsx";
 import { supabase } from "../supabaseClient.js";
 import logoImage from "../logo-cropped.png";
 
+function PremiumOakFloor() {
+  const texture = useTexture(
+    "/textures/WoodFloor038_1K-JPG_Color.jpg"
+  );
+
+  useEffect(() => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(6, 6);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+  }, [texture]);
+
+  return (
+    <mesh
+      position={[0, -2, 5]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      receiveShadow
+    >
+      <planeGeometry args={[30, 30]} />
+      <meshStandardMaterial
+        map={texture}
+        color="#ffffff"
+        roughness={0.75}
+        metalness={0.02}
+      />
+    </mesh>
+  );
+}
+
 function StreetViewLookControls() {
   const { camera, gl } = useThree();
   const dragging = useRef(false);
@@ -544,18 +574,7 @@ export default function GalleryWall3DPrototype({
 </group>
 
         {/* PREMIUM MUSEUM FLOOR */}
-<mesh
-  position={[0, -2, 5]}
-  rotation={[-Math.PI / 2, 0, 0]}
-  receiveShadow
->
-  <planeGeometry args={[30, 30]} />
-  <meshStandardMaterial
-    color="#eee8dc"
-    roughness={0.58}
-    metalness={0.02}
-  />
-</mesh>
+<PremiumOakFloor />
 
         {/* PREMIUM MUSEUM CEILING */}
 <mesh
