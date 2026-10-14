@@ -282,7 +282,7 @@ function InfoWallLogo({ room = "Identity" }) {
     </group>
 
     <group
-  position={[-5.5, 4.8, 19.86]}
+  position={[-7, 4.8, 19.86]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
@@ -306,7 +306,7 @@ function InfoWallLogo({ room = "Identity" }) {
       </group>
 
       <group
-  position={[-9, 5.3, 19.86]}
+  position={[-10.5, 5.3, 19.86]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
@@ -330,7 +330,7 @@ function InfoWallLogo({ room = "Identity" }) {
 </group>
 
     <group
-  position={[-5.5, 1.3, 19.86]}
+  position={[-7, 1.3, 19.86]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
@@ -354,7 +354,7 @@ function InfoWallLogo({ room = "Identity" }) {
 </group>
 
     <group
-  position={[-9, 0.1, 19.84]}
+  position={[-10.5, 0.1, 19.84]}
   rotation={[0, Math.PI, 0]}
       onClick={(e) => {
     e.stopPropagation();
