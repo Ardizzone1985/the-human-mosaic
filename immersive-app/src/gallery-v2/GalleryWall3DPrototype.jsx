@@ -28,11 +28,11 @@ function PremiumOakFloor() {
     >
       <planeGeometry args={[30, 30]} />
       <meshStandardMaterial
-        map={texture}
-        color="#ffffff"
-        roughness={0.75}
-        metalness={0.02}
-      />
+  map={texture}
+  color="#d5d0c5"
+  roughness={0.85}
+  metalness={0}
+/>
     </mesh>
   );
 }
