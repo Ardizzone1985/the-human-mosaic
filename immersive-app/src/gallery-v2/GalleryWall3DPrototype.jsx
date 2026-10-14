@@ -510,6 +510,39 @@ export default function GalleryWall3DPrototype({
   onPhotoSelect={onPhotoSelect}
 />
 
+        {/* PREMIUM MUSEUM BASEBOARD */}
+<group>
+  {/* Front and Info Wall */}
+  {[-10, 20].map((z) => (
+    <mesh
+      key={`baseboard-z-${z}`}
+      position={[0, -1.91, z]}
+    >
+      <boxGeometry args={[30, 0.16, 0.10]} />
+      <meshStandardMaterial
+        color="#a88955"
+        metalness={0.45}
+        roughness={0.4}
+      />
+    </mesh>
+  ))}
+
+  {/* Left and Right Walls */}
+  {[-15, 15].map((x) => (
+    <mesh
+      key={`baseboard-x-${x}`}
+      position={[x, -1.91, 5]}
+    >
+      <boxGeometry args={[0.10, 0.16, 30]} />
+      <meshStandardMaterial
+        color="#a88955"
+        metalness={0.45}
+        roughness={0.4}
+      />
+    </mesh>
+  ))}
+</group>
+
         {/* PREMIUM MUSEUM FLOOR */}
 <mesh
   position={[0, -2, 5]}
