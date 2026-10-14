@@ -239,10 +239,17 @@ function InfoWallLogo({ room = "Identity" }) {
       position={[8.5, -0.65, 19.78]}
       rotation={[0, Math.PI, 0]}
     >
-      <mesh>
-        <planeGeometry args={[5.5, 1.25]} />
-        <meshBasicMaterial color="#1b1712" />
-      </mesh>
+      {/* PREMIUM GOLD FRAME */}
+<mesh position={[0, 0, -0.015]}>
+  <planeGeometry args={[5.6, 1.35]} />
+  <meshBasicMaterial color="#b98942" />
+</mesh>
+
+{/* DARK PREMIUM PANEL */}
+<mesh position={[0, 0, 0]}>
+  <planeGeometry args={[5.46, 1.21]} />
+  <meshBasicMaterial color="#1b1712" />
+</mesh>
 
       <Text
         position={[0, 0.35, 0.03]}
