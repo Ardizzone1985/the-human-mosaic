@@ -487,6 +487,19 @@ export default function GalleryWall3DPrototype({
           intensity={1.5}
         />
 
+        {/* PREMIUM MUSEUM LIGHTING */}
+<hemisphereLight
+  args={["#ffffff", "#d8cbb7", 1.1]}
+/>
+
+<pointLight
+  position={[0, 6.5, 5]}
+  intensity={45}
+  distance={24}
+  decay={2}
+  color="#fff4df"
+/>
+
         <GalleryWall3D
   key={sectionNumber}
   room={room}
