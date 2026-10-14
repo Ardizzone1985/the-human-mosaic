@@ -282,7 +282,7 @@ function InfoWallLogo({ room = "Identity" }) {
     </group>
 
     <group
-  position={[-7, 4.8, 19.86]}
+  position={[-7, 5.8, 19.86]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
@@ -306,7 +306,7 @@ function InfoWallLogo({ room = "Identity" }) {
       </group>
 
       <group
-  position={[-10.5, 4.8, 19.86]}
+  position={[-10.5, 5.8, 19.86]}
   rotation={[0, Math.PI, 0]}
 >
   <mesh>
