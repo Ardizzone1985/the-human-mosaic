@@ -511,6 +511,20 @@ export default function GalleryWall3DPrototype({
   />
 </mesh>
 
+        {/* PREMIUM MUSEUM CEILING */}
+<mesh
+  position={[0, 8, 5]}
+  rotation={[Math.PI / 2, 0, 0]}
+>
+  <planeGeometry args={[30, 30]} />
+  <meshStandardMaterial
+    color="#f1eee7"
+    roughness={0.9}
+    metalness={0}
+    side={THREE.DoubleSide}
+  />
+</mesh>
+
         {/* INFO WALL */}
 <mesh
   position={[0, 3, 20]}
