@@ -4,6 +4,16 @@ import * as THREE from "three";
 export default function LobbyShell() {
   const floorTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
 
+  const plasterTexture = useTexture(
+  "/textures/Plaster001_1K-JPG_Color.jpg"
+);
+
+plasterTexture.wrapS = THREE.RepeatWrapping;
+plasterTexture.wrapT = THREE.RepeatWrapping;
+plasterTexture.repeat.set(5, 3);
+plasterTexture.colorSpace = THREE.SRGBColorSpace;
+plasterTexture.needsUpdate = true;
+
   floorTexture.wrapS = THREE.RepeatWrapping;
   floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.set(4, 3);
@@ -187,11 +197,11 @@ emissiveIntensity={0.04}
 <mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#f2efe8"
-  roughness={0.78}
-  emissive="#f2efe8"
-emissiveIntensity={0.015}
-/>
+    map={plasterTexture}
+    color="#ffffff"
+    roughness={0.85}
+    metalness={0}
+  />
 </mesh>
 
 {/* Right wall */}
