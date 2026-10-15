@@ -184,10 +184,10 @@ function FloorArrow({ point, onMove }) {
       <mesh>
         <circleGeometry args={[0.42, 32]} />
         <meshBasicMaterial
-          color="#d7b56d"
-          transparent
-          opacity={0.4}
-        />
+  color="#59452f"
+  transparent
+  opacity={0.85}
+/>
       </mesh>
 
       <mesh position={[0, 0.18, 0.01]}>
