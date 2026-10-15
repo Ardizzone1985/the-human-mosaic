@@ -45,8 +45,8 @@ rotation={
       <mesh>
   <planeGeometry args={[30, 10]} />
         <meshStandardMaterial
-  map={wall === "Front" ? plasterTexture : null}
-  color={wall === "Front" ? "#ffffff" : "#e8e3d8"}
+  map={plasterTexture}
+  color="#ffffff"
   roughness={0.85}
   metalness={0.0}
 />
