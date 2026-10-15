@@ -343,7 +343,7 @@ function StreetViewLookControls() {
 function FloorArrow({ point, onMove }) {
   return (
     <group
-      position={[point.position[0], 0.02, point.position[2]]}
+      position={[point.position[0], -1.18, point.position[2]]}
       rotation={[-Math.PI / 2, 0, 0]}
       onClick={(e) => {
         e.stopPropagation();
