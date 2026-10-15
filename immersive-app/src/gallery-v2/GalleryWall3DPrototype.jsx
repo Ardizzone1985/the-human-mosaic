@@ -560,6 +560,17 @@ export default function GalleryWall3DPrototype({
   color="#fff4df"
 />
 
+        {/* PREMIUM PHOTO WALL LIGHTING — FRONT */}
+<spotLight
+  position={[0, 7, -4]}
+  angle={0.85}
+  penumbra={0.8}
+  intensity={18}
+  distance={18}
+  decay={2}
+  color="#fffaf0"
+/>
+
         <GalleryWall3D
   key={sectionNumber}
   room={room}
