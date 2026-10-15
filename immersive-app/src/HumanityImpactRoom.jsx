@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Text } from "@react-three/drei";
+import { Text, useTexture } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import { supabase } from "./supabaseClient.js";
 import { useFrame } from "@react-three/fiber";
 import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
 
 export default function HumanityImpactRoom() {
+  const plasterTexture = useTexture("/textures/Plaster001_1K-JPG_Color.jpg");
   const [peopleInMosaic, setPeopleInMosaic] = useState(null);
   const [donationsCompleted, setDonationsCompleted] = useState(null);
 const [totalDonated, setTotalDonated] = useState(null);
@@ -676,11 +677,10 @@ const milestoneProgress =
   <boxGeometry args={[22, 12, 0.28]} />
 
   <meshStandardMaterial
-  color="#d8d0c3"
-  roughness={0.72}
-  metalness={0.04}
-  emissive="#f2efe8"
-  emissiveIntensity={0.02}
+  map={plasterTexture}
+  color="#f5f2ec"
+  roughness={0.85}
+  metalness={0}
 />
 </mesh>
 
