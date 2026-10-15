@@ -1,3 +1,6 @@
+import { useMemo } from "react";
+import * as THREE from "three";
+import { useTexture } from "@react-three/drei";
 import GalleryPhotoGrid3D from "./GalleryPhotoGrid3D";
 
 export default function GalleryPhotoWall3D({
@@ -8,6 +11,19 @@ export default function GalleryPhotoWall3D({
   onEmptySlotClick,
   onPhotoSelect,
 }) {
+
+  const plasterTexture = useTexture(
+  "/textures/Plaster001_1K-JPG_Color.jpg"
+);
+
+useMemo(() => {
+  plasterTexture.wrapS = THREE.RepeatWrapping;
+  plasterTexture.wrapT = THREE.RepeatWrapping;
+  plasterTexture.repeat.set(4, 2);
+  plasterTexture.colorSpace = THREE.SRGBColorSpace;
+  plasterTexture.anisotropy = 8;
+  plasterTexture.needsUpdate = true;
+}, [plasterTexture]);
   
   return (
   <group
@@ -29,10 +45,11 @@ rotation={
       <mesh>
   <planeGeometry args={[30, 10]} />
         <meshStandardMaterial
-          color="#e8e3d8"
-          roughness={0.75}
-          metalness={0.05}
-        />
+  map={wall === "Front" ? plasterTexture : null}
+  color={wall === "Front" ? "#ffffff" : "#e8e3d8"}
+  roughness={0.85}
+  metalness={0.0}
+/>
       </mesh>
 
       <group position={[0, -2, 0.05]}>
