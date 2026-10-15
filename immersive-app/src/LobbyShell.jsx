@@ -117,10 +117,10 @@ plasterTexture.needsUpdate = true;
       <mesh position={[0, 4.25, -9]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
         <meshStandardMaterial
-  color="#f2efe8"
-  roughness={0.78}
-  emissive="#f2efe8"
-emissiveIntensity={0.015}
+  map={plasterTexture}
+  color="#ffffff"
+  roughness={0.85}
+  metalness={0}
 />
       </mesh>
 
@@ -208,10 +208,10 @@ emissiveIntensity={0.04}
 <mesh position={[15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
   <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#f2efe8"
-  roughness={0.78}
-  emissive="#f2efe8"
-emissiveIntensity={0.015}
+  map={plasterTexture}
+  color="#ffffff"
+  roughness={0.85}
+  metalness={0}
 />
 </mesh>
 
@@ -219,10 +219,10 @@ emissiveIntensity={0.015}
 <mesh position={[0, 4.25, 10.8]}>
   <boxGeometry args={[30, 13.2, 0.35]} />
   <meshStandardMaterial
-  color="#f2efe8"
-  roughness={0.78}
-  emissive="#f2efe8"
-emissiveIntensity={0.015}
+  map={plasterTexture}
+  color="#ffffff"
+  roughness={0.85}
+  metalness={0}
 />
 </mesh>
 
