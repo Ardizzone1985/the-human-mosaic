@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
 function createParquetTexture() {
@@ -138,7 +139,16 @@ export default function RoomShell({
   const backWallTexture = useMemo(() => createMuseumWallTexture("#d8d0c3"), []);
 const sideWallTexture = useMemo(() => createMuseumWallTexture("#d1c8bb"), []);
 const ceilingTexture = useMemo(() => createCeilingTexture(), []);
-const parquetTexture = useMemo(() => createParquetTexture(), []);
+const parquetTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
+
+useMemo(() => {
+  parquetTexture.wrapS = THREE.RepeatWrapping;
+  parquetTexture.wrapT = THREE.RepeatWrapping;
+  parquetTexture.repeat.set(3, 3);
+  parquetTexture.colorSpace = THREE.SRGBColorSpace;
+  parquetTexture.anisotropy = 8;
+  parquetTexture.needsUpdate = true;
+}, [parquetTexture]);
 
   return (
     <>
@@ -233,18 +243,20 @@ const parquetTexture = useMemo(() => createParquetTexture(), []);
   color="#fff6e5"
 />
 
-      {/* Premium brighter parquet floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.22, 1]} receiveShadow>
-        <planeGeometry args={[30, 34]} />
-        <meshStandardMaterial
-  map={parquetTexture}
-  roughness={0.42}
-  metalness={0.08}
-  color="#ead8b8"
-  emissive="#f1dfbd"
-  emissiveIntensity={0.025}
-/>
-      </mesh>
+      {/* PREMIUM WOOD FLOOR — HUMANITY IMPACT */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.22, 1]}
+  receiveShadow
+>
+  <planeGeometry args={[30, 34]} />
+  <meshStandardMaterial
+    map={parquetTexture}
+    color="#ffffff"
+    roughness={0.58}
+    metalness={0.02}
+  />
+</mesh>
 
       {/* Back wall */}
       <mesh position={[0, 4, -10]}>
