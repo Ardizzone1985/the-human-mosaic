@@ -2,48 +2,6 @@ import { useMemo } from "react";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-function createParquetTexture() {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 1024;
-
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "#d9c3a0";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const plankW = 180;
-  const plankH = 46;
-
-  for (let y = 0; y < canvas.height; y += plankH) {
-    for (let x = -plankW; x < canvas.width + plankW; x += plankW) {
-      const offset = Math.floor(y / plankH) % 2 === 0 ? 0 : plankW / 2;
-
-      const gradient = ctx.createLinearGradient(x + offset, y, x + offset + plankW, y + plankH);
-      gradient.addColorStop(0, "#c9aa7e");
-gradient.addColorStop(0.45, "#ead6b8");
-gradient.addColorStop(1, "#b79263");
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(x + offset, y, plankW - 3, plankH - 3);
-
-      ctx.strokeStyle = "rgba(255,225,170,0.2)";
-      ctx.strokeRect(x + offset, y, plankW - 3, plankH - 3);
-
-      ctx.fillStyle = "rgba(255,255,255,0.035)";
-      ctx.fillRect(x + offset + 12, y + 8, plankW * 0.55, 2);
-    }
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2.2, 2.2);
-  texture.anisotropy = 16;
-
-  return texture;
-}
-
 function createMuseumWallTexture(base = "#8a735f") {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
