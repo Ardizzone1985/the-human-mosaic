@@ -9,8 +9,8 @@ import logoImage from "../logo-cropped.png";
 
 function PremiumOakFloor() {
   const texture = useTexture(
-    "/textures/WoodFloor038_1K-JPG_Color.jpg"
-  );
+  "/textures/WoodFloor039_1K-JPG_Color.jpg"
+);
 
   useEffect(() => {
     texture.wrapS = THREE.RepeatWrapping;
@@ -29,7 +29,7 @@ function PremiumOakFloor() {
       <planeGeometry args={[30, 30]} />
       <meshStandardMaterial
   map={texture}
-  color="#d5d0c5"
+  color="#ffffff"
   roughness={0.85}
   metalness={0}
 />
