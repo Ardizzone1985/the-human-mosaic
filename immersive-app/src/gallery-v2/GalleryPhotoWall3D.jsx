@@ -19,7 +19,7 @@ export default function GalleryPhotoWall3D({
 useMemo(() => {
   plasterTexture.wrapS = THREE.RepeatWrapping;
   plasterTexture.wrapT = THREE.RepeatWrapping;
-  plasterTexture.repeat.set(4, 2);
+  plasterTexture.repeat.set(8, 4);
   plasterTexture.colorSpace = THREE.SRGBColorSpace;
   plasterTexture.anisotropy = 8;
   plasterTexture.needsUpdate = true;
