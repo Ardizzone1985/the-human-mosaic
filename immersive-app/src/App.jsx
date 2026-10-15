@@ -353,9 +353,9 @@ function FloorArrow({ point, onMove }) {
       <mesh>
   <circleGeometry args={[0.42, 32]} />
   <meshBasicMaterial
-    color="#d7b56d"
-    transparent
-    opacity={0.40}
+    color="#4b3827"
+transparent
+opacity={0.90}
   />
 </mesh>
 
