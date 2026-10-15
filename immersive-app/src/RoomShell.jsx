@@ -2,51 +2,6 @@ import { useMemo } from "react";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-function createMuseumWallTexture(base = "#8a735f") {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 1024;
-
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = base;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < 8500; i++) {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height;
-    const r = Math.random() * 2.2;
-
-    ctx.fillStyle =
-      Math.random() > 0.5
-        ? "rgba(255,255,255,0.055)"
-        : "rgba(0,0,0,0.055)";
-
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  for (let i = 0; i < 55; i++) {
-    const y = Math.random() * canvas.height;
-    const gradient = ctx.createLinearGradient(0, y, canvas.width, y + 100);
-    gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.5, "rgba(255,255,255,0.055)");
-    gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, y, canvas.width, 100);
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(1.5, 1.1);
-  texture.anisotropy = 16;
-
-  return texture;
-}
-
 function createCeilingTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 1024;
@@ -94,8 +49,7 @@ export default function RoomShell({
   theme,
   hideFrontPanels = false,
 }) {
-  const backWallTexture = useMemo(() => createMuseumWallTexture("#d8d0c3"), []);
-const sideWallTexture = useMemo(() => createMuseumWallTexture("#d1c8bb"), []);
+  
 const ceilingTexture = useMemo(() => createCeilingTexture(), []);
 const parquetTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
 
