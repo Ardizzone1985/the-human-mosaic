@@ -99,6 +99,19 @@ const sideWallTexture = useMemo(() => createMuseumWallTexture("#d1c8bb"), []);
 const ceilingTexture = useMemo(() => createCeilingTexture(), []);
 const parquetTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
 
+  const plasterTexture = useTexture(
+  "/textures/Plaster001_1K-JPG_Color.jpg"
+);
+
+useMemo(() => {
+  plasterTexture.wrapS = THREE.RepeatWrapping;
+  plasterTexture.wrapT = THREE.RepeatWrapping;
+  plasterTexture.repeat.set(6, 3);
+  plasterTexture.colorSpace = THREE.SRGBColorSpace;
+  plasterTexture.anisotropy = 8;
+  plasterTexture.needsUpdate = true;
+}, [plasterTexture]);
+
 useMemo(() => {
   parquetTexture.wrapS = THREE.RepeatWrapping;
   parquetTexture.wrapT = THREE.RepeatWrapping;
@@ -220,11 +233,11 @@ useMemo(() => {
       <mesh position={[0, 4, -10]}>
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
-          map={backWallTexture}
-          color="#e3ddd2"
-          roughness={0.58}
-          metalness={0.04}
-        />
+  map={plasterTexture}
+  color="#f5f2ec"
+  roughness={0.85}
+  metalness={0}
+/>
       </mesh>
 
       {/* Left wall */}
