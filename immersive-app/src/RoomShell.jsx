@@ -244,22 +244,22 @@ useMemo(() => {
       <mesh rotation={[0, Math.PI / 2, 0]} position={[-11, 4, 1]}>
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
-          map={sideWallTexture}
-          color="#ddd4c8"
-          roughness={0.6}
-          metalness={0.04}
-        />
+  map={plasterTexture}
+  color="#f5f2ec"
+  roughness={0.85}
+  metalness={0}
+/>
       </mesh>
 
       {/* Right wall */}
       <mesh rotation={[0, -Math.PI / 2, 0]} position={[11, 4, 1]}>
         <planeGeometry args={[22, 12]} />
         <meshStandardMaterial
-          map={sideWallTexture}
-          color="#ddd4c8"
-          roughness={0.6}
-          metalness={0.04}
-        />
+  map={plasterTexture}
+  color="#f5f2ec"
+  roughness={0.85}
+  metalness={0}
+/>
       </mesh>
 
       {/* Brighter ceiling */}
