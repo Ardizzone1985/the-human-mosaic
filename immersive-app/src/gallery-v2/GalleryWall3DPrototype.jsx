@@ -7,6 +7,36 @@ import AppDialog from "../components/AppDialog.jsx";
 import { supabase } from "../supabaseClient.js";
 import logoImage from "../logo-cropped.png";
 
+function PremiumPlasterInfoWall() {
+  const texture = useTexture(
+    "/textures/Plaster001_1K-JPG_Color.jpg"
+  );
+
+  useEffect(() => {
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(8, 4);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 8;
+    texture.needsUpdate = true;
+  }, [texture]);
+
+  return (
+    <mesh
+      position={[0, 3, 20]}
+      rotation={[0, Math.PI, 0]}
+    >
+      <planeGeometry args={[30, 10]} />
+      <meshStandardMaterial
+        map={texture}
+        color="#ffffff"
+        roughness={0.85}
+        metalness={0}
+      />
+    </mesh>
+  );
+}
+
 function PremiumOakFloor() {
   const texture = useTexture(
   "/textures/WoodFloor039_1K-JPG_Color.jpg"
@@ -647,18 +677,8 @@ export default function GalleryWall3DPrototype({
   ))}
 </group>
 
-        {/* INFO WALL */}
-<mesh
-  position={[0, 3, 20]}
-  rotation={[0, Math.PI, 0]}
->
-  <planeGeometry args={[30, 10]} />
-  <meshStandardMaterial
-    color="#e8e3d8"
-    roughness={0.75}
-    metalness={0.05}
-  />
-</mesh>
+        {/* INFO WALL — PREMIUM PLASTER */}
+<PremiumPlasterInfoWall />
 
         {/* PREMIUM SECTION / VIEW DISPLAY */}
 <group
