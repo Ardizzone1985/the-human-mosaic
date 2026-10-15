@@ -512,6 +512,7 @@ export default function GalleryWall3DPrototype({
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [reservationCreated, setReservationCreated] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const frontLightTarget = useRef(new THREE.Object3D()).current;
   
     return (
     <div
@@ -560,9 +561,15 @@ export default function GalleryWall3DPrototype({
   color="#fff4df"
 />
 
+        <primitive
+  object={frontLightTarget}
+  position={[0, 3, -10]}
+/>
+
         {/* PREMIUM PHOTO WALL LIGHTING — FRONT */}
 <spotLight
   position={[0, 7, -4]}
+  target={frontLightTarget}
   angle={0.85}
   penumbra={0.8}
   intensity={18}
