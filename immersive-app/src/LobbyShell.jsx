@@ -1,4 +1,14 @@
+import { useTexture } from "@react-three/drei";
+import * as THREE from "three";
+
 export default function LobbyShell() {
+  const floorTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
+
+  floorTexture.wrapS = THREE.RepeatWrapping;
+  floorTexture.wrapT = THREE.RepeatWrapping;
+  floorTexture.repeat.set(4, 3);
+  floorTexture.colorSpace = THREE.SRGBColorSpace;
+
   return (
     <>
       {/* Cinematic lobby lights */}
@@ -25,17 +35,21 @@ export default function LobbyShell() {
         color="#d7b56d"
       />
 
-      {/* Premium lobby floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.25, 0]} receiveShadow>
-        <planeGeometry args={[40, 30]} />
-        <meshStandardMaterial
-  color="#d8c39a"
-  roughness={0.72}
-  metalness={0.08}
-  emissive="#3a2a12"
-  emissiveIntensity={0.06}
-/>
-      </mesh>
+      {/* PREMIUM LOBBY FLOOR — WOODFLOOR039 */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.25, 0]}
+  receiveShadow
+>
+  <planeGeometry args={[40, 30]} />
+
+  <meshStandardMaterial
+    map={floorTexture}
+    color="#ffffff"
+    roughness={0.58}
+    metalness={0.02}
+  />
+</mesh>
 
       {/* Central cinematic floor glow */}
 <mesh
