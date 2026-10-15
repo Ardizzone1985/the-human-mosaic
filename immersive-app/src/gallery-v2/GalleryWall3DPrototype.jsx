@@ -550,7 +550,7 @@ export default function GalleryWall3DPrototype({
 
         {/* PREMIUM MUSEUM LIGHTING */}
 <hemisphereLight
-  args={["#ffffff", "#d8cbb7", 1.1]}
+  args={["#ffffff", "#d8cbb7", 0.6]}
 />
 
 <pointLight
