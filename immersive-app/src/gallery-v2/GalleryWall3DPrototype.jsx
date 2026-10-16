@@ -621,6 +621,38 @@ penumbra={1}
   color="#fffaf0"
 />
 
+        {/* PREMIUM PHOTO WALL LIGHTING — LEFT */}
+<primitive
+  object={leftLightTarget}
+  position={[-15, 3, 5]}
+/>
+<spotLight
+  position={[-9, 7, 5]}
+  target={leftLightTarget}
+  angle={0.85}
+  penumbra={1}
+  intensity={35}
+  distance={18}
+  decay={2}
+  color="#fffaf0"
+/>
+
+{/* PREMIUM PHOTO WALL LIGHTING — RIGHT */}
+<primitive
+  object={rightLightTarget}
+  position={[15, 3, 5]}
+/>
+<spotLight
+  position={[9, 7, 5]}
+  target={rightLightTarget}
+  angle={0.85}
+  penumbra={1}
+  intensity={35}
+  distance={18}
+  decay={2}
+  color="#fffaf0"
+/>
+
         <GalleryWall3D
   key={sectionNumber}
   room={room}
