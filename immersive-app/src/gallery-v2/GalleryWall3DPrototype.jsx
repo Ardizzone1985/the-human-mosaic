@@ -67,7 +67,7 @@ function PremiumPlasterCeiling() {
       <planeGeometry args={[30, 30]} />
       <meshStandardMaterial
         map={ceilingTexture}
-        color="#ffffff"
+        color="#fffaf0"
         roughness={0.95}
         metalness={0}
         side={THREE.DoubleSide}
