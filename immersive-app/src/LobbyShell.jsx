@@ -3,7 +3,15 @@ import * as THREE from "three";
 
 export default function LobbyShell() {
   const floorTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
+ const ceilingSourceTexture = useTexture("/textures/Plaster001_1K-JPG_Color.jpg");
 
+const ceilingTexture = ceilingSourceTexture.clone();
+ceilingTexture.wrapS = THREE.RepeatWrapping;
+ceilingTexture.wrapT = THREE.RepeatWrapping;
+ceilingTexture.repeat.set(6, 5);
+ceilingTexture.colorSpace = THREE.SRGBColorSpace;
+ceilingTexture.needsUpdate = true;
+  
   const plasterTexture = useTexture(
   "/textures/Plaster001_1K-JPG_Color.jpg"
 );
@@ -332,11 +340,11 @@ emissiveIntensity={0.03}
 <mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
   <planeGeometry args={[40, 30]} />
   <meshStandardMaterial
-  color="#f7f6f2"
-  roughness={0.92}
-  metalness={0.02}
-  emissive="#ffffff"
-  emissiveIntensity={0.02}
+  map={ceilingTexture}
+  color="#ffffff"
+  roughness={0.9}
+  metalness={0}
+  side={THREE.DoubleSide}
 />
 </mesh>
 
