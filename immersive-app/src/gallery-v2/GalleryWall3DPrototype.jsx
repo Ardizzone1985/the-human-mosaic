@@ -37,6 +37,45 @@ function PremiumPlasterInfoWall() {
   );
 }
 
+function PremiumPlasterCeiling() {
+  const sourceTexture = useTexture(
+    "/textures/Plaster001_1K-JPG_Color.jpg"
+  );
+
+  const ceilingTexture = useMemo(() => {
+    const texture = sourceTexture.clone();
+
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(6, 6);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 8;
+    texture.needsUpdate = true;
+
+    return texture;
+  }, [sourceTexture]);
+
+  useEffect(() => {
+    return () => ceilingTexture.dispose();
+  }, [ceilingTexture]);
+
+  return (
+    <mesh
+      position={[0, 8, 5]}
+      rotation={[Math.PI / 2, 0, 0]}
+    >
+      <planeGeometry args={[30, 30]} />
+      <meshStandardMaterial
+        map={ceilingTexture}
+        color="#ffffff"
+        roughness={0.95}
+        metalness={0}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
 function PremiumOakFloor() {
   const texture = useTexture(
   "/textures/WoodFloor039_1K-JPG_Color.jpg"
