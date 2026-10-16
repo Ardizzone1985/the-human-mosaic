@@ -545,7 +545,7 @@ export default function GalleryWall3DPrototype({
         <ambientLight intensity={0.7} />
         <directionalLight
           position={[4, 6, 4]}
-          intensity={1.5}
+          intensity={1.0}
         />
 
         {/* PREMIUM MUSEUM LIGHTING */}
