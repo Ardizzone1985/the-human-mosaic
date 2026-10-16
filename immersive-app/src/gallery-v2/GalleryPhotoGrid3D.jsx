@@ -9,7 +9,12 @@ function GallerySlotPhoto({ imageUrl }) {
   return (
     <mesh position={[0, 0, 0.015]}>
       <planeGeometry args={[1.3, 1.3]} />
-      <meshBasicMaterial map={texture} />
+      <meshStandardMaterial
+  map={texture}
+  color="#ffffff"
+  roughness={0.9}
+  metalness={0}
+/>
     </mesh>
   );
 }
