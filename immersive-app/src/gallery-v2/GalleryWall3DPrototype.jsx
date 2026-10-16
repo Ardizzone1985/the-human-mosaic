@@ -555,7 +555,7 @@ export default function GalleryWall3DPrototype({
 
 <pointLight
   position={[0, 6.5, 5]}
-  intensity={45}
+  intensity={25}
   distance={24}
   decay={2}
   color="#fff4df"
