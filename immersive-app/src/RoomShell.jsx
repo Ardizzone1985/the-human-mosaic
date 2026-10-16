@@ -50,7 +50,22 @@ export default function RoomShell({
   hideFrontPanels = false,
 }) {
   
-const ceilingTexture = useMemo(() => createCeilingTexture(), []);
+const ceilingSourceTexture = useTexture(
+  "/textures/Plaster001_1K-JPG_Color.jpg"
+);
+
+const ceilingTexture = useMemo(() => {
+  const texture = ceilingSourceTexture.clone();
+
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(6, 5);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  texture.needsUpdate = true;
+
+  return texture;
+}, [ceilingSourceTexture]);
 const parquetTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
 
   const plasterTexture = useTexture(
