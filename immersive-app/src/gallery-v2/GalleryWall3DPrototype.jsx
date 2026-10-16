@@ -570,7 +570,7 @@ export default function GalleryWall3DPrototype({
 <spotLight
   position={[0, 7, -4]}
   target={frontLightTarget}
-  angle={0.85}
+  angle={0.55}
   penumbra={0.8}
   intensity={35}
   distance={18}
