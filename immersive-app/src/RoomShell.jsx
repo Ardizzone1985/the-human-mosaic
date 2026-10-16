@@ -2,39 +2,6 @@ import { useMemo } from "react";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
-function createCeilingTexture() {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 1024;
-
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "#ece7df";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < 5000; i++) {
-    ctx.fillStyle =
-      Math.random() > 0.5
-        ? "rgba(255,230,190,0.04)"
-        : "rgba(0,0,0,0.045)";
-
-    ctx.fillRect(
-      Math.random() * canvas.width,
-      Math.random() * canvas.height,
-      Math.random() * 2.4,
-      Math.random() * 2.4
-    );
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2.2, 2.2);
-  texture.anisotropy = 16;
-
-  return texture;
-}
-
 const goldMaterial = (
   <meshStandardMaterial
     color="#e0b866"
