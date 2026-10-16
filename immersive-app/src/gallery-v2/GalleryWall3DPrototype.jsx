@@ -572,7 +572,7 @@ export default function GalleryWall3DPrototype({
   target={frontLightTarget}
   angle={0.85}
   penumbra={0.8}
-  intensity={18}
+  intensity={35}
   distance={18}
   decay={2}
   color="#fffaf0"
