@@ -554,6 +554,8 @@ export default function GalleryWall3DPrototype({
   const [reservationCreated, setReservationCreated] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const frontLightTarget = useRef(new THREE.Object3D()).current;
+  const leftLightTarget = useRef(new THREE.Object3D()).current;
+const rightLightTarget = useRef(new THREE.Object3D()).current;
   
     return (
     <div
