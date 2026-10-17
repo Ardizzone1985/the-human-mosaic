@@ -6,6 +6,7 @@ import GalleryWall3D from "./GalleryWall3D";
 import AppDialog from "../components/AppDialog.jsx";
 import { supabase } from "../supabaseClient.js";
 import logoImage from "../logo-cropped.png";
+import SponsorPanel from "../components/sponsors/SponsorPanel.jsx";
 
 function PremiumPlasterInfoWall() {
   const texture = useTexture(
