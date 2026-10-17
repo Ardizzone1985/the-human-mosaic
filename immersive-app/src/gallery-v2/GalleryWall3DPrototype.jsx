@@ -386,7 +386,7 @@ function InfoWallLogo({ room = "Identity" }) {
     <group
   position={[-7, 5.8, 19.86]}
   rotation={[0, Math.PI, 0]}
-  scale={[0.72, 0.65, 1]}
+  scale={[1, 0.65, 1]}
 >
   <SponsorPanel
     placement={`${String(room).toLowerCase()}-top-left`}
