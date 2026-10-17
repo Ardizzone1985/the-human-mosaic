@@ -124,14 +124,38 @@ async function getRequestBody(req) {
   return {};
 }
 
-async function getAvailableHumanityImpactPlacement(
-  supabaseAdmin,
-  currentRequestId = null
-) {
-  const humanityImpactPlacements = [
+const ROOM_SPONSOR_PLACEMENTS = {
+  identity: [
+    "identity-top-left",
+    "identity-top-right",
+    "identity-bottom-left",
+  ],
+  love: [
+    "love-top-left",
+    "love-top-right",
+    "love-bottom-left",
+  ],
+  creativity: [
+    "creativity-top-left",
+    "creativity-top-right",
+    "creativity-bottom-left",
+  ],
+  "humanity-impact": [
     "humanity-impact-left",
     "humanity-impact-right",
-  ];
+  ],
+};
+
+async function getAvailableRoomSponsorPlacement(
+  supabaseAdmin,
+  room,
+  currentRequestId = null
+) {
+  const roomPlacements = ROOM_SPONSOR_PLACEMENTS[room];
+
+if (!roomPlacements) {
+  throw new Error(`Unknown sponsor room: ${room}`);
+}
 
   const now = new Date().toISOString();
 
