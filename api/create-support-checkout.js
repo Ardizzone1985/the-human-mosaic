@@ -77,12 +77,14 @@ export default async function handler(req, res) {
       error: 'Sponsor request is not approved'
     });
   }
-
-  if (sponsorRequest.payment_status === 'paid') {
-    return res.status(409).json({
-      error: 'This partnership has already been paid'
-    });
-  }
+  
+if (sponsorRequest.payment_status !== 'pending') {
+  return res.status(409).json({
+    error:
+      'This partnership is not available for payment. ' +
+      'Please contact The Human Mosaic for assistance.'
+  });
+}
 
       if (!sponsorRequest.payment_expires_at) {
   return res.status(410).json({
@@ -142,9 +144,26 @@ if (
     placement: String(placement),
     durationDays: String(durationDays),
   };
+      
+  const secondsRemaining = Math.floor(
+    (paymentExpiresAt.getTime() - Date.now()) / 1000
+  );
+
+  if (secondsRemaining < 35 * 60) {
+    return res.status(410).json({
+      error:
+        'The remaining payment window is too short to start a new checkout. ' +
+        'Please contact The Human Mosaic for assistance.'
+    });
+  }
+
+  const stripeExpiresAt =
+    Math.floor(Date.now() / 1000) +
+    Math.min(secondsRemaining, 24 * 60 * 60);
 
   const sponsorSession =
     await stripe.checkout.sessions.create({
+      expires_at: stripeExpiresAt,
       payment_method_types: [
         'card',
         'paypal',
