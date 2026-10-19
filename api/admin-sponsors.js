@@ -424,38 +424,34 @@ if (rejectionReason.length > 1000) {
     null;
 
   /*
-   * Humanity Impact has two distinct physical
-   * Partner Spaces. Assign the first currently
-   * available one automatically.
-   */
-  if (
-    selectedPlan?.room === "humanity-impact"
-  ) {
-    try {
-      approvedPlacement =
-        await getAvailableHumanityImpactPlacement(
-          supabaseAdmin,
-          sponsorRequest.id
-        );
-    } catch (error) {
-      console.error(
-        "Humanity Impact placement assignment error:",
-        error
+ * Automatically assign an available Partner Space
+ * for Identity, Love, Creativity and Humanity Impact.
+ */
+if (ROOM_SPONSOR_PLACEMENTS[selectedPlan?.room]) {
+  try {
+    approvedPlacement =
+      await getAvailableRoomSponsorPlacement(
+        supabaseAdmin,
+        selectedPlan.room,
+        sponsorRequest.id
       );
+  } catch (error) {
+    console.error(
+      "Sponsor placement assignment error:",
+      error
+    );
 
-      return res.status(500).json({
-        error:
-          "Unable to verify Humanity Impact availability",
-      });
-    }
-
-    if (!approvedPlacement) {
-      return res.status(409).json({
-        error:
-          "No Humanity Impact Partner Space is currently available",
-      });
-    }
+    return res.status(500).json({
+      error: "Unable to verify sponsor space availability",
+    });
   }
+
+  if (!approvedPlacement) {
+    return res.status(409).json({
+      error: "No Partner Space is currently available in this room",
+    });
+  }
+}
 
   updateData = {
     status: "approved",
