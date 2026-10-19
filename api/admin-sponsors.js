@@ -240,7 +240,7 @@ if (!roomPlacements) {
         );
 
         throw new Error(
-          "Unable to verify Humanity Impact campaign availability"
+          "Unable to verify Sponsor room campaign availability"
         );
       }
 
