@@ -281,21 +281,57 @@ Support: info@thehumanmosaic.art
 
 async function activateSponsorCampaign(
   supabase,
+  stripe,
   payload
 ) {
+
   const {
     requestId,
     placement:
       metadataPlacement = null,
     durationDays:
       metadataDurationDays = null,
+    stripeSessionId = null,
   } = payload;
+  
+if (!stripeSessionId) {
+  throw new Error(
+    "Missing Stripe session ID for sponsor activation"
+  );
+}
+
+const verifiedSession =
+  await stripe.checkout.sessions.retrieve(
+    stripeSessionId
+  );
+
+if (
+  verifiedSession.payment_status !== "paid"
+) {
+  throw new Error(
+    `Sponsor payment not confirmed for session ${stripeSessionId}`
+  );
+}
+
+if (
+  verifiedSession.metadata?.source !== "sponsor" ||
+  (
+    verifiedSession.metadata?.requestId !== requestId &&
+    verifiedSession.client_reference_id !== requestId
+  )
+) {
+  throw new Error(
+    `Sponsor session identity mismatch for request ${requestId}`
+  );
+}
 
   if (!requestId) {
     console.error(
       "❌ Missing sponsor requestId"
     );
-    return;
+    throw new Error(
+  "Missing sponsor requestId in Stripe webhook"
+);
   }
 
   const {
@@ -324,8 +360,29 @@ async function activateSponsorCampaign(
       "❌ Sponsor request not found:",
       requestError
     );
-    return;
+    throw new Error(
+  `Sponsor request lookup failed for ${requestId}`
+);
   }
+  
+if (
+  sponsorRequest.paid_stripe_session_id &&
+  sponsorRequest.paid_stripe_session_id !== stripeSessionId
+) {
+  console.error(
+    "Different Stripe session for sponsor request:",
+    {
+      requestId,
+      existingSessionId:
+        sponsorRequest.paid_stripe_session_id,
+      incomingSessionId: stripeSessionId,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment session conflict for ${requestId}`
+  );
+}
 
   if (
     sponsorRequest.status !==
@@ -339,18 +396,23 @@ async function activateSponsorCampaign(
   }
 
   /*
-   * Prima segniamo il pagamento come confermato.
-   */
+ * Record the confirmed Stripe payment.
+ *
+ * Payment confirmation and campaign activation
+ * are separate operations.
+ * A successful payment must remain traceable
+ * even if campaign activation fails.
+ */
   const {
     error: paymentUpdateError,
   } = await supabase
     .from("sponsor_requests")
     .update({
   payment_status: "paid",
-  payment_expires_at: null,
-  updated_at:
-    new Date().toISOString(),
+      paid_stripe_session_id: stripeSessionId,
+  updated_at: new Date().toISOString(),
 })
+
     .eq("id", requestId);
 
   if (paymentUpdateError) {
@@ -358,7 +420,11 @@ async function activateSponsorCampaign(
       "❌ Sponsor payment status update error:",
       paymentUpdateError
     );
-    return;
+    
+throw new Error(
+  `Sponsor payment update failed for ${requestId}`
+);
+
   }
 
   /*
@@ -381,16 +447,36 @@ async function activateSponsorCampaign(
       "❌ Sponsor campaign lookup error:",
       existingCampaignError
     );
-    return;
+    
+throw new Error(
+  `Sponsor campaign lookup failed for ${requestId}`
+);
+
+  }
+  
+if (existingCampaign) {
+  if (sponsorRequest.activation_status !== "active") {
+    const { error: syncError } = await supabase
+      .from("sponsor_requests")
+      .update({
+        activation_status: "active",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", requestId);
+
+    if (syncError) {
+      throw new Error(
+        `Sponsor activation sync failed for ${requestId}`
+      );
+    }
   }
 
-  if (existingCampaign) {
-    console.log(
-      "ℹ️ Sponsor campaign already exists:",
-      existingCampaign.id
-    );
-    return;
-  }
+  console.log(
+    "Sponsor campaign already exists:",
+    existingCampaign.id
+  );
+  return;
+}
 
   const durationDays =
     Number(
@@ -407,22 +493,29 @@ async function activateSponsorCampaign(
     durationDays > 0
       ? durationDays
       : 30;
+  
+const placement = sponsorRequest.approved_placement || null;
 
-  const placement =
-    metadataPlacement ||
-    sponsorRequest.approved_placement ||
-    sponsorRequest.requested_placement ||
-    sponsorRequest
-      .sponsor_plans
-      ?.placement ||
-    null;
+if (metadataPlacement && metadataPlacement !== placement) {
+  console.error(
+    "Sponsor placement mismatch between Stripe and database:",
+    { requestId, metadataPlacement, placement }
+  );
+  
+throw new Error(
+  `Sponsor placement mismatch for request ${requestId}`
+);
+
+}
 
   if (!placement) {
     console.error(
       "❌ Missing sponsor placement:",
       requestId
     );
-    return;
+    throw new Error(
+  `Missing approved sponsor placement for request ${requestId}`
+);
   }
 
   const startsAt =
@@ -500,14 +593,62 @@ async function activateSponsorCampaign(
     .insert([campaignRow])
     .select("*")
     .single();
+  
+if (campaignError) {
+  if (campaignError.code === "23505") {
+    const {
+      data: duplicateCampaign,
+      error: duplicateLookupError,
+    } = await supabase
+      .from("sponsor_campaigns")
+      .select("id")
+      .eq("request_id", requestId)
+      .maybeSingle();
 
-  if (campaignError) {
-    console.error(
-      "❌ SPONSOR CAMPAIGN INSERT ERROR:",
-      campaignError
-    );
-    return;
+    if (duplicateLookupError) {
+      throw new Error(
+        `Sponsor duplicate lookup failed for ${requestId}`
+      );
+    }
+
+    if (duplicateCampaign) {
+      console.log(
+        "Sponsor campaign already activated:",
+        duplicateCampaign.id
+      );
+      return;
+    }
   }
+
+  console.error(
+    "❌ SPONSOR CAMPAIGN INSERT ERROR:",
+    campaignError
+  );
+
+  throw new Error(
+    `Sponsor campaign activation failed for request ${requestId}`
+  );
+}
+  
+const { error: activationUpdateError } =
+  await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "active",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+if (activationUpdateError) {
+  console.error(
+    "Sponsor activation status update failed:",
+    activationUpdateError
+  );
+
+  throw new Error(
+    `Sponsor activation status update failed for ${requestId}`
+  );
+}
 
   console.log(
     "✅ Sponsor campaign activated:",
@@ -737,6 +878,7 @@ export default async function handler(
         ) {
           await activateSponsorCampaign(
             supabase,
+            stripe,
             {
               requestId:
                 session.metadata
@@ -754,6 +896,7 @@ export default async function handler(
                 session.metadata
                   ?.durationDays ||
                 null,
+              stripeSessionId: session.id,
             }
           );
         } else {
@@ -1055,7 +1198,7 @@ export default async function handler(
     );
 
     return res
-      .status(200)
+      .status(500)
       .json({
         received: true,
       });
