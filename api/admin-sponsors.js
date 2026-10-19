@@ -160,6 +160,31 @@ if (!roomPlacements) {
   const now = new Date().toISOString();
 
   /*
+   * Release expired unpaid sponsor reservations.
+   */
+  const { error: expiredReservationsError } =
+    await supabaseAdmin
+      .from("sponsor_requests")
+      .update({
+        payment_status: "expired",
+        updated_at: now,
+      })
+      .eq("status", "approved")
+      .eq("payment_status", "pending")
+      .lte("payment_expires_at", now);
+
+  if (expiredReservationsError) {
+    console.error(
+      "Expired sponsor reservation cleanup error:",
+      expiredReservationsError
+    );
+
+    throw new Error(
+      "Unable to release expired sponsor reservations"
+    );
+  }
+
+  /*
    * Load approved Humanity Impact requests that may
    * currently reserve one of the two physical placements.
    */
@@ -483,6 +508,7 @@ if (ROOM_SPONSOR_PLACEMENTS[selectedPlan?.room]) {
   .from("sponsor_requests")
   .update(updateData)
   .eq("id", requestId)
+  .eq("status", "pending")    
   .select("*")
   .single();
 
