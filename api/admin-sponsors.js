@@ -172,10 +172,7 @@ if (!roomPlacements) {
       payment_expires_at
     `)
     .eq("status", "approved")
-    .in(
-      "approved_placement",
-      humanityImpactPlacements
-    );
+    .in("approved_placement", roomPlacements);
 
   if (currentRequestId) {
     requestsQuery = requestsQuery.neq(
@@ -191,12 +188,12 @@ if (!roomPlacements) {
 
   if (requestsError) {
     console.error(
-      "Humanity Impact placement lookup error:",
+      "Sponsor room placement lookup error:",
       requestsError
     );
 
     throw new Error(
-      "Unable to verify Humanity Impact availability"
+      "Unable to verify Sponsor room availability"
     );
   }
 
@@ -238,7 +235,7 @@ if (!roomPlacements) {
 
       if (campaignError) {
         console.error(
-          "Humanity Impact campaign lookup error:",
+          "Sponsor room campaign lookup error:",
           campaignError
         );
 
@@ -256,7 +253,7 @@ if (!roomPlacements) {
   }
 
   return (
-    humanityImpactPlacements.find(
+    roomPlacements.find(
       (placement) =>
         !occupiedPlacements.has(placement)
     ) || null
