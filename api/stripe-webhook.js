@@ -527,10 +527,16 @@ throw new Error(
   }
   
 if (existingCampaign) {  
+
 if (
   existingCampaign.status === "active" &&
+  existingCampaign.starts_at &&
+  existingCampaign.ends_at &&
+  new Date(existingCampaign.starts_at).getTime() <= Date.now() &&
+  new Date(existingCampaign.ends_at).getTime() > Date.now() &&
   sponsorRequest.activation_status !== "active"
 ) {
+
     const { error: syncError } = await supabase
       .from("sponsor_requests")
       .update({
