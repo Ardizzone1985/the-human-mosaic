@@ -304,6 +304,26 @@ const verifiedSession =
   await stripe.checkout.sessions.retrieve(
     stripeSessionId
   );
+  
+const stripePaymentIntentId =
+  typeof verifiedSession.payment_intent === "string"
+    ? verifiedSession.payment_intent
+    : verifiedSession.payment_intent?.id || null;
+  
+const verifiedPaymentIntent = stripePaymentIntentId
+  ? await stripe.paymentIntents.retrieve(
+      stripePaymentIntentId
+    )
+  : null;
+  
+if (
+  verifiedPaymentIntent &&
+  verifiedPaymentIntent.status !== "succeeded"
+) {
+  throw new Error(
+    `Sponsor PaymentIntent not succeeded for ${requestId}`
+  );
+}
 
 if (
   verifiedSession.payment_status !== "paid"
@@ -610,14 +630,28 @@ if (campaignError) {
         `Sponsor duplicate lookup failed for ${requestId}`
       );
     }
+    
+if (duplicateCampaign) {
+  const { error: syncError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "active",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
 
-    if (duplicateCampaign) {
-      console.log(
-        "Sponsor campaign already activated:",
-        duplicateCampaign.id
-      );
-      return;
-    }
+  if (syncError) {
+    throw new Error(
+      `Sponsor duplicate activation sync failed for ${requestId}`
+    );
+  }
+
+  console.log(
+    "Sponsor campaign already activated:",
+    duplicateCampaign.id
+  );
+  return;
+}
   }
 
   console.error(
