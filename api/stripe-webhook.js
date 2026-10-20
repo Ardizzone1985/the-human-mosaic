@@ -574,6 +574,29 @@ throw new Error(
   `Missing approved sponsor placement for request ${requestId}`
 );
   }
+  
+if (!sponsorRequest.payment_expires_at) {
+  const { error: reviewError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "needs_review",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (reviewError) {
+    throw new Error(
+      `Sponsor review status update failed for ${requestId}`
+    );
+  }
+
+  console.warn(
+    "Sponsor activation requires review: missing reservation expiry",
+    { requestId }
+  );
+
+  return;
+}
 
   const startsAt =
     new Date();
