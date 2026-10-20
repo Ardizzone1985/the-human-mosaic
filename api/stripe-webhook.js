@@ -459,30 +459,43 @@ if (
  * are separate operations.
  * A successful payment must remain traceable
  * even if campaign activation fails.
- */
-  const {
-    error: paymentUpdateError,
-  } = await supabase
-    .from("sponsor_requests")
-    .update({
-  payment_status: "paid",
-      paid_stripe_session_id: stripeSessionId,
-  updated_at: new Date().toISOString(),
-})
+ */  
+const {
+  data: paymentResult,
+  error: paymentUpdateError,
+} = await supabase.rpc("record_sponsor_payment", {
+  p_request_id: requestId,
+  p_stripe_session_id: stripeSessionId,
+});
 
-    .eq("id", requestId);
+if (paymentUpdateError) {
+  console.error(
+    "Sponsor atomic payment recording failed:",
+    paymentUpdateError
+  );
 
-  if (paymentUpdateError) {
-    console.error(
-      "❌ Sponsor payment status update error:",
-      paymentUpdateError
-    );
-    
-throw new Error(
-  `Sponsor payment update failed for ${requestId}`
-);
+  throw new Error(
+    `Sponsor payment recording failed for ${requestId}`
+  );
+}
 
-  }
+if (
+  paymentResult !== "recorded" &&
+  paymentResult !== "already_paid"
+) {
+  console.error(
+    "Sponsor payment requires reconciliation:",
+    {
+      requestId,
+      stripeSessionId,
+      paymentResult,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment reconciliation required for ${requestId}: ${paymentResult}`
+  );
+}
 
   /*
    * Protezione idempotenza:
