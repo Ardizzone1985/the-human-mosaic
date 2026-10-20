@@ -600,6 +600,35 @@ if (!sponsorRequest.payment_expires_at) {
 
   return;
 }
+  
+const reservationExpiresAt =
+  new Date(sponsorRequest.payment_expires_at);
+
+if (
+  !Number.isFinite(reservationExpiresAt.getTime()) ||
+  reservationExpiresAt.getTime() <= Date.now()
+) {
+  const { error: reviewError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "needs_review",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (reviewError) {
+    throw new Error(
+      `Sponsor expiry review update failed for ${requestId}`
+    );
+  }
+
+  console.warn(
+    "Sponsor activation requires review: reservation expired or invalid",
+    { requestId }
+  );
+
+  return;
+}
 
   const startsAt =
     new Date();
