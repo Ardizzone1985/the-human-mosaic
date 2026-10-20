@@ -449,7 +449,9 @@ if (
       "❌ Sponsor request is not approved:",
       requestId
     );
-    return;
+    throw new Error(
+  `Paid sponsor request is not approved: ${requestId}`
+);
   }
 
   /*
