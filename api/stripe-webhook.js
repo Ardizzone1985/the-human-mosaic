@@ -344,6 +344,15 @@ if (
     `Sponsor session identity mismatch for request ${requestId}`
   );
 }
+  
+if (
+  verifiedSession.amount_total == null ||
+  !verifiedSession.currency
+) {
+  throw new Error(
+    `Missing Stripe payment amount or currency for ${requestId}`
+  );
+}
 
   if (!requestId) {
     console.error(
@@ -384,6 +393,34 @@ if (
   `Sponsor request lookup failed for ${requestId}`
 );
   }
+  
+const expectedAmount =
+  Number(sponsorRequest.quoted_price_cents);
+
+const expectedCurrency =
+  String(sponsorRequest.currency || "").toLowerCase();
+
+if (
+  !Number.isInteger(expectedAmount) ||
+  expectedAmount <= 0 ||
+  verifiedSession.amount_total !== expectedAmount ||
+  verifiedSession.currency.toLowerCase() !== expectedCurrency
+) {
+  console.error(
+    "Sponsor payment amount or currency mismatch:",
+    {
+      requestId,
+      expectedAmount,
+      actualAmount: verifiedSession.amount_total,
+      expectedCurrency,
+      actualCurrency: verifiedSession.currency,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment amount mismatch for ${requestId}`
+  );
+}
   
 if (
   sponsorRequest.paid_stripe_session_id &&
