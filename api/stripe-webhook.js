@@ -511,8 +511,11 @@ throw new Error(
 
   }
   
-if (existingCampaign) {
-  if (sponsorRequest.activation_status !== "active") {
+if (existingCampaign) {  
+if (
+  existingCampaign.status === "active" &&
+  sponsorRequest.activation_status !== "active"
+) {
     const { error: syncError } = await supabase
       .from("sponsor_requests")
       .update({
