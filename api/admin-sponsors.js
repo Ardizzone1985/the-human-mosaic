@@ -438,64 +438,27 @@ if (rejectionReason.length > 1000) {
     const reviewedAt = new Date().toISOString();
 
     let updateData;
+let updatedRequest;
+        
+if (action === "approve") {
+  const { data, error } = await supabaseAdmin.rpc(
+    "approve_sponsor_request",
+    {
+      p_request_id: requestId,
+    }
+  );
 
-    if (action === "approve") {
-  const selectedPlan =
-    sponsorRequest.sponsor_plans || null;
+  if (error || !data) {
+    console.error("Sponsor atomic approval error:", error);
 
-  const paymentExpiresAt = new Date(
-    Date.now() + 48 * 60 * 60 * 1000
-  ).toISOString();
-
-  let approvedPlacement =
-    sponsorRequest.requested_placement ||
-    selectedPlan?.placement ||
-    null;
-
-  /*
- * Automatically assign an available Partner Space
- * for Identity, Love, Creativity and Humanity Impact.
- */
-if (ROOM_SPONSOR_PLACEMENTS[selectedPlan?.room]) {
-  try {
-    approvedPlacement =
-      await getAvailableRoomSponsorPlacement(
-        supabaseAdmin,
-        selectedPlan.room,
-        sponsorRequest.id
-      );
-  } catch (error) {
-    console.error(
-      "Sponsor placement assignment error:",
-      error
-    );
-
-    return res.status(500).json({
-      error: "Unable to verify sponsor space availability",
-    });
-  }
-
-  if (!approvedPlacement) {
     return res.status(409).json({
-      error: "No Partner Space is currently available in this room",
+      error:
+        "Unable to approve sponsor request or no sponsor space available",
     });
   }
-}
 
-  updateData = {
-    status: "approved",
-    payment_status: "pending",
-    rejection_reason: null,
-    reviewed_at: reviewedAt,
-    payment_expires_at: paymentExpiresAt,
-    approved_placement: approvedPlacement,
-    quoted_price_cents:
-      selectedPlan?.price_cents ?? null,
-    currency:
-      selectedPlan?.currency ||
-      sponsorRequest.currency ||
-      "EUR",
-  };
+  updatedRequest = data;
+
     } else {
       updateData = {
   status: "rejected",
@@ -504,30 +467,28 @@ if (ROOM_SPONSOR_PLACEMENTS[selectedPlan?.room]) {
   reviewed_at: reviewedAt,
 };
     }
+    
+if (action === "reject") {
+  const { data, error: updateError } = await supabaseAdmin
+    .from("sponsor_requests")
+    .update(updateData)
+    .eq("id", requestId)
+    .eq("status", "pending")
+    .select("*")
+    .single();
 
-    const {
-  data: updatedRequest,
-  error: updateError,
-} = await supabaseAdmin
-  .from("sponsor_requests")
-  .update(updateData)
-  .eq("id", requestId)
-  .eq("status", "pending")    
-  .select("*")
-  .single();
+  if (updateError || !data) {
+    console.error(
+      "Sponsor request rejection error:",
+      updateError
+    );
 
-if (updateError) {
-  console.error(
-    "Sponsor request update error:",
-    updateError
-  );
+    return res.status(500).json({
+      error: "Unable to reject sponsor request",
+    });
+  }
 
-  return res.status(500).json({
-    error:
-      action === "approve"
-        ? "Unable to approve sponsor request"
-        : "Unable to reject sponsor request",
-  });
+  updatedRequest = data;
 }
 
 let emailSent = false;
