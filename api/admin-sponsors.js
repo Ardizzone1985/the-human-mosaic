@@ -140,6 +140,10 @@ const ROOM_SPONSOR_PLACEMENTS = {
     "creativity-top-right",
     "creativity-bottom-left",
   ],
+  lobby: [
+    "lobby-left",
+    "lobby-right",
+  ],
   "humanity-impact": [
     "humanity-impact-left",
     "humanity-impact-right",
