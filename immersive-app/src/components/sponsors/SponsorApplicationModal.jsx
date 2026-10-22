@@ -54,6 +54,21 @@ export default function SponsorApplicationModal({
       return;
     }
 
+    const allowedTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+];
+
+if (!allowedTypes.includes(file.type)) {
+  setLogoFile(null);
+  setLogoError(
+    "Invalid file format. Please upload a PNG, JPG or WEBP image."
+  );
+  event.target.value = "";
+  return;
+}
+
     const maximumSize = 5 * 1024 * 1024;
 
     if (file.size > maximumSize) {
@@ -438,7 +453,7 @@ onChange={handleChange}
     <input
       type="file"
       name="logo"
-      accept=".svg,.png,.jpg,.jpeg,.webp"
+      accept=".png,.jpg,.jpeg,.webp"
       style={fileInput}
       onChange={handleLogoChange}
     />
@@ -466,7 +481,7 @@ onChange={handleChange}
         </div>
 
         <div style={uploadText}>
-          SVG, PNG, JPG or WEBP · Maximum 5 MB
+          PNG, JPG or WEBP · Maximum 5 MB
         </div>
       </>
     )}
