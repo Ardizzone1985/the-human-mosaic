@@ -892,9 +892,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -904,9 +904,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -919,9 +919,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -947,10 +947,10 @@ export default async function handler(
       );
 
       return res
-        .status(200)
-        .json({
-          received: true,
-        });
+  .status(400)
+  .json({
+    error: "Invalid webhook signature",
+  });
     }
 
     const rawBody =
@@ -973,10 +973,10 @@ export default async function handler(
       );
 
       return res
-        .status(200)
-        .json({
-          received: true,
-        });
+  .status(400)
+  .json({
+    error: "Invalid webhook signature",
+  });
     }
 
     /*
