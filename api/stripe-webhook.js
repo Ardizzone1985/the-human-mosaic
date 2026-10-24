@@ -156,6 +156,7 @@ async function sendSponsorActivationEmail({
       timeZone: "UTC",
     }).format(new Date(value));
 
+  const { data: emailData, error: emailError } =
   await resend.emails.send({
     from:
       "The Human Mosaic <info@mail.thehumanmosaic.art>",
@@ -276,7 +277,15 @@ Support: info@thehumanmosaic.art
 
 — The Human Mosaic
     `.trim(),
-  });
+    });
+
+  if (emailError || !emailData?.id) {
+    throw new Error(
+      `Sponsor activation email failed: ${
+        emailError?.message || "No email ID returned by Resend"
+      }`
+    );
+  }
 }
 
 async function activateSponsorCampaign(
