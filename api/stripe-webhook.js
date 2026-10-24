@@ -286,6 +286,7 @@ Support: info@thehumanmosaic.art
       }`
     );
   }
+  return emailData.id;
 }
 
 async function activateSponsorCampaign(
