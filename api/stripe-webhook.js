@@ -113,6 +113,16 @@ function slugifyCompany(value) {
     .replace(/^-+|-+$/g, "");
 }
 
+// Escape untrusted sponsor-provided text before interpolating into email HTML.
+function escapeEmailHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function sendSponsorActivationEmail({
   email,
   contactName,
@@ -124,20 +134,14 @@ async function sendSponsorActivationEmail({
   portalToken,
 }) {
   if (!email || !portalToken) {
-    console.error(
-      "❌ Missing sponsor email or portal token"
-    );
-    return;
+    throw new Error("Missing sponsor email or portal token");
   }
 
   const resendApiKey =
     process.env.RESEND_API_KEY;
 
   if (!resendApiKey) {
-    console.error(
-      "❌ Missing RESEND_API_KEY — sponsor activation email not sent"
-    );
-    return;
+    throw new Error("Missing RESEND_API_KEY — sponsor activation email not sent");
   }
 
   const resend =
@@ -155,6 +159,11 @@ async function sendSponsorActivationEmail({
       year: "numeric",
       timeZone: "UTC",
     }).format(new Date(value));
+
+  const safeContactName = escapeEmailHtml(contactName || company || "Partner");
+  const safeCompany = escapeEmailHtml(company || "—");
+  const safePlanName = escapeEmailHtml(planName || "The Human Mosaic Partner");
+  const safePlacement = escapeEmailHtml(placement || "—");
 
   const { data: emailData, error: emailError } =
   await resend.emails.send({
@@ -179,7 +188,7 @@ async function sendSponsorActivationEmail({
           </h2>
 
           <p>
-            Hello ${contactName || company || "Partner"},
+            Hello ${safeContactName},
           </p>
 
           <p style="color:#555;">
@@ -192,17 +201,17 @@ async function sendSponsorActivationEmail({
 
           <p>
             <strong>Organization:</strong>
-            ${company || "—"}
+            ${safeCompany}
           </p>
 
           <p>
             <strong>Partnership:</strong>
-            ${planName || "The Human Mosaic Partner"}
+            ${safePlanName}
           </p>
 
           <p>
             <strong>Placement:</strong>
-            ${placement || "—"}
+            ${safePlacement}
           </p>
 
           <p>
@@ -287,6 +296,91 @@ Support: info@thehumanmosaic.art
     );
   }
   return emailData.id;
+}
+
+// Durable, one-per-request activation email record. The unique database
+// constraint (sponsor_request_id, email_type) makes concurrent inserts safe.
+// Only a pending record can be claimed. Failed/sending records require
+// deliberate reconciliation; never blindly resend after an ambiguous outcome.
+async function processSponsorActivationEmail(supabase, sponsorRequest, campaign) {
+  if (!campaign || campaign.status !== "active") return;
+  if (!campaign.starts_at || !campaign.ends_at ||
+      new Date(campaign.starts_at).getTime() > Date.now() ||
+      new Date(campaign.ends_at).getTime() <= Date.now()) return;
+
+  const { error: enqueueError } = await supabase
+    .from("sponsor_email_outbox")
+    .upsert({
+      sponsor_request_id: sponsorRequest.id,
+      email_type: "activation",
+      recipient_email: sponsorRequest.email,
+      status: "pending",
+    }, { onConflict: "sponsor_request_id,email_type", ignoreDuplicates: true });
+
+  if (enqueueError) {
+    console.error("Sponsor activation email enqueue failed:", enqueueError);
+    return;
+  }
+
+  const { data: outboxRow, error: lookupError } = await supabase
+    .from("sponsor_email_outbox")
+    .select("id, status")
+    .eq("sponsor_request_id", sponsorRequest.id)
+    .eq("email_type", "activation")
+    .single();
+  if (lookupError || !outboxRow) {
+    console.error("Sponsor activation email outbox lookup failed:", lookupError);
+    return;
+  }
+  if (outboxRow.status !== "pending") return;
+
+  const { data: claimed, error: claimError } = await supabase.rpc(
+    "claim_sponsor_activation_email", { p_outbox_id: outboxRow.id }
+  );
+  if (claimError) {
+    console.error("Sponsor activation email claim failed:", claimError);
+    return;
+  }
+  if (!Array.isArray(claimed) || claimed.length !== 1) return;
+
+  // Resend/network errors may be ambiguous: the provider might have
+  // accepted the email even when this process did not receive its response.
+  // Leave the row in `sending` for MANUAL reconciliation in that case.
+  let emailId;
+  try {
+    emailId = await sendSponsorActivationEmail({
+      email: sponsorRequest.email,
+      contactName: sponsorRequest.contact_name,
+      company: sponsorRequest.company || "Museum Partner",
+      planName: sponsorRequest.sponsor_plans?.name ||
+        `${sponsorRequest.company || "Museum Partner"} Partner`,
+      placement: campaign.placement,
+      startsAt: campaign.starts_at,
+      endsAt: campaign.ends_at,
+      portalToken: campaign.portal_token,
+    });
+  } catch (error) {
+    console.error(
+      "Sponsor activation email outcome uncertain; manual Resend reconciliation required:",
+      { outboxId: outboxRow.id, message: String(error?.message || error) }
+    );
+    return;
+  }
+
+  const { data: completed, error: completeError } = await supabase.rpc(
+    "complete_sponsor_activation_email", {
+      p_outbox_id: outboxRow.id,
+      p_success: true,
+      p_resend_email_id: emailId,
+      p_error: null,
+    }
+  );
+  if (completeError || !Array.isArray(completed) || completed.length !== 1) {
+    console.error(
+      "Sponsor activation email accepted by Resend but completion unconfirmed; manual reconciliation required:",
+      { outboxId: outboxRow.id, resendEmailId: emailId, error: completeError }
+    );
+  }
 }
 
 async function activateSponsorCampaign(
@@ -520,7 +614,7 @@ if (
     error: existingCampaignError,
   } = await supabase
     .from("sponsor_campaigns")
-    .select("id, status, starts_at, ends_at")
+    .select("id, status, starts_at, ends_at, placement, portal_token")
     .eq("request_id", requestId)
     .maybeSingle();
 
@@ -562,6 +656,11 @@ if (
     }
   }
 
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, existingCampaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
+  }
   console.log(
     "Sponsor campaign already exists:",
     existingCampaign.id
@@ -744,7 +843,7 @@ if (campaignError) {
       error: duplicateLookupError,
     } = await supabase
       .from("sponsor_campaigns")
-      .select("id")
+      .select("id, status, starts_at, ends_at, placement, portal_token")
       .eq("request_id", requestId)
       .maybeSingle();
 
@@ -769,6 +868,11 @@ if (duplicateCampaign) {
     );
   }
 
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, duplicateCampaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
+  }
   console.log(
     "Sponsor campaign already activated:",
     duplicateCampaign.id
@@ -821,51 +925,12 @@ if (activationUpdateError) {
         campaign.ends_at,
     }
   );
-  /*
- * Send the private Sponsor Dashboard link
- * only after the campaign has been created successfully.
- *
- * Email failure must never invalidate the payment
- * or the active campaign.
- */
-try {
-  await sendSponsorActivationEmail({
-    email:
-      sponsorRequest.email,
-
-    contactName:
-      sponsorRequest.contact_name,
-
-    company,
-
-    planName:
-      sponsorRequest
-        .sponsor_plans
-        ?.name ||
-      `${company} Partner`,
-
-    placement,
-
-    startsAt:
-      campaign.starts_at,
-
-    endsAt:
-      campaign.ends_at,
-
-    portalToken:
-      campaign.portal_token,
-  });
-
-  console.log(
-    "✅ Sponsor activation email processed:",
-    sponsorRequest.email
-  );
-} catch (emailError) {
-  console.error(
-    "❌ Sponsor activation email error:",
-    emailError
-  );
-}
+  // Email failures must not invalidate a paid, active campaign.
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, campaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
+  }
 }
 
 export default async function handler(
