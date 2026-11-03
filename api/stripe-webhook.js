@@ -1420,9 +1420,10 @@ export default async function handler(
     );
 
     return res
-      .status(500)
-      .json({
-        received: true,
-      });
+  .status(500)
+  .json({
+    received: false,
+    error: "Webhook processing failed",
+  });
   }
 }
