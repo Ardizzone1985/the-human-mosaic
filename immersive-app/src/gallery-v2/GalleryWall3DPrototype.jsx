@@ -278,7 +278,7 @@ function goHome() {
   }, 450);
 }
 
-function InfoWallLogo({ room = "Identity" }) {
+function InfoWallLogo({ room = "Identity", onSponsorClick }) {
   const logoTexture = useTexture(logoImage);
 
   return (
@@ -392,6 +392,7 @@ function InfoWallLogo({ room = "Identity" }) {
     placement={`${String(room).toLowerCase()}-top-left`}
     label="PARTNER SPACE"
     layout="vertical"
+    onSponsorClick={onSponsorClick}
   />
 </group>
 
@@ -404,6 +405,7 @@ function InfoWallLogo({ room = "Identity" }) {
     placement={`${String(room).toLowerCase()}-top-right`}
     label="PARTNER SPACE"
     layout="vertical"
+    onSponsorClick={onSponsorClick}
   />
 </group>
 
@@ -416,6 +418,7 @@ function InfoWallLogo({ room = "Identity" }) {
     placement={`${String(room).toLowerCase()}-bottom-left`}
     label="PARTNER SPACE"
     layout="vertical"
+    onSponsorClick={onSponsorClick}
   />
 </group>
 
@@ -516,6 +519,7 @@ export default function GalleryWall3DPrototype({
   const [currentPointId] = useState("center");
   const [targetPointId, setTargetPointId] = useState("center");
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [reservationCreated, setReservationCreated] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const frontLightTarget = useRef(new THREE.Object3D()).current;
@@ -532,7 +536,10 @@ const rightLightTarget = useRef(new THREE.Object3D()).current;
     >
       <Canvas camera={{ position: [0, 2.05, 5], fov: 50 }}>
         <StreetViewLookControls />
-        <InfoWallLogo room={room} />
+        <InfoWallLogo
+  room={room}
+  onSponsorClick={setSelectedSponsor}
+/>
         
         <StreetViewControls
         currentPointId={currentPointId}
