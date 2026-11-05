@@ -44,6 +44,7 @@ export default async function handler(req, res) {
       id,
       company,
       email,
+      logo_url,
       status,
       payment_status,
       payment_expires_at,
