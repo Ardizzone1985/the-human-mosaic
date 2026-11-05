@@ -72,6 +72,17 @@ export default async function handler(req, res) {
       error: 'Sponsor request not found'
     });
   }
+      
+        if (
+    typeof sponsorRequest.logo_url !== 'string' ||
+    !sponsorRequest.logo_url.trim()
+  ) {
+    return res.status(409).json({
+      error:
+        'Sponsor logo is required before payment. ' +
+        'Please contact The Human Mosaic for assistance.'
+    });
+  }
 
   if (sponsorRequest.status !== 'approved') {
     return res.status(409).json({
