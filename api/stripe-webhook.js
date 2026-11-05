@@ -113,6 +113,16 @@ function slugifyCompany(value) {
     .replace(/^-+|-+$/g, "");
 }
 
+// Escape untrusted sponsor-provided text before interpolating into email HTML.
+function escapeEmailHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function sendSponsorActivationEmail({
   email,
   contactName,
@@ -124,20 +134,14 @@ async function sendSponsorActivationEmail({
   portalToken,
 }) {
   if (!email || !portalToken) {
-    console.error(
-      "❌ Missing sponsor email or portal token"
-    );
-    return;
+    throw new Error("Missing sponsor email or portal token");
   }
 
   const resendApiKey =
     process.env.RESEND_API_KEY;
 
   if (!resendApiKey) {
-    console.error(
-      "❌ Missing RESEND_API_KEY — sponsor activation email not sent"
-    );
-    return;
+    throw new Error("Missing RESEND_API_KEY — sponsor activation email not sent");
   }
 
   const resend =
@@ -156,6 +160,12 @@ async function sendSponsorActivationEmail({
       timeZone: "UTC",
     }).format(new Date(value));
 
+  const safeContactName = escapeEmailHtml(contactName || company || "Partner");
+  const safeCompany = escapeEmailHtml(company || "—");
+  const safePlanName = escapeEmailHtml(planName || "The Human Mosaic Partner");
+  const safePlacement = escapeEmailHtml(placement || "—");
+
+  const { data: emailData, error: emailError } =
   await resend.emails.send({
     from:
       "The Human Mosaic <info@mail.thehumanmosaic.art>",
@@ -178,7 +188,7 @@ async function sendSponsorActivationEmail({
           </h2>
 
           <p>
-            Hello ${contactName || company || "Partner"},
+            Hello ${safeContactName},
           </p>
 
           <p style="color:#555;">
@@ -191,17 +201,17 @@ async function sendSponsorActivationEmail({
 
           <p>
             <strong>Organization:</strong>
-            ${company || "—"}
+            ${safeCompany}
           </p>
 
           <p>
             <strong>Partnership:</strong>
-            ${planName || "The Human Mosaic Partner"}
+            ${safePlanName}
           </p>
 
           <p>
             <strong>Placement:</strong>
-            ${placement || "—"}
+            ${safePlacement}
           </p>
 
           <p>
@@ -276,26 +286,185 @@ Support: info@thehumanmosaic.art
 
 — The Human Mosaic
     `.trim(),
-  });
+    });
+
+  if (emailError || !emailData?.id) {
+    throw new Error(
+      `Sponsor activation email failed: ${
+        emailError?.message || "No email ID returned by Resend"
+      }`
+    );
+  }
+  return emailData.id;
+}
+
+// Durable, one-per-request activation email record. The unique database
+// constraint (sponsor_request_id, email_type) makes concurrent inserts safe.
+// Only a pending record can be claimed. Failed/sending records require
+// deliberate reconciliation; never blindly resend after an ambiguous outcome.
+async function processSponsorActivationEmail(supabase, sponsorRequest, campaign) {
+  if (!campaign || campaign.status !== "active") return;
+  if (!campaign.starts_at || !campaign.ends_at ||
+      new Date(campaign.starts_at).getTime() > Date.now() ||
+      new Date(campaign.ends_at).getTime() <= Date.now()) return;
+
+  const { error: enqueueError } = await supabase
+    .from("sponsor_email_outbox")
+    .upsert({
+      sponsor_request_id: sponsorRequest.id,
+      email_type: "activation",
+      recipient_email: sponsorRequest.email,
+      status: "pending",
+    }, { onConflict: "sponsor_request_id,email_type", ignoreDuplicates: true });
+
+  if (enqueueError) {
+    console.error("Sponsor activation email enqueue failed:", enqueueError);
+    return;
+  }
+
+  const { data: outboxRow, error: lookupError } = await supabase
+    .from("sponsor_email_outbox")
+    .select("id, status")
+    .eq("sponsor_request_id", sponsorRequest.id)
+    .eq("email_type", "activation")
+    .single();
+  if (lookupError || !outboxRow) {
+    console.error("Sponsor activation email outbox lookup failed:", lookupError);
+    return;
+  }
+  if (outboxRow.status !== "pending") return;
+
+  const { data: claimed, error: claimError } = await supabase.rpc(
+    "claim_sponsor_activation_email", { p_outbox_id: outboxRow.id }
+  );
+  if (claimError) {
+    console.error("Sponsor activation email claim failed:", claimError);
+    return;
+  }
+  if (!Array.isArray(claimed) || claimed.length !== 1) return;
+
+  // Resend/network errors may be ambiguous: the provider might have
+  // accepted the email even when this process did not receive its response.
+  // Leave the row in `sending` for MANUAL reconciliation in that case.
+  let emailId;
+  try {
+    emailId = await sendSponsorActivationEmail({
+      email: sponsorRequest.email,
+      contactName: sponsorRequest.contact_name,
+      company: sponsorRequest.company || "Museum Partner",
+      planName: sponsorRequest.sponsor_plans?.name ||
+        `${sponsorRequest.company || "Museum Partner"} Partner`,
+      placement: campaign.placement,
+      startsAt: campaign.starts_at,
+      endsAt: campaign.ends_at,
+      portalToken: campaign.portal_token,
+    });
+  } catch (error) {
+    console.error(
+      "Sponsor activation email outcome uncertain; manual Resend reconciliation required:",
+      { outboxId: outboxRow.id, message: String(error?.message || error) }
+    );
+    return;
+  }
+
+  const { data: completed, error: completeError } = await supabase.rpc(
+    "complete_sponsor_activation_email", {
+      p_outbox_id: outboxRow.id,
+      p_success: true,
+      p_resend_email_id: emailId,
+      p_error: null,
+    }
+  );
+  if (completeError || !Array.isArray(completed) || completed.length !== 1) {
+    console.error(
+      "Sponsor activation email accepted by Resend but completion unconfirmed; manual reconciliation required:",
+      { outboxId: outboxRow.id, resendEmailId: emailId, error: completeError }
+    );
+  }
 }
 
 async function activateSponsorCampaign(
   supabase,
+  stripe,
   payload
 ) {
+
   const {
     requestId,
     placement:
       metadataPlacement = null,
     durationDays:
       metadataDurationDays = null,
+    stripeSessionId = null,
   } = payload;
+  
+if (!stripeSessionId) {
+  throw new Error(
+    "Missing Stripe session ID for sponsor activation"
+  );
+}
+
+const verifiedSession =
+  await stripe.checkout.sessions.retrieve(
+    stripeSessionId
+  );
+  
+const stripePaymentIntentId =
+  typeof verifiedSession.payment_intent === "string"
+    ? verifiedSession.payment_intent
+    : verifiedSession.payment_intent?.id || null;
+  
+const verifiedPaymentIntent = stripePaymentIntentId
+  ? await stripe.paymentIntents.retrieve(
+      stripePaymentIntentId
+    )
+  : null;
+  
+if (
+  verifiedPaymentIntent &&
+  verifiedPaymentIntent.status !== "succeeded"
+) {
+  throw new Error(
+    `Sponsor PaymentIntent not succeeded for ${requestId}`
+  );
+}
+
+if (
+  verifiedSession.payment_status !== "paid"
+) {
+  throw new Error(
+    `Sponsor payment not confirmed for session ${stripeSessionId}`
+  );
+}
+
+if (
+  verifiedSession.metadata?.source !== "sponsor" ||
+  (
+    verifiedSession.metadata?.requestId !== requestId &&
+    verifiedSession.client_reference_id !== requestId
+  )
+) {
+  throw new Error(
+    `Sponsor session identity mismatch for request ${requestId}`
+  );
+}
+  
+if (
+  verifiedSession.amount_total == null ||
+  !verifiedSession.currency
+) {
+  throw new Error(
+    `Missing Stripe payment amount or currency for ${requestId}`
+  );
+}
 
   if (!requestId) {
     console.error(
       "❌ Missing sponsor requestId"
     );
-    return;
+    throw new Error(
+  "Missing sponsor requestId in Stripe webhook"
+);
   }
 
   const {
@@ -324,8 +493,57 @@ async function activateSponsorCampaign(
       "❌ Sponsor request not found:",
       requestError
     );
-    return;
+    throw new Error(
+  `Sponsor request lookup failed for ${requestId}`
+);
   }
+  
+const expectedAmount =
+  Number(sponsorRequest.quoted_price_cents);
+
+const expectedCurrency =
+  String(sponsorRequest.currency || "").toLowerCase();
+
+if (
+  !Number.isInteger(expectedAmount) ||
+  expectedAmount <= 0 ||
+  verifiedSession.amount_total !== expectedAmount ||
+  verifiedSession.currency.toLowerCase() !== expectedCurrency
+) {
+  console.error(
+    "Sponsor payment amount or currency mismatch:",
+    {
+      requestId,
+      expectedAmount,
+      actualAmount: verifiedSession.amount_total,
+      expectedCurrency,
+      actualCurrency: verifiedSession.currency,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment amount mismatch for ${requestId}`
+  );
+}
+  
+if (
+  sponsorRequest.paid_stripe_session_id &&
+  sponsorRequest.paid_stripe_session_id !== stripeSessionId
+) {
+  console.error(
+    "Different Stripe session for sponsor request:",
+    {
+      requestId,
+      existingSessionId:
+        sponsorRequest.paid_stripe_session_id,
+      incomingSessionId: stripeSessionId,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment session conflict for ${requestId}`
+  );
+}
 
   if (
     sponsorRequest.status !==
@@ -335,31 +553,55 @@ async function activateSponsorCampaign(
       "❌ Sponsor request is not approved:",
       requestId
     );
-    return;
+    throw new Error(
+  `Paid sponsor request is not approved: ${requestId}`
+);
   }
 
   /*
-   * Prima segniamo il pagamento come confermato.
-   */
-  const {
-    error: paymentUpdateError,
-  } = await supabase
-    .from("sponsor_requests")
-    .update({
-  payment_status: "paid",
-  payment_expires_at: null,
-  updated_at:
-    new Date().toISOString(),
-})
-    .eq("id", requestId);
+ * Record the confirmed Stripe payment.
+ *
+ * Payment confirmation and campaign activation
+ * are separate operations.
+ * A successful payment must remain traceable
+ * even if campaign activation fails.
+ */  
+const {
+  data: paymentResult,
+  error: paymentUpdateError,
+} = await supabase.rpc("record_sponsor_payment", {
+  p_request_id: requestId,
+  p_stripe_session_id: stripeSessionId,
+});
 
-  if (paymentUpdateError) {
-    console.error(
-      "❌ Sponsor payment status update error:",
-      paymentUpdateError
-    );
-    return;
-  }
+if (paymentUpdateError) {
+  console.error(
+    "Sponsor atomic payment recording failed:",
+    paymentUpdateError
+  );
+
+  throw new Error(
+    `Sponsor payment recording failed for ${requestId}`
+  );
+}
+
+if (
+  paymentResult !== "recorded" &&
+  paymentResult !== "already_paid"
+) {
+  console.error(
+    "Sponsor payment requires reconciliation:",
+    {
+      requestId,
+      stripeSessionId,
+      paymentResult,
+    }
+  );
+
+  throw new Error(
+    `Sponsor payment reconciliation required for ${requestId}: ${paymentResult}`
+  );
+}
 
   /*
    * Protezione idempotenza:
@@ -372,7 +614,7 @@ async function activateSponsorCampaign(
     error: existingCampaignError,
   } = await supabase
     .from("sponsor_campaigns")
-    .select("id, status, starts_at, ends_at")
+    .select("id, status, starts_at, ends_at, placement, portal_token")
     .eq("request_id", requestId)
     .maybeSingle();
 
@@ -381,16 +623,50 @@ async function activateSponsorCampaign(
       "❌ Sponsor campaign lookup error:",
       existingCampaignError
     );
-    return;
+    
+throw new Error(
+  `Sponsor campaign lookup failed for ${requestId}`
+);
+
+  }
+  
+if (existingCampaign) {  
+
+if (
+  existingCampaign.status === "active" &&
+  existingCampaign.starts_at &&
+  existingCampaign.ends_at &&
+  new Date(existingCampaign.starts_at).getTime() <= Date.now() &&
+  new Date(existingCampaign.ends_at).getTime() > Date.now() &&
+  sponsorRequest.activation_status !== "active"
+) {
+
+    const { error: syncError } = await supabase
+      .from("sponsor_requests")
+      .update({
+        activation_status: "active",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", requestId);
+
+    if (syncError) {
+      throw new Error(
+        `Sponsor activation sync failed for ${requestId}`
+      );
+    }
   }
 
-  if (existingCampaign) {
-    console.log(
-      "ℹ️ Sponsor campaign already exists:",
-      existingCampaign.id
-    );
-    return;
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, existingCampaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
   }
+  console.log(
+    "Sponsor campaign already exists:",
+    existingCampaign.id
+  );
+  return;
+}
 
   const durationDays =
     Number(
@@ -407,23 +683,82 @@ async function activateSponsorCampaign(
     durationDays > 0
       ? durationDays
       : 30;
+  
+const placement = sponsorRequest.approved_placement || null;
 
-  const placement =
-    metadataPlacement ||
-    sponsorRequest.approved_placement ||
-    sponsorRequest.requested_placement ||
-    sponsorRequest
-      .sponsor_plans
-      ?.placement ||
-    null;
+if (metadataPlacement && metadataPlacement !== placement) {
+  console.error(
+    "Sponsor placement mismatch between Stripe and database:",
+    { requestId, metadataPlacement, placement }
+  );
+  
+throw new Error(
+  `Sponsor placement mismatch for request ${requestId}`
+);
+
+}
 
   if (!placement) {
     console.error(
       "❌ Missing sponsor placement:",
       requestId
     );
-    return;
+    throw new Error(
+  `Missing approved sponsor placement for request ${requestId}`
+);
   }
+  
+if (!sponsorRequest.payment_expires_at) {
+  const { error: reviewError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "needs_review",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (reviewError) {
+    throw new Error(
+      `Sponsor review status update failed for ${requestId}`
+    );
+  }
+
+  console.warn(
+    "Sponsor activation requires review: missing reservation expiry",
+    { requestId }
+  );
+
+  return;
+}
+  
+const reservationExpiresAt =
+  new Date(sponsorRequest.payment_expires_at);
+
+if (
+  !Number.isFinite(reservationExpiresAt.getTime()) ||
+  reservationExpiresAt.getTime() <= Date.now()
+) {
+  const { error: reviewError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "needs_review",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (reviewError) {
+    throw new Error(
+      `Sponsor expiry review update failed for ${requestId}`
+    );
+  }
+
+  console.warn(
+    "Sponsor activation requires review: reservation expired or invalid",
+    { requestId }
+  );
+
+  return;
+}
 
   const startsAt =
     new Date();
@@ -500,14 +835,81 @@ async function activateSponsorCampaign(
     .insert([campaignRow])
     .select("*")
     .single();
+  
+if (campaignError) {
+  if (campaignError.code === "23505") {
+    const {
+      data: duplicateCampaign,
+      error: duplicateLookupError,
+    } = await supabase
+      .from("sponsor_campaigns")
+      .select("id, status, starts_at, ends_at, placement, portal_token")
+      .eq("request_id", requestId)
+      .maybeSingle();
 
-  if (campaignError) {
-    console.error(
-      "❌ SPONSOR CAMPAIGN INSERT ERROR:",
-      campaignError
+    if (duplicateLookupError) {
+      throw new Error(
+        `Sponsor duplicate lookup failed for ${requestId}`
+      );
+    }
+    
+if (duplicateCampaign) {
+  const { error: syncError } = await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "active",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (syncError) {
+    throw new Error(
+      `Sponsor duplicate activation sync failed for ${requestId}`
     );
-    return;
   }
+
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, duplicateCampaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
+  }
+  console.log(
+    "Sponsor campaign already activated:",
+    duplicateCampaign.id
+  );
+  return;
+}
+  }
+
+  console.error(
+    "❌ SPONSOR CAMPAIGN INSERT ERROR:",
+    campaignError
+  );
+
+  throw new Error(
+    `Sponsor campaign activation failed for request ${requestId}`
+  );
+}
+  
+const { error: activationUpdateError } =
+  await supabase
+    .from("sponsor_requests")
+    .update({
+      activation_status: "active",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+if (activationUpdateError) {
+  console.error(
+    "Sponsor activation status update failed:",
+    activationUpdateError
+  );
+
+  throw new Error(
+    `Sponsor activation status update failed for ${requestId}`
+  );
+}
 
   console.log(
     "✅ Sponsor campaign activated:",
@@ -523,51 +925,12 @@ async function activateSponsorCampaign(
         campaign.ends_at,
     }
   );
-  /*
- * Send the private Sponsor Dashboard link
- * only after the campaign has been created successfully.
- *
- * Email failure must never invalidate the payment
- * or the active campaign.
- */
-try {
-  await sendSponsorActivationEmail({
-    email:
-      sponsorRequest.email,
-
-    contactName:
-      sponsorRequest.contact_name,
-
-    company,
-
-    planName:
-      sponsorRequest
-        .sponsor_plans
-        ?.name ||
-      `${company} Partner`,
-
-    placement,
-
-    startsAt:
-      campaign.starts_at,
-
-    endsAt:
-      campaign.ends_at,
-
-    portalToken:
-      campaign.portal_token,
-  });
-
-  console.log(
-    "✅ Sponsor activation email processed:",
-    sponsorRequest.email
-  );
-} catch (emailError) {
-  console.error(
-    "❌ Sponsor activation email error:",
-    emailError
-  );
-}
+  // Email failures must not invalidate a paid, active campaign.
+  try {
+    await processSponsorActivationEmail(supabase, sponsorRequest, campaign);
+  } catch (emailError) {
+    console.error("Sponsor outbox processing error:", emailError);
+  }
 }
 
 export default async function handler(
@@ -604,9 +967,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -616,9 +979,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -631,9 +994,9 @@ export default async function handler(
       );
 
       return res
-        .status(200)
+        .status(500)
         .json({
-          received: true,
+          error: "Webhook configuration unavailable",
         });
     }
 
@@ -659,10 +1022,10 @@ export default async function handler(
       );
 
       return res
-        .status(200)
-        .json({
-          received: true,
-        });
+  .status(400)
+  .json({
+    error: "Invalid webhook signature",
+  });
     }
 
     const rawBody =
@@ -685,10 +1048,10 @@ export default async function handler(
       );
 
       return res
-        .status(200)
-        .json({
-          received: true,
-        });
+  .status(400)
+  .json({
+    error: "Invalid webhook signature",
+  });
     }
 
     /*
@@ -737,6 +1100,7 @@ export default async function handler(
         ) {
           await activateSponsorCampaign(
             supabase,
+            stripe,
             {
               requestId:
                 session.metadata
@@ -754,6 +1118,7 @@ export default async function handler(
                 session.metadata
                   ?.durationDays ||
                 null,
+              stripeSessionId: session.id,
             }
           );
         } else {
@@ -1055,9 +1420,10 @@ export default async function handler(
     );
 
     return res
-      .status(200)
-      .json({
-        received: true,
-      });
+  .status(500)
+  .json({
+    received: false,
+    error: "Webhook processing failed",
+  });
   }
 }
