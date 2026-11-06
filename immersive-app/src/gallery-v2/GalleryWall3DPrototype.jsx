@@ -7,6 +7,7 @@ import AppDialog from "../components/AppDialog.jsx";
 import { supabase } from "../supabaseClient.js";
 import logoImage from "../logo-cropped.png";
 import SponsorPanel from "../components/sponsors/SponsorPanel.jsx";
+import SponsorModal from "../components/sponsors/SponsorModal.jsx";
 
 function PremiumPlasterInfoWall() {
   const texture = useTexture(
@@ -1025,6 +1026,12 @@ return;
   onLoginRequest?.();
 }}
 />
+
+      <SponsorModal
+        sponsor={selectedSponsor}
+        onClose={() => setSelectedSponsor(null)}
+      />
+
     </div>
   );
 }
