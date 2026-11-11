@@ -230,14 +230,74 @@ window.dispatchEvent(new PopStateEvent("popstate"));
       <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.45} />
     </mesh>
 
+    {/* Premium museum plaque — IDENTITY */}
+{room === "Identity" ? (
+  <group position={[0, 3.45, 0.28]}>
+
+    {/* Golden outer frame */}
+    <mesh position={[0, 0, -0.03]}>
+      <boxGeometry args={[3.35, 0.78, 0.12]} />
+      <meshStandardMaterial
+        color="#8b6428"
+        emissive="#d7b56d"
+        emissiveIntensity={0.22}
+        metalness={0.55}
+        roughness={0.3}
+      />
+    </mesh>
+
+    {/* Black plaque */}
+    <mesh position={[0, 0, 0.04]}>
+      <boxGeometry args={[3.15, 0.58, 0.10]} />
+      <meshStandardMaterial
+        color="#120b05"
+        roughness={0.48}
+        metalness={0.18}
+      />
+    </mesh>
+
+    {/* Left gold detail */}
+    <mesh position={[-1.36, 0, 0.11]}>
+      <boxGeometry args={[0.18, 0.025, 0.025]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#d7b56d"
+        emissiveIntensity={0.45}
+      />
+    </mesh>
+
+    {/* Right gold detail */}
+    <mesh position={[1.36, 0, 0.11]}>
+      <boxGeometry args={[0.18, 0.025, 0.025]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#d7b56d"
+        emissiveIntensity={0.45}
+      />
+    </mesh>
+
     <Text
-      position={[0, 3.45, 0.28]}
-      fontSize={0.28}
-      color={hovered ? "#ffffff" : color}
+      position={[0, 0, 0.12]}
+      fontSize={0.27}
+      color="#f2c879"
       anchorX="center"
+      anchorY="middle"
+      letterSpacing={0.12}
     >
       {label}
     </Text>
+
+  </group>
+) : (
+  <Text
+    position={[0, 3.45, 0.28]}
+    fontSize={0.28}
+    color={hovered ? "#ffffff" : color}
+    anchorX="center"
+  >
+    {label}
+  </Text>
+)}
 
     {/* Floor reflection glow */}
 <mesh position={[0, -2.58, 0.55]} rotation={[-Math.PI / 2, 0, 0]}>
