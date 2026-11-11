@@ -503,6 +503,25 @@ function HumanityImpactDoor({
 }) {
     const [hovered, setHovered] = useState(false);
 
+  const lastTapRef = useRef(0);
+const enteringRef = useRef(false);
+
+function handleHumanityDoubleClick(e) {
+  e.stopPropagation();
+
+  if (enteringRef.current) return;
+
+  const now = Date.now();
+
+  if (now - lastTapRef.current <= 400) {
+    lastTapRef.current = 0;
+    enteringRef.current = true;
+    enterHumanityImpact();
+  } else {
+    lastTapRef.current = now;
+  }
+}
+
   function enterHumanityImpact() {
     window.dispatchEvent(new Event("startFadeOut"));
 
@@ -526,10 +545,7 @@ function HumanityImpactDoor({
     setHovered(false);
     document.body.style.cursor = "default";
   }}
-  onClick={(e) => {
-    e.stopPropagation();
-    enterHumanityImpact();
-  }}
+  onClick={handleHumanityDoubleClick}
 >
       {/* External frame */}
       <mesh position={[0, 0, -0.28]}>
@@ -704,7 +720,7 @@ function HumanityImpactDoor({
         anchorX="center"
         letterSpacing={0.08}
       >
-        CLICK TO ENTER
+        DOUBLE CLICK / DOUBLE TAP
       </Text>
     </group>
   );
