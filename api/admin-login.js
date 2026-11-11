@@ -103,6 +103,32 @@ function getSupabaseAdmin() {
 
 export default async function handler(req, res) {
   try {
+
+    // ---------------------------------------------------------
+    // GET ?action=manual-gallery-v2-check
+    // Verify Admin authentication for Gallery V2.
+    // Read-only: no database changes.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "manual-gallery-v2-check"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Gallery V2 Admin authentication verified",
+        mode: "read-only",
+      });
+    }
+    
         // ---------------------------------------------------------
     // GET ?action=impact-donations
     // Load Humanity Impact donations for the authenticated admin.
