@@ -120,6 +120,25 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef();
 
+  const lastTapRef = useRef(0);
+const enteringRef = useRef(false);
+
+function handleDoorClick(e) {
+  e.stopPropagation();
+
+  if (enteringRef.current) return;
+
+  const now = Date.now();
+
+  if (now - lastTapRef.current < 400) {
+    lastTapRef.current = 0;
+    enteringRef.current = true;
+    enterRoom();
+  } else {
+    lastTapRef.current = now;
+  }
+}
+
   useFrame((state) => {
   if (!groupRef.current) return;
 
@@ -162,10 +181,7 @@ window.dispatchEvent(new PopStateEvent("popstate"));
       setHovered(false);
       document.body.style.cursor = "default";
     }}
-    onClick={(e) => {
-      e.stopPropagation();
-      enterRoom();
-    }}
+    onClick={handleDoorClick}
   >
     <mesh position={[0, 0, -0.28]}>
   <boxGeometry args={[3.8, 6.1, 0.52]} />
@@ -282,7 +298,7 @@ window.dispatchEvent(new PopStateEvent("popstate"));
       color={hovered ? "#ffffff" : "#d8c7ad"}
       anchorX="center"
     >
-      CLICK TO ENTER
+      DOUBLE CLICK / DOUBLE TAP
     </Text>
   </group>
 );
