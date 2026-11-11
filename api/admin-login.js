@@ -128,6 +128,78 @@ export default async function handler(req, res) {
         mode: "read-only",
       });
     }
+
+        // ---------------------------------------------------------
+    // GET ?action=manual-gallery-v2-slots
+    // Read available Gallery V2 slots for authenticated Admin.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "manual-gallery-v2-slots"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      const { room, wall, section } = req.query || {};
+
+      const validRooms = ["Identity", "Love", "Creativity"];
+      const validWalls = ["Front Wall", "Left Wall", "Right Wall"];
+
+      if (
+        !validRooms.includes(room) ||
+        !validWalls.includes(wall) ||
+        !/^(F([1-9]|10)|L[1-6]|R[1-6])$/.test(section || "") ||
+        (wall === "Front Wall" && !section.startsWith("F")) ||
+        (wall === "Left Wall" && !section.startsWith("L")) ||
+        (wall === "Right Wall" && !section.startsWith("R"))
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid Gallery V2 position",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .from("slots")
+        .select(
+          "slot_code, room, wall, section, row_number, col_number, section_number, view_number"
+        )
+        .eq("room", room)
+        .eq("wall", wall)
+        .eq("section", section)
+        .eq("status", "available")
+        .eq("payment_confirmed", false)
+        .is("submission_id", null)
+        .order("row_number", { ascending: true })
+        .order("col_number", { ascending: true })
+        .limit(600);
+
+      if (error) {
+        console.error("Admin Gallery V2 slots error:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to load Gallery V2 slots",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        room,
+        wall,
+        section,
+        total: data?.length || 0,
+        slots: data || [],
+      });
+    }
     
         // ---------------------------------------------------------
     // GET ?action=impact-donations
