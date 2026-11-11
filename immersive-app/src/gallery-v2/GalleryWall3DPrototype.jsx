@@ -279,6 +279,20 @@ function goHome() {
   }, 450);
 }
 
+const HOME_DOUBLE_CLICK_DELAY = 350;
+let lastHomeClickTime = 0;
+
+function handleHomeDoorClick() {
+  const now = Date.now();
+
+  if (now - lastHomeClickTime <= HOME_DOUBLE_CLICK_DELAY) {
+    lastHomeClickTime = 0;
+    goHome();
+  } else {
+    lastHomeClickTime = now;
+  }
+}
+
 function InfoWallLogo({ room = "Identity", onSponsorClick }) {
   const logoTexture = useTexture(logoImage);
 
@@ -427,9 +441,9 @@ function InfoWallLogo({ room = "Identity", onSponsorClick }) {
   position={[-10.5, 0.1, 19.84]}
   rotation={[0, Math.PI, 0]}
       onClick={(e) => {
-    e.stopPropagation();
-    goHome();
-  }}
+  e.stopPropagation();
+  handleHomeDoorClick();
+}}
   onPointerOver={() => {
     document.body.style.cursor = "pointer";
   }}
