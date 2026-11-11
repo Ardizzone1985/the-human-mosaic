@@ -13,6 +13,24 @@ const [totalDonated, setTotalDonated] = useState(null);
   const [impactDonations, setImpactDonations] = useState([]);
   const [doorHovered, setDoorHovered] = useState(false);
   const globeRef = useRef();
+  const lastHomeTapRef = useRef(0);
+const homeTriggeredRef = useRef(false);
+
+function handleHomeDoubleClick(e) {
+  e.stopPropagation();
+
+  if (homeTriggeredRef.current) return;
+
+  const now = Date.now();
+
+  if (now - lastHomeTapRef.current <= 400) {
+    lastHomeTapRef.current = 0;
+    homeTriggeredRef.current = true;
+    goHome();
+  } else {
+    lastHomeTapRef.current = now;
+  }
+}
   const milestoneTarget = 1000;
   const globePoints = useMemo(() => {
   const points = [];
@@ -1107,10 +1125,7 @@ const milestoneProgress =
           setDoorHovered(false);
           document.body.style.cursor = "default";
         }}
-        onClick={(e) => {
-          e.stopPropagation();
-          goHome();
-        }}
+        onClick={handleHomeDoubleClick}
       >
         {/* Outer frame */}
         <mesh position={[0, 0, -0.08]}>
@@ -1172,7 +1187,7 @@ const milestoneProgress =
           anchorX="center"
           anchorY="middle"
         >
-          Return to Lobby
+          DOUBLE CLICK / DOUBLE TAP
         </Text>
       </group>
     </>
