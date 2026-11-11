@@ -231,7 +231,7 @@ window.dispatchEvent(new PopStateEvent("popstate"));
     </mesh>
 
     {/* Premium museum plaque — IDENTITY */}
-{room === "Identity" ? (
+{["Identity", "Love", "Creativity"].includes(room) ? (
   <group position={[0, 3.45, 0.28]}>
 
     {/* Golden outer frame */}
