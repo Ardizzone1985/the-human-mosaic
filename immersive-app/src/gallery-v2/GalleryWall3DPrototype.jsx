@@ -802,6 +802,7 @@ penumbra={1}
   rotation={[0, Math.PI, 0]}
   transform
   distanceFactor={8}
+  zIndexRange={[1, 0]}        
 >
   <div
     style={{
