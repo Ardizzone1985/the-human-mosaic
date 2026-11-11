@@ -714,6 +714,30 @@ export default function Lobby({
   onOpenCommunityWall,
   onSponsorClick,
 }) {
+  
+  const lastExitTapRef = useRef(0);
+const exitTriggeredRef = useRef(false);
+
+function handleExitDoubleClick(e) {
+  e.stopPropagation();
+
+  if (exitTriggeredRef.current) return;
+
+  const now = Date.now();
+
+  if (now - lastExitTapRef.current <= 400) {
+    lastExitTapRef.current = 0;
+    exitTriggeredRef.current = true;
+
+    window.dispatchEvent(new Event("startFadeOut"));
+
+    setTimeout(() => {
+      window.location.href = "https://thehumanmosaic.art";
+    }, 700);
+  } else {
+    lastExitTapRef.current = now;
+  }
+}
     const [roomCounts, setRoomCounts] = useState({
     Identity: 0,
     Love: 0,
@@ -844,13 +868,7 @@ color="#6b5a3f"
   onPointerOut={() => {
     document.body.style.cursor = "default";
   }}
-  onClick={() => {
-    window.dispatchEvent(new Event("startFadeOut"));
-
-    setTimeout(() => {
-      window.location.href = "https://thehumanmosaic.art";
-    }, 700);
-  }}
+  onClick={handleExitDoubleClick}
 >
   {/* External museum frame */}
   <mesh position={[0, 0, -0.28]}>
