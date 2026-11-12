@@ -304,11 +304,35 @@ export default async function handler(req, res) {
         });
       }
 
+            // STEP 7.19 — Generate a unique Storage upload path.
+      const supabase = getSupabaseAdmin();
+
+      const imageId = crypto.randomUUID();
+
+      const storagePath =
+        `manual-admin/${imageId}.${allowedTypes[fileType]}`;
+
+      const { data, error } = await supabase.storage
+        .from("images")
+        .createSignedUploadUrl(storagePath);
+
+      if (error || !data?.token) {
+        console.error("Gallery V2 signed upload error:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to prepare image upload",
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        message: "Gallery V2 image metadata validated",
-        mode: "validation-only",
-        extension: allowedTypes[fileType],
+        message: "Gallery V2 signed upload URL generated",
+        upload: {
+          path: storagePath,
+          token: data.token,
+          signedUrl: data.signedUrl,
+        },
       });
     }
     
