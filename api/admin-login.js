@@ -130,6 +130,63 @@ export default async function handler(req, res) {
     }
 
         // ---------------------------------------------------------
+    // GET ?action=manual-gallery-v2-ready
+    // Check that the manual submission RPC exists.
+    // No submissions or slot changes.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "manual-gallery-v2-ready"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .rpc("admin_create_manual_submission", {
+          p_slot_code: null,
+          p_submission_id: null,
+          p_full_name: null,
+          p_email: null,
+          p_country: null,
+          p_note: null,
+          p_image_file_name: null,
+          p_image_url: null,
+        });
+
+      if (error) {
+        const message = error.message || "";
+
+        if (message.includes("Missing required submission data")) {
+          return res.status(200).json({
+            success: true,
+            message: "Gallery V2 manual submission RPC verified",
+            mode: "validation-only",
+          });
+        }
+
+        console.error("Manual Gallery V2 RPC check:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Manual submission RPC verification failed",
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: "Unexpected RPC response",
+      });
+    }
+
+        // ---------------------------------------------------------
     // GET ?action=manual-gallery-v2-slots
     // Read available Gallery V2 slots for authenticated Admin.
     // ---------------------------------------------------------
