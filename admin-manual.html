@@ -144,6 +144,11 @@
 <select id="section" required>
   <option value="">Select a section</option>
 </select>
+
+      <label>Spot</label>
+<select id="spot" required>
+  <option value="">Select a section first</option>
+</select>
       
       <div style="margin-top:16px; padding:14px; background:#f7f7f7; border:1px solid #ddd; border-radius:14px;">
   <strong>Slot assignment:</strong><br>
@@ -210,6 +215,81 @@ wallSelect.addEventListener("change", updateSectionOptions);
 roomSelect.addEventListener("change", updateSectionOptions);
 
 updateSectionOptions();
+
+    // Gallery V2 — Available Spot Selector
+const spotSelect = document.getElementById("spot");
+
+let availableGallerySlots = [];
+
+async function updateSpotOptions() {
+  spotSelect.innerHTML = "";
+  availableGallerySlots = [];
+
+  const room = roomSelect.value;
+  const wall = wallSelect.value;
+  const section = sectionSelect.value;
+
+  if (!section) {
+    spotSelect.add(new Option("Select a section first", ""));
+    return;
+  }
+
+  spotSelect.add(new Option("Loading available spots...", ""));
+  spotSelect.disabled = true;
+
+  try {
+    const params = new URLSearchParams({
+      action: "manual-gallery-v2-slots",
+      room,
+      wall,
+      section
+    });
+
+    const response = await fetch(
+      `/api/admin-login?${params.toString()}`,
+      {
+        credentials: "same-origin",
+        cache: "no-store"
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to load available spots");
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.slots)) {
+      throw new Error("Invalid slot response");
+    }
+
+    availableGallerySlots = result.slots;
+
+    spotSelect.innerHTML = "";
+    spotSelect.add(new Option("Select a spot", ""));
+
+    result.slots.forEach((slot) => {
+      const label = `R${slot.row_number}-C${slot.col_number}`;
+      spotSelect.add(new Option(label, slot.slot_code));
+    });
+
+    if (result.slots.length === 0) {
+      spotSelect.innerHTML = "";
+      spotSelect.add(new Option("No available spots", ""));
+    }
+  } catch (error) {
+    console.error("Gallery V2 spot loading error:", error);
+
+    spotSelect.innerHTML = "";
+    spotSelect.add(new Option("Unable to load spots", ""));
+  } finally {
+    spotSelect.disabled = false;
+  }
+}
+
+sectionSelect.addEventListener("change", updateSpotOptions);
+wallSelect.addEventListener("change", updateSpotOptions);
+roomSelect.addEventListener("change", updateSpotOptions);
 
     function showStatus(message, type = "") {
       statusBox.style.display = "block";
