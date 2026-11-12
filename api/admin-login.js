@@ -397,11 +397,39 @@ export default async function handler(req, res) {
         });
       }
 
+            // STEP 7.28 — Validate stored image metadata.
+      const allowedTypes = {
+        jpg: "image/jpeg",
+        png: "image/png",
+        webp: "image/webp",
+      };
+
+      const extension = path.split(".").pop().toLowerCase();
+      const expectedMime = allowedTypes[extension];
+
+      const actualMime = file.metadata?.mimetype;
+      const actualSize = Number(file.metadata?.size);
+
+      const validMetadata =
+        actualMime === expectedMime &&
+        Number.isSafeInteger(actualSize) &&
+        actualSize > 0 &&
+        actualSize <= 5 * 1024 * 1024;
+
+      if (!validMetadata) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid stored image metadata",
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        message: "Manual image found in Storage",
+        message: "Manual image metadata verified",
         mode: "read-only",
         path,
+        mimeType: actualMime,
+        sizeBytes: actualSize,
       });
     }
     
