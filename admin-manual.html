@@ -173,6 +173,44 @@
     const form = document.getElementById("manualForm");
     const statusBox = document.getElementById("status");
 
+    // Gallery V2 — Dynamic Section Selector
+const roomSelect = document.getElementById("room");
+const wallSelect = document.getElementById("wall");
+const sectionSelect = document.getElementById("section");
+
+function updateSectionOptions() {
+  const wall = wallSelect.value;
+
+  sectionSelect.innerHTML =
+    '<option value="">Select a section</option>';
+
+  let prefix = "";
+  let total = 0;
+
+  if (wall === "Front Wall") {
+    prefix = "F";
+    total = 10;
+  } else if (wall === "Left Wall") {
+    prefix = "L";
+    total = 6;
+  } else if (wall === "Right Wall") {
+    prefix = "R";
+    total = 6;
+  }
+
+  for (let i = 1; i <= total; i++) {
+    const option = document.createElement("option");
+    option.value = `${prefix}${i}`;
+    option.textContent = `${prefix}${i}`;
+    sectionSelect.appendChild(option);
+  }
+}
+
+wallSelect.addEventListener("change", updateSectionOptions);
+roomSelect.addEventListener("change", updateSectionOptions);
+
+updateSectionOptions();
+
     function showStatus(message, type = "") {
       statusBox.style.display = "block";
       statusBox.className = "status";
