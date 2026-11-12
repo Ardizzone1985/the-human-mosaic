@@ -257,6 +257,31 @@ export default async function handler(req, res) {
         slots: data || [],
       });
     }
+
+        // ---------------------------------------------------------
+    // POST ?action=manual-gallery-v2-upload-url
+    // STEP 7.17 — Admin authentication test only.
+    // No uploads or database changes.
+    // ---------------------------------------------------------
+    if (
+      req.method === "POST" &&
+      req.query?.action === "manual-gallery-v2-upload-url"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Gallery V2 Admin upload authorization verified",
+        mode: "test-only",
+      });
+    }
     
         // ---------------------------------------------------------
     // GET ?action=impact-donations
