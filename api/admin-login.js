@@ -423,13 +423,68 @@ export default async function handler(req, res) {
         });
       }
 
+            // STEP 7.29 — Verify actual file signature on the server.
+      const { data: imageBlob, error: downloadError } =
+        await supabase.storage
+          .from("images")
+          .download(path);
+
+      if (downloadError || !imageBlob) {
+        console.error("Manual image download error:", downloadError);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to inspect image content",
+        });
+      }
+
+      const imageBytes = Buffer.from(
+        await imageBlob.arrayBuffer()
+      );
+
+      const signatures = {
+        jpg:
+          imageBytes.length >= 3 &&
+          imageBytes.subarray(0, 3).equals(
+            Buffer.from([0xff, 0xd8, 0xff])
+          ),
+
+        png:
+          imageBytes.length >= 8 &&
+          imageBytes.subarray(0, 8).equals(
+            Buffer.from([
+              0x89, 0x50, 0x4e, 0x47,
+              0x0d, 0x0a, 0x1a, 0x0a
+            ])
+          ),
+
+        webp:
+          imageBytes.length >= 12 &&
+          imageBytes.toString("ascii", 0, 4) === "RIFF" &&
+          imageBytes.toString("ascii", 8, 12) === "WEBP",
+      };
+
+      const validSignature = signatures[extension] === true;
+
+      if (
+        !validSignature ||
+        imageBytes.length !== actualSize ||
+        imageBytes.length > 5 * 1024 * 1024
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid image content",
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        message: "Manual image metadata verified",
+        message: "Manual image signature verified",
         mode: "read-only",
         path,
         mimeType: actualMime,
-        sizeBytes: actualSize,
+        sizeBytes: imageBytes.length,
+        validSignature: true,
       });
     }
     
