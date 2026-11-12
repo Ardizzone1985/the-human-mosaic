@@ -335,6 +335,75 @@ export default async function handler(req, res) {
         },
       });
     }
+
+        // ---------------------------------------------------------
+    // GET ?action=manual-gallery-v2-verify-image
+    // STEP 7.23 — Read-only Storage verification.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "manual-gallery-v2-verify-image"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      const { path } = req.query || {};
+
+      const validPath =
+        typeof path === "string" &&
+        /^manual-admin\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(jpg|png|webp)$/i.test(path);
+
+      if (!validPath) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid manual image path",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const fileName = path.split("/")[1];
+
+      const { data, error } = await supabase.storage
+        .from("images")
+        .list("manual-admin", {
+          search: fileName,
+          limit: 100,
+        });
+
+      if (error) {
+        console.error("Manual image verification error:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to verify image",
+        });
+      }
+
+      const file = (data || []).find(
+        (item) => item.name === fileName
+      );
+
+      if (!file) {
+        return res.status(404).json({
+          success: false,
+          error: "Image not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Manual image found in Storage",
+        mode: "read-only",
+        path,
+      });
+    }
     
         // ---------------------------------------------------------
     // GET ?action=impact-donations
