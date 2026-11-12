@@ -276,10 +276,39 @@ export default async function handler(req, res) {
         });
       }
 
+            // STEP 7.18 — Validate image metadata.
+      // No signed URL or upload is created yet.
+
+      const { fileName, fileType, fileSize } = req.body || {};
+
+      const allowedTypes = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+      };
+
+      const maxFileSize = 5 * 1024 * 1024;
+
+      if (
+        typeof fileName !== "string" ||
+        !fileName.trim() ||
+        fileName.length > 255 ||
+        !Object.prototype.hasOwnProperty.call(allowedTypes, fileType) ||
+        !Number.isSafeInteger(fileSize) ||
+        fileSize <= 0 ||
+        fileSize > maxFileSize
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid image metadata",
+        });
+      }
+
       return res.status(200).json({
         success: true,
-        message: "Gallery V2 Admin upload authorization verified",
-        mode: "test-only",
+        message: "Gallery V2 image metadata validated",
+        mode: "validation-only",
+        extension: allowedTypes[fileType],
       });
     }
     
