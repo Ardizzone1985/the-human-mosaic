@@ -898,6 +898,52 @@ export default async function handler(req, res) {
       });
     }
 
+        // ---------------------------------------------------------
+    // GET ?action=submissions
+    // Secure Admin submissions read.
+    // Read-only: no database modifications.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "submissions"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data, error } = await supabase
+        .from("submissions")
+        .select(
+          "submission_id, slot_code, full_name, email, country, room, wall, section, spot, approval_status, created_at, image_file_name, image_url, note"
+        )
+        .eq("approval_status", "pending")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      if (error) {
+        console.error("Admin submissions query error:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to load submissions",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mode: "read-only",
+        total: data?.length || 0,
+        submissions: data || [],
+      });
+    }
+
     // ---------------------------------------------------------
     // GET ?action=comments
     
