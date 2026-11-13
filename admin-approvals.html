@@ -2013,18 +2013,38 @@ async function toggleImpactDonationPublication(id) {
     async function loadSubmissions(statusFilter = "pending", roomFilter = "ALL", aiFilter = "ALL") {
   grid.innerHTML = "";
   statusBox.textContent = "Loading submissions...";
+  
+      let data = [];
+      let error = null;
 
-  let query = supabaseClient
-    .from("submissions")
-    .select("submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at, note, moderation_status, moderation_reason, note_flagged, image_moderation_status, image_moderation_reason, image_flagged")
-    .eq("approval_status", statusFilter)
-    .order("created_at", { ascending: false });
+      try {
+        const params = new URLSearchParams({
+          action: "submissions",
+          status: statusFilter,
+          room: roomFilter,
+        });
 
-  if (roomFilter !== "ALL") {
-    query = query.eq("room", roomFilter);
-  }
+        const response = await fetch(
+          `/api/admin-login?${params.toString()}`,
+          {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+          }
+        );
 
-  const { data, error } = await query;
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.error || "Failed to load submissions"
+          );
+        }
+
+        data = result.submissions || [];
+      } catch (fetchError) {
+        error = fetchError;
+      }
 
   if (error) {
     console.error("Admin load error:", error);
