@@ -1020,6 +1020,31 @@ export default async function handler(req, res) {
         comments: data || [],
       });
     }
+    
+    // ---------------------------------------------------------
+    // GET ?action=approval-check
+    // STEP 7.75 — Read-only approval verification.
+    // No database updates and no emails.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "approval-check"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mode: "read-only",
+        message: "Secure approval endpoint ready",
+      });
+    }
 
     // ---------------------------------------------------------
     // POST ?action=moderate-comment
