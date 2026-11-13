@@ -984,6 +984,130 @@ export default async function handler(req, res) {
     // ---------------------------------------------------------
     
     // ---------------------------------------------------------
+    // GET ?action=approval-inspect&submissionId=...
+    // Secure read-only inspection of one submission and slot.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "approval-inspect"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      const submissionId = req.query?.submissionId;
+
+      if (
+        typeof submissionId !== "string" ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submissionId)
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid submission ID",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data: submission, error: submissionError } =
+        await supabase
+          .from("submissions")
+          .select(
+            "submission_id, slot_code, room, wall, section, spot, approval_status, section_number, view_number"
+          )
+          .eq("submission_id", submissionId)
+          .maybeSingle();
+
+      if (submissionError) {
+        console.error("Approval inspection error:", submissionError);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to inspect submission",
+        });
+      }
+
+      if (!submission) {
+        return res.status(404).json({
+          success: false,
+          error: "Submission not found",
+        });
+      }
+
+      if (!submission.slot_code) {
+        return res.status(409).json({
+          success: false,
+          error: "Submission has no linked slot",
+        });
+      }
+
+      const { data: slot, error: slotError } =
+        await supabase
+          .from("slots")
+          .select(
+            "slot_code, room, wall, section, row_number, col_number, status, submission_id, payment_confirmed, section_number, view_number"
+          )
+          .eq("slot_code", submission.slot_code)
+          .maybeSingle();
+
+      if (slotError) {
+        console.error("Approval slot inspection error:", slotError);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to inspect slot",
+        });
+      }
+
+      if (!slot) {
+        return res.status(409).json({
+          success: false,
+          error: "Linked slot not found",
+        });
+      }
+
+      const slotLinkedCorrectly =
+        slot.submission_id === submission.submission_id;
+
+      const positionMatches =
+        slot.room === submission.room &&
+        slot.wall === submission.wall &&
+        slot.section === submission.section &&
+        submission.spot ===
+          `R${slot.row_number}-C${slot.col_number}`;
+
+      const galleryV2Position =
+        /^(F([1-9]|10)|L[1-6]|R[1-6])$/.test(
+          slot.section || ""
+        ) &&
+        /^(F([1-9]|10)|L[1-6]|R[1-6])$/.test(
+          submission.section || ""
+        );
+
+      return res.status(200).json({
+        success: true,
+        mode: "read-only",
+        submission,
+        slot,
+        checks: {
+          slotLinkedCorrectly,
+          positionMatches,
+          galleryV2Position,
+          readyForApproval:
+            submission.approval_status === "pending" &&
+            slot.status === "submitted" &&
+            slotLinkedCorrectly &&
+            positionMatches,
+        },
+      });
+    }
+    
+    // ---------------------------------------------------------
     // GET ?action=approval-check
     // Secure read-only approval test.
     // ---------------------------------------------------------
