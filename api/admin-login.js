@@ -1125,11 +1125,101 @@ if (
     });
   }
 
-  return res.status(200).json({
-    success: true,
-    mode: "read-only",
-    message: "Secure approval preparation verified",
+  
+const { submissionId } = req.body || {};
+
+if (
+  typeof submissionId !== "string" ||
+  !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submissionId)
+) {
+  return res.status(400).json({
+    success: false,
+    error: "Invalid submission ID",
   });
+}
+
+const supabase = getSupabaseAdmin();
+
+const { data: submission, error: submissionError } =
+  await supabase
+    .from("submissions")
+    .select("submission_id, slot_code, room, wall, section, spot, approval_status")
+    .eq("submission_id", submissionId)
+    .maybeSingle();
+
+if (submissionError) {
+  console.error("Approval preparation submission error:", submissionError);
+  return res.status(500).json({
+    success: false,
+    error: "Failed to inspect submission",
+  });
+}
+
+if (!submission) {
+  return res.status(404).json({
+    success: false,
+    error: "Submission not found",
+  });
+}
+
+if (!submission.slot_code) {
+  return res.status(409).json({
+    success: false,
+    error: "Submission has no linked slot",
+  });
+}
+
+const { data: slot, error: slotError } =
+  await supabase
+    .from("slots")
+    .select("slot_code, room, wall, section, row_number, col_number, status, submission_id, payment_confirmed, section_number, view_number")
+    .eq("slot_code", submission.slot_code)
+    .maybeSingle();
+
+if (slotError) {
+  console.error("Approval preparation slot error:", slotError);
+  return res.status(500).json({
+    success: false,
+    error: "Failed to inspect slot",
+  });
+}
+
+if (!slot) {
+  return res.status(409).json({
+    success: false,
+    error: "Linked slot not found",
+  });
+}
+
+const checks = {
+  pending: submission.approval_status === "pending",
+  slotSubmitted: slot.status === "submitted",
+  slotLinkedCorrectly:
+    slot.submission_id === submission.submission_id,
+  roomMatches: slot.room === submission.room,
+  wallMatches: slot.wall === submission.wall,
+  sectionMatches: slot.section === submission.section,
+  paymentFlagConfirmed: slot.payment_confirmed === true,
+};
+
+const readyForFurtherReview =
+  checks.pending &&
+  checks.slotSubmitted &&
+  checks.slotLinkedCorrectly &&
+  checks.roomMatches &&
+  checks.wallMatches &&
+  checks.sectionMatches;
+
+return res.status(200).json({
+  success: true,
+  mode: "read-only",
+  submissionId: submission.submission_id,
+  slotCode: slot.slot_code,
+  checks,
+  readyForFurtherReview,
+  message: "Submission inspected; approval not executed",
+});
+
 }
     
     // ---------------------------------------------------------
