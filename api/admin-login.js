@@ -903,6 +903,12 @@ export default async function handler(req, res) {
     // Secure Admin submissions read.
     // Read-only: no database modifications.
     // ---------------------------------------------------------
+    
+    // ---------------------------------------------------------
+    // GET ?action=submissions
+    // Secure Admin submissions read with filters.
+    // Read-only: no database modifications.
+    // ---------------------------------------------------------
     if (
       req.method === "GET" &&
       req.query?.action === "submissions"
@@ -916,16 +922,39 @@ export default async function handler(req, res) {
         });
       }
 
+      const status = req.query?.status || "pending";
+      const room = req.query?.room || "ALL";
+
+      if (!["pending", "approved", "rejected"].includes(status)) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid submission status",
+        });
+      }
+
+      if (!["ALL", "Identity", "Love", "Creativity"].includes(room)) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid room",
+        });
+      }
+
       const supabase = getSupabaseAdmin();
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("submissions")
         .select(
-          "submission_id, slot_code, full_name, email, country, room, wall, section, spot, approval_status, created_at, image_file_name, image_url, note"
+          "submission_id, full_name, room, slot_code, image_file_name, approval_status, created_at, note, moderation_status, moderation_reason, note_flagged, image_moderation_status, image_moderation_reason, image_flagged"
         )
-        .eq("approval_status", "pending")
+        .eq("approval_status", status)
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(1000);
+
+      if (room !== "ALL") {
+        query = query.eq("room", room);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error("Admin submissions query error:", error);
@@ -939,6 +968,8 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         mode: "read-only",
+        status,
+        room,
         total: data?.length || 0,
         submissions: data || [],
       });
