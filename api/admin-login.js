@@ -982,6 +982,31 @@ export default async function handler(req, res) {
     // GET ?action=comments
     // Load comments for the authenticated admin.
     // ---------------------------------------------------------
+    
+    // ---------------------------------------------------------
+    // GET ?action=approval-check
+    // Secure read-only approval test.
+    // ---------------------------------------------------------
+    if (
+      req.method === "GET" &&
+      req.query?.action === "approval-check"
+    ) {
+      const token = getAdminTokenFromRequest(req);
+
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mode: "read-only",
+        message: "Secure approval endpoint ready",
+      });
+    }
+
     if (req.method === "GET") {
       if (req.query?.action !== "comments") {
         return res.status(400).json({
