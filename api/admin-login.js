@@ -1106,6 +1106,31 @@ export default async function handler(req, res) {
         },
       });
     }
+
+    // ---------------------------------------------------------
+// POST ?action=approval-prepare
+// Verify Admin session before future approval operations.
+// No database changes and no emails.
+// ---------------------------------------------------------
+if (
+  req.method === "POST" &&
+  req.query?.action === "approval-prepare"
+) {
+  const token = getAdminTokenFromRequest(req);
+
+  if (!verifyAdminToken(token)) {
+    return res.status(401).json({
+      success: false,
+      error: "Unauthorized",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    mode: "read-only",
+    message: "Secure approval preparation verified",
+  });
+}
     
     // ---------------------------------------------------------
     // GET ?action=approval-check
