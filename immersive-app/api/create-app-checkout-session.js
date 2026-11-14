@@ -243,6 +243,7 @@ if (!refreshedSlots || refreshedSlots.length !== 1) {
       section,
       spot,
       slotCode,
+      reservationId: slot.reservation_id,
       fullName: `${userProfile?.first_name || ""} ${userProfile?.last_name || ""}`
   .trim()
   .slice(0, 500),
