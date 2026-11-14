@@ -1131,7 +1131,7 @@ export default async function handler(
       /*
        * FOTO / MEMORY
        */
-      else {
+      else if (source === "immersive_app") {
         const slotCode =
           session.metadata
             ?.slotCode ||
