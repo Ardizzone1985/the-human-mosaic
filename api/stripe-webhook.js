@@ -25,85 +25,82 @@ async function getRawBody(req) {
   });
 }
 
-async function markSlotAsPaid(
-  supabase,
-  payload
-) {
+async function markSlotAsPaid(supabase, payload) {
   const {
-  slotCode,
-  reservationId = null,
-  sessionId = null,
-  paymentStatus = "paid",
-  customerEmail = null,
-  room = null,
-  fullName = null,
-  country = null,
-} = payload;
+    slotCode,
+    reservationId = null,
+    sessionId = null,
+    paymentStatus = "paid",
+    customerEmail = null,
+    room = null,
+    fullName = null,
+    country = null,
+  } = payload;
+
+  if (!sessionId || !sessionId.startsWith("cs_")) {
+    throw new Error(
+      "Invalid Checkout session ID for photo payment"
+    );
+  }
 
   if (!slotCode) {
-    console.error(
-      "❌ Missing slotCode while marking payment"
+    throw new Error(
+      "Missing slotCode for photo payment"
     );
-    return;
   }
 
-  const now =
-    new Date().toISOString();
+  const { data: result, error } = await supabase.rpc(
+    "record_app_slot_payment",
+    {
+      p_stripe_session_id: sessionId,
+      p_slot_code: slotCode,
+      p_reservation_id: reservationId,
+      p_payment_status: paymentStatus,
+      p_customer_email: customerEmail,
+      p_room: room,
+      p_full_name: fullName,
+      p_country: country,
+    }
+  );
 
-  const { error: slotError } =
-    await supabase
-      .from("slots")
-      .update({
-        payment_confirmed: true,
-        payment_confirmed_at: now,
-      })
-      .eq("slot_code", slotCode);
-
-  if (slotError) {
+  if (error) {
     console.error(
-      "❌ SLOT PAYMENT UPDATE ERROR:",
-      slotError
+      "❌ Atomic photo payment recording failed:",
+      {
+        sessionId,
+        slotCode,
+        error,
+      }
+    );
+
+    throw new Error(
+      `Atomic photo payment recording failed for ${sessionId}`
+    );
+  }
+
+  if (
+    result !== "confirmed" &&
+    result !== "already_processed" &&
+    result !== "needs_review"
+  ) {
+    throw new Error(
+      `Unexpected photo payment result: ${result}`
+    );
+  }
+
+  if (result === "needs_review") {
+    console.warn(
+      "⚠️ Paid photo checkout requires manual reconciliation:",
+      { sessionId, slotCode, reservationId }
     );
   } else {
     console.log(
-      "✅ Slot marked as paid:",
-      slotCode
+      "✅ Atomic photo payment processed:",
+      { sessionId, slotCode, result }
     );
   }
 
-  const row = {
-  stripe_session_id:
-    sessionId,
-  reservation_id:
-    reservationId,
-  payment_status:
-    paymentStatus,
-  customer_email:
-    customerEmail,
-  room,
-  slot_code:
-    slotCode,
-  full_name:
-    fullName,
-  country,
-};
-
-  const {
-    error: paymentInsertError,
-  } = await supabase
-    .from("stripe_payments")
-    .insert([row]);
-
-  if (paymentInsertError) {
-    console.error(
-      "❌ STRIPE_PAYMENTS INSERT ERROR:",
-      paymentInsertError
-    );
-  } else {
-    console.log(
-      "✅ stripe_payments row inserted"
-    );
-  }
+  return result;
 }
 
 function slugifyCompany(value) {
