@@ -1360,50 +1360,55 @@ export default async function handler(
           }
         );
 
-        if (slotCode) {
-          const {
-            error,
-          } =
-            await supabase
-              .from("slots")
-              .update({
-                status:
-                  "available",
-                reserved_at:
-                  null,
-                reserved_by:
-                  null,
-                submission_id:
-                  null,
-                payment_confirmed:
-                  false,
-                payment_confirmed_at:
-                  null,
-              })
-              .eq(
-                "slot_code",
-                slotCode
-              )
-              .eq(
-                "status",
-                "reserved"
-              )
-              .eq(
-                "payment_confirmed",
-                false
-              );
+        
+const reservationId =
+  session.metadata?.reservationId || null;
 
-          if (error) {
-            console.error(
-              "❌ DB UPDATE ERROR (expired):",
-              error
-            );
-          } else {
-            console.log(
-              "✅ Expired reserved slot released:",
-              slotCode
-            );
-          }
+if (slotCode && reservationId) {
+  const { data: releasedSlots, error } =
+    await supabase
+      .from("slots")
+      .update({
+        status: "available",
+        reserved_at: null,
+        reserved_by: null,
+        reservation_id: null,
+        submission_id: null,
+        payment_confirmed: false,
+        payment_confirmed_at: null,
+      })
+      .eq("slot_code", slotCode)
+      .eq("reservation_id", reservationId)
+      .eq("status", "reserved")
+      .eq("payment_confirmed", false)
+      .select("id");
+
+  if (error) {
+    console.error(
+      "❌ DB UPDATE ERROR (expired):",
+      error
+    );
+    throw error;
+  }
+
+  if (releasedSlots?.length === 1) {
+    console.log(
+      "✅ Expired reservation released:",
+      slotCode,
+      reservationId
+    );
+  } else {
+    console.log(
+      "ℹ️ Expired session did not match an active reservation:",
+      session.id
+    );
+  }
+} else {
+  console.log(
+    "ℹ️ Expired session skipped: missing slotCode or reservationId",
+    session.id
+  );
+}
         }
       }
     }
