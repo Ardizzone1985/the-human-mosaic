@@ -168,6 +168,34 @@ export default async function handler(req, res) {
       });
     }
 
+        /*
+     * Verifica che il pagamento Stripe appartenga
+     * alla prenotazione attuale dello slot.
+     */
+    const checkoutReservationId =
+      metadata.reservationId || null;
+
+    if (
+      !checkoutReservationId ||
+      !slot.reservation_id ||
+      checkoutReservationId !== slot.reservation_id
+    ) {
+      console.warn(
+        "Payment reservation mismatch:",
+        {
+          sessionId,
+          slotCode: expectedSlotCode,
+        }
+      );
+
+      return res.status(409).json({
+        success: false,
+        paymentConfirmed: false,
+        error:
+          "This payment does not match the current reservation",
+      });
+    }
+
     /*
      * Stripe può aver confermato il pagamento qualche
      * istante prima che il webhook abbia aggiornato
