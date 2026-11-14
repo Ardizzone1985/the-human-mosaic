@@ -1167,6 +1167,9 @@ export default async function handler(
     {
       slotCode,
 
+      reservationId:
+  session.metadata?.reservationId || null,
+
       sessionId:
         session.id,
 
