@@ -72,19 +72,21 @@ async function markSlotAsPaid(
   }
 
   const row = {
-    stripe_session_id:
-      sessionId,
-    payment_status:
-      paymentStatus,
-    customer_email:
-      customerEmail,
-    room,
-    slot_code:
-      slotCode,
-    full_name:
-      fullName,
-    country,
-  };
+  stripe_session_id:
+    sessionId,
+  reservation_id:
+    reservationId,
+  payment_status:
+    paymentStatus,
+  customer_email:
+    customerEmail,
+  room,
+  slot_code:
+    slotCode,
+  full_name:
+    fullName,
+  country,
+};
 
   const {
     error: paymentInsertError,
