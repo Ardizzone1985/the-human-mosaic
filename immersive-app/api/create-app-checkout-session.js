@@ -173,20 +173,36 @@ payment_confirmed
     const now = new Date();
     const nowIso = now.toISOString();
 
-    const { error: refreshReservationError } =
-      await supabaseAdmin
-        .from("slots")
-        .update({
-          reserved_at: nowIso,
-        })
-        .eq("slot_code", slotCode)
-        .eq("reserved_by", user.id)
-        .eq("status", "reserved")
-        .eq("payment_confirmed", false);
+    if (!slot.reservation_id) {
+  return res.status(409).json({
+    error: "Reservation identifier missing",
+  });
+}
 
-    if (refreshReservationError) {
-      throw refreshReservationError;
-    }
+const {
+  data: refreshedSlots,
+  error: refreshReservationError,
+} = await supabaseAdmin
+  .from("slots")
+  .update({
+    reserved_at: nowIso,
+  })
+  .eq("slot_code", slotCode)
+  .eq("reserved_by", user.id)
+  .eq("reservation_id", slot.reservation_id)
+  .eq("status", "reserved")
+  .eq("payment_confirmed", false)
+  .select("id");
+
+if (refreshReservationError) {
+  throw refreshReservationError;
+}
+
+if (!refreshedSlots || refreshedSlots.length !== 1) {
+  return res.status(409).json({
+    error: "Reservation changed or expired",
+  });
+}
 
     const { count, error: countError } =
       await supabaseAdmin
