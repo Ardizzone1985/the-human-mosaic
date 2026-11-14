@@ -1215,97 +1215,31 @@ export default async function handler(
     /*
      * PAYMENT INTENT
      */
-    if (
-      event.type ===
-      "payment_intent.succeeded"
-    ) {
-      const paymentIntent =
-        event.data.object;
+    
+if (event.type === "payment_intent.succeeded") {
+  const paymentIntent = event.data.object;
 
-      const source =
-        paymentIntent
-          .metadata
-          ?.source ||
-        "";
+  const source = paymentIntent.metadata?.source || "";
 
-      /*
-       * Lo sponsor viene già gestito
-       * da checkout.session.completed.
-       * Qui NON lo trattiamo come slot foto.
-       */
-      if (
-        source === "sponsor"
-      ) {
-        console.log(
-          "🤝 Sponsor PaymentIntent succeeded — handled by Checkout Session",
-          {
-            paymentIntentId:
-              paymentIntent.id,
-            requestId:
-              paymentIntent
-                .metadata
-                ?.requestId ||
-              null,
-          }
-        );
-      } else {
-        const slotCode =
-          paymentIntent
-            .metadata
-            ?.slotCode ||
-          null;
-
-        console.log(
-          "✅ payment_intent.succeeded",
-          {
-            paymentIntentId:
-              paymentIntent.id,
-            slotCode,
-            amount:
-              paymentIntent.amount,
-            currency:
-              paymentIntent.currency,
-          }
-        );
-
-        await markSlotAsPaid(
-          supabase,
-          {
-            slotCode,
-
-            sessionId:
-              paymentIntent.id,
-
-            paymentStatus:
-              "paid",
-
-            customerEmail:
-              paymentIntent
-                .metadata
-                ?.email ||
-              null,
-
-            room:
-              paymentIntent
-                .metadata
-                ?.room ||
-              null,
-
-            fullName:
-              paymentIntent
-                .metadata
-                ?.fullName ||
-              null,
-
-            country:
-              paymentIntent
-                .metadata
-                ?.country ||
-              null,
-          }
-        );
+  if (source === "sponsor") {
+    console.log(
+      "🤝 Sponsor PaymentIntent succeeded — handled by Checkout Session",
+      {
+        paymentIntentId: paymentIntent.id,
+        requestId: paymentIntent.metadata?.requestId || null,
       }
-    }
+    );
+  } else {
+    console.log(
+      "ℹ️ PaymentIntent succeeded — photo payment handled by Checkout Session",
+      {
+        paymentIntentId: paymentIntent.id,
+        source,
+        slotCode: paymentIntent.metadata?.slotCode || null,
+      }
+    );
+  }
+}
 
     /*
      * CHECKOUT SCADUTO
