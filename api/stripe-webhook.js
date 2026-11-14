@@ -1058,9 +1058,9 @@ export default async function handler(
      * CHECKOUT COMPLETATO
      */
     if (
-      event.type ===
-      "checkout.session.completed"
-    ) {
+  event.type === "checkout.session.completed" ||
+  event.type === "checkout.session.async_payment_succeeded"
+) {
       const session =
         event.data.object;
 
