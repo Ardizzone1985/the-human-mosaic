@@ -137,6 +137,7 @@ export default async function handler(req, res) {
           slot_code,
           status,
           reserved_by,
+          reservation_id,
           payment_confirmed,
           payment_confirmed_at
           `
