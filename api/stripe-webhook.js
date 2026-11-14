@@ -30,14 +30,15 @@ async function markSlotAsPaid(
   payload
 ) {
   const {
-    slotCode,
-    sessionId = null,
-    paymentStatus = "paid",
-    customerEmail = null,
-    room = null,
-    fullName = null,
-    country = null,
-  } = payload;
+  slotCode,
+  reservationId = null,
+  sessionId = null,
+  paymentStatus = "paid",
+  customerEmail = null,
+  room = null,
+  fullName = null,
+  country = null,
+} = payload;
 
   if (!slotCode) {
     console.error(
