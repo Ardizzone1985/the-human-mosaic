@@ -116,14 +116,15 @@ if (profileError) {
         .select(
           `
           id,
-          room,
-          wall,
-          section,
-          slot_code,
-          status,
-          reserved_at,
-          reserved_by,
-          payment_confirmed
+room,
+wall,
+section,
+slot_code,
+status,
+reserved_at,
+reserved_by,
+reservation_id,
+payment_confirmed
           `
         )
         .eq("slot_code", slotCode)
