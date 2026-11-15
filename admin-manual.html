@@ -291,6 +291,53 @@ async function updateSpotOptions() {
 sectionSelect.addEventListener("change", updateSpotOptions);
 wallSelect.addEventListener("change", updateSpotOptions);
 roomSelect.addEventListener("change", updateSpotOptions);
+    
+    // Gallery V2 — Verify selected Spot (read-only)
+    spotSelect.addEventListener("change", async () => {
+      const slotCode = spotSelect.value;
+
+      if (!slotCode) return;
+
+      showStatus("Verifying selected Gallery V2 position...");
+
+      try {
+        const params = new URLSearchParams({
+          action: "manual-gallery-v2-prepare",
+          slotCode
+        });
+
+        const response = await fetch(
+          `/api/admin-login?${params.toString()}`,
+          {
+            credentials: "same-origin",
+            cache: "no-store"
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Slot verification failed");
+        }
+
+        if (result.readyForManualCreation !== true) {
+          showStatus(
+            "This Gallery V2 position is no longer available.",
+            "error"
+          );
+          return;
+        }
+
+        showStatus(
+          `Gallery V2 position verified: ${result.room} / ${result.wall} / ${result.section} / ${result.spot}`,
+          "success"
+        );
+
+      } catch (error) {
+        console.error("Gallery V2 position verification:", error);
+        showStatus("Unable to verify the selected position.", "error");
+      }
+    });
 
     function showStatus(message, type = "") {
       statusBox.style.display = "block";
