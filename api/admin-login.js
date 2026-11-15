@@ -103,6 +103,25 @@ function getSupabaseAdmin() {
 
 export default async function handler(req, res) {
   try {
+    
+    // Manual Entry permanently disabled.
+    const disabledManualActions = new Set([
+      "manual-gallery-v2-check",
+      "manual-gallery-v2-ready",
+      "manual-gallery-v2-slots",
+      "manual-gallery-v2-prepare",
+      "manual-gallery-v2-validate",
+      "manual-gallery-v2-upload-url",
+      "manual-gallery-v2-verify-image",
+    ]);
+
+    if (disabledManualActions.has(req.query?.action)) {
+      return res.status(410).json({
+        success: false,
+        error: "Manual Entry has been permanently discontinued",
+      });
+    }
+
 
     // ---------------------------------------------------------
     // GET ?action=manual-gallery-v2-check
