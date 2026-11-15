@@ -123,7 +123,7 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
-    // STEP 8.37C — Gallery activation, server-gated.
+    // STEP 8.37E — Gallery activation, server-gated and result-verified.
     // OFF by default. Requires explicit server flag AND confirmation.
     // ---------------------------------------------------------
     if (req.method === "POST" && req.query?.action === "gallery-capacity-activate") {
@@ -152,7 +152,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: "Invalid gallery activation parameters" });
       }
 
-      // Do not enable this environment variable during STEP 8.37C.
+      // Do not enable this environment variable during STEP 8.37E.
       // Default behavior preserves the previously tested HTTP 423 handshake.
       if (process.env.GALLERY_VIEW_ACTIVATION_ENABLED !== "true") {
         return res.status(423).json({
@@ -163,6 +163,19 @@ export default async function handler(req, res) {
           viewNumber,
           expectedSlots: 120,
           error: "Gallery activation is not enabled. No slots were created or modified."
+        });
+      }
+
+      // A second, target-specific server gate is required for LIVE activation.
+      // Neither variable should be configured during this protected test.
+      if (process.env.GALLERY_VIEW_ACTIVATION_TARGET !== "Identity S1 V2") {
+        return res.status(423).json({
+          success: false,
+          mode: "activation-disabled",
+          room,
+          sectionNumber,
+          viewNumber,
+          error: "Gallery activation target is not enabled. No slots were created or modified."
         });
       }
 
@@ -197,12 +210,36 @@ export default async function handler(req, res) {
         });
       }
 
-      // Preserve the function's result for inspection; never claim success
-      // solely because the RPC transport returned without an error.
+      // Validate every documented RPC result field before reporting success.
+      // An unexpected result requires a read-only database inspection before retry.
       const result = data;
-      const declaredSuccess = result && typeof result === "object" && result.success === true;
-      return res.status(declaredSuccess ? 200 : 409).json({
-        success: declaredSuccess,
+      const verifiedResult =
+        result !== null &&
+        typeof result === "object" &&
+        !Array.isArray(result) &&
+        result.success === true &&
+        result.room === room &&
+        result.sectionNumber === sectionNumber &&
+        result.viewNumber === viewNumber &&
+        result.insertedSlots === 120 &&
+        result.frontWall === 40 &&
+        result.leftWall === 40 &&
+        result.rightWall === 40;
+
+      if (!verifiedResult) {
+        console.error("Unexpected gallery activation RPC result:", result);
+        return res.status(409).json({
+          success: false,
+          mode: "activation-result-unverified",
+          room,
+          sectionNumber,
+          viewNumber,
+          error: "RPC result could not be verified. Inspect slot counts before any retry."
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
         mode: "activation-result",
         room,
         sectionNumber,
