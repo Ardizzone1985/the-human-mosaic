@@ -103,6 +103,8 @@
     .wall-table th, .wall-table td { text-align:left; padding:12px 8px; border-bottom:1px solid #e6e6e6; }
     .wall-scroll { overflow-x:auto; }
     .hidden { display:none; }
+    .activate-btn { margin-top:14px; background:#8b651e; }
+    .activate-btn:disabled { opacity:.45; cursor:not-allowed; }
   </style>
 </head>
 
@@ -203,7 +205,8 @@
             <tbody id="preview-walls"></tbody>
           </table>
         </div>
-        <p class="note">Preview only: no slots are created or modified. Activation is not enabled.</p>
+        <p class="note">Activation is currently disabled on the server. A test request cannot create slots.</p>
+        <button class="read-btn activate-btn" id="capacity-activate" type="button" disabled>Activate View (protected test)</button>
       </section>
     </div>
   </div>
@@ -213,6 +216,9 @@
       const form = document.getElementById('capacity-form');
       const loadButton = document.getElementById('capacity-load');
       const previewButton = document.getElementById('capacity-preview');
+      const activateButton = document.getElementById('capacity-activate');
+      let previewToken = null;
+      const invalidatePreview = () => { previewToken = null; activateButton.disabled = true; previewResults.classList.add('hidden'); };
       const previewResults = document.getElementById('preview-results');
       const previewReadiness = document.getElementById('preview-readiness');
       const previewStats = document.getElementById('preview-stats');
@@ -229,10 +235,10 @@
         section: Number(document.getElementById('capacity-section').value),
         view: Number(document.getElementById('capacity-view').value)
       });
-      const valid = ({room, section, view}) => ['Identity','Love','Creativity'].includes(room) && Number.isInteger(section) && section >= 1 && section <= 1667 && Number.isInteger(view) && view >= 1 && view <= 5;
+      const valid = ({room, section, view}) => ['Identity','Love','Creativity'].includes(room) && Number.isInteger(section) && section >= 1 && section <= 1667 && Number.isInteger(view) && view >= 1 && view <= (section === 1667 ? 4 : 5);
       for (const id of ['capacity-room','capacity-section','capacity-view']) {
-        document.getElementById(id).addEventListener('input', () => { previewResults.classList.add('hidden'); });
-        document.getElementById(id).addEventListener('change', () => { previewResults.classList.add('hidden'); });
+        document.getElementById(id).addEventListener('input', invalidatePreview);
+        document.getElementById(id).addEventListener('change', invalidatePreview);
       }
       const metric = (label, value) => {
         const item = document.createElement('div');
@@ -246,7 +252,7 @@
       };
       previewButton.addEventListener('click', async () => {
         const {room, section, view} = selected();
-        previewResults.classList.add('hidden');
+        invalidatePreview();
         if (!valid({room, section, view})) {
           status.textContent = 'Please select valid Room, Section and View values.';
           status.className = 'status error';
@@ -287,6 +293,10 @@
             previewWalls.appendChild(tr);
           }
           previewResults.classList.remove('hidden');
+          if (data.readyForActivation === true && proposed === 120 && coord === 0 && codes === 0) {
+            previewToken = {room, section, view};
+            activateButton.disabled = false;
+          }
           status.textContent = 'Read-only activation preview loaded successfully.';
         } catch (error) {
           status.className = 'status error';
@@ -297,10 +307,52 @@
         }
       });
 
+      activateButton.addEventListener('click', async () => {
+        const choice = selected();
+        if (!previewToken || !valid(choice) || Object.keys(choice).some(k => choice[k] !== previewToken[k])) {
+          invalidatePreview();
+          status.className = 'status error';
+          status.textContent = 'Preview expired. Run Preview Activation again.';
+          return;
+        }
+        const expected = `${choice.room} S${choice.section} V${choice.view}`;
+        const typed = window.prompt(`PROTECTED TEST ONLY — no slots will be created.\nTo confirm the selected view, type exactly:\n${expected}`);
+        if (typed !== expected) {
+          status.textContent = 'Confirmation cancelled or did not match.';
+          return;
+        }
+        invalidatePreview();
+        activateButton.disabled = true;
+        previewButton.disabled = true;
+        loadButton.disabled = true;
+        status.className = 'status';
+        status.textContent = 'Testing protected activation endpoint…';
+        try {
+          const response = await fetch('/api/admin-login?action=gallery-capacity-activate', {
+            method: 'POST', credentials: 'same-origin', cache: 'no-store',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(choice)
+          });
+          const data = await response.json();
+          if (response.status === 423 && data.mode === 'activation-disabled') {
+            status.textContent = `${expected}: protected test passed (HTTP 423). No slots activated.`;
+          } else {
+            status.className = 'status error';
+            status.textContent = `Unexpected response (HTTP ${response.status}). Stop and inspect the backend before proceeding.`;
+          }
+        } catch (error) {
+          status.className = 'status error';
+          status.textContent = 'Protected test failed: ' + (error.message || String(error));
+        } finally {
+          previewButton.disabled = false;
+          loadButton.disabled = false;
+        }
+      });
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const {room, section, view} = selected();
-        previewResults.classList.add('hidden');
+        invalidatePreview();
         if (!valid({room, section, view})) {
           status.textContent = 'Please select valid Room, Section and View values.';
           status.className = 'status error';
