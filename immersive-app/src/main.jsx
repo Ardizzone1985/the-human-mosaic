@@ -13,8 +13,7 @@ const isGalleryV23D = pathname === "/gallery-v2-3d";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {isGalleryV23D ? (
-  <GalleryWall3DPrototype />
-) : isGalleryV2 ? (
+  {isGalleryV2 ? (
   <GalleryV2Prototype />
 ) : (
   <AuthProvider>
