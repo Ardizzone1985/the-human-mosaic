@@ -123,9 +123,8 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
-    // STEP 8.36Z — POST ?action=gallery-capacity-activate
-    // Protected endpoint handshake ONLY. Activation deliberately disabled.
-    // No database access, RPC call, or writes in this version.
+    // STEP 8.37C — Gallery activation, server-gated.
+    // OFF by default. Requires explicit server flag AND confirmation.
     // ---------------------------------------------------------
     if (req.method === "POST" && req.query?.action === "gallery-capacity-activate") {
       const token = getAdminTokenFromRequest(req);
@@ -133,7 +132,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ success: false, error: "Unauthorized" });
       }
 
-      const { room, section, view } = req.body || {};
+      const { room, section, view, confirmation } = req.body || {};
       const sectionNumber = Number(section);
       const viewNumber = Number(view);
       const validSection =
@@ -153,15 +152,62 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: "Invalid gallery activation parameters" });
       }
 
-      // This response is intentional: no activation can happen in STEP 8.36Z.
-      return res.status(423).json({
-        success: false,
-        mode: "activation-disabled",
+      // Do not enable this environment variable during STEP 8.37C.
+      // Default behavior preserves the previously tested HTTP 423 handshake.
+      if (process.env.GALLERY_VIEW_ACTIVATION_ENABLED !== "true") {
+        return res.status(423).json({
+          success: false,
+          mode: "activation-disabled",
+          room,
+          sectionNumber,
+          viewNumber,
+          expectedSlots: 120,
+          error: "Gallery activation is not enabled. No slots were created or modified."
+        });
+      }
+
+      // This must be supplied in the request body, not just confirmed in the UI.
+      const expectedConfirmation = `${room} S${sectionNumber} V${viewNumber}`;
+      if (confirmation !== expectedConfirmation) {
+        return res.status(400).json({
+          success: false,
+          error: "Exact server-side activation confirmation is required"
+        });
+      }
+
+      // This stage is intentionally limited to the verified first target.
+      if (room !== "Identity" || sectionNumber !== 1 || viewNumber !== 2) {
+        return res.status(403).json({
+          success: false,
+          error: "Only Identity S1 V2 is authorized for the initial activation"
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+      const { data, error } = await supabase.rpc("admin_activate_gallery_view", {
+        p_room: room,
+        p_section_number: sectionNumber,
+        p_view_number: viewNumber
+      });
+      if (error) {
+        console.error("Gallery activation RPC failed:", error);
+        return res.status(409).json({
+          success: false,
+          error: "Gallery activation failed; check server logs before retrying"
+        });
+      }
+
+      // Preserve the function's result for inspection; never claim success
+      // solely because the RPC transport returned without an error.
+      const result = data;
+      const declaredSuccess = result && typeof result === "object" && result.success === true;
+      return res.status(declaredSuccess ? 200 : 409).json({
+        success: declaredSuccess,
+        mode: "activation-result",
         room,
         sectionNumber,
         viewNumber,
-        expectedSlots: 120,
-        error: "Gallery activation is not enabled. No slots were created or modified."
+        result
       });
     }
 
