@@ -257,7 +257,6 @@ export default async function handler(req, res) {
         slots: data || [],
       });
     }
-
     
     // ---------------------------------------------------------
     // GET ?action=manual-gallery-v2-prepare&slotCode=...
@@ -355,8 +354,129 @@ export default async function handler(req, res) {
         readyForManualCreation: validPosition && available,
       });
     }
+    
+    // ---------------------------------------------------------
+    // POST ?action=manual-gallery-v2-validate
+    // Validate manual participant data and selected Gallery V2 slot.
+    // Read-only: no uploads, inserts or database updates.
+    // ---------------------------------------------------------
+    if (
+      req.method === "POST" &&
+      req.query?.action === "manual-gallery-v2-validate"
+    ) {
+      const token = getAdminTokenFromRequest(req);
 
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized",
+        });
+      }
 
+      const {
+        fullName,
+        email,
+        country,
+        slotCode,
+      } = req.body || {};
+
+      const cleanFullName =
+        typeof fullName === "string" ? fullName.trim() : "";
+
+      const cleanEmail =
+        typeof email === "string" ? email.trim().toLowerCase() : "";
+
+      const cleanCountry =
+        typeof country === "string" ? country.trim() : "";
+
+      const cleanSlotCode =
+        typeof slotCode === "string" ? slotCode.trim() : "";
+
+      if (
+        cleanFullName.length < 2 ||
+        cleanFullName.length > 150 ||
+        cleanEmail.length > 254 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ||
+        cleanCountry.length < 2 ||
+        cleanCountry.length > 100 ||
+        !cleanSlotCode ||
+        cleanSlotCode.length > 150
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid participant data",
+        });
+      }
+
+      const supabase = getSupabaseAdmin();
+
+      const { data: slot, error } = await supabase
+        .from("slots")
+        .select(
+          "slot_code, room, wall, section, row_number, col_number, status, payment_confirmed, submission_id, reserved_by"
+        )
+        .eq("slot_code", cleanSlotCode)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Manual participant validation error:", error);
+
+        return res.status(500).json({
+          success: false,
+          error: "Failed to validate selected slot",
+        });
+      }
+
+      if (!slot) {
+        return res.status(404).json({
+          success: false,
+          error: "Slot not found",
+        });
+      }
+
+      const validPosition =
+        ["Identity", "Love", "Creativity"].includes(slot.room) &&
+        (
+          (slot.wall === "Front Wall" &&
+            /^F([1-9]|10)$/.test(slot.section || "")) ||
+          (slot.wall === "Left Wall" &&
+            /^L[1-6]$/.test(slot.section || "")) ||
+          (slot.wall === "Right Wall" &&
+            /^R[1-6]$/.test(slot.section || ""))
+        ) &&
+        Number.isInteger(slot.row_number) &&
+        slot.row_number >= 1 &&
+        slot.row_number <= 60 &&
+        Number.isInteger(slot.col_number) &&
+        slot.col_number >= 1 &&
+        slot.col_number <= 10;
+
+      const available =
+        slot.status === "available" &&
+        slot.payment_confirmed === false &&
+        slot.submission_id === null &&
+        slot.reserved_by === null;
+
+      if (!validPosition || !available) {
+        return res.status(409).json({
+          success: false,
+          error: "Selected Gallery V2 slot is not available",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mode: "validation-only",
+        validParticipantData: true,
+        readyForNextStep: true,
+        slotCode: slot.slot_code,
+        room: slot.room,
+        wall: slot.wall,
+        section: slot.section,
+        spot: `R${slot.row_number}-C${slot.col_number}`,
+      });
+    }
+    
         // ---------------------------------------------------------
     // POST ?action=manual-gallery-v2-upload-url
     // STEP 7.17 — Admin authentication test only.
