@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery Capacity – The Human Mosaic</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: Arial, sans-serif;
+      background: #f8f8f6;
+      color: #111;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin: 0;
+    }
+
+    .back-btn {
+      background: #111;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .metric {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 16px 0;
+    }
+
+    .note {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .info {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    if (
+      sessionStorage.getItem(
+        "thm_admin_authenticated"
+      ) !== "true"
+    ) {
+      window.location.replace("admin-login.html");
+    }
+  </script>
+
+  <div class="container">
+    <div class="topbar">
+      <h1>Gallery Capacity</h1>
+
+      <a class="back-btn" href="admin-approvals.html">
+        Back to Admin
+      </a>
+    </div>
+
+    <p class="subtitle">
+      The Human Mosaic – Gallery v2 Capacity Manager
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Identity</h2>
+        <div class="metric">1,000,200</div>
+        <div class="note">Planned capacity</div>
+      </div>
+
+      <div class="card">
+        <h2>Love</h2>
+        <div class="metric">1,000,200</div>
+        <div class="note">Planned capacity</div>
+      </div>
+
+      <div class="card">
+        <h2>Creativity</h2>
+        <div class="metric">1,000,200</div>
+        <div class="note">Planned capacity</div>
+      </div>
+    </div>
+
+    <div class="info">
+      <h2>Capacity Model</h2>
+
+      <p>Sections per Room: <strong>1,667</strong></p>
+      <p>Views per Section: <strong>5</strong></p>
+      <p>Slots per View: <strong>120</strong></p>
+
+      <p class="note">
+        Read-only prototype.
+        No database modifications are enabled.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
