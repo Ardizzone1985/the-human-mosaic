@@ -85,6 +85,21 @@
       padding: 24px;
       margin-top: 24px;
     }
+
+    .controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:16px; margin:20px 0; }
+    .control label { display:block; font-weight:700; margin-bottom:8px; }
+    .control select, .control input { width:100%; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; background:#fff; }
+    .read-btn { padding:12px 20px; background:#111; color:white; border:0; border-radius:10px; font-weight:700; cursor:pointer; }
+    .read-btn:disabled { opacity:.55; cursor:wait; }
+    .status { margin:16px 0; min-height:24px; }
+    .status.error { color:#9d2424; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin:18px 0; }
+    .stat { padding:16px; background:#f8f8f6; border-radius:12px; }
+    .stat strong { display:block; font-size:1.6rem; margin-top:8px; }
+    .wall-table { width:100%; border-collapse:collapse; margin-top:14px; }
+    .wall-table th, .wall-table td { text-align:left; padding:12px 8px; border-bottom:1px solid #e6e6e6; }
+    .wall-scroll { overflow-x:auto; }
+    .hidden { display:none; }
   </style>
 </head>
 
@@ -144,6 +159,117 @@
         No database modifications are enabled.
       </p>
     </div>
+
+    <div class="info" aria-labelledby="live-capacity-title">
+      <h2 id="live-capacity-title">Live View Status</h2>
+      <p class="note">Read-only data from Supabase via the protected Admin API.</p>
+      <form id="capacity-form">
+        <div class="controls">
+          <div class="control"><label for="capacity-room">Room</label>
+            <select id="capacity-room" required><option value="Identity">Identity</option><option value="Love">Love</option><option value="Creativity">Creativity</option></select>
+          </div>
+          <div class="control"><label for="capacity-section">Section (1–1667)</label>
+            <input id="capacity-section" type="number" min="1" max="1667" step="1" value="1" required>
+          </div>
+          <div class="control"><label for="capacity-view">View (1–5)</label>
+            <select id="capacity-view" required><option value="1">V1</option><option value="2">V2</option><option value="3">V3</option><option value="4">V4</option><option value="5">V5</option></select>
+          </div>
+        </div>
+        <button class="read-btn" id="capacity-load" type="submit">Check View Status</button>
+      </form>
+      <p class="status" id="capacity-status" role="status" aria-live="polite">Select a Room, Section and View, then check its status.</p>
+      <div id="capacity-results" class="hidden">
+        <h3 id="capacity-result-title"></h3>
+        <div class="stats" id="capacity-stats"></div>
+        <div class="wall-scroll">
+          <table class="wall-table">
+            <thead><tr><th>Wall</th><th>Existing</th><th>Available</th><th>Reserved</th><th>Submitted</th><th>Paid</th></tr></thead>
+            <tbody id="capacity-walls"></tbody>
+          </table>
+        </div>
+        <p class="note" id="capacity-warning"></p>
+      </div>
+    </div>
   </div>
+
+  <script>
+    (() => {
+      const form = document.getElementById('capacity-form');
+      const loadButton = document.getElementById('capacity-load');
+      const status = document.getElementById('capacity-status');
+      const results = document.getElementById('capacity-results');
+      const stats = document.getElementById('capacity-stats');
+      const walls = document.getElementById('capacity-walls');
+      const warning = document.getElementById('capacity-warning');
+      const resultTitle = document.getElementById('capacity-result-title');
+      const fmt = (value) => Number(value || 0).toLocaleString('en-US');
+      const metric = (label, value) => {
+        const item = document.createElement('div');
+        item.className = 'stat';
+        const title = document.createElement('span');
+        title.textContent = label;
+        const count = document.createElement('strong');
+        count.textContent = fmt(value);
+        item.append(title, count);
+        return item;
+      };
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const room = document.getElementById('capacity-room').value;
+        const section = Number(document.getElementById('capacity-section').value);
+        const view = Number(document.getElementById('capacity-view').value);
+        if (!['Identity', 'Love', 'Creativity'].includes(room) || !Number.isInteger(section) || section < 1 || section > 1667 || !Number.isInteger(view) || view < 1 || view > 5) {
+          status.textContent = 'Please select valid Room, Section and View values.';
+          status.className = 'status error';
+          results.classList.add('hidden');
+          return;
+        }
+        loadButton.disabled = true;
+        status.textContent = 'Loading live capacity…';
+        status.className = 'status';
+        results.classList.add('hidden');
+        try {
+          const params = new URLSearchParams({ action: 'gallery-capacity', room, section: String(section), view: String(view) });
+          const response = await fetch('/api/admin-login?' + params.toString(), { credentials: 'same-origin', cache: 'no-store' });
+          if (response.status === 401 || response.status === 403) {
+            throw new Error('Admin session expired or access denied. Please sign in again.');
+          }
+          const data = await response.json();
+          if (!response.ok || data.success !== true) throw new Error(data.error || 'Unable to load View status.');
+          if (data.room !== room || Number(data.sectionNumber) !== section || Number(data.viewNumber) !== view || !Array.isArray(data.walls)) {
+            throw new Error('Unexpected API response.');
+          }
+          const total = Number(data.total || 0);
+          const expected = Number(data.expected || 120);
+          const sum = (key) => data.walls.reduce((acc, w) => acc + Number(w[key] || 0), 0);
+          const state = total === 0 ? 'Not created' : total === expected ? 'Complete' : 'Partial';
+          resultTitle.textContent = room + ' · S' + section + ' · V' + view + ' — ' + state;
+          stats.replaceChildren(
+            metric('Existing', total), metric('Expected', expected),
+            metric('Available', sum('available')), metric('Reserved', sum('reserved')),
+            metric('Submitted', sum('submitted')), metric('Paid', sum('paid'))
+          );
+          walls.replaceChildren();
+          for (const w of data.walls) {
+            const tr = document.createElement('tr');
+            for (const value of [w.wall, fmt(w.total), fmt(w.available), fmt(w.reserved), fmt(w.submitted), fmt(w.paid)]) {
+              const td = document.createElement('td');
+              td.textContent = value == null ? '' : String(value);
+              tr.appendChild(td);
+            }
+            walls.appendChild(tr);
+          }
+          warning.textContent = data.warning ? 'API warning: ' + String(data.warning) : 'Read-only: no slots were created or modified.';
+          status.textContent = 'Live status loaded successfully.';
+          results.classList.remove('hidden');
+        } catch (error) {
+          status.className = 'status error';
+          status.textContent = error.message || 'Unable to load View status.';
+        } finally {
+          loadButton.disabled = false;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
