@@ -123,6 +123,49 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
+    // STEP 8.36Z — POST ?action=gallery-capacity-activate
+    // Protected endpoint handshake ONLY. Activation deliberately disabled.
+    // No database access, RPC call, or writes in this version.
+    // ---------------------------------------------------------
+    if (req.method === "POST" && req.query?.action === "gallery-capacity-activate") {
+      const token = getAdminTokenFromRequest(req);
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({ success: false, error: "Unauthorized" });
+      }
+
+      const { room, section, view } = req.body || {};
+      const sectionNumber = Number(section);
+      const viewNumber = Number(view);
+      const validSection =
+        (typeof section === "number" && Number.isSafeInteger(section)) ||
+        (typeof section === "string" && /^[1-9]\d*$/.test(section));
+      const validView =
+        (typeof view === "number" && Number.isSafeInteger(view)) ||
+        (typeof view === "string" && /^[1-5]$/.test(view));
+
+      if (
+        typeof room !== "string" || !["Identity", "Love", "Creativity"].includes(room) ||
+        !validSection || !Number.isSafeInteger(sectionNumber) ||
+        sectionNumber < 1 || sectionNumber > 1667 ||
+        !validView || !Number.isSafeInteger(viewNumber) ||
+        viewNumber < 1 || viewNumber > (sectionNumber === 1667 ? 4 : 5)
+      ) {
+        return res.status(400).json({ success: false, error: "Invalid gallery activation parameters" });
+      }
+
+      // This response is intentional: no activation can happen in STEP 8.36Z.
+      return res.status(423).json({
+        success: false,
+        mode: "activation-disabled",
+        room,
+        sectionNumber,
+        viewNumber,
+        expectedSlots: 120,
+        error: "Gallery activation is not enabled. No slots were created or modified."
+      });
+    }
+
+    // ---------------------------------------------------------
     // GET ?action=gallery-capacity&room=Identity&section=1&view=1
     // Gallery v2 capacity inspection. Admin-only, read-only.
     // ---------------------------------------------------------
