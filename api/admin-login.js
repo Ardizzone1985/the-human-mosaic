@@ -235,6 +235,7 @@ export default async function handler(req, res) {
         .eq("status", "available")
         .eq("payment_confirmed", false)
         .is("submission_id", null)
+        .is("reserved_by", null)
         .order("row_number", { ascending: true })
         .order("col_number", { ascending: true })
         .limit(600);
