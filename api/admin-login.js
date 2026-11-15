@@ -192,6 +192,105 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
+    // GET ?action=gallery-capacity-preview&room=Identity&section=1&view=2
+    // Admin-only preview. Reads slots; never writes to the database.
+    // ---------------------------------------------------------
+    if (req.method === "GET" && req.query?.action === "gallery-capacity-preview") {
+      const token = getAdminTokenFromRequest(req);
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({ success: false, error: "Unauthorized" });
+      }
+
+      const { room, section, view } = req.query || {};
+      const sectionNumber = Number(section);
+      const viewNumber = Number(view);
+      if (
+        typeof room !== "string" || !["Identity", "Love", "Creativity"].includes(room) ||
+        typeof section !== "string" || !/^[1-9]\d*$/.test(section) ||
+        !Number.isSafeInteger(sectionNumber) || sectionNumber > 1667 ||
+        typeof view !== "string" || !/^[1-5]$/.test(view) ||
+        !Number.isSafeInteger(viewNumber)
+      ) {
+        return res.status(400).json({ success: false, error: "Invalid gallery capacity parameters" });
+      }
+
+      const supabase = getSupabaseAdmin();
+      const prefix = `${room}-S${sectionNumber}-V${viewNumber}-`;
+      const [positionResult, codeResult] = await Promise.all([
+        supabase.from("slots")
+          .select("slot_code, wall, row_number, col_number")
+          .eq("room", room)
+          .eq("section_number", sectionNumber)
+          .eq("view_number", viewNumber)
+          .limit(1000),
+        supabase.from("slots")
+          .select("slot_code")
+          .like("slot_code", `${prefix}%`)
+          .limit(1000),
+      ]);
+
+      if (positionResult.error || codeResult.error) {
+        console.error("Gallery capacity preview read error:", positionResult.error || codeResult.error);
+        return res.status(500).json({ success: false, error: "Failed to load gallery preview" });
+      }
+      // Fail closed if a result might be truncated.
+      if ((positionResult.data || []).length >= 1000 || (codeResult.data || []).length >= 1000) {
+        return res.status(409).json({ success: false, error: "Preview data limit reached; cannot safely assess conflicts" });
+      }
+
+      const occupiedPositions = new Set((positionResult.data || []).map(
+        (s) => `${s.wall}|${s.row_number}|${s.col_number}`
+      ));
+      const occupiedCodes = new Set((codeResult.data || []).map((s) => s.slot_code));
+      const wallDefinitions = [
+        { wall: "Front Wall", code: "F" },
+        { wall: "Left Wall", code: "L" },
+        { wall: "Right Wall", code: "R" },
+      ];
+      const walls = wallDefinitions.map(({ wall, code }) => {
+        let coordinateConflicts = 0;
+        let slotCodeConflicts = 0;
+        const examples = [];
+        for (let row = 1; row <= 4; row++) {
+          for (let col = 1; col <= 10; col++) {
+            const slotCode = `${prefix}${code}-R${row}-C${col}`;
+            const coordinateConflict = occupiedPositions.has(`${wall}|${row}|${col}`);
+            const slotCodeConflict = occupiedCodes.has(slotCode);
+            if (coordinateConflict) coordinateConflicts++;
+            if (slotCodeConflict) slotCodeConflicts++;
+            if ((coordinateConflict || slotCodeConflict) && examples.length < 5) {
+              examples.push({ slotCode, coordinateConflict, slotCodeConflict });
+            }
+          }
+        }
+        return {
+          wall,
+          proposedSlots: 40,
+          coordinateConflicts,
+          slotCodeConflicts,
+          exampleFirstCode: `${prefix}${code}-R1-C1`,
+          exampleLastCode: `${prefix}${code}-R4-C10`,
+          conflictExamples: examples,
+        };
+      });
+      const coordinateConflicts = walls.reduce((sum, w) => sum + w.coordinateConflicts, 0);
+      const slotCodeConflicts = walls.reduce((sum, w) => sum + w.slotCodeConflicts, 0);
+      return res.status(200).json({
+        success: true,
+        mode: "read-only-preview",
+        room,
+        sectionNumber,
+        viewNumber,
+        proposedSlots: 120,
+        coordinateConflicts,
+        slotCodeConflicts,
+        readyForActivation: coordinateConflicts === 0 && slotCodeConflicts === 0,
+        walls,
+        message: "Preview only: no slots created or modified",
+      });
+    }
+
+    // ---------------------------------------------------------
     // GET ?action=impact-donations
     // Load Humanity Impact donations for the authenticated admin.
     // ---------------------------------------------------------
