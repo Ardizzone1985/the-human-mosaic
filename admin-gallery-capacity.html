@@ -91,6 +91,9 @@
     .control select, .control input { width:100%; padding:12px; border:1px solid #ccc; border-radius:10px; font:inherit; background:#fff; }
     .read-btn { padding:12px 20px; background:#111; color:white; border:0; border-radius:10px; font-weight:700; cursor:pointer; }
     .read-btn:disabled { opacity:.55; cursor:wait; }
+    .preview-btn { margin-left:10px; }
+    .preview-box { margin-top:22px; padding:20px; border:1px solid #ddd; border-radius:12px; background:#fafaf9; }
+    .preview-box h3 { margin-top:0; }
     .status { margin:16px 0; min-height:24px; }
     .status.error { color:#9d2424; }
     .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin:18px 0; }
@@ -176,6 +179,7 @@
           </div>
         </div>
         <button class="read-btn" id="capacity-load" type="submit">Check View Status</button>
+        <button class="read-btn preview-btn" id="capacity-preview" type="button">Preview Activation</button>
       </form>
       <p class="status" id="capacity-status" role="status" aria-live="polite">Select a Room, Section and View, then check its status.</p>
       <div id="capacity-results" class="hidden">
@@ -189,6 +193,18 @@
         </div>
         <p class="note" id="capacity-warning"></p>
       </div>
+      <section id="preview-results" class="preview-box hidden" aria-labelledby="preview-title">
+        <h3 id="preview-title">Activation Preview</h3>
+        <p id="preview-readiness"></p>
+        <div class="stats" id="preview-stats"></div>
+        <div class="wall-scroll">
+          <table class="wall-table">
+            <thead><tr><th>Wall</th><th>Proposed</th><th>Coordinate conflicts</th><th>Code conflicts</th></tr></thead>
+            <tbody id="preview-walls"></tbody>
+          </table>
+        </div>
+        <p class="note">Preview only: no slots are created or modified. Activation is not enabled.</p>
+      </section>
     </div>
   </div>
 
@@ -196,6 +212,11 @@
     (() => {
       const form = document.getElementById('capacity-form');
       const loadButton = document.getElementById('capacity-load');
+      const previewButton = document.getElementById('capacity-preview');
+      const previewResults = document.getElementById('preview-results');
+      const previewReadiness = document.getElementById('preview-readiness');
+      const previewStats = document.getElementById('preview-stats');
+      const previewWalls = document.getElementById('preview-walls');
       const status = document.getElementById('capacity-status');
       const results = document.getElementById('capacity-results');
       const stats = document.getElementById('capacity-stats');
@@ -203,6 +224,16 @@
       const warning = document.getElementById('capacity-warning');
       const resultTitle = document.getElementById('capacity-result-title');
       const fmt = (value) => Number(value || 0).toLocaleString('en-US');
+      const selected = () => ({
+        room: document.getElementById('capacity-room').value,
+        section: Number(document.getElementById('capacity-section').value),
+        view: Number(document.getElementById('capacity-view').value)
+      });
+      const valid = ({room, section, view}) => ['Identity','Love','Creativity'].includes(room) && Number.isInteger(section) && section >= 1 && section <= 1667 && Number.isInteger(view) && view >= 1 && view <= 5;
+      for (const id of ['capacity-room','capacity-section','capacity-view']) {
+        document.getElementById(id).addEventListener('input', () => { previewResults.classList.add('hidden'); });
+        document.getElementById(id).addEventListener('change', () => { previewResults.classList.add('hidden'); });
+      }
       const metric = (label, value) => {
         const item = document.createElement('div');
         item.className = 'stat';
@@ -213,12 +244,64 @@
         item.append(title, count);
         return item;
       };
+      previewButton.addEventListener('click', async () => {
+        const {room, section, view} = selected();
+        previewResults.classList.add('hidden');
+        if (!valid({room, section, view})) {
+          status.textContent = 'Please select valid Room, Section and View values.';
+          status.className = 'status error';
+          return;
+        }
+        previewButton.disabled = true;
+        loadButton.disabled = true;
+        status.className = 'status';
+        status.textContent = 'Preparing read-only activation preview…';
+        try {
+          const params = new URLSearchParams({ action:'gallery-capacity-preview', room, section:String(section), view:String(view) });
+          const response = await fetch('/api/admin-login?' + params.toString(), { credentials:'same-origin', cache:'no-store' });
+          if (response.status === 401 || response.status === 403) throw new Error('Admin session expired or access denied. Please sign in again.');
+          const data = await response.json();
+          if (!response.ok || data.success !== true) throw new Error(data.error || 'Unable to load activation preview.');
+          if (data.room !== room || Number(data.sectionNumber) !== section || Number(data.viewNumber) !== view || !Array.isArray(data.walls)) throw new Error('Unexpected preview response.');
+          // Ignore results if the selection changed while the request was in flight.
+          const current = selected();
+          if (current.room !== room || current.section !== section || current.view !== view) {
+            status.textContent = 'Selection changed. Please run the preview again.';
+            return;
+          }
+          const proposed = Number(data.proposedSlots);
+          const coord = Number(data.coordinateConflicts);
+          const codes = Number(data.slotCodeConflicts);
+          if (![proposed,coord,codes].every(Number.isFinite)) throw new Error('Incomplete preview response.');
+          previewReadiness.textContent = room + ' · S' + section + ' · V' + view + ' — ' +
+            (data.readyForActivation === true ? 'Ready for activation (preview only)' : 'Not ready for activation');
+          previewStats.replaceChildren(metric('Proposed slots', proposed), metric('Coordinate conflicts', coord), metric('Slot code conflicts', codes));
+          previewWalls.replaceChildren();
+          for (const w of data.walls) {
+            const tr = document.createElement('tr');
+            for (const value of [w.wall, fmt(w.proposedSlots), fmt(w.coordinateConflicts), fmt(w.slotCodeConflicts)]) {
+              const td = document.createElement('td');
+              td.textContent = String(value ?? '');
+              tr.appendChild(td);
+            }
+            previewWalls.appendChild(tr);
+          }
+          previewResults.classList.remove('hidden');
+          status.textContent = 'Read-only activation preview loaded successfully.';
+        } catch (error) {
+          status.className = 'status error';
+          status.textContent = error.message || 'Unable to load activation preview.';
+        } finally {
+          previewButton.disabled = false;
+          loadButton.disabled = false;
+        }
+      });
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const room = document.getElementById('capacity-room').value;
-        const section = Number(document.getElementById('capacity-section').value);
-        const view = Number(document.getElementById('capacity-view').value);
-        if (!['Identity', 'Love', 'Creativity'].includes(room) || !Number.isInteger(section) || section < 1 || section > 1667 || !Number.isInteger(view) || view < 1 || view > 5) {
+        const {room, section, view} = selected();
+        previewResults.classList.add('hidden');
+        if (!valid({room, section, view})) {
           status.textContent = 'Please select valid Room, Section and View values.';
           status.className = 'status error';
           results.classList.add('hidden');
