@@ -123,6 +123,75 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
+    // GET ?action=gallery-capacity&room=Identity&section=1&view=1
+    // Gallery v2 capacity inspection. Admin-only, read-only.
+    // ---------------------------------------------------------
+    if (req.method === "GET" && req.query?.action === "gallery-capacity") {
+      const token = getAdminTokenFromRequest(req);
+      if (!verifyAdminToken(token)) {
+        return res.status(401).json({ success: false, error: "Unauthorized" });
+      }
+
+      const { room, section, view } = req.query || {};
+      const validRooms = ["Identity", "Love", "Creativity"];
+      const sectionNumber = Number(section);
+      const viewNumber = Number(view);
+
+      if (
+        typeof room !== "string" || !validRooms.includes(room) ||
+        typeof section !== "string" || !/^[1-9]\d*$/.test(section) ||
+        !Number.isSafeInteger(sectionNumber) || sectionNumber > 1667 ||
+        typeof view !== "string" || !/^[1-5]$/.test(view) ||
+        !Number.isSafeInteger(viewNumber)
+      ) {
+        return res.status(400).json({ success: false, error: "Invalid gallery capacity parameters" });
+      }
+
+      const supabase = getSupabaseAdmin();
+      const prefix = `${room}-S${sectionNumber}-V${viewNumber}-`;
+      const { data, error } = await supabase
+        .from("slots")
+        .select("slot_code, wall, status, payment_confirmed, section_number, view_number")
+        .eq("room", room)
+        .like("slot_code", `${prefix}%`)
+        .limit(500);
+
+      if (error) {
+        console.error("Gallery capacity read error:", error);
+        return res.status(500).json({ success: false, error: "Failed to load gallery capacity" });
+      }
+
+      const slots = (data || []).filter((slot) =>
+        slot.slot_code.startsWith(prefix) &&
+        slot.section_number === sectionNumber &&
+        slot.view_number === viewNumber
+      );
+      const walls = ["Front Wall", "Left Wall", "Right Wall"].map((wall) => {
+        const items = slots.filter((slot) => slot.wall === wall);
+        return {
+          wall,
+          total: items.length,
+          available: items.filter((slot) => slot.status === "available" && slot.payment_confirmed !== true).length,
+          reserved: items.filter((slot) => slot.status === "reserved").length,
+          submitted: items.filter((slot) => slot.status === "submitted").length,
+          paid: items.filter((slot) => slot.payment_confirmed === true).length,
+        };
+      });
+
+      return res.status(200).json({
+        success: true,
+        mode: "read-only",
+        room,
+        sectionNumber,
+        viewNumber,
+        total: slots.length,
+        expected: 120,
+        walls,
+        warning: (data || []).length === 500 ? "Result limit reached; counts may be incomplete" : null,
+      });
+    }
+
+    // ---------------------------------------------------------
     // GET ?action=impact-donations
     // Load Humanity Impact donations for the authenticated admin.
     // ---------------------------------------------------------
