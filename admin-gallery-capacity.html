@@ -160,14 +160,13 @@
       <p>Slots per View: <strong>120</strong></p>
 
       <p class="note">
-        Read-only prototype.
-        No database modifications are enabled.
+        Capacity planning is read-only. View activation is separately protected by the Admin API.
       </p>
     </div>
 
     <div class="info" aria-labelledby="live-capacity-title">
       <h2 id="live-capacity-title">Live View Status</h2>
-      <p class="note">Read-only data from Supabase via the protected Admin API.</p>
+      <p class="note">View status and preview are read-only. Activation requires explicit server authorization.</p>
       <form id="capacity-form">
         <div class="controls">
           <div class="control"><label for="capacity-room">Room</label>
@@ -205,8 +204,8 @@
             <tbody id="preview-walls"></tbody>
           </table>
         </div>
-        <p class="note">Activation is currently disabled on the server. A test request cannot create slots.</p>
-        <button class="read-btn activate-btn" id="capacity-activate" type="button" disabled>Activate View (protected test)</button>
+        <p class="note">Activation is a LIVE database operation if enabled on the server. It can create 120 slots. When disabled, the server returns HTTP 423.</p>
+        <button class="read-btn activate-btn" id="capacity-activate" type="button" disabled>Activate Selected View</button>
       </section>
     </div>
   </div>
@@ -316,33 +315,68 @@
           return;
         }
         const expected = `${choice.room} S${choice.section} V${choice.view}`;
-        const typed = window.prompt(`PROTECTED TEST ONLY — no slots will be created.\nTo confirm the selected view, type exactly:\n${expected}`);
+        const typed = window.prompt(
+          `LIVE DATABASE OPERATION IF SERVER-ENABLED.\n` +
+          `This action may permanently create 120 new gallery slots.\n` +
+          `If server activation is disabled, no slots will be created (HTTP 423).\n\n` +
+          `To authorize the selected view, type exactly:\n${expected}`
+        );
         if (typed !== expected) {
           status.textContent = 'Confirmation cancelled or did not match.';
           return;
         }
+        // One-shot preview: a second activation always requires a fresh preview.
         invalidatePreview();
-        activateButton.disabled = true;
         previewButton.disabled = true;
         loadButton.disabled = true;
         status.className = 'status';
-        status.textContent = 'Testing protected activation endpoint…';
+        status.textContent = 'Sending one authorized activation request…';
         try {
           const response = await fetch('/api/admin-login?action=gallery-capacity-activate', {
             method: 'POST', credentials: 'same-origin', cache: 'no-store',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(choice)
+            body: JSON.stringify({ ...choice, confirmation: typed })
           });
           const data = await response.json();
-          if (response.status === 423 && data.mode === 'activation-disabled') {
-            status.textContent = `${expected}: protected test passed (HTTP 423). No slots activated.`;
+          if (response.status === 423 && data.success === false && data.mode === 'activation-disabled') {
+            status.textContent = `${expected}: protected test passed (HTTP 423). Activation disabled; no slots activated by this request.`;
+          } else if (
+            response.status === 200 && data.success === true && data.mode === 'activation-result' &&
+            data.room === choice.room && Number(data.sectionNumber) === choice.section &&
+            Number(data.viewNumber) === choice.view && data.result &&
+            data.result.success === true && data.result.room === choice.room &&
+            Number(data.result.sectionNumber) === choice.section &&
+            Number(data.result.viewNumber) === choice.view &&
+            data.result.insertedSlots === 120 && data.result.frontWall === 40 &&
+            data.result.leftWall === 40 && data.result.rightWall === 40
+          ) {
+            // Independently re-read the live View before reporting the final count.
+            const params = new URLSearchParams({
+              action: 'gallery-capacity', room: choice.room,
+              section: String(choice.section), view: String(choice.view)
+            });
+            const checkResponse = await fetch('/api/admin-login?' + params.toString(), {
+              credentials: 'same-origin', cache: 'no-store'
+            });
+            const check = await checkResponse.json();
+            if (checkResponse.ok && check.success === true &&
+                check.room === choice.room && Number(check.sectionNumber) === choice.section &&
+                Number(check.viewNumber) === choice.view && check.total === 120 &&
+                Array.isArray(check.walls) && check.walls.length === 3 &&
+                ['Front Wall', 'Left Wall', 'Right Wall'].every(wall =>
+                  check.walls.some(w => w.wall === wall && w.total === 40))) {
+              status.textContent = `${expected}: LIVE activation succeeded. 120 slots confirmed (40 per wall).`;
+            } else {
+              status.className = 'status error';
+              status.textContent = `${expected}: activation RPC reported success, but live count verification is inconclusive. Check Supabase before any retry.`;
+            }
           } else {
             status.className = 'status error';
-            status.textContent = `Unexpected response (HTTP ${response.status}). Stop and inspect the backend before proceeding.`;
+            status.textContent = `${expected}: response HTTP ${response.status} was not a verified activation. Inspect live slot counts before any retry.`;
           }
         } catch (error) {
           status.className = 'status error';
-          status.textContent = 'Protected test failed: ' + (error.message || String(error));
+          status.textContent = `Request or verification failed: ${error.message || String(error)}. Check live slot counts before any retry.`;
         } finally {
           previewButton.disabled = false;
           loadButton.disabled = false;
