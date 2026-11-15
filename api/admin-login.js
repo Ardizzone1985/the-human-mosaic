@@ -132,6 +132,18 @@ export default async function handler(req, res) {
         return res.status(401).json({ success: false, error: "Unauthorized" });
       }
 
+      // Reject cross-origin or origin-less browser requests for this write endpoint.
+      // The admin UI calls this endpoint from the same HTTPS origin.
+      const requestOrigin = req.headers.origin;
+      const requestHost = req.headers.host;
+      if (
+        typeof requestOrigin !== "string" ||
+        typeof requestHost !== "string" ||
+        requestOrigin !== `https://${requestHost}`
+      ) {
+        return res.status(403).json({ success: false, error: "Invalid request origin" });
+      }
+
       const { room, section, view, confirmation } = req.body || {};
       const sectionNumber = Number(section);
       const viewNumber = Number(view);
@@ -168,7 +180,8 @@ export default async function handler(req, res) {
 
       // A second, target-specific server gate is required for LIVE activation.
       // Neither variable should be configured during this protected test.
-      if (process.env.GALLERY_VIEW_ACTIVATION_TARGET !== "Identity S1 V2") {
+      const selectedTarget = `${room} S${sectionNumber} V${viewNumber}`;
+      if (process.env.GALLERY_VIEW_ACTIVATION_TARGET !== selectedTarget) {
         return res.status(423).json({
           success: false,
           mode: "activation-disabled",
