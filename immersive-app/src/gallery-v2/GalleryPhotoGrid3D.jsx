@@ -1,7 +1,6 @@
 import { Text, useTexture } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient.js";
-import AppDialog from "../components/AppDialog.jsx";
 
 function GallerySlotPhoto({ imageUrl }) {
   const texture = useTexture(imageUrl);
@@ -30,9 +29,18 @@ export default function GalleryPhotoGrid3D({
   
   const SLOTS_PER_VIEW = 120;
 
-  const [submissions, setSubmissions] = useState([]);
-const [slots, setSlots] = useState([]);
-const [selectedSlot, setSelectedSlot] = useState(null);
+  // Keep fetched records tied to the exact room/section/view/wall.
+  // This prevents a previous View from appearing while the next View loads.
+  const scope = `${room}|${wall}|${sectionNumber}|${viewNumber}`;
+  const [submissionResult, setSubmissionResult] = useState({ scope: null, data: [] });
+  const [slotResult, setSlotResult] = useState({ scope: null, data: [], error: null });
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const submissions = submissionResult.scope === scope ? submissionResult.data : [];
+  const slots = slotResult.scope === scope ? slotResult.data : [];
+  const slotsLoaded = slotResult.scope === scope;
+  const slotsError = slotsLoaded ? slotResult.error : null;
+  const slotLookup = new Map(slots.map((slot) => [slot.slot_code, slot]));
+  const submissionLookup = new Map(submissions.map((item) => [item.slot_code, item]));
 
 useEffect(() => {
   let cancelled = false;
@@ -60,11 +68,12 @@ useEffect(() => {
 
     if (error) {
       console.error("Gallery V2 submissions error:", error);
+      if (!cancelled) setSubmissionResult({ scope, data: [] });
       return;
     }
 
     if (!cancelled) {
-      setSubmissions(data ?? []);
+      setSubmissionResult({ scope, data: data ?? [] });
       console.log("Gallery V2 submissions:", data ?? []);
     }
   }
@@ -96,11 +105,12 @@ useEffect(() => {
 
     if (error) {
       console.error("Gallery V2 slots error:", error);
+      if (!cancelled) setSlotResult({ scope, data: [], error: error.message || "Unable to load slots" });
       return;
     }
 
     if (!cancelled) {
-  setSlots(data ?? []);
+  setSlotResult({ scope, data: data ?? [], error: null });
 
   console.log("Gallery V2 slots loaded:", {
     room,
@@ -125,7 +135,16 @@ useEffect(() => {
   return (
   <>
     <group>
-      {Array.from({ length: 4 }).map((_, row) =>
+      {!slotsLoaded || slotsError || slots.length === 0 ? (
+        <group position={[0, 1.2, 0.1]}>
+          <Text fontSize={0.48} color="#765b33" anchorX="center" anchorY="middle" maxWidth={22} textAlign="center">
+            {!slotsLoaded ? "Loading gallery view..." : slotsError ? "Gallery temporarily unavailable" : "This gallery view is not yet open"}
+          </Text>
+          <Text position={[0, -0.75, 0]} fontSize={0.25} color="#8c806d" anchorX="center" anchorY="middle" maxWidth={22} textAlign="center">
+            {slotsError ? "Please try again later" : slotsLoaded && slots.length === 0 ? "New positions will appear when this view is activated" : ""}
+          </Text>
+        </group>
+      ) : Array.from({ length: 4 }).map((_, row) =>
   Array.from({ length: 10 }).map((_, column) => {
           const x = -11.25 + column * 2.5;
           const y = 4.2 - row * 2.0;
@@ -148,15 +167,10 @@ const slotNumber =
     const expectedSlotCode =
   `${room}-S${sectionNumber}-V${viewNumber}-${wall.charAt(0)}-R${row + 1}-C${column + 1}`;
 
-const submission = submissions.find(
-  (item) => item.slot_code === expectedSlotCode
-);
-
-    const slot = slots.find(
-  (item) => item.slot_code === expectedSlotCode
-);
-
-const isUnavailable = !slot || slot.status !== "available";
+const submission = submissionLookup.get(expectedSlotCode);
+const slot = slotLookup.get(expectedSlotCode);
+const isMissing = !slot;
+const isUnavailable = isMissing || slot.status !== "available";
 
           return (
       <group
@@ -165,7 +179,7 @@ const isUnavailable = !slot || slot.status !== "available";
   onClick={(event) => {
     event.stopPropagation();
 
-    if (submission) {
+    if (submission && slot) {
   onPhotoSelect?.(submission);
   return;
 }
@@ -202,6 +216,8 @@ console.log("Gallery V2 empty slot selected:", slotData);
                   color={
   submission
     ? "#f7f5ef"
+    : isMissing
+    ? "#dedbd4"
     : isUnavailable
     ? "#aaa49a"
     : selectedSlot?.slotCode === expectedSlotCode
@@ -229,7 +245,7 @@ console.log("Gallery V2 empty slot selected:", slotData);
     anchorX="center"
     anchorY="middle"
   >
-    {slotNumber}
+    {isMissing ? "—" : slotNumber}
   </Text>
 
   {isUnavailable && (
@@ -240,7 +256,7 @@ console.log("Gallery V2 empty slot selected:", slotData);
       anchorX="center"
       anchorY="middle"
     >
-      BOOKED
+      {isMissing ? "NOT OPEN" : slot?.status === "reserved" ? "RESERVED" : "BOOKED"}
     </Text>
   )}
 </group>
