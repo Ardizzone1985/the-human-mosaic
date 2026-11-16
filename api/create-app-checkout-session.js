@@ -112,6 +112,7 @@ export default async function handler(req, res) {
           status,
           reserved_at,
           reserved_by,
+          reservation_id,
           payment_confirmed
           `
         )
@@ -154,26 +155,55 @@ export default async function handler(req, res) {
       });
     }
 
-    /*
-     * Rinnova l'inizio della riserva prima di aprire Stripe.
-     * La durata di Checkout sarà di 30 minuti.
-     */
-    const now = new Date();
-    const nowIso = now.toISOString();
+    // The checkout must belong to the exact reservation created by the RPC.
+    // Do not create a new reservation ID here.
+    if (!slot.reservation_id || !slot.reserved_at) {
+      return res.status(409).json({
+        error: "Reservation identity is missing",
+      });
+    }
 
-    const { error: refreshReservationError } =
+    const reservationId = slot.reservation_id;
+    const now = new Date();
+    const reservationTime = new Date(slot.reserved_at).getTime();
+    const reservationCutoff = new Date(now.getTime() - 35 * 60 * 1000);
+
+    if (
+      !Number.isFinite(reservationTime) ||
+      reservationTime > now.getTime() ||
+      reservationTime <= reservationCutoff.getTime()
+    ) {
+      return res.status(409).json({
+        error: "Reservation has expired. Please reserve the position again",
+      });
+    }
+
+    // Renew only this exact, still-valid reservation. Checking the returned
+    // row prevents Stripe checkout from opening after a failed conditional update.
+    const { data: refreshedSlots, error: refreshReservationError } =
       await supabaseAdmin
         .from("slots")
-        .update({
-          reserved_at: nowIso,
-        })
+        .update({ reserved_at: now.toISOString() })
         .eq("slot_code", slotCode)
+        .eq("reservation_id", reservationId)
         .eq("reserved_by", user.id)
         .eq("status", "reserved")
-        .eq("payment_confirmed", false);
+        .eq("payment_confirmed", false)
+        .gt("reserved_at", reservationCutoff.toISOString())
+        .select("id, reservation_id");
 
     if (refreshReservationError) {
       throw refreshReservationError;
+    }
+
+    if (
+      refreshedSlots?.length !== 1 ||
+      refreshedSlots[0].id !== slot.id ||
+      refreshedSlots[0].reservation_id !== reservationId
+    ) {
+      return res.status(409).json({
+        error: "Reservation changed or expired. Please try again",
+      });
     }
 
     const { count, error: countError } =
@@ -215,6 +245,7 @@ export default async function handler(req, res) {
       section,
       spot,
       slotCode,
+      reservationId,
       fullName: String(fullName || "").slice(0, 500),
       email: String(email || user.email || "").slice(0, 500),
       country: String(country || "").slice(0, 500),
