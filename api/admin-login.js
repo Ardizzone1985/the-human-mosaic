@@ -201,11 +201,58 @@ export default async function handler(req, res) {
         });
       }
 
-      // Gallery Capacity supports all valid Rooms, Sections and Views.
-      // LIVE writes still require BOTH server environment gates above,
-      // the exact target-specific confirmation and the atomic SQL RPC.
+      // STEP GC-SEQ-1: fail closed unless the immediately preceding View
+      // in THIS Room is complete. This is a preliminary server check;
+      // the SQL activation RPC must independently enforce the sequence
+      // atomically before LIVE activation is ever enabled.
+      const predecessorSection = viewNumber > 1 ? sectionNumber : sectionNumber - 1;
+      const predecessorView = viewNumber > 1 ? viewNumber - 1 : 5;
+      if (predecessorSection < 1) {
+        return res.status(409).json({
+          success: false,
+          error: "Initial View activation requires a separate provisioning procedure"
+        });
+      }
 
       const supabase = getSupabaseAdmin();
+      const predecessorPrefix = `${room}-S${predecessorSection}-V${predecessorView}-`;
+      const { data: predecessorSlots, error: predecessorError } = await supabase
+        .from("slots")
+        .select("slot_code, wall, section_number, view_number")
+        .eq("room", room)
+        .eq("section_number", predecessorSection)
+        .eq("view_number", predecessorView)
+        .limit(121);
+
+      if (predecessorError) {
+        console.error("Gallery sequence inspection failed:", predecessorError);
+        return res.status(500).json({ success: false, error: "Unable to verify preceding View" });
+      }
+
+      const precedingWalls = ["Front Wall", "Left Wall", "Right Wall"];
+      const precedingCodes = new Set((predecessorSlots || []).map(s => s.slot_code));
+      const precedingComplete =
+        (predecessorSlots || []).length === 120 &&
+        precedingCodes.size === 120 &&
+        (predecessorSlots || []).every(s =>
+          s.slot_code.startsWith(predecessorPrefix) &&
+          s.section_number === predecessorSection &&
+          s.view_number === predecessorView &&
+          precedingWalls.includes(s.wall)
+        ) &&
+        precedingWalls.every(wall =>
+          predecessorSlots.filter(s => s.wall === wall).length === 40
+        );
+
+      if (!precedingComplete) {
+        return res.status(409).json({
+          success: false,
+          mode: "gallery-sequence-blocked",
+          error: `Activate ${room} S${predecessorSection} V${predecessorView} first; preceding View is not complete`
+        });
+      }
+
+      // Existing RPC call remains unchanged. LIVE activation remains gated.
       const { data, error } = await supabase.rpc("admin_activate_gallery_view", {
         p_room: room,
         p_section_number: sectionNumber,
