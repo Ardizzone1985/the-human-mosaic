@@ -164,6 +164,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: "Invalid gallery activation parameters" });
       }
 
+      // Validate exact Admin confirmation before checking the global LIVE switch.
+      // This must be supplied in the request body, not just confirmed in the UI.
+      const expectedConfirmation = `${room} S${sectionNumber} V${viewNumber}`;
+      if (confirmation !== expectedConfirmation) {
+        return res.status(400).json({
+          success: false,
+          error: "Exact server-side activation confirmation is required"
+        });
+      }
+
+
       // Keep this global safety switch OFF during deployment verification.
       // Default behavior preserves the previously tested HTTP 423 handshake.
       if (process.env.GALLERY_VIEW_ACTIVATION_ENABLED !== "true") {
@@ -175,20 +186,6 @@ export default async function handler(req, res) {
           viewNumber,
           expectedSlots: 120,
           error: "Gallery activation is not enabled. No slots were created or modified."
-        });
-      }
-
-      // Gallery Capacity Manager: the selected View is authorized by the
-      // authenticated Admin session, same-origin request, exact confirmation,
-      // sequence checks and atomic SQL RPC. No per-View Vercel target flag.
-      // Keep GALLERY_VIEW_ACTIVATION_ENABLED disabled until testing is complete.
-
-      // This must be supplied in the request body, not just confirmed in the UI.
-      const expectedConfirmation = `${room} S${sectionNumber} V${viewNumber}`;
-      if (confirmation !== expectedConfirmation) {
-        return res.status(400).json({
-          success: false,
-          error: "Exact server-side activation confirmation is required"
         });
       }
 
