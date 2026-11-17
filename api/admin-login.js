@@ -123,7 +123,7 @@ export default async function handler(req, res) {
     }
 
     // ---------------------------------------------------------
-    // STEP 8.37E — Gallery activation, server-gated and result-verified.
+    // STEP GC-ADMIN-1 — Gallery activation, admin-confirmed and result-verified.
     // OFF by default. Requires explicit server flag AND confirmation.
     // ---------------------------------------------------------
     if (req.method === "POST" && req.query?.action === "gallery-capacity-activate") {
@@ -164,7 +164,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: "Invalid gallery activation parameters" });
       }
 
-      // Do not enable this environment variable during STEP 8.37E.
+      // Keep this global safety switch OFF during deployment verification.
       // Default behavior preserves the previously tested HTTP 423 handshake.
       if (process.env.GALLERY_VIEW_ACTIVATION_ENABLED !== "true") {
         return res.status(423).json({
@@ -178,19 +178,10 @@ export default async function handler(req, res) {
         });
       }
 
-      // A second, target-specific server gate is required for LIVE activation.
-      // Neither variable should be configured during this protected test.
-      const selectedTarget = `${room} S${sectionNumber} V${viewNumber}`;
-      if (process.env.GALLERY_VIEW_ACTIVATION_TARGET !== selectedTarget) {
-        return res.status(423).json({
-          success: false,
-          mode: "activation-disabled",
-          room,
-          sectionNumber,
-          viewNumber,
-          error: "Gallery activation target is not enabled. No slots were created or modified."
-        });
-      }
+      // Gallery Capacity Manager: the selected View is authorized by the
+      // authenticated Admin session, same-origin request, exact confirmation,
+      // sequence checks and atomic SQL RPC. No per-View Vercel target flag.
+      // Keep GALLERY_VIEW_ACTIVATION_ENABLED disabled until testing is complete.
 
       // This must be supplied in the request body, not just confirmed in the UI.
       const expectedConfirmation = `${room} S${sectionNumber} V${viewNumber}`;
@@ -252,7 +243,7 @@ export default async function handler(req, res) {
         });
       }
 
-      // Existing RPC call remains unchanged. LIVE activation remains gated.
+      // SQL RPC independently enforces sequence and atomic insertion.
       const { data, error } = await supabase.rpc("admin_activate_gallery_view", {
         p_room: room,
         p_section_number: sectionNumber,
