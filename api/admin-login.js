@@ -201,13 +201,9 @@ export default async function handler(req, res) {
         });
       }
 
-      // This stage is intentionally limited to the verified first target.
-      if (room !== "Identity" || sectionNumber !== 1 || viewNumber !== 2) {
-        return res.status(403).json({
-          success: false,
-          error: "Only Identity S1 V2 is authorized for the initial activation"
-        });
-      }
+      // Gallery Capacity supports all valid Rooms, Sections and Views.
+      // LIVE writes still require BOTH server environment gates above,
+      // the exact target-specific confirmation and the atomic SQL RPC.
 
       const supabase = getSupabaseAdmin();
       const { data, error } = await supabase.rpc("admin_activate_gallery_view", {
