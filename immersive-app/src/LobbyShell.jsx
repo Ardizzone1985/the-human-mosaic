@@ -121,26 +121,32 @@ plasterTexture.needsUpdate = true;
   />
 </mesh>
 
-      {/* Back wall: real opening for LOVE, x -1.55..1.55, y -1.25..4.20 */}
-      {[-8.275, 8.275].map((x) => (
-        <mesh key={`back-wall-side-${x}`} position={[x, 4.25, -9]}>
-          <boxGeometry args={[13.45, 13.2, 0.35]} />
-          <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
-        </mesh>
-      ))}
-      <mesh position={[0, 7.525, -9]}>
-        <boxGeometry args={[3.1, 6.65, 0.35]} />
-        <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
-      </mesh>
+             {/* Back wall: matching real openings for IDENTITY (x=-8) and LOVE (x=0). */}
+       {[
+         { x: -12.275, width: 5.45 },
+         { x: -4, width: 4.9 },
+         { x: 8.275, width: 13.45 },
+       ].map(({ x, width }) => (
+         <mesh key={`back-wall-segment-${x}`} position={[x, 4.25, -9]}>
+           <boxGeometry args={[width, 13.2, 0.35]} />
+           <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
+         </mesh>
+       ))}
+       {[-8, 0].map((x) => (
+         <mesh key={`back-wall-header-${x}`} position={[x, 7.525, -9]}>
+           <boxGeometry args={[3.1, 6.65, 0.35]} />
+           <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
+         </mesh>
+       ))}
 
-      {/* Premium door wall architectural panels */}
+{/* Premium door wall architectural panels */}
 {[-8, 0, 8].map((x) => (
   <group key={`door-wall-panel-${x}`} position={[x, 3.35, -8.72]}>
-    {x === 0 ? (
+    {(x === 0 || x === -8) ? (
       <>
-        {/* The LOVE panel is split around the doorway; no solid face behind the door. */}
+        {/* IDENTITY and LOVE panels are split around their doorways. */}
         {[-2.375, 2.375].map((offset) => (
-          <group key={`love-panel-side-${offset}`} position={[offset, 0, 0]}>
+          <group key={`door-panel-side-${offset}`} position={[offset, 0, 0]}>
             <mesh><boxGeometry args={[1.55, 7.1, 0.18]} />
               <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
             </mesh>
@@ -178,7 +184,7 @@ plasterTexture.needsUpdate = true;
       />
     </mesh>
 
-    {x !== 0 && <mesh position={[0, -3.25, 0.08]}>
+    {x === 8 && <mesh position={[0, -3.25, 0.08]}>
       <boxGeometry args={[5.7, 0.045, 0.08]} />
       <meshStandardMaterial
         color="#8a4b12"
@@ -188,7 +194,7 @@ plasterTexture.needsUpdate = true;
         roughness={0.28}
       />
     </mesh>}
-    {x !== 0 && (
+    {x === 8 && (
       <>
     <mesh position={[-2.85, 0, 0.08]}>
       <boxGeometry args={[0.055, 6.5, 0.08]} />
@@ -416,15 +422,19 @@ emissiveIntensity={0.03}
         <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.5} />
       </mesh>
 
-      {/* Keep the lower gold rail outside LOVE's real doorway (x -1.55..1.55). */}
-      {[-7.9, 7.9].map((x) => (
-        <mesh key={`back-wall-lower-gold-${x}`} position={[x, -0.95, -8.75]}>
-          <boxGeometry args={[12.7, 0.08, 0.14]} />
-          <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
-        </mesh>
-      ))}
+             {/* Lower rail stops at both IDENTITY and LOVE openings. */}
+       {[
+         { x: -12.275, width: 5.45 },
+         { x: -4, width: 4.9 },
+         { x: 7.9, width: 12.7 },
+       ].map(({ x, width }) => (
+         <mesh key={`back-wall-lower-gold-${x}`} position={[x, -0.95, -8.75]}>
+           <boxGeometry args={[width, 0.08, 0.14]} />
+           <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
+         </mesh>
+       ))}
 
-      <mesh position={[-14.25, 4.9, -8.75]}>
+<mesh position={[-14.25, 4.9, -8.75]}>
   <boxGeometry args={[0.08, 11.8, 0.14]} />
   <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
