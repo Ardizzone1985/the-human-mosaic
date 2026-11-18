@@ -116,6 +116,34 @@ setActiveIndex(0);
   );
 }
 
+// Wood051 PBR finish — used only by the LOVE prototype door.
+// Files are served from immersive-app/public/textures/.
+function LoveWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
+  const [colorMap, normalMap, roughnessMap] = useTexture([
+    "/textures/Wood051_1K-JPG_Color.jpg",
+    "/textures/Wood051_1K-JPG_NormalGL.jpg",
+    "/textures/Wood051_1K-JPG_Roughness.jpg",
+  ]);
+
+  // Color is sRGB; data maps remain in linear space.
+  colorMap.colorSpace = THREE.SRGBColorSpace;
+  colorMap.anisotropy = 8;
+  normalMap.anisotropy = 8;
+  roughnessMap.anisotropy = 8;
+
+  return (
+    <meshStandardMaterial
+      color={tint}
+      map={colorMap}
+      normalMap={normalMap}
+      normalScale={new THREE.Vector2(0.32, 0.32)}
+      roughnessMap={roughnessMap}
+      roughness={roughness}
+      metalness={0}
+    />
+  );
+}
+
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef();
@@ -191,28 +219,28 @@ window.dispatchEvent(new PopStateEvent("popstate"));
         {[-1.43, 1.43].map((x) => (
           <mesh key={x} position={[x, 0, -0.055]}>
             <boxGeometry args={[0.14, 5.48, 0.12]} />
-            <meshStandardMaterial color="#63432b" roughness={0.76} metalness={0} />
+            <LoveWalnutMaterial roughness={0.82} />
           </mesh>
         ))}
         <mesh position={[0, 2.68, -0.055]}>
           <boxGeometry args={[2.99, 0.13, 0.12]} />
-          <meshStandardMaterial color="#63432b" roughness={0.76} metalness={0} />
+          <LoveWalnutMaterial roughness={0.82} />
         </mesh>
         {/* Door leaf sits behind the trim */}
         <mesh position={[0, -0.015, -0.105]}>
           <boxGeometry args={[2.70, 5.27, 0.085]} />
-          <meshStandardMaterial color="#785038" roughness={0.72} metalness={0} />
+          <LoveWalnutMaterial roughness={0.78} />
         </mesh>
         {/* Two restrained recessed panels */}
         {[-1.16, 1.16].map((y) => (
           <group key={y}>
             <mesh position={[0, y, -0.053]}>
               <boxGeometry args={[2.24, 2.11, 0.014]} />
-              <meshStandardMaterial color="#4e3324" roughness={0.8} metalness={0} />
+              <LoveWalnutMaterial tint="#b5a79d" roughness={0.86} />
             </mesh>
             <mesh position={[0, y, -0.043]}>
               <boxGeometry args={[2.08, 1.95, 0.014]} />
-              <meshStandardMaterial color="#896047" roughness={0.74} metalness={0} />
+              <LoveWalnutMaterial roughness={0.72} />
             </mesh>
           </group>
         ))}
