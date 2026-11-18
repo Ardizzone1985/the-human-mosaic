@@ -1714,7 +1714,7 @@ color={
       />
 
       <RoomDoor
-        position={[0, 1.45, -7.6]}
+        position={[0, 1.45, -8.35]}
         label="LOVE"
         room="Love"
         color="#ff9fbd"
