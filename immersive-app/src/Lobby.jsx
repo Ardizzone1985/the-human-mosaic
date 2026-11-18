@@ -1051,60 +1051,61 @@ color="#6b5a3f"
   }}
   onClick={handleExitDoubleClick}
 >
-  {/* External museum frame */}
-  <mesh position={[0, 0, -0.28]}>
-    <boxGeometry args={[3.8, 6.1, 0.52]} />
-    <meshStandardMaterial
-      color="#6b4a1e"
-      emissive="#d7b56d"
-      emissiveIntensity={0.22}
-      roughness={0.34}
-      metalness={0.28}
-    />
+  {/* EXIT — walnut architectural door, consistent with the three Room doors. */}
+  {/* Backing and overlapping frame conceal gaps around the leaf. */}
+  <mesh position={[0, 0, -0.32]}>
+    <boxGeometry args={[3.28, 5.66, 0.045]} />
+    <LoveWalnutMaterial roughness={0.82} />
   </mesh>
-
-  {/* Main door */}
-  <mesh position={[0, 0, 0.02]}>
-    <boxGeometry args={[2.95, 5.25, 0.46]} />
-    <meshStandardMaterial
-      color="#2a1208"
-      roughness={0.42}
-      metalness={0.22}
-      emissive="#d7b56d"
-      emissiveIntensity={0.06}
-    />
+  {[-1.34, 1.34].map((x) => (
+    <mesh key={`exit-jamb-${x}`} position={[x, 0, 0.035]}>
+      <boxGeometry args={[0.38, 5.60, 0.14]} />
+      <LoveWalnutMaterial roughness={0.82} />
+    </mesh>
+  ))}
+  {[-1.43, 1.43].map((x) => (
+    <mesh key={`exit-lip-${x}`} position={[x, 0, 0.16]}>
+      <boxGeometry args={[0.30, 5.54, 0.075]} />
+      <LoveWalnutMaterial roughness={0.82} />
+    </mesh>
+  ))}
+  <mesh position={[0, 2.68, 0.035]}>
+    <boxGeometry args={[3.18, 0.25, 0.14]} />
+    <LoveWalnutMaterial roughness={0.82} />
   </mesh>
-
-  {/* Inner dark panel */}
-  <mesh position={[0, 0, 0.28]}>
-    <boxGeometry args={[2.2, 4.4, 0.16]} />
-    <meshStandardMaterial
-      color="#0b0302"
-      roughness={0.7}
-      metalness={0.1}
-    />
+  <mesh position={[0, -0.015, 0.02]}>
+    <boxGeometry args={[2.70, 5.27, 0.085]} />
+    <LoveWalnutMaterial roughness={0.78} />
   </mesh>
-
-  {/* Handle */}
-  <mesh position={[0.82, 0, 0.38]}>
-    <sphereGeometry args={[0.08, 16, 16]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.3}
-      metalness={0.8}
-      roughness={0.22}
-    />
+  <mesh position={[0, -2.70, 0.085]}>
+    <boxGeometry args={[3.06, 0.16, 0.16]} />
+    <LoveWalnutMaterial roughness={0.84} />
   </mesh>
-
-  {/* Upper golden detail */}
-  <mesh position={[0, 2.18, 0.24]}>
-    <boxGeometry args={[2.55, 0.08, 0.08]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.32}
-    />
+  {/* Two recessed walnut panels. */}
+  {[-1.16, 1.16].map((y) => (
+    <group key={`exit-panel-${y}`}>
+      <mesh position={[0, y, 0.077]}>
+        <boxGeometry args={[2.24, 2.11, 0.014]} />
+        <LoveWalnutMaterial tint="#b5a79d" roughness={0.86} />
+      </mesh>
+      <mesh position={[0, y, 0.087]}>
+        <boxGeometry args={[2.08, 1.95, 0.014]} />
+        <LoveWalnutMaterial roughness={0.72} />
+      </mesh>
+    </group>
+  ))}
+  {/* Brushed brass lever, rather than the former round knob. */}
+  <mesh position={[0.99, -0.18, 0.107]}>
+    <boxGeometry args={[0.09, 0.31, 0.023]} />
+    <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
+  </mesh>
+  <mesh position={[0.89, -0.12, 0.137]}>
+    <boxGeometry args={[0.25, 0.045, 0.048]} />
+    <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
+  </mesh>
+  <mesh position={[0, 2.45, 0.108]}>
+    <boxGeometry args={[2.13, 0.023, 0.012]} />
+    <meshStandardMaterial color="#d7b56d" roughness={0.6} metalness={0.1} />
   </mesh>
 
   {/* Museum plaque — EXIT */}
