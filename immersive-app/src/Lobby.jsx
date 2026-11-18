@@ -176,7 +176,7 @@ function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const groupRef = useRef();
   const isLovePrototype = room === "Love";
   const isIdentityPremium = room === "Identity";
-  const isArchitecturalDoor = isLovePrototype || isIdentityPremium;
+  const isArchitecturalDoor = isLovePrototype || isIdentityPremium || room === "Creativity";
 
   const lastTapRef = useRef(0);
 const enteringRef = useRef(false);
@@ -1796,7 +1796,7 @@ color={
       />
 
       <RoomDoor
-        position={[8, 1.45, -7.6]}
+        position={[8, 1.45, -8.35]}
         label="CREATIVITY"
         room="Creativity"
         color="#9fc3ff"
