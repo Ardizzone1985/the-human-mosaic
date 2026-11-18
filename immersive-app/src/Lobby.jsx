@@ -227,6 +227,13 @@ window.dispatchEvent(new PopStateEvent("popstate"));
             <LoveWalnutMaterial roughness={0.82} />
           </mesh>
         ))}
+        {/* LOVE side seam cover — narrow forward walnut lips conceal wall-colored slivers. */}
+        {[-1.43, 1.43].map((x) => (
+          <mesh key={`love-side-seam-${x}`} position={[x, 0, 0.16]}>
+            <boxGeometry args={[0.30, 5.54, 0.075]} />
+            <LoveWalnutMaterial roughness={0.82} />
+          </mesh>
+        ))}
         {/* Header overlaps the upper edge of the door leaf as well. */}
         <mesh position={[0, 2.68, -0.012]}>
           <boxGeometry args={[3.18, 0.25, 0.14]} />
