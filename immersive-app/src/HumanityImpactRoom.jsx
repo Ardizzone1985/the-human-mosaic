@@ -1137,7 +1137,7 @@ const milestoneProgress =
 
       {/* HOME — Wood051 architectural door matching the Lobby */}
       <group
-        position={[0, 2.80, 10.55]}
+        position={[0, 2.65, 10.55]}
         rotation={[0, Math.PI, 0]}
         onPointerOver={(e) => {
           e.stopPropagation();
