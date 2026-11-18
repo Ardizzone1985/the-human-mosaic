@@ -215,15 +215,16 @@ window.dispatchEvent(new PopStateEvent("popstate"));
   >
     {isLovePrototype ? (
       <group position={[0, 0, -0.32]}>
-        {/* Visual inset: low-profile jambs and header, not a protruding portal */}
-        {[-1.43, 1.43].map((x) => (
+        {/* Walnut jambs overlap the leaf edges to conceal the light wall reveal. */}
+        {[-1.40, 1.40].map((x) => (
           <mesh key={x} position={[x, 0, -0.055]}>
-            <boxGeometry args={[0.14, 5.48, 0.12]} />
+            <boxGeometry args={[0.22, 5.48, 0.12]} />
             <LoveWalnutMaterial roughness={0.82} />
           </mesh>
         ))}
-        <mesh position={[0, 2.68, -0.055]}>
-          <boxGeometry args={[2.99, 0.13, 0.12]} />
+        {/* Header overlaps the upper edge of the door leaf as well. */}
+        <mesh position={[0, 2.64, -0.055]}>
+          <boxGeometry args={[3.02, 0.22, 0.12]} />
           <LoveWalnutMaterial roughness={0.82} />
         </mesh>
         {/* Door leaf sits behind the trim */}
