@@ -9,6 +9,30 @@ import logoImage from "../logo-cropped.png";
 import SponsorPanel from "../components/sponsors/SponsorPanel.jsx";
 import SponsorModal from "../components/sponsors/SponsorModal.jsx";
 
+// Wood051 walnut finish shared with the Lobby architectural doors.
+function HomeWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
+  const [colorMap, normalMap, roughnessMap] = useTexture([
+    "/textures/Wood051_1K-JPG_Color.jpg",
+    "/textures/Wood051_1K-JPG_NormalGL.jpg",
+    "/textures/Wood051_1K-JPG_Roughness.jpg",
+  ]);
+  colorMap.colorSpace = THREE.SRGBColorSpace;
+  colorMap.anisotropy = 8;
+  normalMap.anisotropy = 8;
+  roughnessMap.anisotropy = 8;
+  return (
+    <meshStandardMaterial
+      color={tint}
+      map={colorMap}
+      normalMap={normalMap}
+      normalScale={new THREE.Vector2(0.32, 0.32)}
+      roughnessMap={roughnessMap}
+      roughness={roughness}
+      metalness={0}
+    />
+  );
+}
+
 function PremiumPlasterInfoWall() {
   const texture = useTexture(
     "/textures/Plaster001_1K-JPG_Color.jpg"
@@ -437,86 +461,96 @@ function InfoWallLogo({ room = "Identity", onSponsorClick }) {
   />
 </group>
 
+    {/* HOME — Wood051 architectural door, shared by all three Gallery v2 rooms. */}
     <group
-  position={[-10.5, 0.1, 19.84]}
-  rotation={[0, Math.PI, 0]}
+      position={[-10.5, 0.83, 19.84]}
+      rotation={[0, Math.PI, 0]}
       onClick={(e) => {
-  e.stopPropagation();
-  handleHomeDoorClick();
-}}
-  onPointerOver={() => {
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={() => {
-    document.body.style.cursor = "default";
-  }}
->
-
-      <mesh position={[0, 3.15, 0.015]}>
-  <planeGeometry args={[3.15, 0.95]} />
-  <meshStandardMaterial
-    color="#8a642f"
-    roughness={0.45}
-    metalness={0.25}
-  />
-</mesh>
-      
-      <mesh position={[0, 3.15, 0.02]}>
-  <planeGeometry args={[2.8, 0.65]} />
-  <meshStandardMaterial
-    color="#1b1712"
-    roughness={0.5}
-    metalness={0.15}
-  />
-</mesh>
-
-      <Text
-  position={[0, 3.15, 0.04]}
-  fontSize={0.34}
-  color="#f2c879"
-  anchorX="center"
-  anchorY="middle"
->
-  HOME
-</Text>
-      
-      <mesh position={[0, 0, -0.04]}>
-  <planeGeometry args={[3.05, 4.85]} />
-  <meshStandardMaterial
-    color="#4a3217"
-    roughness={0.5}
-    metalness={0.25}
-  />
-</mesh>
-      
-<mesh position={[0, 0, -0.02]}>
-  <planeGeometry args={[2.75, 4.55]} />
-  <meshStandardMaterial
-    color="#8a652d"
-    roughness={0.42}
-    metalness={0.38}
-  />
-</mesh>
-      
-  <mesh>
-    <planeGeometry args={[2.4, 4.2]} />
-    <meshStandardMaterial
-      color="#1b1712"
-      roughness={0.55}
-      metalness={0.12}
-    />
-  </mesh>
-
-      <mesh position={[-0.82, -0.05, 0.08]}>
-  <sphereGeometry args={[0.09, 20, 20]} />
-  <meshStandardMaterial
-    color="#d4af37"
-    metalness={0.75}
-    roughness={0.25}
-  />
-</mesh>
-  
-</group>
+        e.stopPropagation();
+        handleHomeDoorClick();
+      }}
+      onPointerOver={() => {
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = "default";
+      }}
+    >
+      {/* Walnut backing and frame. Base is at floor level Y=-2. */}
+      <mesh position={[0, 0, -0.32]}>
+        <boxGeometry args={[3.28, 5.66, 0.045]} />
+        <HomeWalnutMaterial roughness={0.82} />
+      </mesh>
+      {[-1.34, 1.34].map((x) => (
+        <mesh key={`home-jamb-${x}`} position={[x, 0, 0.035]}>
+          <boxGeometry args={[0.38, 5.60, 0.14]} />
+          <HomeWalnutMaterial roughness={0.82} />
+        </mesh>
+      ))}
+      {[-1.43, 1.43].map((x) => (
+        <mesh key={`home-lip-${x}`} position={[x, 0, 0.16]}>
+          <boxGeometry args={[0.30, 5.54, 0.075]} />
+          <HomeWalnutMaterial roughness={0.82} />
+        </mesh>
+      ))}
+      <mesh position={[0, 2.68, 0.035]}>
+        <boxGeometry args={[3.18, 0.25, 0.14]} />
+        <HomeWalnutMaterial roughness={0.82} />
+      </mesh>
+      <mesh position={[0, -0.015, 0.02]}>
+        <boxGeometry args={[2.70, 5.27, 0.085]} />
+        <HomeWalnutMaterial roughness={0.78} />
+      </mesh>
+      <mesh position={[0, -2.70, 0.085]}>
+        <boxGeometry args={[3.06, 0.16, 0.16]} />
+        <HomeWalnutMaterial roughness={0.84} />
+      </mesh>
+      {[-1.16, 1.16].map((y) => (
+        <group key={`home-panel-${y}`}>
+          <mesh position={[0, y, 0.077]}>
+            <boxGeometry args={[2.24, 2.11, 0.014]} />
+            <HomeWalnutMaterial tint="#b5a79d" roughness={0.86} />
+          </mesh>
+          <mesh position={[0, y, 0.087]}>
+            <boxGeometry args={[2.08, 1.95, 0.014]} />
+            <HomeWalnutMaterial roughness={0.72} />
+          </mesh>
+        </group>
+      ))}
+      {/* Brushed brass lever and upper gold detail. */}
+      <mesh position={[0.99, -0.18, 0.107]}>
+        <boxGeometry args={[0.09, 0.31, 0.023]} />
+        <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
+      </mesh>
+      <mesh position={[0.89, -0.12, 0.137]}>
+        <boxGeometry args={[0.25, 0.045, 0.048]} />
+        <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
+      </mesh>
+      <mesh position={[0, 2.45, 0.108]}>
+        <boxGeometry args={[2.13, 0.023, 0.012]} />
+        <meshStandardMaterial color="#d7b56d" roughness={0.6} metalness={0.1} />
+      </mesh>
+      {/* Premium HOME plaque, black with gold border and details. */}
+      <group position={[0, 3.40, 0.28]}>
+        <mesh position={[0, 0, -0.03]}>
+          <boxGeometry args={[3.35, 0.78, 0.12]} />
+          <meshStandardMaterial color="#8b6428" emissive="#d7b56d" emissiveIntensity={0.22} metalness={0.55} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 0, 0.04]}>
+          <boxGeometry args={[3.15, 0.58, 0.10]} />
+          <meshStandardMaterial color="#120b05" roughness={0.48} metalness={0.18} />
+        </mesh>
+        {[-1.36, 1.36].map((x) => (
+          <mesh key={`home-plaque-line-${x}`} position={[x, 0, 0.11]}>
+            <boxGeometry args={[0.18, 0.025, 0.025]} />
+            <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
+          </mesh>
+        ))}
+        <Text position={[0, 0, 0.12]} fontSize={0.27} color="#f2c879" anchorX="center" anchorY="middle" letterSpacing={0.12}>
+          HOME
+        </Text>
+      </group>
+    </group>
   </>
 );
 }
