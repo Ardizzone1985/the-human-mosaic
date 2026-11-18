@@ -215,16 +215,21 @@ window.dispatchEvent(new PopStateEvent("popstate"));
   >
     {isLovePrototype ? (
       <group position={[0, 0, -0.32]}>
-        {/* Walnut jambs overlap the leaf edges to conceal the light wall reveal. */}
+        {/* Dark walnut backing closes any light gaps behind the door assembly. */}
+        <mesh position={[0, 0, -0.19]}>
+          <boxGeometry args={[3.28, 5.66, 0.045]} />
+          <LoveWalnutMaterial roughness={0.82} />
+        </mesh>
+        {/* Wider, forward-set jambs conceal the light wall reveal from the front. */}
         {[-1.40, 1.40].map((x) => (
-          <mesh key={x} position={[x, 0, -0.055]}>
-            <boxGeometry args={[0.22, 5.48, 0.12]} />
+          <mesh key={x} position={[x, 0, -0.012]}>
+            <boxGeometry args={[0.32, 5.60, 0.14]} />
             <LoveWalnutMaterial roughness={0.82} />
           </mesh>
         ))}
         {/* Header overlaps the upper edge of the door leaf as well. */}
-        <mesh position={[0, 2.64, -0.055]}>
-          <boxGeometry args={[3.02, 0.22, 0.12]} />
+        <mesh position={[0, 2.68, -0.012]}>
+          <boxGeometry args={[3.18, 0.25, 0.14]} />
           <LoveWalnutMaterial roughness={0.82} />
         </mesh>
         {/* Door leaf sits behind the trim */}
