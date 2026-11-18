@@ -1782,7 +1782,7 @@ color={
 />
       
       <RoomDoor
-        position={[-8, 1.45, -7.6]}
+        position={[-8, 1.45, -8.35]}
         label="IDENTITY"
         room="Identity"
         color="#d7b56d"
