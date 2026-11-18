@@ -186,49 +186,49 @@ window.dispatchEvent(new PopStateEvent("popstate"));
     onClick={handleDoorClick}
   >
     {isLovePrototype ? (
-      <group>
-        {/* Architectural surround: slender walnut jambs and lintel */}
-        {[-1.49, 1.49].map((x) => (
-          <mesh key={x} position={[x, 0, -0.12]}>
-            <boxGeometry args={[0.24, 5.72, 0.35]} />
-            <meshStandardMaterial color="#63432b" roughness={0.7} metalness={0} />
+      <group position={[0, 0, -0.32]}>
+        {/* Visual inset: low-profile jambs and header, not a protruding portal */}
+        {[-1.43, 1.43].map((x) => (
+          <mesh key={x} position={[x, 0, -0.055]}>
+            <boxGeometry args={[0.14, 5.48, 0.12]} />
+            <meshStandardMaterial color="#63432b" roughness={0.76} metalness={0} />
           </mesh>
         ))}
-        <mesh position={[0, 2.76, -0.12]}>
-          <boxGeometry args={[3.2, 0.24, 0.35]} />
-          <meshStandardMaterial color="#63432b" roughness={0.7} metalness={0} />
+        <mesh position={[0, 2.68, -0.055]}>
+          <boxGeometry args={[2.99, 0.13, 0.12]} />
+          <meshStandardMaterial color="#63432b" roughness={0.76} metalness={0} />
         </mesh>
-        {/* Flush solid walnut door leaf */}
-        <mesh position={[0, 0, 0.02]}>
-          <boxGeometry args={[2.74, 5.3, 0.25]} />
-          <meshStandardMaterial color="#785038" roughness={0.68} metalness={0} />
+        {/* Door leaf sits behind the trim */}
+        <mesh position={[0, -0.015, -0.105]}>
+          <boxGeometry args={[2.70, 5.27, 0.085]} />
+          <meshStandardMaterial color="#785038" roughness={0.72} metalness={0} />
         </mesh>
-        {/* Four recessed-looking raised wooden panels */}
-        {[-1.17, 1.17].map((y) => (
+        {/* Two restrained recessed panels */}
+        {[-1.16, 1.16].map((y) => (
           <group key={y}>
-            <mesh position={[0, y, 0.16]}>
-              <boxGeometry args={[2.24, 2.12, 0.055]} />
-              <meshStandardMaterial color="#4e3324" roughness={0.75} metalness={0} />
+            <mesh position={[0, y, -0.053]}>
+              <boxGeometry args={[2.24, 2.11, 0.014]} />
+              <meshStandardMaterial color="#4e3324" roughness={0.8} metalness={0} />
             </mesh>
-            <mesh position={[0, y, 0.195]}>
-              <boxGeometry args={[2.05, 1.93, 0.035]} />
-              <meshStandardMaterial color="#896047" roughness={0.68} metalness={0} />
+            <mesh position={[0, y, -0.043]}>
+              <boxGeometry args={[2.08, 1.95, 0.014]} />
+              <meshStandardMaterial color="#896047" roughness={0.74} metalness={0} />
             </mesh>
           </group>
         ))}
-        {/* Brushed brass backplate and lever */}
-        <mesh position={[0.96, -0.18, 0.22]}>
-          <boxGeometry args={[0.12, 0.34, 0.035]} />
-          <meshStandardMaterial color="#ae8950" metalness={0.78} roughness={0.35} />
+        {/* Brushed brass backplate and horizontal lever */}
+        <mesh position={[0.99, -0.18, -0.022]}>
+          <boxGeometry args={[0.09, 0.31, 0.023]} />
+          <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
         </mesh>
-        <mesh position={[0.88, -0.12, 0.29]}>
-          <boxGeometry args={[0.27, 0.055, 0.075]} />
-          <meshStandardMaterial color="#c4a16a" metalness={0.78} roughness={0.3} />
+        <mesh position={[0.89, -0.12, 0.007]}>
+          <boxGeometry args={[0.25, 0.045, 0.048]} />
+          <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
         </mesh>
-        {/* Subtle rose accent, instead of colored portal lighting */}
-        <mesh position={[0, 2.46, 0.17]}>
-          <boxGeometry args={[2.16, 0.035, 0.025]} />
-          <meshStandardMaterial color="#a87c83" roughness={0.55} metalness={0.15} />
+        {/* Delicate rose accent */}
+        <mesh position={[0, 2.45, -0.023]}>
+          <boxGeometry args={[2.13, 0.023, 0.012]} />
+          <meshStandardMaterial color="#a87c83" roughness={0.6} metalness={0.1} />
         </mesh>
       </group>
     ) : (
