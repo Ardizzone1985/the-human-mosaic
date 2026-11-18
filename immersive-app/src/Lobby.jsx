@@ -116,7 +116,7 @@ setActiveIndex(0);
   );
 }
 
-// Wood051 PBR finish — used only by the LOVE prototype door.
+// Wood051 PBR finish — shared by IDENTITY, LOVE and CREATIVITY.
 // Files are served from immersive-app/public/textures/.
 function LoveWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
   const [colorMap, normalMap, roughnessMap] = useTexture([
@@ -144,39 +144,11 @@ function LoveWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
   );
 }
 
-// IDENTITY uses the existing wood texture set with a warmer, lighter oak finish.
-// No additional assets or texture downloads are required.
-function IdentityOakMaterial({ roughness = 0.76, tint = "#e5c99f" }) {
-  const [colorMap, normalMap, roughnessMap] = useTexture([
-    "/textures/Wood051_1K-JPG_Color.jpg",
-    "/textures/Wood051_1K-JPG_NormalGL.jpg",
-    "/textures/Wood051_1K-JPG_Roughness.jpg",
-  ]);
-  colorMap.colorSpace = THREE.SRGBColorSpace;
-  colorMap.anisotropy = 8;
-  normalMap.anisotropy = 8;
-  roughnessMap.anisotropy = 8;
-  return (
-    <meshStandardMaterial
-      color={tint}
-      map={colorMap}
-      normalMap={normalMap}
-      normalScale={new THREE.Vector2(0.22, 0.22)}
-      roughnessMap={roughnessMap}
-      roughness={roughness}
-      metalness={0}
-      emissive="#9a7444"
-      emissiveIntensity={0.16}
-    />
-  );
-}
-
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef();
   const isLovePrototype = room === "Love";
-  const isIdentityPremium = room === "Identity";
-  const isArchitecturalDoor = isLovePrototype || isIdentityPremium || room === "Creativity";
+  const isArchitecturalDoor = ["Identity", "Love", "Creativity"].includes(room);
 
   const lastTapRef = useRef(0);
 const enteringRef = useRef(false);
@@ -202,7 +174,7 @@ function handleDoorClick(e) {
 
   const t = state.clock.elapsedTime;
 
-  // The LOVE prototype is a fixed architectural door, not a floating portal.
+  // All three museum room doors are fixed architectural doors, not floating portals.
   groupRef.current.position.y = isArchitecturalDoor
     ? position[1]
     : position[1] + Math.sin(t * 1.2 + position[0]) * 0.04;
@@ -244,50 +216,50 @@ window.dispatchEvent(new PopStateEvent("popstate"));
   >
     {isArchitecturalDoor ? (
       <group position={[0, 0, -0.32]}>
-        {/* Dark walnut backing closes any light gaps behind the door assembly. */}
+        {/* Walnut backing closes any light gaps behind the door assembly. */}
         <mesh position={[0, 0, -0.19]}>
           <boxGeometry args={[3.28, 5.66, 0.045]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
+          {<LoveWalnutMaterial roughness={0.82} />}
         </mesh>
         {/* Slightly overlapping jambs conceal the last bright seams at the leaf edges. */}
         {[-1.34, 1.34].map((x) => (
           <mesh key={x} position={[x, 0, 0.035]}>
             <boxGeometry args={[0.38, 5.60, 0.14]} />
-            {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
+            {<LoveWalnutMaterial roughness={0.82} />}
           </mesh>
         ))}
         {/* Architectural side seam cover — narrow forward walnut lips conceal wall-colored slivers. */}
         {[-1.43, 1.43].map((x) => (
           <mesh key={`love-side-seam-${x}`} position={[x, 0, 0.16]}>
             <boxGeometry args={[0.30, 5.54, 0.075]} />
-            {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
+            {<LoveWalnutMaterial roughness={0.82} />}
           </mesh>
         ))}
         {/* Header overlaps the upper edge of the door leaf as well. */}
         <mesh position={[0, 2.68, -0.012]}>
           <boxGeometry args={[3.18, 0.25, 0.14]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
+          {<LoveWalnutMaterial roughness={0.82} />}
         </mesh>
         {/* Door leaf sits behind the trim */}
         <mesh position={[0, -0.015, -0.105]}>
           <boxGeometry args={[2.70, 5.27, 0.085]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.78} /> : <IdentityOakMaterial roughness={0.78} />}
+          {<LoveWalnutMaterial roughness={0.78} />}
         </mesh>
         {/* Walnut threshold masks the wall skirting line at the base of LOVE. */}
         <mesh position={[0, -2.70, 0.085]}>
           <boxGeometry args={[3.06, 0.16, 0.16]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.84} /> : <IdentityOakMaterial roughness={0.84} />}
+          {<LoveWalnutMaterial roughness={0.84} />}
         </mesh>
         {/* Two restrained recessed panels */}
         {[-1.16, 1.16].map((y) => (
           <group key={y}>
             <mesh position={[0, y, -0.053]}>
               <boxGeometry args={[2.24, 2.11, 0.014]} />
-              {isLovePrototype ? <LoveWalnutMaterial tint="#b5a79d" roughness={0.86} /> : <IdentityOakMaterial tint="#b59a76" roughness={0.86} />}
+              {<LoveWalnutMaterial tint="#b5a79d" roughness={0.86} />}
             </mesh>
             <mesh position={[0, y, -0.043]}>
               <boxGeometry args={[2.08, 1.95, 0.014]} />
-              {isLovePrototype ? <LoveWalnutMaterial roughness={0.72} /> : <IdentityOakMaterial roughness={0.72} />}
+              {<LoveWalnutMaterial roughness={0.72} />}
             </mesh>
           </group>
         ))}
