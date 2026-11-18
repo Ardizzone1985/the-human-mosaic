@@ -220,10 +220,10 @@ window.dispatchEvent(new PopStateEvent("popstate"));
           <boxGeometry args={[3.28, 5.66, 0.045]} />
           <LoveWalnutMaterial roughness={0.82} />
         </mesh>
-        {/* Wider, forward-set jambs conceal the light wall reveal from the front. */}
-        {[-1.40, 1.40].map((x) => (
-          <mesh key={x} position={[x, 0, -0.012]}>
-            <boxGeometry args={[0.32, 5.60, 0.14]} />
+        {/* Slightly overlapping jambs conceal the last bright seams at the leaf edges. */}
+        {[-1.34, 1.34].map((x) => (
+          <mesh key={x} position={[x, 0, 0.035]}>
+            <boxGeometry args={[0.38, 5.60, 0.14]} />
             <LoveWalnutMaterial roughness={0.82} />
           </mesh>
         ))}
@@ -236,6 +236,11 @@ window.dispatchEvent(new PopStateEvent("popstate"));
         <mesh position={[0, -0.015, -0.105]}>
           <boxGeometry args={[2.70, 5.27, 0.085]} />
           <LoveWalnutMaterial roughness={0.78} />
+        </mesh>
+        {/* Walnut threshold masks the wall skirting line at the base of LOVE. */}
+        <mesh position={[0, -2.70, 0.085]}>
+          <boxGeometry args={[3.06, 0.16, 0.16]} />
+          <LoveWalnutMaterial roughness={0.84} />
         </mesh>
         {/* Two restrained recessed panels */}
         {[-1.16, 1.16].map((y) => (
