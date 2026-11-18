@@ -1,1806 +1,461 @@
-import { useState, useRef, useEffect } from "react";
-import { Text, useTexture } from "@react-three/drei";
-import LobbyShell from "./LobbyShell.jsx";
-import logoImage from "./logo-cropped.png";
+import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { supabase } from "./supabaseClient.js";
-import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
 
-function FeaturedRoomPhoto({ position, room, color = "#d7b56d" }) {
-  const [featuredPhotos, setFeaturedPhotos] = useState([]);
-const [activeIndex, setActiveIndex] = useState(0);
+export default function LobbyShell() {
+  const floorTexture = useTexture("/textures/WoodFloor039_1K-JPG_Color.jpg");
+ const ceilingSourceTexture = useTexture("/textures/Plaster001_1K-JPG_Color.jpg");
 
-const featuredPhoto = featuredPhotos[activeIndex];
-
-const imageUrl = featuredPhoto?.image_file_name
-  ? "https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/" + featuredPhoto.image_file_name
-  : null;
+const ceilingTexture = ceilingSourceTexture.clone();
+ceilingTexture.wrapS = THREE.RepeatWrapping;
+ceilingTexture.wrapT = THREE.RepeatWrapping;
+ceilingTexture.repeat.set(6, 5);
+ceilingTexture.colorSpace = THREE.SRGBColorSpace;
+ceilingTexture.needsUpdate = true;
   
-  useEffect(() => {
-    async function loadFeaturedPhoto() {
-      const { data, error } = await supabase
-        .from("submissions")
-        .select("image_file_name, likes_count, views_count, comments_count")
-.eq("room", room)
-.eq("approval_status", "approved")
-.order("likes_count", { ascending: false })
-.limit(3);
+  const plasterTexture = useTexture(
+  "/textures/Plaster001_1K-JPG_Color.jpg"
+);
 
-      if (error) {
-        console.error("Featured photo error:", error);
-        return;
-      }
+plasterTexture.wrapS = THREE.RepeatWrapping;
+plasterTexture.wrapT = THREE.RepeatWrapping;
+plasterTexture.repeat.set(5, 3);
+plasterTexture.colorSpace = THREE.SRGBColorSpace;
+plasterTexture.needsUpdate = true;
 
-      setFeaturedPhotos(data || []);
-setActiveIndex(0);
-    }
-
-    loadFeaturedPhoto();
-  }, [room]);
-
-  useEffect(() => {
-  if (featuredPhotos.length <= 1) return;
-
-  const interval = setInterval(() => {
-    setActiveIndex((current) => (current + 1) % featuredPhotos.length);
-  }, 10000);
-
-  return () => clearInterval(interval);
-}, [featuredPhotos.length]);
-
-  const texture = useTexture(imageUrl || logoImage);
+  floorTexture.wrapS = THREE.RepeatWrapping;
+  floorTexture.wrapT = THREE.RepeatWrapping;
+  floorTexture.repeat.set(4, 3);
+  floorTexture.colorSpace = THREE.SRGBColorSpace;
 
   return (
-    <group position={position}>
+    <>
+      {/* Cinematic lobby lights */}
+      <ambientLight intensity={0.45} color="#fff4dc" />
 
-      <Text
-  position={[0, 1.42, 0.08]}
-  fontSize={0.13}
-  color="#4b3522"
-  anchorX="center"
-  anchorY="middle"
-  letterSpacing={0.12}
+      <pointLight
+        position={[0, 5.2, -5]}
+        intensity={5.5}
+        distance={20}
+        color="#d7b56d"
+      />
+
+      <pointLight
+        position={[-5, 3.5, -6]}
+        intensity={3}
+        distance={12}
+        color="#d7b56d"
+      />
+
+      <pointLight
+        position={[5, 3.5, -6]}
+        intensity={3}
+        distance={12}
+        color="#d7b56d"
+      />
+
+      {/* PREMIUM LOBBY FLOOR — WOODFLOOR039 */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.25, 0]}
+  receiveShadow
 >
-  👑 COMMUNITY FAVORITE
-</Text>
+  <planeGeometry args={[40, 30]} />
 
-      <Text
-  position={[0, 1.12, 0.08]}
-  fontSize={0.13}
-  color="#4b3522"
-  anchorX="center"
-  anchorY="middle"
->
-  {`❤️ ${featuredPhoto?.likes_count ?? 0}   💬 ${featuredPhoto?.comments_count ?? 0}   👁 ${featuredPhoto?.views_count ?? 0}`}
-</Text>
-
-      <mesh position={[0, 0.35, -0.08]}>
-  <planeGeometry args={[2.25, 1.75]} />
-  <meshBasicMaterial
-  color={color}
-  transparent
-  opacity={0.05}
-  depthWrite={false}
-/>
+  <meshStandardMaterial
+    map={floorTexture}
+    color="#ffffff"
+    roughness={0.58}
+    metalness={0.02}
+  />
 </mesh>
-      
-      <mesh position={[0, 0.35, 0.09]}>
-        <planeGeometry args={[1.45, 1.05]} />
-        <meshStandardMaterial
-          map={texture}
-          roughness={0.22}
-          metalness={0.05}
-          emissive="#ffffff"
-          emissiveIntensity={0.05}
-          toneMapped={false}
-        />
-      </mesh>
 
-      <mesh position={[0, 0.35, 0]}>
-        <boxGeometry args={[1.82, 1.42, 0.06]} />
-        <meshStandardMaterial
-          color="#120806"
-          emissive={color}
-          emissiveIntensity={0.22}
-          roughness={0.35}
-          metalness={0.22}
-        />
-      </mesh>
+      {/* Central cinematic floor glow */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.22, -5.8]}
+>
+  <circleGeometry args={[5.8, 64]} />
+  <meshBasicMaterial
+    color="#ffcc88"
+    transparent
+    opacity={0.045}
+  />
+</mesh>
 
-      <mesh position={[0, 0.35, -0.04]}>
-        <planeGeometry args={[2.1, 1.65]} />
-        <meshBasicMaterial color={color} transparent opacity={0.08} />
-      </mesh>
-    </group>
-  );
-}
+      {/* Identity reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[-6.6, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#d7b56d"
+    transparent
+    opacity={0.055}
+  />
+</mesh>
 
-// Wood051 PBR finish — used only by the LOVE prototype door.
-// Files are served from immersive-app/public/textures/.
-function LoveWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
-  const [colorMap, normalMap, roughnessMap] = useTexture([
-    "/textures/Wood051_1K-JPG_Color.jpg",
-    "/textures/Wood051_1K-JPG_NormalGL.jpg",
-    "/textures/Wood051_1K-JPG_Roughness.jpg",
-  ]);
+{/* Love reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[0, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#ff9fbd"
+    transparent
+    opacity={0.05}
+  />
+</mesh>
 
-  // Color is sRGB; data maps remain in linear space.
-  colorMap.colorSpace = THREE.SRGBColorSpace;
-  colorMap.anisotropy = 8;
-  normalMap.anisotropy = 8;
-  roughnessMap.anisotropy = 8;
+{/* Creativity reflection */}
+<mesh
+  rotation={[-Math.PI / 2, 0, 0]}
+  position={[6.6, -1.21, -6.2]}
+>
+  <planeGeometry args={[2.8, 5]} />
+  <meshBasicMaterial
+    color="#9fc3ff"
+    transparent
+    opacity={0.05}
+  />
+</mesh>
 
-  return (
-    <meshStandardMaterial
-      color={tint}
-      map={colorMap}
-      normalMap={normalMap}
-      normalScale={new THREE.Vector2(0.32, 0.32)}
-      roughnessMap={roughnessMap}
-      roughness={roughness}
-      metalness={0}
-    />
-  );
-}
+             {/* Back wall: matching real openings for IDENTITY (x=-8), LOVE (x=0) and CREATIVITY (x=8). */}
+       {[
+         { x: -12.275, width: 5.45 },
+         { x: -4, width: 4.9 },
+         { x: 4, width: 4.9 },
+          { x: 12.275, width: 5.45 },
+       ].map(({ x, width }) => (
+         <mesh key={`back-wall-segment-${x}`} position={[x, 4.25, -9]}>
+           <boxGeometry args={[width, 13.2, 0.35]} />
+           <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
+         </mesh>
+       ))}
+       {[-8, 0, 8].map((x) => (
+         <mesh key={`back-wall-header-${x}`} position={[x, 7.525, -9]}>
+           <boxGeometry args={[3.1, 6.65, 0.35]} />
+           <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
+         </mesh>
+       ))}
 
-// IDENTITY uses the existing wood texture set with a warmer, lighter oak finish.
-// No additional assets or texture downloads are required.
-function IdentityOakMaterial({ roughness = 0.76, tint = "#e5c99f" }) {
-  const [colorMap, normalMap, roughnessMap] = useTexture([
-    "/textures/Wood051_1K-JPG_Color.jpg",
-    "/textures/Wood051_1K-JPG_NormalGL.jpg",
-    "/textures/Wood051_1K-JPG_Roughness.jpg",
-  ]);
-  colorMap.colorSpace = THREE.SRGBColorSpace;
-  colorMap.anisotropy = 8;
-  normalMap.anisotropy = 8;
-  roughnessMap.anisotropy = 8;
-  return (
-    <meshStandardMaterial
-      color={tint}
-      map={colorMap}
-      normalMap={normalMap}
-      normalScale={new THREE.Vector2(0.22, 0.22)}
-      roughnessMap={roughnessMap}
-      roughness={roughness}
-      metalness={0}
-      emissive="#9a7444"
-      emissiveIntensity={0.16}
-    />
-  );
-}
-
-function RoomDoor({ position, label, room, color = "#d7b56d" }) {
-  const [hovered, setHovered] = useState(false);
-  const groupRef = useRef();
-  const isLovePrototype = room === "Love";
-  const isIdentityPremium = room === "Identity";
-  const isArchitecturalDoor = isLovePrototype || isIdentityPremium || room === "Creativity";
-
-  const lastTapRef = useRef(0);
-const enteringRef = useRef(false);
-
-function handleDoorClick(e) {
-  e.stopPropagation();
-
-  if (enteringRef.current) return;
-
-  const now = Date.now();
-
-  if (now - lastTapRef.current < 400) {
-    lastTapRef.current = 0;
-    enteringRef.current = true;
-    enterRoom();
-  } else {
-    lastTapRef.current = now;
-  }
-}
-
-  useFrame((state) => {
-  if (!groupRef.current) return;
-
-  const t = state.clock.elapsedTime;
-
-  // The LOVE prototype is a fixed architectural door, not a floating portal.
-  groupRef.current.position.y = isArchitecturalDoor
-    ? position[1]
-    : position[1] + Math.sin(t * 1.2 + position[0]) * 0.04;
-
-  // Smooth hover scaling
-  const targetScale = isArchitecturalDoor ? 1 : hovered ? 1.12 : 1;
-
-  groupRef.current.scale.lerp(
-    new THREE.Vector3(targetScale, targetScale, targetScale),
-    0.08
-  );
-});
-
-  function enterRoom() {
-  window.dispatchEvent(new Event("startFadeOut"));
-
-  setTimeout(() => {
-    window.history.pushState({}, "", `/?room=${room}`);
-window.dispatchEvent(new PopStateEvent("popstate"));
-  }, 900);
-}
-
-  return (
-  <group
-  ref={groupRef}
-    position={position}
-    scale={isArchitecturalDoor ? 1 : hovered ? 1.08 : 1}
-    onPointerOver={(e) => {
-      e.stopPropagation();
-      setHovered(true);
-      document.body.style.cursor = "pointer";
-    }}
-    onPointerOut={(e) => {
-      e.stopPropagation();
-      setHovered(false);
-      document.body.style.cursor = "default";
-    }}
-    onClick={handleDoorClick}
-  >
-    {isArchitecturalDoor ? (
-      <group position={[0, 0, -0.32]}>
-        {/* Dark walnut backing closes any light gaps behind the door assembly. */}
-        <mesh position={[0, 0, -0.19]}>
-          <boxGeometry args={[3.28, 5.66, 0.045]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
-        </mesh>
-        {/* Slightly overlapping jambs conceal the last bright seams at the leaf edges. */}
-        {[-1.34, 1.34].map((x) => (
-          <mesh key={x} position={[x, 0, 0.035]}>
-            <boxGeometry args={[0.38, 5.60, 0.14]} />
-            {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
-          </mesh>
-        ))}
-        {/* Architectural side seam cover — narrow forward walnut lips conceal wall-colored slivers. */}
-        {[-1.43, 1.43].map((x) => (
-          <mesh key={`love-side-seam-${x}`} position={[x, 0, 0.16]}>
-            <boxGeometry args={[0.30, 5.54, 0.075]} />
-            {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
-          </mesh>
-        ))}
-        {/* Header overlaps the upper edge of the door leaf as well. */}
-        <mesh position={[0, 2.68, -0.012]}>
-          <boxGeometry args={[3.18, 0.25, 0.14]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.82} /> : <IdentityOakMaterial roughness={0.82} />}
-        </mesh>
-        {/* Door leaf sits behind the trim */}
-        <mesh position={[0, -0.015, -0.105]}>
-          <boxGeometry args={[2.70, 5.27, 0.085]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.78} /> : <IdentityOakMaterial roughness={0.78} />}
-        </mesh>
-        {/* Walnut threshold masks the wall skirting line at the base of LOVE. */}
-        <mesh position={[0, -2.70, 0.085]}>
-          <boxGeometry args={[3.06, 0.16, 0.16]} />
-          {isLovePrototype ? <LoveWalnutMaterial roughness={0.84} /> : <IdentityOakMaterial roughness={0.84} />}
-        </mesh>
-        {/* Two restrained recessed panels */}
-        {[-1.16, 1.16].map((y) => (
-          <group key={y}>
-            <mesh position={[0, y, -0.053]}>
-              <boxGeometry args={[2.24, 2.11, 0.014]} />
-              {isLovePrototype ? <LoveWalnutMaterial tint="#b5a79d" roughness={0.86} /> : <IdentityOakMaterial tint="#b59a76" roughness={0.86} />}
+{/* Premium door wall architectural panels */}
+{[-8, 0, 8].map((x) => (
+  <group key={`door-wall-panel-${x}`} position={[x, 3.35, -8.72]}>
+    {(x === 0 || x === -8 || x === 8) ? (
+      <>
+        {/* All three room panels are split around their doorways. */}
+        {[-2.375, 2.375].map((offset) => (
+          <group key={`door-panel-side-${offset}`} position={[offset, 0, 0]}>
+            <mesh><boxGeometry args={[1.55, 7.1, 0.18]} />
+              <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
             </mesh>
-            <mesh position={[0, y, -0.043]}>
-              <boxGeometry args={[2.08, 1.95, 0.014]} />
-              {isLovePrototype ? <LoveWalnutMaterial roughness={0.72} /> : <IdentityOakMaterial roughness={0.72} />}
+            <mesh position={[0, 0, -0.08]}><boxGeometry args={[1.85, 7.7, 0.12]} />
+              <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
             </mesh>
           </group>
         ))}
-        {/* Brushed brass backplate and horizontal lever */}
-        <mesh position={[0.99, -0.18, -0.022]}>
-          <boxGeometry args={[0.09, 0.31, 0.023]} />
-          <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
+        <mesh position={[0, 2.2, 0]}><boxGeometry args={[3.2, 2.7, 0.18]} />
+          <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
         </mesh>
-        <mesh position={[0.89, -0.12, 0.007]}>
-          <boxGeometry args={[0.25, 0.045, 0.048]} />
-          <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
+        <mesh position={[0, 2.2, -0.08]}><boxGeometry args={[3.2, 2.7, 0.12]} />
+          <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
         </mesh>
-        {/* Delicate rose accent */}
-        <mesh position={[0, 2.45, -0.023]}>
-          <boxGeometry args={[2.13, 0.023, 0.012]} />
-          <meshStandardMaterial color={isLovePrototype ? "#a87c83" : "#d7b56d"} roughness={0.6} metalness={0.1} />
-        </mesh>
-      </group>
+      </>
     ) : (
       <>
-    <mesh position={[0, 0, -0.28]}>
-  <boxGeometry args={[3.8, 6.1, 0.52]} />
-      <meshStandardMaterial
-        color={hovered ? color : "#6b4a1e"}
-        emissive={color}
-        emissiveIntensity={hovered ? 1.4 : 0.45}
-        roughness={0.34}
-        metalness={0.28}
-      />
-    </mesh>
+        <mesh><boxGeometry args={[6.3, 7.1, 0.18]} />
+          <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
+        </mesh>
+        <mesh position={[0, 0, -0.08]}><boxGeometry args={[6.9, 7.7, 0.12]} />
+          <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
+        </mesh>
+      </>
+    )}
 
-    <mesh position={[0, 0, 0.02]}>
-  <boxGeometry args={[2.95, 5.25, 0.46]} />
-      <meshStandardMaterial
-        color="#2a1208"
-        roughness={0.42}
-        metalness={0.22}
-        emissive={color}
-        emissiveIntensity={hovered ? 0.34 : 0.08}
-      />
-    </mesh>
-
-    <mesh position={[0, 0, 0.28]}>
-  <boxGeometry args={[2.2, 4.4, 0.16]} />
-      <meshStandardMaterial
-        color="#0b0302"
-        roughness={0.7}
-        metalness={0.1}
-      />
-    </mesh>
-
-    <mesh position={[0.82, 0, 0.28]}>
-      <sphereGeometry args={[0.08, 16, 16]} />
+    <mesh position={[0, 3.25, 0.08]}>
+      <boxGeometry args={[5.7, 0.055, 0.08]} />
       <meshStandardMaterial
         color="#d7b56d"
-        emissive="#d7b56d"
-        emissiveIntensity={hovered ? 0.7 : 0.25}
-        metalness={0.8}
+        emissive="#8a4b12"
+        emissiveIntensity={0.45}
+        metalness={0.35}
         roughness={0.22}
       />
     </mesh>
 
-    <mesh position={[0, 2.18, 0.24]}>
-      <boxGeometry args={[2.55, 0.08, 0.08]} />
-      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.45} />
-    </mesh>
-
-      </>
-    )}
-
-    {/* Premium museum plaque — IDENTITY */}
-{["Identity", "Love", "Creativity"].includes(room) ? (
-  <group position={[0, 3.45, 0.28]}>
-
-    {/* Golden outer frame */}
-    <mesh position={[0, 0, -0.03]}>
-      <boxGeometry args={[3.35, 0.78, 0.12]} />
-      <meshStandardMaterial
-        color="#8b6428"
-        emissive="#d7b56d"
-        emissiveIntensity={0.22}
-        metalness={0.55}
-        roughness={0.3}
-      />
-    </mesh>
-
-    {/* Black plaque */}
-    <mesh position={[0, 0, 0.04]}>
-      <boxGeometry args={[3.15, 0.58, 0.10]} />
-      <meshStandardMaterial
-        color="#120b05"
-        roughness={0.48}
-        metalness={0.18}
-      />
-    </mesh>
-
-    {/* Left gold detail */}
-    <mesh position={[-1.36, 0, 0.11]}>
-      <boxGeometry args={[0.18, 0.025, 0.025]} />
-      <meshStandardMaterial
-        color="#d7b56d"
-        emissive="#d7b56d"
-        emissiveIntensity={0.45}
-      />
-    </mesh>
-
-    {/* Right gold detail */}
-    <mesh position={[1.36, 0, 0.11]}>
-      <boxGeometry args={[0.18, 0.025, 0.025]} />
-      <meshStandardMaterial
-        color="#d7b56d"
-        emissive="#d7b56d"
-        emissiveIntensity={0.45}
-      />
-    </mesh>
-
-    <Text
-      position={[0, 0, 0.12]}
-      fontSize={0.27}
-      color="#f2c879"
-      anchorX="center"
-      anchorY="middle"
-      letterSpacing={0.12}
-    >
-      {label}
-    </Text>
-
-  </group>
-) : (
-  <Text
-    position={[0, 3.45, 0.28]}
-    fontSize={0.28}
-    color={hovered ? "#ffffff" : color}
-    anchorX="center"
-  >
-    {label}
-  </Text>
-)}
-
-    {!isArchitecturalDoor && (
+    {x === 8 && (
       <>
-    {/* Floor reflection glow */}
-<mesh position={[0, -2.58, 0.55]} rotation={[-Math.PI / 2, 0, 0]}>
-  <circleGeometry args={[1.25, 48]} />
-  <meshBasicMaterial
-    color={color}
-    transparent
-    opacity={hovered ? 0.22 : 0.09}
-  />
-</mesh>
+    <mesh position={[-2.85, 0, 0.08]}>
+      <boxGeometry args={[0.055, 6.5, 0.08]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#8a4b12"
+        emissiveIntensity={0.32}
+        metalness={0.35}
+        roughness={0.25}
+      />
+    </mesh>
 
-    {/* Cinematic rear glow */}
-<mesh position={[0, 0, -0.55]}>
-  <planeGeometry args={[2.8, 4.8]} />
-  <meshBasicMaterial
-    color={color}
-    transparent
-    opacity={hovered ? 0.18 : 0.08}
-  />
-</mesh>
-
-    {/* Vertical cinematic halo */}
-<mesh position={[0, 0.35, -0.7]}>
-  <planeGeometry args={[3.4, 5.8]} />
-  <meshBasicMaterial
-    color={color}
-    transparent
-    opacity={hovered ? 0.10 : 0.035}
-  />
-</mesh>
-
-    {/* Portal wall glow */}
-<mesh position={[0, 0.55, -1.05]}>
-  <planeGeometry args={[5.2, 7.2]} />
-  <meshBasicMaterial
-    color={color}
-    transparent
-    opacity={hovered ? 0.16 : 0.055}
-  />
-</mesh>
-
-{/* Floor cinematic spill */}
-<mesh
-  position={[0, -2.92, 1.25]}
-  rotation={[-Math.PI / 2, 0, 0]}
->
-  <planeGeometry args={[3.8, 4.8]} />
-  <meshBasicMaterial
-    color={color}
-    transparent
-    opacity={hovered ? 0.11 : 0.045}
-  />
-</mesh>
-
+    <mesh position={[2.85, 0, 0.08]}>
+      <boxGeometry args={[0.055, 6.5, 0.08]} />
+      <meshStandardMaterial
+        color="#d7b56d"
+        emissive="#8a4b12"
+        emissiveIntensity={0.32}
+        metalness={0.35}
+        roughness={0.25}
+      />
+    </mesh>
       </>
     )}
-
-    <Text
-      position={[0, -2.85, 0.28]}
-      fontSize={0.12}
-      color={hovered ? "#ffffff" : "#d8c7ad"}
-      anchorX="center"
-    >
-      DOUBLE CLICK / DOUBLE TAP
-    </Text>
   </group>
-);
-}
+))}
 
-function LoungeBarDoor({
-  position,
-  rotation = [0, 0, 0],
-  color = "#d7b56d",
-}) {
-  return (
-    <group position={position} rotation={rotation}>
-      {/* External frame */}
-      <mesh position={[0, 0, -0.28]}>
-        <boxGeometry args={[3.8, 6.1, 0.52]} />
-        <meshStandardMaterial
-          color="#6b4a1e"
-          emissive={color}
-          emissiveIntensity={0.22}
-          roughness={0.34}
-          metalness={0.28}
-        />
-      </mesh>
-
-      {/* Main door */}
-      <mesh position={[0, 0, 0.02]}>
-        <boxGeometry args={[2.95, 5.25, 0.46]} />
-        <meshStandardMaterial
-          color="#2a1208"
-          roughness={0.42}
-          metalness={0.22}
-          emissive={color}
-          emissiveIntensity={0.06}
-        />
-      </mesh>
-
-      {/* Inner panel */}
-      <mesh position={[0, 0, 0.28]}>
-        <boxGeometry args={[2.2, 4.4, 0.16]} />
-        <meshStandardMaterial
-          color="#0b0302"
-          roughness={0.7}
-          metalness={0.1}
-        />
-      </mesh>
-
-      {/* Door handle */}
-      <mesh position={[0.82, 0, 0.38]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial
-          color="#d7b56d"
-          emissive="#d7b56d"
-          emissiveIntensity={0.25}
-          metalness={0.8}
-          roughness={0.22}
-        />
-      </mesh>
-
-      {/* Golden upper detail */}
-      <mesh position={[0, 2.18, 0.24]}>
-        <boxGeometry args={[2.55, 0.08, 0.08]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.32}
-        />
-      </mesh>
-
-      {/* Museum plaque — COMING SOON */}
-<group position={[0, 3.85, 0.28]}>
-
-  {/* Gold outer frame */}
-  <mesh position={[0, 0, -0.03]}>
-    <boxGeometry args={[3.35, 0.78, 0.12]} />
-    <meshStandardMaterial
-      color="#8b6428"
-      emissive="#d7b56d"
-      emissiveIntensity={0.22}
-      metalness={0.55}
-      roughness={0.3}
-    />
-  </mesh>
-
-  {/* Dark plaque */}
-  <mesh position={[0, 0, 0.04]}>
-    <boxGeometry args={[3.15, 0.58, 0.10]} />
-    <meshStandardMaterial
-      color="#120b05"
-      roughness={0.48}
-      metalness={0.18}
-    />
-  </mesh>
-
-  {/* Decorative gold lines */}
-  <mesh position={[-1.36, 0, 0.11]}>
-  <boxGeometry args={[0.18, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  <mesh position={[1.36, 0, 0.11]}>
-  <boxGeometry args={[0.18, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  <Text
-    position={[0, 0, 0.12]}
-    fontSize={0.27}
-    color="#f2c879"
-    anchorX="center"
-    anchorY="middle"
-    letterSpacing={0.12}
-  >
-    COMING SOON
-  </Text>
-
-</group>
-
-      <Text
-        position={[0, 0.45, 0.4]}
-        fontSize={0.30}
-        color="#f2c879"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={2.1}
-        textAlign="center"
-        lineHeight={1.25}
-      >
-        LOUNGE BAR
-      </Text>
-
-      <Text
-        position={[0, -0.35, 0.4]}
-        fontSize={0.15}
-        color="#e7dcc8"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={1.9}
-        textAlign="center"
-        lineHeight={1.4}
-      >
-        A new museum experience awaits.
-      </Text>
-
-      {/* Decorative separator */}
-      <mesh position={[0, -0.72, 0.32]}>
-        <boxGeometry args={[1.55, 0.02, 0.02]} />
-        <meshStandardMaterial
-          color="#d7b56d"
-          emissive="#d7b56d"
-          emissiveIntensity={0.35}
-        />
-      </mesh>
-
-      {/* Floor glow */}
-      <mesh
-        position={[0, -2.58, 0.55]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
-        <circleGeometry args={[1.25, 48]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.07}
-        />
-      </mesh>
-
-      {/* Rear glow */}
-      <mesh position={[0, 0, -0.55]}>
-        <planeGeometry args={[2.8, 4.8]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.05}
-        />
-      </mesh>
-
-      <Text
-        position={[0, -2.85, 0.28]}
-        fontSize={0.11}
-        color="#9f8b6a"
-        anchorX="center"
-        letterSpacing={0.08}
-      >
-        FUTURE EXPERIENCE
-      </Text>
-    </group>
-  );
-}
-
-function HumanityImpactDoor({
-  position,
-  rotation = [0, 0, 0],
-  color = "#d7b56d",
-}) {
-    const [hovered, setHovered] = useState(false);
-
-  const lastTapRef = useRef(0);
-const enteringRef = useRef(false);
-
-function handleHumanityDoubleClick(e) {
-  e.stopPropagation();
-
-  if (enteringRef.current) return;
-
-  const now = Date.now();
-
-  if (now - lastTapRef.current <= 400) {
-    lastTapRef.current = 0;
-    enteringRef.current = true;
-    enterHumanityImpact();
-  } else {
-    lastTapRef.current = now;
-  }
-}
-
-  function enterHumanityImpact() {
-    window.dispatchEvent(new Event("startFadeOut"));
-
-    setTimeout(() => {
-      window.history.pushState({}, "", "/?room=humanity-impact");
-      window.dispatchEvent(new PopStateEvent("popstate"));
-    }, 900);
-  }
-  return (
-    <group
-  position={position}
-  rotation={rotation}
-  scale={hovered ? 1.06 : 1}
-  onPointerOver={(e) => {
-    e.stopPropagation();
-    setHovered(true);
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(e) => {
-    e.stopPropagation();
-    setHovered(false);
-    document.body.style.cursor = "default";
-  }}
-  onClick={handleHumanityDoubleClick}
->
-      {/* External frame */}
-      <mesh position={[0, 0, -0.28]}>
-        <boxGeometry args={[3.8, 6.1, 0.52]} />
-
-        <meshStandardMaterial
-          color="#6b4a1e"
-          emissive={color}
-          emissiveIntensity={0.22}
-          roughness={0.34}
-          metalness={0.28}
-        />
-      </mesh>
-
-      {/* Main door */}
-      <mesh position={[0, 0, 0.02]}>
-        <boxGeometry args={[2.95, 5.25, 0.46]} />
-
-        <meshStandardMaterial
-          color="#2a1208"
-          roughness={0.42}
-          metalness={0.22}
-          emissive={color}
-          emissiveIntensity={0.06}
-        />
-      </mesh>
-
-      {/* Inner panel */}
-      <mesh position={[0, 0, 0.28]}>
-        <boxGeometry args={[2.2, 4.4, 0.16]} />
-
-        <meshStandardMaterial
-          color="#0b0302"
-          roughness={0.7}
-          metalness={0.1}
-        />
-      </mesh>
-
-      {/* Door handle */}
-      <mesh position={[0.82, 0, 0.38]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-
-        <meshStandardMaterial
-          color="#d7b56d"
-          emissive="#d7b56d"
-          emissiveIntensity={0.25}
-          metalness={0.8}
-          roughness={0.22}
-        />
-      </mesh>
-
-      {/* Golden upper detail */}
-      <mesh position={[0, 2.18, 0.24]}>
-        <boxGeometry args={[2.55, 0.08, 0.08]} />
-
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.32}
-        />
-      </mesh>
-
-      {/* Museum plaque — HUMANITY IMPACT */}
-<group position={[0, 3.85, 0.28]}>
-
-  {/* Gold outer frame */}
-  <mesh position={[0, 0, -0.03]}>
-    <boxGeometry args={[3.35, 0.78, 0.12]} />
-    <meshStandardMaterial
-      color="#8b6428"
-      emissive="#d7b56d"
-      emissiveIntensity={0.22}
-      metalness={0.55}
-      roughness={0.3}
-    />
-  </mesh>
-
-  {/* Dark plaque */}
-  <mesh position={[0, 0, 0.04]}>
-    <boxGeometry args={[3.15, 0.58, 0.10]} />
-    <meshStandardMaterial
-      color="#120b05"
-      roughness={0.48}
-      metalness={0.18}
-    />
-  </mesh>
-
-  {/* Left decorative gold line */}
-  <mesh position={[-1.36, 0, 0.11]}>
-    <boxGeometry args={[0.18, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  {/* Right decorative gold line */}
-  <mesh position={[1.36, 0, 0.11]}>
-    <boxGeometry args={[0.18, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  <Text
-    position={[0, 0, 0.12]}
-    fontSize={0.24}
-    color="#f2c879"
-    anchorX="center"
-    anchorY="middle"
-    letterSpacing={0.10}
-  >
-    HUMANITY IMPACT
-  </Text>
-
-</group>
-     
-      <Text
-        position={[0, -0.35, 0.4]}
-        fontSize={0.15}
-        color="#e7dcc8"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={1.9}
-        textAlign="center"
-        lineHeight={1.4}
-      >
-        Together we create real impact.
-      </Text>
-
-      <mesh position={[0, -0.72, 0.32]}>
-  <boxGeometry args={[1.55, 0.02, 0.02]} />
+      {/* Left wall */}
+<mesh position={[-15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 13.2, 0.35]} />
   <meshStandardMaterial
-    color="#d7b56d"
-    emissive="#d7b56d"
-    emissiveIntensity={0.35}
+    map={plasterTexture}
+    color="#ffffff"
+    roughness={0.85}
+    metalness={0}
   />
 </mesh>
 
-      {/* Subtle floor glow */}
-      <mesh
-        position={[0, -2.58, 0.55]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
-        <circleGeometry args={[1.25, 48]} />
-
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.07}
-        />
-      </mesh>
-
-      {/* Subtle rear glow */}
-      <mesh position={[0, 0, -0.55]}>
-        <planeGeometry args={[2.8, 4.8]} />
-
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.05}
-        />
-      </mesh>
-
-      <Text
-        position={[0, -2.85, 0.28]}
-        fontSize={0.11}
-        color="#9f8b6a"
-        anchorX="center"
-        letterSpacing={0.08}
-      >
-        DOUBLE CLICK / DOUBLE TAP
-      </Text>
-    </group>
-  );
-}
-
-export default function Lobby({
-  onOpenCommunityWall,
-  onSponsorClick,
-}) {
-  
-  const lastExitTapRef = useRef(0);
-const exitTriggeredRef = useRef(false);
-
-function handleExitDoubleClick(e) {
-  e.stopPropagation();
-
-  if (exitTriggeredRef.current) return;
-
-  const now = Date.now();
-
-  if (now - lastExitTapRef.current <= 400) {
-    lastExitTapRef.current = 0;
-    exitTriggeredRef.current = true;
-
-    window.dispatchEvent(new Event("startFadeOut"));
-
-    setTimeout(() => {
-      window.location.href = "https://thehumanmosaic.art";
-    }, 700);
-  } else {
-    lastExitTapRef.current = now;
-  }
-}
-    const [roomCounts, setRoomCounts] = useState({
-    Identity: 0,
-    Love: 0,
-    Creativity: 0,
-  });
-
-  const totalMosaic =
-  roomCounts.Identity +
-  roomCounts.Love +
-  roomCounts.Creativity;
-
-  const earlyAccessLimit = 1000;
-
-const earlyAccessClaimed = Math.min(
-  totalMosaic,
-  earlyAccessLimit
-);
-
-const earlyAccessRemaining = Math.max(
-  earlyAccessLimit - earlyAccessClaimed,
-  0
-);
-
-const earlyAccessProgress =
-  earlyAccessClaimed / earlyAccessLimit;
-
-const earlyAccessBarWidth = 3.6;
-
-const earlyAccessFillWidth = Math.max(
-  0.04,
-  earlyAccessBarWidth * earlyAccessProgress
-);
-
-  const [news, setNews] = useState([]);
-
-  const [hoveredOfficialLink, setHoveredOfficialLink] = useState(null);
-
-  const [communityWallHovered, setCommunityWallHovered] =
-  useState(false);
-
-  useEffect(() => {
-async function loadNews() {
-  const { data, error } = await supabase
-    .from("project_news")
-    .select("title, message, created_at")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false })
-    .limit(5);
-
-  if (error) {
-    console.error("News error:", error);
-    return;
-  }
-
-  setNews(data || []);
-}
-
-    loadNews();
-    
-    async function loadRoomCounts() {
-      const { data, error } = await supabase
-        .from("submissions")
-        .select("room, approval_status");
-
-      if (error) {
-        console.error("Lobby stats error:", error);
-        return;
-      }
-
-      let counts = {
-        Identity: 0,
-        Love: 0,
-        Creativity: 0,
-      };
-
-      data.forEach((item) => {
-        if (item.approval_status !== "approved") return;
-
-        if (item.room === "Identity") counts.Identity++;
-        if (item.room === "Love") counts.Love++;
-        if (item.room === "Creativity") counts.Creativity++;
-      });
-
-      setRoomCounts(counts);
-    }
-
-    loadRoomCounts();
-  }, []);
-  const logoTexture = useTexture(logoImage);
-  return (
-    <>
-      <LobbyShell />
-      
-<mesh position={[0, 4.2, 10.55]} rotation={[0, Math.PI, 0]}>
-  <planeGeometry args={[7.4, 3.7]} />
-  <meshBasicMaterial map={logoTexture} transparent />
+{/* Right wall */}
+<mesh position={[15, 4.9, 0.9]} rotation={[0, Math.PI / 2, 0]}>
+  <boxGeometry args={[20, 13.2, 0.35]} />
+  <meshStandardMaterial
+  map={plasterTexture}
+  color="#ffffff"
+  roughness={0.85}
+  metalness={0}
+/>
 </mesh>
 
-      <Text
-  position={[0, 6.75, 10.55]}
-rotation={[0, Math.PI, 0]}
-  fontSize={0.52}
-  color="#f2c879"
-  anchorX="center"
->
-  WELCOME TO
-</Text>
+      {/* Entrance / branding wall */}
+<mesh position={[0, 4.25, 10.8]}>
+  <boxGeometry args={[30, 13.2, 0.35]} />
+  <meshStandardMaterial
+  map={plasterTexture}
+  color="#ffffff"
+  roughness={0.85}
+  metalness={0}
+/>
+</mesh>
 
-     <Text
-  position={[0, 1.55, 10.55]}
-rotation={[0, Math.PI, 0]}
-  fontSize={0.28}
-color="#6b5a3f"
-  anchorX="center"
-  maxWidth={6}
-  textAlign="center"
->
-  A permanent global immersive artwork
-</Text>
+      {/* Welcome wall architectural panels */}
 
-      {/* EXIT — Full museum door */}
-<group
-  position={[-12.7, 1.80, 10.55]}
-  rotation={[0, Math.PI, 0]}
-  onPointerOver={() => {
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={() => {
-    document.body.style.cursor = "default";
-  }}
-  onClick={handleExitDoubleClick}
->
-  {/* External museum frame */}
-  <mesh position={[0, 0, -0.28]}>
-    <boxGeometry args={[3.8, 6.1, 0.52]} />
+<group position={[-6.5, 4.4, 10.58]}>
+  <mesh>
+    <boxGeometry args={[4.6, 8.35, 0.16]} />
     <meshStandardMaterial
-      color="#6b4a1e"
-      emissive="#d7b56d"
-      emissiveIntensity={0.22}
-      roughness={0.34}
-      metalness={0.28}
+      color="#8b857c"
+      roughness={0.52}
+      metalness={0.08}
+      emissive="#d7c7a0"
+emissiveIntensity={0.03}
     />
   </mesh>
 
-  {/* Main door */}
-  <mesh position={[0, 0, 0.02]}>
-    <boxGeometry args={[2.95, 5.25, 0.46]} />
-    <meshStandardMaterial
-      color="#2a1208"
-      roughness={0.42}
-      metalness={0.22}
-      emissive="#d7b56d"
-      emissiveIntensity={0.06}
-    />
-  </mesh>
-
-  {/* Inner dark panel */}
-  <mesh position={[0, 0, 0.28]}>
-    <boxGeometry args={[2.2, 4.4, 0.16]} />
-    <meshStandardMaterial
-      color="#0b0302"
-      roughness={0.7}
-      metalness={0.1}
-    />
-  </mesh>
-
-  {/* Handle */}
-  <mesh position={[0.82, 0, 0.38]}>
-    <sphereGeometry args={[0.08, 16, 16]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.3}
-      metalness={0.8}
-      roughness={0.22}
-    />
-  </mesh>
-
-  {/* Upper golden detail */}
-  <mesh position={[0, 2.18, 0.24]}>
-    <boxGeometry args={[2.55, 0.08, 0.08]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.32}
-    />
-  </mesh>
-
-  {/* Museum plaque — EXIT */}
-<group position={[0, 3.85, 0.28]}>
-
-  {/* Gold outer frame */}
-  <mesh position={[0, 0, -0.03]}>
-    <boxGeometry args={[1.85, 0.78, 0.12]} />
-    <meshStandardMaterial
-      color="#8b6428"
-      emissive="#d7b56d"
-      emissiveIntensity={0.22}
-      metalness={0.55}
-      roughness={0.3}
-    />
-  </mesh>
-
-  {/* Dark plaque */}
-  <mesh position={[0, 0, 0.04]}>
-    <boxGeometry args={[1.65, 0.58, 0.10]} />
-    <meshStandardMaterial
-      color="#120b05"
-      roughness={0.48}
-      metalness={0.18}
-    />
-  </mesh>
-
-  {/* Left decorative gold line */}
-  <mesh position={[-0.68, 0, 0.11]}>
-    <boxGeometry args={[0.16, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  {/* Right decorative gold line */}
-  <mesh position={[0.68, 0, 0.11]}>
-    <boxGeometry args={[0.16, 0.025, 0.025]} />
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  <Text
-    position={[0, 0, 0.12]}
-    fontSize={0.27}
-    color="#f2c879"
-    anchorX="center"
-    anchorY="middle"
-    letterSpacing={0.12}
-  >
-    EXIT
-  </Text>
-
-</group>
-</group>
-
-      {/* Welcome Wall - Project News Panel */}
-<group position={[-6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
-  <Text
-    position={[0, 2.55, 0.12]}
-    fontSize={0.36}
-    color="#5b4630"
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    PROJECT NEWS
-  </Text>
-
-  <Text
-    position={[0, 1.85, 0.12]}
-    fontSize={0.16}
-    color="#6b5a3f"
-    anchorX="center"
-    maxWidth={3.8}
-    textAlign="center"
-  >
-    Latest updates from The Human Mosaic
-  </Text>
-
-  {news.length > 0 ? (
-  <>
-   <Text
-  position={[0, 1.25, 0.12]}
-  fontSize={0.13}
-  color="#8a7758"
-  anchorX="center"
->
-  {new Date(news[0].created_at).toLocaleDateString("en-GB", {
-    year: "numeric",
-  month: "long",
-  day: "numeric",
-  })}
-</Text>
-    <Text
-      position={[0, 0.85, 0.12]}
-      fontSize={0.18}
-      color="#4f4638"
-      anchorX="center"
-      maxWidth={3.6}
-      textAlign="center"
-    >
-      {news[0].title}      
-    </Text>
-
-    <Text
-      position={[0, 0.10, 0.12]}
-      fontSize={0.13}
-      color="#6b5a3f"
-      anchorX="center"
-      maxWidth={3.8}
-      textAlign="center"
-    >
-      {news[0].message}
-    </Text>
-  </>
-) : (
-  <Text
-    position={[0, 0.7, 0.12]}
-    fontSize={0.18}
-    color="#4f4638"
-    anchorX="center"
-    maxWidth={3.6}
-    textAlign="center"
-  >
-    No news available
-  </Text>
-)}
-
-  <Text
-    position={[0, -1.95, 0.12]}
-    fontSize={0.13}
-    color="#5b4630"
-    anchorX="center"
-    maxWidth={3.4}
-    textAlign="center"
-  >
-    Updated from the official admin area
-  </Text>
-</group>
-
-{/* Welcome Wall - Live Participation Panel */}
-<group position={[6.5, 4.45, 10.45]} rotation={[0, Math.PI, 0]}>
-  <Text
-    position={[0, 2.55, 0.12]}
-    fontSize={0.36}
-    color="#5b4630"
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    LIVE PARTICIPATION
-  </Text>
-
-  <Text
-    position={[0, 1.85, 0.12]}
-    fontSize={0.16}
-    color="#6b5a3f"
-    anchorX="center"
-    maxWidth={3.8}
-    textAlign="center"
-  >
-    Real-time growth of the artwork
-  </Text>
-
-  <Text
-    position={[0, 0.75, 0.12]}
-    fontSize={0.22}
-    color="#d7b56d"
-    anchorX="center"
-  >
-    {`IDENTITY: ${roomCounts.Identity.toLocaleString()} / 1,000,000`}
-  </Text>
-
-  <Text
-    position={[0, 0.2, 0.12]}
-    fontSize={0.22}
-    color="#c9829b"
-    anchorX="center"
-  >
-    {`LOVE: ${roomCounts.Love.toLocaleString()} / 1,000,000`}
-  </Text>
-
-  <Text
-    position={[0, -0.35, 0.12]}
-    fontSize={0.22}
-    color="#8fa8d8"
-    anchorX="center"
-  >
-    {`CREATIVITY: ${roomCounts.Creativity.toLocaleString()} / 1,000,000`}
-  </Text>
-
-  <Text
-  position={[0, -0.92, 0.12]}
-  fontSize={0.18}
-  color="#d7b56d"
-  anchorX="center"
->
-  {`TOTAL MOSAIC: ${totalMosaic.toLocaleString()} / 3,000,000`}
-</Text>
-
- {/* Early Access separator */}
-<mesh position={[0, -1.32, 0.1]}>
-  <boxGeometry args={[3.8, 0.025, 0.025]} />
-
-  <meshBasicMaterial
-    color="#d7b56d"
-    transparent
-    opacity={0.5}
+  <mesh position={[0, 0, -0.08]}>
+  <boxGeometry args={[5.1, 8.8, 0.12]} />
+  <meshStandardMaterial
+    color="#ddd5c8"
+    roughness={0.88}
+    metalness={0.02}
   />
 </mesh>
 
-<Text
-  position={[0, -1.55, 0.12]}
-  fontSize={0.18}
-  color="#d7b56d"
-  anchorX="center"
-  letterSpacing={0.12}
->
-  EARLY ACCESS
-</Text>
-
-<Text
-  position={[0, -1.82, 0.12]}
-  fontSize={0.105}
-  color="#6b5a3f"
-  anchorX="center"
-  maxWidth={3.8}
-  textAlign="center"
->
-  First 1,000 participants join at reduced prices
-</Text>
-
-<Text
-  position={[0, -2.08, 0.12]}
-  fontSize={0.115}
-  color="#4f4638"
-  anchorX="center"
->
-  IDENTITY €5   ·   LOVE €5   ·   CREATIVITY €10
-</Text>
-
-{/* Progress bar background */}
-<mesh position={[0, -2.34, 0.1]}>
-  <boxGeometry args={[earlyAccessBarWidth, 0.085, 0.035]} />
-
-  <meshBasicMaterial
-    color="#5e584f"
-    transparent
-    opacity={0.55}
-  />
-</mesh>
-
-{/* Progress bar fill */}
-<mesh
-  position={[
-    -earlyAccessBarWidth / 2 +
-      earlyAccessFillWidth / 2,
-    -2.34,
-    0.13,
-  ]}
->
-  <boxGeometry
-    args={[earlyAccessFillWidth, 0.105, 0.045]}
-  />
-
-  <meshBasicMaterial color="#d7b56d" />
-</mesh>
-
-<Text
-  position={[0, -2.58, 0.12]}
-  fontSize={0.105}
-  color="#5b4630"
-  anchorX="center"
->
-  {`${earlyAccessClaimed.toLocaleString()} / ${earlyAccessLimit.toLocaleString()} spots claimed`}
-</Text>
-
-<Text
-  position={[0, -2.82, 0.12]}
-  fontSize={0.11}
-  color="#8a7758"
-  anchorX="center"
->
-  {earlyAccessRemaining > 0
-    ? `${earlyAccessRemaining.toLocaleString()} Early Access spots remaining`
-    : "Early Access allocation completed"}
-</Text>
-</group>
-        
-      <group
-  position={[0, 0.15, 10.55]}
-  rotation={[0, Math.PI, 0]}
->
-  <mesh position={[0, 0, -0.05]}>
-    <boxGeometry args={[5.2, 1.70, 0.12]} />
-
+  <mesh position={[0, 4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
     <meshStandardMaterial
-      color="#140805"
+      color="#d7b56d"
       emissive="#8a4b12"
-      emissiveIntensity={0.22}
-      roughness={0.32}
-      metalness={0.35}
+      emissiveIntensity={0.35}
     />
   </mesh>
 
-  <mesh position={[0, 0.83, 0]}>
-    <boxGeometry args={[4.85, 0.045, 0.08]} />
+  <mesh position={[-2.3, 0, 0.08]}>
+  <boxGeometry args={[0.055, 8.2, 0.08]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.28} />
+</mesh>
 
+<mesh position={[2.3, 0, 0.08]}>
+  <boxGeometry args={[0.055, 8.2, 0.08]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.28} />
+</mesh>
+
+  <mesh position={[0, -4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
     <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.7}
+      color="#8a4b12"
+      emissive="#8a4b12"
+      emissiveIntensity={0.18}
     />
   </mesh>
-
-  <mesh position={[0, -0.83, 0]}>
-    <boxGeometry args={[4.85, 0.045, 0.08]} />
-
-    <meshStandardMaterial
-      color="#d7b56d"
-      emissive="#d7b56d"
-      emissiveIntensity={0.45}
-    />
-  </mesh>
-
-  <Text
-    position={[0, 0.43, 0.08]}
-    fontSize={0.2}
-    color="#f8d890"
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    VISIT OUR OFFICIAL WEBSITE
-  </Text>
-
-  <Text
-    position={[0, 0.07, 0.08]}
-    fontSize={0.1}
-    color="#c9a96b"
-    anchorX="center"
-    maxWidth={4}
-    textAlign="center"
-  >
-    Discover the story, mission, news and global vision of The Human Mosaic
-  </Text>
-
-  <Text
-  position={[0, -0.28, 0.08]}
-  fontSize={0.17}
-  color={
-    hoveredOfficialLink === "website"
-      ? "#ffffff"
-      : "#f2c879"
-  }
-  anchorX="center"
-  fontWeight={700}
-  onPointerOver={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink("website");
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink(null);
-    document.body.style.cursor = "default";
-  }}
-  onClick={(event) => {
-    event.stopPropagation();
-
-    window.open(
-      "https://thehumanmosaic.art",
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }}
->
-  THEHUMANMOSAIC.ART
-</Text>
-
-        <Text
-  position={[0, -0.46, 0.08]}
-  fontSize={0.085}
-  color="#9f8b6a"
-  anchorX="center"
-  letterSpacing={0.05}
->
-  FOLLOW OUR GLOBAL JOURNEY
-</Text>
-
-  <Text
-  position={[-0.95, -0.60, 0.08]}
-  fontSize={0.11}
-  color={
-    hoveredOfficialLink === "instagram"
-      ? "#ffffff"
-      : "#d8c7ad"
-  }
-  anchorX="center"
-  onPointerOver={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink("instagram");
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink(null);
-    document.body.style.cursor = "default";
-  }}
-  onClick={(event) => {
-    event.stopPropagation();
-
-    window.open(
-      "https://www.instagram.com/thehumanmosaic.art",
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }}
->
-  INSTAGRAM
-</Text>
-
-  <Text
-  position={[0.95, -0.60, 0.08]}
-  fontSize={0.11}
-  color={
-    hoveredOfficialLink === "facebook"
-      ? "#ffffff"
-      : "#d8c7ad"
-  }
-  anchorX="center"
-  onPointerOver={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink("facebook");
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(event) => {
-    event.stopPropagation();
-    setHoveredOfficialLink(null);
-    document.body.style.cursor = "default";
-  }}
-  onClick={(event) => {
-    event.stopPropagation();
-
-    window.open(
-      "https://www.facebook.com/profile.php?id=61573309801007&locale=it_IT",
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }}
->
-  FACEBOOK
-</Text>
 </group>
 
-      <LoungeBarDoor
-  position={[-13.95, 1.45, -3.8]}
-  rotation={[0, Math.PI / 2, 0]}
-  color="#d7b56d"
-/>
+<group position={[6.5, 4.4, 10.58]}>
+  <mesh>
+    <boxGeometry args={[4.6, 8.35, 0.16]} />
+    <meshStandardMaterial
+      color="#8b857c"
+      roughness={0.52}
+      metalness={0.08}
+      emissive="#d7c7a0"
+emissiveIntensity={0.03}
+    />
+  </mesh>
 
-      {/* Future Humanity Impact wall */}
-<HumanityImpactDoor
-  position={[-13.95, 1.45, 3.8]}
-  rotation={[0, Math.PI / 2, 0]}
-  color="#d7b56d"
-/>
-
-    <group position={[11.72, 3.3, 0]} rotation={[0, -Math.PI / 2, 0]}>
-  {/* Left sponsor */}
-<SponsorPanel
-  position={[-4.2, 0, 0]}
-  placement="lobby-left"
-  label="PARTNER SPACE"
-  onSponsorClick={onSponsorClick}
-  layout="vertical"
-/>
-
-  {/* Community wall */}
-<group
-  position={[0, 0.15, 0]}
-  scale={communityWallHovered ? 1.035 : 1}
-  onPointerOver={(event) => {
-    event.stopPropagation();
-    setCommunityWallHovered(true);
-    document.body.style.cursor = "pointer";
-  }}
-  onPointerOut={(event) => {
-    event.stopPropagation();
-    setCommunityWallHovered(false);
-    document.body.style.cursor = "default";
-  }}
-  onClick={(event) => {
-    event.stopPropagation();
-    onOpenCommunityWall?.();
-  }}
->
-  {/* External golden frame */}
-<mesh position={[0, 0, -0.05]}>
-  <boxGeometry args={[4.8, 5.6, 0.24]} />
-
+  <mesh position={[0, 0, -0.08]}>
+  <boxGeometry args={[5.1, 8.8, 0.12]} />
   <meshStandardMaterial
-    color={
-      communityWallHovered
-        ? "#f2c879"
-        : "#b88932"
-    }
+    color="#ddd5c8"
+    roughness={0.88}
+    metalness={0.02}
+  />
+</mesh>
+
+  <mesh position={[0, 4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#d7b56d"
+      emissive="#8a4b12"
+      emissiveIntensity={0.35}
+    />
+  </mesh>
+
+  <mesh position={[-2.3, 0, 0.08]}>
+  <boxGeometry args={[0.055, 8.2, 0.08]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.28} />
+</mesh>
+
+<mesh position={[2.3, 0, 0.08]}>
+  <boxGeometry args={[0.055, 8.2, 0.08]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.28} />
+</mesh>
+
+  <mesh position={[0, -4.1, 0.08]}>
+    <boxGeometry args={[4.6, 0.05, 0.08]} />
+    <meshStandardMaterial
+      color="#8a4b12"
+      emissive="#8a4b12"
+      emissiveIntensity={0.18}
+    />
+  </mesh>
+</group>
+
+      {/* Deep cinematic ceiling */}
+<mesh position={[0, 9.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
+  <planeGeometry args={[40, 30]} />
+  <meshStandardMaterial
+  map={ceilingTexture}
+  color="#ffffff"
+  roughness={0.9}
+  metalness={0}
+  side={THREE.DoubleSide}
+/>
+</mesh>
+
+{/* Central ceiling light panel */}
+<mesh position={[0, 9.48, -1]}>
+  <boxGeometry args={[12, 0.08, 0.22]} />
+  <meshStandardMaterial
+    color="#d7b56d"
     emissive="#d7b56d"
-    emissiveIntensity={
-      communityWallHovered ? 0.85 : 0.38
-    }
-    metalness={0.82}
+    emissiveIntensity={0.75}
+    metalness={0.45}
+    roughness={0.22}
+  />
+</mesh>
+
+{/* Rear ceiling light panel */}
+<mesh position={[0, 9.48, -6.5]}>
+  <boxGeometry args={[18, 0.08, 0.22]} />
+  <meshStandardMaterial
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.55}
+    metalness={0.45}
     roughness={0.24}
   />
 </mesh>
 
-{/* Dark frame depth */}
-<mesh position={[0, 0, 0.08]}>
-  <boxGeometry args={[4.48, 5.28, 0.20]} />
-
+{/* Side ceiling light rails */}
+<mesh position={[-10.6, 9.48, -1]}>
+  <boxGeometry args={[0.18, 0.08, 12]} />
   <meshStandardMaterial
-    color="#241407"
-    emissive="#6b4315"
-    emissiveIntensity={0.16}
-    metalness={0.34}
-    roughness={0.42}
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.45}
+    roughness={0.24}
   />
 </mesh>
 
-{/* Black museum panel */}
-<mesh position={[0, 0, 0.19]}>
-  <boxGeometry args={[4.18, 4.98, 0.18]} />
-
+<mesh position={[10.6, 9.48, -1]}>
+  <boxGeometry args={[0.18, 0.08, 12]} />
   <meshStandardMaterial
-    color="#050302"
-    emissive="#120904"
-    emissiveIntensity={
-      communityWallHovered ? 0.24 : 0.10
-    }
-    metalness={0.16}
-    roughness={0.72}
+    color="#b8872b"
+    emissive="#d7b56d"
+    emissiveIntensity={0.45}
+    metalness={0.45}
+    roughness={0.24}
   />
 </mesh>
 
-{/* Inner golden border */}
-<mesh position={[0, 0, 0.30]}>
-  <boxGeometry args={[3.96, 4.76, 0.025]} />
+      {/* Back wall golden frame */}
+      <mesh position={[0, 9.15, -8.75]}>
+        <boxGeometry args={[28.5, 0.08, 0.14]} />
+        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.5} />
+      </mesh>
 
-  <meshBasicMaterial
-    color="#d7b56d"
-    transparent
-    opacity={
-      communityWallHovered ? 0.26 : 0.13
-    }
-  />
+             {/* Lower rail stops at all three room door openings. */}
+       {[
+         { x: -12.275, width: 5.45 },
+         { x: -4, width: 4.9 },
+         { x: 4, width: 4.9 },
+          { x: 11.9, width: 4.7 },
+       ].map(({ x, width }) => (
+         <mesh key={`back-wall-lower-gold-${x}`} position={[x, -0.95, -8.75]}>
+           <boxGeometry args={[width, 0.08, 0.14]} />
+           <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
+         </mesh>
+       ))}
+
+<mesh position={[-14.25, 4.9, -8.75]}>
+  <boxGeometry args={[0.08, 11.8, 0.14]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
-{/* Inner black surface */}
-<mesh position={[0, 0, 0.325]}>
-  <boxGeometry args={[3.88, 4.68, 0.028]} />
-
-  <meshBasicMaterial color="#080504" />
+      <mesh position={[14.25, 4.9, -8.75]}>
+  <boxGeometry args={[0.08, 11.8, 0.14]} />
+  <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.35} />
 </mesh>
 
-  <Text
-    position={[0, 1.85, 0.38]}
-fontSize={0.32}
-color={
-  communityWallHovered
-    ? "#fff4d8"
-    : "#d7b56d"
-}
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    COMMUNITY WALL
-  </Text>
+      {/* Golden ceiling frame */}
+      <mesh position={[0, 9.52, -7]}>
+        <boxGeometry args={[21, 0.08, 0.12]} />
+        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.55} metalness={0.35} roughness={0.25} />
+      </mesh>
 
-  <Text
-    position={[0, 0.75, 0.38]}
-fontSize={0.15}
-color="#e2c486"
-    anchorX="center"
-    maxWidth={3.4}
-    textAlign="center"
-  >
-    Messages from participants around the world
-  </Text>
+      <mesh position={[0, 9.52, 5]}>
+        <boxGeometry args={[21, 0.08, 0.12]} />
+        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.45} metalness={0.35} roughness={0.25} />
+      </mesh>
 
-  <Text
-    position={[0, -0.25, 0.38]}
-fontSize={0.15}
-color="#d7b56d"
-    anchorX="center"
-    maxWidth={3.5}
-    textAlign="center"
-  >
-    “Every memory becomes part of humanity.”
-  </Text>
+      <mesh position={[-10.5, 9.52, -1]}>
+        <boxGeometry args={[0.12, 0.08, 12]} />
+        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.45} metalness={0.35} roughness={0.25} />
+      </mesh>
 
-  <Text
-    position={[0, -1.35, 0.38]}
-fontSize={0.14}
-color={
-  communityWallHovered
-    ? "#ffffff"
-    : "#f2c879"
-}
-    anchorX="center"
-    letterSpacing={0.08}
-  >
-    {communityWallHovered
-      ? "CLICK TO OPEN"
-      : "OPEN COMMUNITY WALL"}
-  </Text>
-</group>
-
-  {/* Right sponsor */}
-<SponsorPanel
-  position={[4.2, 0, 0]}
-  placement="lobby-right"
-  label="PARTNER SPACE"
-  onSponsorClick={onSponsorClick}
-  layout="vertical"
-/>
-</group>
-
-      <FeaturedRoomPhoto
-  position={[-8, 6.15, -7.35]}
-  room="Identity"
-  color="#d7b56d"
-/>
-
-<FeaturedRoomPhoto
-  position={[0, 6.15, -7.35]}
-  room="Love"
-  color="#ff9fbd"
-/>
-
-<FeaturedRoomPhoto
-  position={[8, 6.15, -7.35]}
-  room="Creativity"
-  color="#9fc3ff"
-/>
-      
-      <RoomDoor
-        position={[-8, 1.45, -8.35]}
-        label="IDENTITY"
-        room="Identity"
-        color="#d7b56d"
-      />
-
-      <RoomDoor
-        position={[0, 1.45, -8.35]}
-        label="LOVE"
-        room="Love"
-        color="#ff9fbd"
-      />
-
-      <RoomDoor
-        position={[8, 1.45, -8.35]}
-        label="CREATIVITY"
-        room="Creativity"
-        color="#9fc3ff"
-      />
+      <mesh position={[10.5, 9.52, -1]}>
+        <boxGeometry args={[0.12, 0.08, 12]} />
+        <meshStandardMaterial color="#d7b56d" emissive="#8a4b12" emissiveIntensity={0.45} metalness={0.35} roughness={0.25} />
+      </mesh>
     </>
   );
 }
