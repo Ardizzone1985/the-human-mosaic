@@ -699,7 +699,7 @@ function handleHumanityDoubleClick(e) {
     <group
   position={position}
   rotation={rotation}
-  scale={hovered ? 1.06 : 1}
+  scale={1}
   onPointerOver={(e) => {
     e.stopPropagation();
     setHovered(true);
@@ -712,65 +712,58 @@ function handleHumanityDoubleClick(e) {
   }}
   onClick={handleHumanityDoubleClick}
 >
-      {/* External frame */}
-      <mesh position={[0, 0, -0.28]}>
-        <boxGeometry args={[3.8, 6.1, 0.52]} />
-
-        <meshStandardMaterial
-          color="#6b4a1e"
-          emissive={color}
-          emissiveIntensity={0.22}
-          roughness={0.34}
-          metalness={0.28}
-        />
+      {/* Architectural walnut door — matches EXIT; no floating portal. */}
+      <mesh position={[0, 0, -0.32]}>
+        <boxGeometry args={[3.28, 5.66, 0.045]} />
+        <LoveWalnutMaterial roughness={0.82} />
       </mesh>
-
-      {/* Main door */}
-      <mesh position={[0, 0, 0.02]}>
-        <boxGeometry args={[2.95, 5.25, 0.46]} />
-
-        <meshStandardMaterial
-          color="#2a1208"
-          roughness={0.42}
-          metalness={0.22}
-          emissive={color}
-          emissiveIntensity={0.06}
-        />
+      {[-1.34, 1.34].map((x) => (
+        <mesh key={`impact-jamb-${x}`} position={[x, 0, 0.035]}>
+          <boxGeometry args={[0.38, 5.60, 0.14]} />
+          <LoveWalnutMaterial roughness={0.82} />
+        </mesh>
+      ))}
+      {[-1.43, 1.43].map((x) => (
+        <mesh key={`impact-lip-${x}`} position={[x, 0, 0.16]}>
+          <boxGeometry args={[0.30, 5.54, 0.075]} />
+          <LoveWalnutMaterial roughness={0.82} />
+        </mesh>
+      ))}
+      <mesh position={[0, 2.68, 0.035]}>
+        <boxGeometry args={[3.18, 0.25, 0.14]} />
+        <LoveWalnutMaterial roughness={0.82} />
       </mesh>
-
-      {/* Inner panel */}
-      <mesh position={[0, 0, 0.28]}>
-        <boxGeometry args={[2.2, 4.4, 0.16]} />
-
-        <meshStandardMaterial
-          color="#0b0302"
-          roughness={0.7}
-          metalness={0.1}
-        />
+      <mesh position={[0, -0.015, 0.02]}>
+        <boxGeometry args={[2.70, 5.27, 0.085]} />
+        <LoveWalnutMaterial roughness={0.78} />
       </mesh>
-
-      {/* Door handle */}
-      <mesh position={[0.82, 0, 0.38]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-
-        <meshStandardMaterial
-          color="#d7b56d"
-          emissive="#d7b56d"
-          emissiveIntensity={0.25}
-          metalness={0.8}
-          roughness={0.22}
-        />
+      <mesh position={[0, -2.70, 0.085]}>
+        <boxGeometry args={[3.06, 0.16, 0.16]} />
+        <LoveWalnutMaterial roughness={0.84} />
       </mesh>
-
-      {/* Golden upper detail */}
-      <mesh position={[0, 2.18, 0.24]}>
-        <boxGeometry args={[2.55, 0.08, 0.08]} />
-
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.32}
-        />
+      {[-1.16, 1.16].map((y) => (
+        <group key={`impact-panel-${y}`}>
+          <mesh position={[0, y, 0.077]}>
+            <boxGeometry args={[2.24, 2.11, 0.014]} />
+            <LoveWalnutMaterial tint="#b5a79d" roughness={0.86} />
+          </mesh>
+          <mesh position={[0, y, 0.087]}>
+            <boxGeometry args={[2.08, 1.95, 0.014]} />
+            <LoveWalnutMaterial roughness={0.72} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0.99, -0.18, 0.107]}>
+        <boxGeometry args={[0.09, 0.31, 0.023]} />
+        <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
+      </mesh>
+      <mesh position={[0.89, -0.12, 0.137]}>
+        <boxGeometry args={[0.25, 0.045, 0.048]} />
+        <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
+      </mesh>
+      <mesh position={[0, 2.45, 0.108]}>
+        <boxGeometry args={[2.13, 0.023, 0.012]} />
+        <meshStandardMaterial color="#d7b56d" roughness={0.6} metalness={0.1} />
       </mesh>
 
       {/* Museum plaque — HUMANITY IMPACT */}
@@ -831,53 +824,6 @@ function handleHumanityDoubleClick(e) {
 
 </group>
      
-      <Text
-        position={[0, -0.35, 0.4]}
-        fontSize={0.15}
-        color="#e7dcc8"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={1.9}
-        textAlign="center"
-        lineHeight={1.4}
-      >
-        Together we create real impact.
-      </Text>
-
-      <mesh position={[0, -0.72, 0.32]}>
-  <boxGeometry args={[1.55, 0.02, 0.02]} />
-  <meshStandardMaterial
-    color="#d7b56d"
-    emissive="#d7b56d"
-    emissiveIntensity={0.35}
-  />
-</mesh>
-
-      {/* Subtle floor glow */}
-      <mesh
-        position={[0, -2.58, 0.55]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
-        <circleGeometry args={[1.25, 48]} />
-
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.07}
-        />
-      </mesh>
-
-      {/* Subtle rear glow */}
-      <mesh position={[0, 0, -0.55]}>
-        <planeGeometry args={[2.8, 4.8]} />
-
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.05}
-        />
-      </mesh>
-
       <Text
         position={[0, -2.85, 0.28]}
         fontSize={0.11}
