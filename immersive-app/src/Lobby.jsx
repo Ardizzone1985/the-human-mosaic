@@ -119,6 +119,7 @@ setActiveIndex(0);
 function RoomDoor({ position, label, room, color = "#d7b56d" }) {
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef();
+  const isLovePrototype = room === "Love";
 
   const lastTapRef = useRef(0);
 const enteringRef = useRef(false);
@@ -144,12 +145,13 @@ function handleDoorClick(e) {
 
   const t = state.clock.elapsedTime;
 
-  // Floating cinematic movement
-  groupRef.current.position.y =
-    position[1] + Math.sin(t * 1.2 + position[0]) * 0.04;
+  // The LOVE prototype is a fixed architectural door, not a floating portal.
+  groupRef.current.position.y = isLovePrototype
+    ? position[1]
+    : position[1] + Math.sin(t * 1.2 + position[0]) * 0.04;
 
   // Smooth hover scaling
-  const targetScale = hovered ? 1.12 : 1;
+  const targetScale = isLovePrototype ? 1 : hovered ? 1.12 : 1;
 
   groupRef.current.scale.lerp(
     new THREE.Vector3(targetScale, targetScale, targetScale),
@@ -170,7 +172,7 @@ window.dispatchEvent(new PopStateEvent("popstate"));
   <group
   ref={groupRef}
     position={position}
-    scale={hovered ? 1.08 : 1}
+    scale={isLovePrototype ? 1 : hovered ? 1.08 : 1}
     onPointerOver={(e) => {
       e.stopPropagation();
       setHovered(true);
@@ -183,6 +185,54 @@ window.dispatchEvent(new PopStateEvent("popstate"));
     }}
     onClick={handleDoorClick}
   >
+    {isLovePrototype ? (
+      <group>
+        {/* Architectural surround: slender walnut jambs and lintel */}
+        {[-1.49, 1.49].map((x) => (
+          <mesh key={x} position={[x, 0, -0.12]}>
+            <boxGeometry args={[0.24, 5.72, 0.35]} />
+            <meshStandardMaterial color="#63432b" roughness={0.7} metalness={0} />
+          </mesh>
+        ))}
+        <mesh position={[0, 2.76, -0.12]}>
+          <boxGeometry args={[3.2, 0.24, 0.35]} />
+          <meshStandardMaterial color="#63432b" roughness={0.7} metalness={0} />
+        </mesh>
+        {/* Flush solid walnut door leaf */}
+        <mesh position={[0, 0, 0.02]}>
+          <boxGeometry args={[2.74, 5.3, 0.25]} />
+          <meshStandardMaterial color="#785038" roughness={0.68} metalness={0} />
+        </mesh>
+        {/* Four recessed-looking raised wooden panels */}
+        {[-1.17, 1.17].map((y) => (
+          <group key={y}>
+            <mesh position={[0, y, 0.16]}>
+              <boxGeometry args={[2.24, 2.12, 0.055]} />
+              <meshStandardMaterial color="#4e3324" roughness={0.75} metalness={0} />
+            </mesh>
+            <mesh position={[0, y, 0.195]}>
+              <boxGeometry args={[2.05, 1.93, 0.035]} />
+              <meshStandardMaterial color="#896047" roughness={0.68} metalness={0} />
+            </mesh>
+          </group>
+        ))}
+        {/* Brushed brass backplate and lever */}
+        <mesh position={[0.96, -0.18, 0.22]}>
+          <boxGeometry args={[0.12, 0.34, 0.035]} />
+          <meshStandardMaterial color="#ae8950" metalness={0.78} roughness={0.35} />
+        </mesh>
+        <mesh position={[0.88, -0.12, 0.29]}>
+          <boxGeometry args={[0.27, 0.055, 0.075]} />
+          <meshStandardMaterial color="#c4a16a" metalness={0.78} roughness={0.3} />
+        </mesh>
+        {/* Subtle rose accent, instead of colored portal lighting */}
+        <mesh position={[0, 2.46, 0.17]}>
+          <boxGeometry args={[2.16, 0.035, 0.025]} />
+          <meshStandardMaterial color="#a87c83" roughness={0.55} metalness={0.15} />
+        </mesh>
+      </group>
+    ) : (
+      <>
     <mesh position={[0, 0, -0.28]}>
   <boxGeometry args={[3.8, 6.1, 0.52]} />
       <meshStandardMaterial
@@ -229,6 +279,9 @@ window.dispatchEvent(new PopStateEvent("popstate"));
       <boxGeometry args={[2.55, 0.08, 0.08]} />
       <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.45} />
     </mesh>
+
+      </>
+    )}
 
     {/* Premium museum plaque — IDENTITY */}
 {["Identity", "Love", "Creativity"].includes(room) ? (
@@ -299,6 +352,8 @@ window.dispatchEvent(new PopStateEvent("popstate"));
   </Text>
 )}
 
+    {!isLovePrototype && (
+      <>
     {/* Floor reflection glow */}
 <mesh position={[0, -2.58, 0.55]} rotation={[-Math.PI / 2, 0, 0]}>
   <circleGeometry args={[1.25, 48]} />
@@ -351,6 +406,9 @@ window.dispatchEvent(new PopStateEvent("popstate"));
     opacity={hovered ? 0.11 : 0.045}
   />
 </mesh>
+
+      </>
+    )}
 
     <Text
       position={[0, -2.85, 0.28]}
