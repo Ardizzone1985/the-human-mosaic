@@ -3,7 +3,32 @@ import { Text, useTexture } from "@react-three/drei";
 import RoomShell from "./RoomShell.jsx";
 import { supabase } from "./supabaseClient.js";
 import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 import SponsorPanel from "./components/sponsors/SponsorPanel.jsx";
+
+// Same Wood051 PBR finish used by the architectural doors in Lobby.jsx.
+function ImpactWalnutMaterial({ tint = "#ffffff", roughness = 0.72 }) {
+  const [colorMap, normalMap, roughnessMap] = useTexture([
+    "/textures/Wood051_1K-JPG_Color.jpg",
+    "/textures/Wood051_1K-JPG_NormalGL.jpg",
+    "/textures/Wood051_1K-JPG_Roughness.jpg",
+  ]);
+  colorMap.colorSpace = THREE.SRGBColorSpace;
+  colorMap.anisotropy = 8;
+  normalMap.anisotropy = 8;
+  roughnessMap.anisotropy = 8;
+  return (
+    <meshStandardMaterial
+      color={tint}
+      map={colorMap}
+      normalMap={normalMap}
+      normalScale={new THREE.Vector2(0.32, 0.32)}
+      roughnessMap={roughnessMap}
+      roughness={roughness}
+      metalness={0}
+    />
+  );
+}
 
 export default function HumanityImpactRoom() {
   const plasterTexture = useTexture("/textures/Plaster001_1K-JPG_Color.jpg");
@@ -1110,11 +1135,10 @@ const milestoneProgress =
   />
 </group>
 
-      {/* HOME door */}
+      {/* HOME — Wood051 architectural door matching the Lobby */}
       <group
-        position={[0, 0.55, 10.55]}
+        position={[0, 2.80, 10.55]}
         rotation={[0, Math.PI, 0]}
-        scale={doorHovered ? 1.06 : 1}
         onPointerOver={(e) => {
           e.stopPropagation();
           setDoorHovered(true);
@@ -1127,66 +1151,82 @@ const milestoneProgress =
         }}
         onClick={handleHomeDoubleClick}
       >
-        {/* Outer frame */}
-        <mesh position={[0, 0, -0.08]}>
-          <boxGeometry args={[2.4, 3.7, 0.18]} />
-          <meshStandardMaterial
-            color={doorHovered ? "#d7b56d" : "#5a3a16"}
-            emissive="#d7b56d"
-            emissiveIntensity={doorHovered ? 0.6 : 0.18}
-            roughness={0.34}
-            metalness={0.28}
-          />
+        {/* Walnut backing and overlapping trim conceal light gaps. */}
+        <mesh position={[0, 0, -0.32]}>
+          <boxGeometry args={[3.28, 5.66, 0.045]} />
+          <ImpactWalnutMaterial roughness={0.82} />
+        </mesh>
+        {[-1.34, 1.34].map((x) => (
+          <mesh key={`home-jamb-${x}`} position={[x, 0, 0.035]}>
+            <boxGeometry args={[0.38, 5.60, 0.14]} />
+            <ImpactWalnutMaterial roughness={0.82} />
+          </mesh>
+        ))}
+        {[-1.43, 1.43].map((x) => (
+          <mesh key={`home-lip-${x}`} position={[x, 0, 0.16]}>
+            <boxGeometry args={[0.30, 5.54, 0.075]} />
+            <ImpactWalnutMaterial roughness={0.82} />
+          </mesh>
+        ))}
+        <mesh position={[0, 2.68, 0.035]}>
+          <boxGeometry args={[3.18, 0.25, 0.14]} />
+          <ImpactWalnutMaterial roughness={0.82} />
+        </mesh>
+        <mesh position={[0, -0.015, 0.02]}>
+          <boxGeometry args={[2.70, 5.27, 0.085]} />
+          <ImpactWalnutMaterial roughness={0.78} />
+        </mesh>
+        <mesh position={[0, -2.70, 0.085]}>
+          <boxGeometry args={[3.06, 0.16, 0.16]} />
+          <ImpactWalnutMaterial roughness={0.84} />
+        </mesh>
+        {[-1.16, 1.16].map((y) => (
+          <group key={`home-panel-${y}`}>
+            <mesh position={[0, y, 0.077]}>
+              <boxGeometry args={[2.24, 2.11, 0.014]} />
+              <ImpactWalnutMaterial tint="#b5a79d" roughness={0.86} />
+            </mesh>
+            <mesh position={[0, y, 0.087]}>
+              <boxGeometry args={[2.08, 1.95, 0.014]} />
+              <ImpactWalnutMaterial roughness={0.72} />
+            </mesh>
+          </group>
+        ))}
+        {/* Brushed brass handle and restrained upper detail. */}
+        <mesh position={[0.99, -0.18, 0.107]}>
+          <boxGeometry args={[0.09, 0.31, 0.023]} />
+          <meshStandardMaterial color="#ae8950" metalness={0.76} roughness={0.36} />
+        </mesh>
+        <mesh position={[0.89, -0.12, 0.137]}>
+          <boxGeometry args={[0.25, 0.045, 0.048]} />
+          <meshStandardMaterial color="#c4a16a" metalness={0.76} roughness={0.32} />
+        </mesh>
+        <mesh position={[0, 2.45, 0.108]}>
+          <boxGeometry args={[2.13, 0.023, 0.012]} />
+          <meshStandardMaterial color="#d7b56d" roughness={0.6} metalness={0.1} />
         </mesh>
 
-        {/* Door */}
-        <mesh>
-          <boxGeometry args={[1.85, 3.2, 0.2]} />
-          <meshStandardMaterial
-            color="#3b1f12"
-            roughness={0.42}
-            metalness={0.18}
-          />
-        </mesh>
-
-        {/* Black inset */}
-        <mesh position={[0, 0, 0.12]}>
-          <boxGeometry args={[1.45, 2.65, 0.04]} />
-          <meshStandardMaterial
-            color="#160703"
-            roughness={0.65}
-          />
-        </mesh>
-
-        {/* Handle */}
-        <mesh position={[0.72, 0, 0.22]}>
-          <sphereGeometry args={[0.065, 16, 16]} />
-          <meshStandardMaterial
-            color="#d7b56d"
-            emissive="#d7b56d"
-            emissiveIntensity={doorHovered ? 0.75 : 0.28}
-            metalness={0.8}
-            roughness={0.22}
-          />
-        </mesh>
-
-        <Text
-          position={[0, 0.35, 0.25]}
-          fontSize={0.25}
-          color="#f2c879"
-          anchorX="center"
-          anchorY="middle"
-        >
-          HOME
-        </Text>
-
-        <Text
-          position={[0, -0.08, 0.25]}
-          fontSize={0.12}
-          color="#d8c7ad"
-          anchorX="center"
-          anchorY="middle"
-        >
+        {/* HOME museum plaque */}
+        <group position={[0, 3.85, 0.28]}>
+          <mesh position={[0, 0, -0.03]}>
+            <boxGeometry args={[2.25, 0.78, 0.12]} />
+            <meshStandardMaterial color="#8b6428" emissive="#d7b56d" emissiveIntensity={0.22} metalness={0.55} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0, 0.04]}>
+            <boxGeometry args={[2.05, 0.58, 0.10]} />
+            <meshStandardMaterial color="#120b05" roughness={0.48} metalness={0.18} />
+          </mesh>
+          {[-0.86, 0.86].map((x) => (
+            <mesh key={`home-plaque-detail-${x}`} position={[x, 0, 0.11]}>
+              <boxGeometry args={[0.16, 0.025, 0.025]} />
+              <meshStandardMaterial color="#d7b56d" emissive="#d7b56d" emissiveIntensity={0.45} />
+            </mesh>
+          ))}
+          <Text position={[0, 0, 0.12]} fontSize={0.27} color="#f2c879" anchorX="center" anchorY="middle" letterSpacing={0.12}>
+            HOME
+          </Text>
+        </group>
+        <Text position={[0, -2.85, 0.28]} fontSize={0.12} color={doorHovered ? "#ffffff" : "#9f8b6a"} anchorX="center">
           DOUBLE CLICK / DOUBLE TAP
         </Text>
       </group>
