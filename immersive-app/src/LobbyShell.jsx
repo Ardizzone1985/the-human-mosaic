@@ -121,39 +121,51 @@ plasterTexture.needsUpdate = true;
   />
 </mesh>
 
-      {/* Back wall */}
-      <mesh position={[0, 4.25, -9]}>
-  <boxGeometry args={[30, 13.2, 0.35]} />
-        <meshStandardMaterial
-  map={plasterTexture}
-  color="#ffffff"
-  roughness={0.85}
-  metalness={0}
-/>
+      {/* Back wall: real opening for LOVE, x -1.55..1.55, y -1.25..4.20 */}
+      {[-8.275, 8.275].map((x) => (
+        <mesh key={`back-wall-side-${x}`} position={[x, 4.25, -9]}>
+          <boxGeometry args={[13.45, 13.2, 0.35]} />
+          <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
+        </mesh>
+      ))}
+      <mesh position={[0, 7.525, -9]}>
+        <boxGeometry args={[3.1, 6.65, 0.35]} />
+        <meshStandardMaterial map={plasterTexture} color="#ffffff" roughness={0.85} metalness={0} />
       </mesh>
 
       {/* Premium door wall architectural panels */}
 {[-8, 0, 8].map((x) => (
   <group key={`door-wall-panel-${x}`} position={[x, 3.35, -8.72]}>
-    <mesh>
-      <boxGeometry args={[6.3, 7.1, 0.18]} />
-      <meshStandardMaterial
-        color="#7d786f"
-        roughness={0.52}
-        metalness={0.08}
-        emissive="#d7c7a0"
-emissiveIntensity={0.04}
-      />
-    </mesh>
-
-    <mesh position={[0, 0, -0.08]}>
-  <boxGeometry args={[6.9, 7.7, 0.12]} />
-  <meshStandardMaterial
-  color="#ddd5c8"
-  roughness={0.88}
-  metalness={0.02}
-/>
-</mesh>
+    {x === 0 ? (
+      <>
+        {/* The LOVE panel is split around the doorway; no solid face behind the door. */}
+        {[-2.375, 2.375].map((offset) => (
+          <group key={`love-panel-side-${offset}`} position={[offset, 0, 0]}>
+            <mesh><boxGeometry args={[1.55, 7.1, 0.18]} />
+              <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
+            </mesh>
+            <mesh position={[0, 0, -0.08]}><boxGeometry args={[1.85, 7.7, 0.12]} />
+              <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
+            </mesh>
+          </group>
+        ))}
+        <mesh position={[0, 2.2, 0]}><boxGeometry args={[3.2, 2.7, 0.18]} />
+          <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
+        </mesh>
+        <mesh position={[0, 2.2, -0.08]}><boxGeometry args={[3.2, 2.7, 0.12]} />
+          <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
+        </mesh>
+      </>
+    ) : (
+      <>
+        <mesh><boxGeometry args={[6.3, 7.1, 0.18]} />
+          <meshStandardMaterial color="#7d786f" roughness={0.52} metalness={0.08} emissive="#d7c7a0" emissiveIntensity={0.04} />
+        </mesh>
+        <mesh position={[0, 0, -0.08]}><boxGeometry args={[6.9, 7.7, 0.12]} />
+          <meshStandardMaterial color="#ddd5c8" roughness={0.88} metalness={0.02} />
+        </mesh>
+      </>
+    )}
 
     <mesh position={[0, 3.25, 0.08]}>
       <boxGeometry args={[5.7, 0.055, 0.08]} />
@@ -166,7 +178,7 @@ emissiveIntensity={0.04}
       />
     </mesh>
 
-    <mesh position={[0, -3.25, 0.08]}>
+    {x !== 0 && <mesh position={[0, -3.25, 0.08]}>
       <boxGeometry args={[5.7, 0.045, 0.08]} />
       <meshStandardMaterial
         color="#8a4b12"
@@ -175,8 +187,9 @@ emissiveIntensity={0.04}
         metalness={0.25}
         roughness={0.28}
       />
-    </mesh>
-
+    </mesh>}
+    {x !== 0 && (
+      <>
     <mesh position={[-2.85, 0, 0.08]}>
       <boxGeometry args={[0.055, 6.5, 0.08]} />
       <meshStandardMaterial
@@ -198,6 +211,8 @@ emissiveIntensity={0.04}
         roughness={0.25}
       />
     </mesh>
+      </>
+    )}
   </group>
 ))}
 
