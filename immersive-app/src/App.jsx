@@ -14,6 +14,7 @@ import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
+import PublicParticipantProfile from "./PublicParticipantProfile.jsx";
 import CommunityWallModal from "./CommunityWallModal.jsx";
 import PrivateMemoryModal from "./PrivateMemoryModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
@@ -1306,9 +1307,15 @@ const isLobby = !currentRoom;
   handleLike={handleLike}
   handleSendComment={handleSendComment}
   onParticipantClick={(participantId) => {
-    setSelectedParticipantId(participantId);
-  }}
+  setSelectedPhoto(null);
+  setSelectedParticipantId(participantId);
+}}
   onClose={() => setSelectedPhoto(null)}
+/>
+
+      <PublicParticipantProfile
+  participantId={selectedParticipantId}
+  onClose={() => setSelectedParticipantId(null)}
 />
 
       <SponsorModal
