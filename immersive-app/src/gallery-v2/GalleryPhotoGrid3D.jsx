@@ -127,11 +127,13 @@ if (submissionIds.length > 0) {
 }
 
   const photosWithNicknames = photos.map((photo) => ({
-    ...photo,
-    participant_nickname:
-      nicknamesBySubmissionId.get(photo.submission_id) ||
-      "Participant not yet linked",
-  }));
+  ...photo,
+  participant_nickname:
+    nicknamesBySubmissionId.get(photo.submission_id) ||
+    "Participant not yet linked",
+  participant_id:
+    ownersBySubmissionId.get(photo.submission_id) || null,
+}));
 
   setSubmissionResult({
     scope,
