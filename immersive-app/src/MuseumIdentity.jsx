@@ -353,7 +353,14 @@ const [loadingCommunityFavorites, setLoadingCommunityFavorites] =
           <button
   type="button"
   key={memory.id}
-  onClick={() => onMemorySelect?.(memory)}
+  onClick={() =>
+  onMemorySelect?.({
+    ...memory,
+    participant_nickname:
+      String(profile?.nickname || "").trim() ||
+      "Participant not yet linked",
+  })
+}
   style={{
     ...memoryCard,
     borderColor: getStatusColor(status),
