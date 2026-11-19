@@ -7,6 +7,8 @@ export default function PublicParticipantProfile({
   onClose,
 }) {
   const [profile, setProfile] = useState(null);
+  const [memories, setMemories] = useState([]);
+const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -43,6 +45,39 @@ export default function PublicParticipantProfile({
       cancelled = true;
     };
   }, [participantId]);
+
+  useEffect(() => {
+  if (!participantId) return;
+
+  let cancelled = false;
+
+  async function loadMemories() {
+    setMemoriesLoading(true);
+    setMemories([]);
+
+    const { data, error } = await supabase.rpc(
+      "get_public_participant_memories",
+      { p_participant_id: participantId }
+    );
+
+    if (cancelled) return;
+
+    if (error) {
+      console.error("Public participant memories error:", error);
+      setMemories([]);
+    } else {
+      setMemories(data ?? []);
+    }
+
+    setMemoriesLoading(false);
+  }
+
+  loadMemories();
+
+  return () => {
+    cancelled = true;
+  };
+}, [participantId]);
 
   if (!participantId) return null;
 
@@ -129,9 +164,52 @@ export default function PublicParticipantProfile({
                 MY MEMORIES
               </h3>
 
-              <p style={{ color: "#bdb0a0", fontSize: "14px" }}>
-                Participant memories will appear here.
-              </p>
+              {memoriesLoading ? (
+  <p>Loading memories...</p>
+) : memories.length === 0 ? (
+  <p style={{ color: "#bdb0a0", fontSize: "14px" }}>
+    No published memories yet.
+  </p>
+) : (
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+      gap: "10px",
+      marginTop: "18px",
+    }}
+  >
+    {memories.map((memory) => (
+      <div key={memory.submission_id}>
+        <img
+          src={
+            memory.image_url ||
+            `https://cqpujmwfiqbwdsmuwkmb.supabase.co/storage/v1/object/public/images/${memory.image_file_name}`
+          }
+          alt={`Memory in ${memory.room}`}
+          loading="lazy"
+          style={{
+            width: "100%",
+            aspectRatio: "1 / 1",
+            objectFit: "cover",
+            borderRadius: "10px",
+            border: "1px solid rgba(215,181,109,0.4)",
+          }}
+        />
+
+        <div
+          style={{
+            fontSize: "11px",
+            color: "#d7b56d",
+            marginTop: "5px",
+          }}
+        >
+          {memory.room}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
             </div>
           </>
         )}
