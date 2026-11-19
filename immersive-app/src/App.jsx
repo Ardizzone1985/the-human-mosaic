@@ -425,6 +425,7 @@ export default function App() {
 } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedParticipantId, setSelectedParticipantId] = useState(null);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
   const [replacementMemory, setReplacementMemory] = useState(null);
@@ -1304,6 +1305,9 @@ const isLobby = !currentRoom;
   userLikedPhoto={userLikedPhoto}
   handleLike={handleLike}
   handleSendComment={handleSendComment}
+  onParticipantClick={(participantId) => {
+    setSelectedParticipantId(participantId);
+  }}
   onClose={() => setSelectedPhoto(null)}
 />
 
