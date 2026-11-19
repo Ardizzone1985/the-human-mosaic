@@ -74,6 +74,21 @@ export default function PhotoModal({
 </button>
         </div>
 
+        <Label>PARTICIPANT</Label>
+<div
+  style={{
+    fontSize: "20px",
+    fontWeight: "700",
+    margin: "6px 0 18px",
+    color: "#f6d98a",
+  }}
+>
+  {selectedPhoto?.participant_nickname &&
+  selectedPhoto.participant_nickname !== "Participant not yet linked"
+    ? `@${selectedPhoto.participant_nickname}`
+    : "Participant not yet linked"}
+</div>
+
         <Label>COUNTRY</Label>
         <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
           {selectedPhoto?.country || "Country not available."}
