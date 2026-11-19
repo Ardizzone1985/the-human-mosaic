@@ -73,9 +73,54 @@ useEffect(() => {
     }
 
     if (!cancelled) {
-      setSubmissionResult({ scope, data: data ?? [] });
-      console.log("Gallery V2 submissions:", data ?? []);
+  const photos = data ?? [];
+
+  const submissionIds = photos
+    .map((photo) => photo.submission_id)
+    .filter(Boolean);
+
+  let nicknamesBySubmissionId = new Map();
+
+  if (submissionIds.length > 0) {
+    const { data: participants, error: participantsError } =
+      await supabase.rpc("get_gallery_photo_participants", {
+        p_submission_ids: submissionIds,
+      });
+
+    if (cancelled) return;
+
+    if (participantsError) {
+      console.error(
+        "Gallery V2 participants error:",
+        participantsError
+      );
+    } else {
+      nicknamesBySubmissionId = new Map(
+        (participants ?? []).map((participant) => [
+          participant.submission_id,
+          participant.nickname,
+        ])
+      );
     }
+  }
+
+  const photosWithNicknames = photos.map((photo) => ({
+    ...photo,
+    participant_nickname:
+      nicknamesBySubmissionId.get(photo.submission_id) ||
+      "Participant not yet linked",
+  }));
+
+  setSubmissionResult({
+    scope,
+    data: photosWithNicknames,
+  });
+
+  console.log(
+    "Gallery V2 submissions with participants:",
+    photosWithNicknames
+  );
+}
   }
 
   loadSubmissions();
