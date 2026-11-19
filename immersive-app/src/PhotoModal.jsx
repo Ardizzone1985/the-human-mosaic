@@ -10,6 +10,7 @@ export default function PhotoModal({
   handleLike,
   handleSendComment,
   onClose,
+  onParticipantClick,
 }) {
   const [showComments, setShowComments] = useState(false);
   const [isSendingComment, setIsSendingComment] = useState(false);
@@ -75,19 +76,45 @@ export default function PhotoModal({
         </div>
 
         <Label>PARTICIPANT</Label>
-<div
-  style={{
-    fontSize: "20px",
-    fontWeight: "700",
-    margin: "6px 0 18px",
-    color: "#f6d98a",
-  }}
->
-  {selectedPhoto?.participant_nickname &&
-  selectedPhoto.participant_nickname !== "Participant not yet linked"
-    ? `@${selectedPhoto.participant_nickname}`
-    : "Participant not yet linked"}
-</div>
+
+{selectedPhoto?.participant_id ? (
+  <button
+    type="button"
+    onClick={() =>
+      onParticipantClick?.(selectedPhoto.participant_id)
+    }
+    style={{
+      display: "block",
+      padding: 0,
+      margin: "6px 0 18px",
+      background: "transparent",
+      border: "none",
+      color: "#f6d98a",
+      fontSize: "20px",
+      fontWeight: "700",
+      cursor: "pointer",
+      textDecoration: "underline",
+      textUnderlineOffset: "5px",
+      fontFamily: "inherit",
+    }}
+  >
+    @{selectedPhoto.participant_nickname}
+  </button>
+) : (
+  <div
+    style={{
+      fontSize: "20px",
+      fontWeight: "700",
+      margin: "6px 0 18px",
+      color: "#f6d98a",
+    }}
+  >
+    {selectedPhoto?.participant_nickname &&
+    selectedPhoto.participant_nickname !== "Participant not yet linked"
+      ? `@${selectedPhoto.participant_nickname}`
+      : "Participant not yet linked"}
+  </div>
+)}
 
         <Label>COUNTRY</Label>
         <div style={{ fontSize: "20px", fontWeight: "700", margin: "6px 0 18px" }}>
