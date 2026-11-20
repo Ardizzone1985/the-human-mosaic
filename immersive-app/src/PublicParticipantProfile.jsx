@@ -5,6 +5,7 @@ import museumLogoUrl from "./logo-cropped.png";
 export default function PublicParticipantProfile({
   participantId,
   onClose,
+  onMemorySelect,
 }) {
   const [profile, setProfile] = useState(null);
   const [memories, setMemories] = useState([]);
@@ -180,7 +181,19 @@ const [memoriesLoading, setMemoriesLoading] = useState(true);
     }}
   >
     {memories.map((memory) => (
-      <div key={memory.submission_id}>
+      <button
+  key={memory.submission_id}
+  type="button"
+  onClick={() => onMemorySelect?.(memory.submission_id)}
+  style={{
+    background: "transparent",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    minWidth: 0,
+    fontFamily: "inherit",
+  }}
+>
         <img
           src={
             memory.image_url ||
@@ -204,9 +217,9 @@ const [memoriesLoading, setMemoriesLoading] = useState(true);
             marginTop: "5px",
           }}
         >
-          {memory.room}
-        </div>
-      </div>
+              {memory.room}
+  </div>
+</button>
     ))}
   </div>
 )}
