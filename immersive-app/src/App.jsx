@@ -1316,8 +1316,43 @@ const isLobby = !currentRoom;
       <PublicParticipantProfile
   participantId={selectedParticipantId}
   onClose={() => setSelectedParticipantId(null)}
-/>
+  onMemorySelect={async (submissionId) => {
+    const participantId = selectedParticipantId;
 
+    const { data: photo, error } = await supabase
+      .from("submissions")
+      .select(
+        "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, country, note, likes_count, views_count, comments_count, section_number, view_number, approval_status"
+      )
+      .eq("submission_id", submissionId)
+      .eq("user_id", participantId)
+      .eq("approval_status", "approved")
+      .maybeSingle();
+
+    if (error || !photo) {
+      console.error("Unable to open participant memory:", error);
+      return;
+    }
+
+    const { data: participant, error: profileError } =
+      await supabase.rpc("get_public_participant_profile", {
+        p_participant_id: participantId,
+      });
+
+    if (profileError || !participant?.[0]) {
+      console.error("Unable to load participant:", profileError);
+      return;
+    }
+
+    setSelectedParticipantId(null);
+
+    setSelectedPhoto({
+      ...photo,
+      participant_id: participantId,
+      participant_nickname: participant[0].nickname,
+    });
+  }}
+/>
       <SponsorModal
   sponsor={selectedSponsor}
   onClose={() => {
