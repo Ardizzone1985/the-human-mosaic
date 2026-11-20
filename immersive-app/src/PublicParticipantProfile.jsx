@@ -12,6 +12,11 @@ export default function PublicParticipantProfile({
 const [memoriesLoading, setMemoriesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showAvatarPreview, setShowAvatarPreview] = useState(false);
+
+useEffect(() => {
+  setShowAvatarPreview(false);
+}, [participantId]);
 
   useEffect(() => {
     if (!participantId) return;
@@ -128,17 +133,30 @@ const [memoriesLoading, setMemoriesLoading] = useState(true);
           <p>{error || "Participant not found."}</p>
         ) : (
           <>
-            <img
-              src={profile.avatar_url || museumLogoUrl}
-              alt="Participant avatar"
-              style={{
-                width: "100px",
-                height: "100px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2px solid #d7b56d",
-              }}
-            />
+            <button
+  type="button"
+  onClick={() => setShowAvatarPreview(true)}
+  aria-label="View profile picture"
+  title="View profile picture"
+  style={{
+    background: "transparent",
+    border: "none",
+    padding: 0,
+    cursor: "zoom-in",
+  }}
+>
+  <img
+    src={profile.avatar_url || museumLogoUrl}
+    alt="Participant avatar"
+    style={{
+      width: "100px",
+      height: "100px",
+      borderRadius: "50%",
+      objectFit: "cover",
+      border: "2px solid #d7b56d",
+    }}
+  />
+</button>
 
             <h2 style={{ color: "#f6d98a" }}>
               @{profile.nickname}
@@ -242,9 +260,86 @@ const [memoriesLoading, setMemoriesLoading] = useState(true);
             cursor: "pointer",
           }}
         >
-          RETURN TO MUSEUM
+                    RETURN TO MUSEUM
         </button>
       </div>
+
+      {showAvatarPreview && profile && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Profile picture"
+          onClick={() => setShowAvatarPreview(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000002,
+            background: "rgba(0,0,0,0.94)",
+            backdropFilter: "blur(14px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              width: "min(85vw, 500px)",
+              textAlign: "center",
+            }}
+          >
+            <button
+              type="button"
+              aria-label="Close profile picture"
+              onClick={() => setShowAvatarPreview(false)}
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                zIndex: 1,
+                width: "38px",
+                height: "38px",
+                borderRadius: "50%",
+                border: "1px solid #d7b56d",
+                background: "rgba(0,0,0,0.85)",
+                color: "#f6d98a",
+                fontSize: "20px",
+                cursor: "pointer",
+              }}
+            >
+              ✕
+            </button>
+
+            <img
+              src={profile.avatar_url || museumLogoUrl}
+              alt={`${profile.nickname} profile picture`}
+              style={{
+                width: "100%",
+                maxHeight: "70vh",
+                objectFit: "contain",
+                borderRadius: "18px",
+                border: "2px solid #d7b56d",
+                boxSizing: "border-box",
+              }}
+            />
+
+            <div
+              style={{
+                marginTop: "16px",
+                color: "#f6d98a",
+                fontSize: "20px",
+                fontWeight: "700",
+                fontFamily: "Arial, sans-serif",
+              }}
+            >
+              @{profile.nickname}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
