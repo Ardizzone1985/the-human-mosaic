@@ -104,12 +104,36 @@ useEffect(() => {
     }
   }
 
+      let ownersBySubmissionId = new Map();
+
+if (submissionIds.length > 0) {
+  const { data: owners, error: ownersError } =
+    await supabase.rpc("get_gallery_photo_verified_owners", {
+      p_submission_ids: submissionIds,
+    });
+
+  if (cancelled) return;
+
+  if (ownersError) {
+    console.error("Gallery V2 verified owners error:", ownersError);
+  } else {
+    ownersBySubmissionId = new Map(
+      (owners ?? []).map((owner) => [
+        owner.submission_id,
+        owner.participant_id,
+      ])
+    );
+  }
+}
+
   const photosWithNicknames = photos.map((photo) => ({
-    ...photo,
-    participant_nickname:
-      nicknamesBySubmissionId.get(photo.submission_id) ||
-      "Participant not yet linked",
-  }));
+  ...photo,
+  participant_nickname:
+    nicknamesBySubmissionId.get(photo.submission_id) ||
+    "Participant not yet linked",
+  participant_id:
+    ownersBySubmissionId.get(photo.submission_id) || null,
+}));
 
   setSubmissionResult({
     scope,

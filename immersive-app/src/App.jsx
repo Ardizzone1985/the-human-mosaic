@@ -14,6 +14,7 @@ import Lobby from "./Lobby.jsx";
 import * as THREE from "three";
 import { supabase } from "./supabaseClient.js";
 import PhotoModal from "./PhotoModal.jsx";
+import PublicParticipantProfile from "./PublicParticipantProfile.jsx";
 import CommunityWallModal from "./CommunityWallModal.jsx";
 import PrivateMemoryModal from "./PrivateMemoryModal.jsx";
 import usePhotoSocial from "./usePhotoSocial.js";
@@ -425,6 +426,7 @@ export default function App() {
 } = useAuth();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedParticipantId, setSelectedParticipantId] = useState(null);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [selectedPrivateMemory, setSelectedPrivateMemory] = useState(null);
   const [replacementMemory, setReplacementMemory] = useState(null);
@@ -1304,9 +1306,53 @@ const isLobby = !currentRoom;
   userLikedPhoto={userLikedPhoto}
   handleLike={handleLike}
   handleSendComment={handleSendComment}
+  onParticipantClick={(participantId) => {
+  setSelectedPhoto(null);
+  setSelectedParticipantId(participantId);
+}}
   onClose={() => setSelectedPhoto(null)}
 />
 
+      <PublicParticipantProfile
+  participantId={selectedParticipantId}
+  onClose={() => setSelectedParticipantId(null)}
+  onMemorySelect={async (submissionId) => {
+    const participantId = selectedParticipantId;
+
+    const { data: photo, error } = await supabase
+      .from("submissions")
+      .select(
+        "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, country, note, likes_count, views_count, comments_count, section_number, view_number, approval_status"
+      )
+      .eq("submission_id", submissionId)
+      .eq("user_id", participantId)
+      .eq("approval_status", "approved")
+      .maybeSingle();
+
+    if (error || !photo) {
+      console.error("Unable to open participant memory:", error);
+      return;
+    }
+
+    const { data: participant, error: profileError } =
+      await supabase.rpc("get_public_participant_profile", {
+        p_participant_id: participantId,
+      });
+
+    if (profileError || !participant?.[0]) {
+      console.error("Unable to load participant:", profileError);
+      return;
+    }
+
+    setSelectedParticipantId(null);
+
+    setSelectedPhoto({
+      ...photo,
+      participant_id: participantId,
+      participant_nickname: participant[0].nickname,
+    });
+  }}
+/>
       <SponsorModal
   sponsor={selectedSponsor}
   onClose={() => {
