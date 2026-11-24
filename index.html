@@ -1810,31 +1810,29 @@ function animateCount(elementId, endValue, duration = 1200) {
   requestAnimationFrame(update);
 }
   
+  
   async function loadStats() {
     try {
       const { data, error } = await supabaseClient
-        .from("submissions")
-        .select("room, approval_status");
+        .rpc("get_public_mosaic_stats");
 
       if (error) {
         console.error("Stats error:", error);
         return;
       }
 
-      let total = 0;
-      let identity = 0;
-      let love = 0;
-      let creativity = 0;
+      if (!Array.isArray(data) || data.length !== 1) {
+        console.error("Invalid public mosaic stats response");
+        return;
+      }
 
-      data.forEach(item => {
-        if (item.approval_status !== "approved") return;
+      const stats = data[0];
 
-        total++;
-
-        if (item.room === "Identity") identity++;
-        if (item.room === "Love") love++;
-        if (item.room === "Creativity") creativity++;
-      });
+      const total = Number(stats.total_memories);
+      const identity = Number(stats.identity_memories);
+      const love = Number(stats.love_memories);
+      const creativity = Number(stats.creativity_memories);
+      const donationsCompleted = Number(stats.donations_completed);
 
       animateCount("count-total", total);
 animateCount("count-identity", identity);
@@ -1847,8 +1845,6 @@ if (inlineTotal) inlineTotal.textContent = total.toLocaleString();
 if (updatesCount) updatesCount.textContent = total.toLocaleString();
 
       const donationLimit = 1000;
-
-const donationsCompleted = Math.floor(total / donationLimit);
 
 const donationProgress = total % donationLimit;
 const donationRemaining = donationLimit - donationProgress;
