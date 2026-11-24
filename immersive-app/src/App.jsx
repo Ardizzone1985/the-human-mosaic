@@ -1317,6 +1317,15 @@ const isLobby = !currentRoom;
 
       <PublicParticipantProfile
   participantId={selectedParticipantId}
+          messagingEnabled={privateMessaging.enabled}
+  messagingUserId={privateMessaging.userId}
+  messagingLoading={privateMessaging.loading}
+  messagingError={privateMessaging.error}
+  messagingConversation={
+    privateMessaging.getConversationForParticipant(
+      selectedParticipantId
+    )
+  }
   onClose={() => setSelectedParticipantId(null)}
   onMemorySelect={async (submissionId) => {
     const participantId = selectedParticipantId;
