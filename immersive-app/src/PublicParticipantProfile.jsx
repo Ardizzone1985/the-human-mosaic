@@ -6,6 +6,12 @@ export default function PublicParticipantProfile({
   participantId,
   onClose,
   onMemorySelect,
+  messagingEnabled = false,
+  messagingUserId = null,
+  messagingLoading = false,
+  messagingError = "",
+  messagingConversation = null,
+  onMessageClick,
 }) {
   const [profile, setProfile] = useState(null);
   const [memories, setMemories] = useState([]);
@@ -86,6 +92,49 @@ useEffect(() => {
 }, [participantId]);
 
   if (!participantId) return null;
+
+    const showMessageButton =
+    messagingEnabled &&
+    !!messagingUserId &&
+    participantId !== messagingUserId;
+
+  let messageButtonLabel = "MESSAGE";
+  let messageButtonDisabled = false;
+
+  if (messagingLoading) {
+    messageButtonLabel = "LOADING...";
+    messageButtonDisabled = true;
+  } else if (messagingError) {
+    messageButtonLabel = "MESSAGING UNAVAILABLE";
+    messageButtonDisabled = true;
+  } else if (messagingConversation?.is_blocked) {
+    messageButtonLabel = "MESSAGING UNAVAILABLE";
+    messageButtonDisabled = true;
+  } else if (messagingConversation) {
+    switch (messagingConversation.status) {
+      case "accepted":
+        messageButtonLabel = "OPEN CHAT";
+        break;
+
+      case "pending":
+        if (messagingConversation.is_incoming_request) {
+          messageButtonLabel = "RESPOND TO REQUEST";
+        } else {
+          messageButtonLabel = "REQUEST PENDING";
+          messageButtonDisabled = true;
+        }
+        break;
+
+      case "declined":
+        messageButtonLabel = "REQUEST DECLINED";
+        messageButtonDisabled = true;
+        break;
+
+      default:
+        messageButtonLabel = "MESSAGING UNAVAILABLE";
+        messageButtonDisabled = true;
+    }
+  }
 
   return (
     <div
@@ -171,6 +220,43 @@ useEffect(() => {
                 { month: "long", year: "numeric" }
               )}
             </p>
+
+                        {showMessageButton && (
+              <button
+                type="button"
+                disabled={
+                  messageButtonDisabled ||
+                  typeof onMessageClick !== "function"
+                }
+                onClick={() =>
+                  onMessageClick?.(participantId)
+                }
+                style={{
+                  marginTop: "12px",
+                  width: "100%",
+                  padding: "14px",
+                  borderRadius: "999px",
+                  border: "1px solid #d7b56d",
+                  background: messageButtonDisabled
+                    ? "rgba(215,181,109,0.08)"
+                    : "#d7b56d",
+                  color: messageButtonDisabled
+                    ? "#c9bba7"
+                    : "#1b0d05",
+                  fontFamily: "inherit",
+                  fontWeight: "700",
+                  fontSize: "13px",
+                  letterSpacing: "0.06em",
+                  cursor:
+                    messageButtonDisabled ||
+                    typeof onMessageClick !== "function"
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+              >
+                {messageButtonLabel}
+              </button>
+            )}
 
             <div
               style={{
