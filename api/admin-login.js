@@ -954,6 +954,75 @@ export default async function handler(req, res) {
     // GET ?action=comments
     // Load comments for the authenticated admin.
     // ---------------------------------------------------------
+
+    // ---------------------------------------------------------
+// GET ?action=submission-stats
+// Secure Admin submission counters.
+// ---------------------------------------------------------
+if (
+  req.method === "GET" &&
+  req.query?.action === "submission-stats"
+) {
+  const token = getAdminTokenFromRequest(req);
+
+  if (!verifyAdminToken(token)) {
+    return res.status(401).json({
+      success: false,
+      error: "Unauthorized",
+    });
+  }
+
+  res.setHeader("Cache-Control", "no-store");
+
+  const supabase = getSupabaseAdmin();
+
+  const [pending, approved, rejected] = await Promise.all([
+    supabase
+      .from("submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("approval_status", "pending"),
+
+    supabase
+      .from("submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("approval_status", "approved"),
+
+    supabase
+      .from("submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("approval_status", "rejected"),
+  ]);
+
+  if (
+    pending.error ||
+    approved.error ||
+    rejected.error ||
+    pending.count === null ||
+    approved.count === null ||
+    rejected.count === null
+  ) {
+    console.error("Admin submission stats error:", {
+      pending: pending.error,
+      approved: approved.error,
+      rejected: rejected.error,
+    });
+
+    return res.status(500).json({
+      success: false,
+      error: "Failed to load submission statistics",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    pending: pending.count,
+    approved: approved.count,
+    rejected: rejected.count,
+  });
+}
+
+// ---------------------------------------------------------
+
     
     // ---------------------------------------------------------
     // GET ?action=approval-inspect&submissionId=...
