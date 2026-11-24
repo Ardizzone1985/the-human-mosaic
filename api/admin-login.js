@@ -979,17 +979,17 @@ if (
   const [pending, approved, rejected] = await Promise.all([
     supabase
       .from("submissions")
-      .select("id", { count: "exact", head: true })
+      .select("submission_id", { count: "exact", head: true })
       .eq("approval_status", "pending"),
 
     supabase
       .from("submissions")
-      .select("id", { count: "exact", head: true })
+      .select("submission_id", { count: "exact", head: true })
       .eq("approval_status", "approved"),
 
     supabase
       .from("submissions")
-      .select("id", { count: "exact", head: true })
+      .select("submission_id", { count: "exact", head: true })
       .eq("approval_status", "rejected"),
   ]);
 
