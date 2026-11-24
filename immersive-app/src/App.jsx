@@ -22,6 +22,7 @@ import WelcomeGate from "./WelcomeGate.jsx";
 import AuthModal from "./auth/AuthModal.jsx";
 import ResetPasswordForm from "./auth/ResetPasswordForm.jsx";
 import { useAuth } from "./auth/AuthProvider.jsx";
+import usePrivateMessaging from "./messaging/usePrivateMessaging.js";
 import AppDialog from "./components/AppDialog.jsx";
 import AdvertisePage from "./components/sponsors/AdvertisePage.jsx";
 import SponsorModal from "./components/sponsors/SponsorModal.jsx";
@@ -424,6 +425,7 @@ export default function App() {
   passwordRecovery,
   setPasswordRecovery,
 } = useAuth();
+  const privateMessaging = usePrivateMessaging();
   const [fadeIn, setFadeIn] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedParticipantId, setSelectedParticipantId] = useState(null);
