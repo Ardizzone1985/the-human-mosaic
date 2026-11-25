@@ -1389,15 +1389,14 @@ Be the first to discover new features, donation milestones, immersive gallery up
     <div class="early-box">
       <div class="early-kicker" id="early-kicker">EARLY ACCESS PHASE</div>
 
-<h2 id="early-title" style="color:#111; margin-bottom:12px;">
-  First 1,000 participants can join at a reduced entry fee.
+<h2 id="early-title" style="color:#fff; margin-bottom:12px;">
+  Special entry fees for the first 1,000 approved photographs.
 </h2>
 
-<p id="early-desc" style="color:#444; max-width:680px; margin:0 auto;">
-  Become one of the first visible participants shaping The Human Mosaic from the beginning.
-  Once the first 1,000 Early Access spots are claimed, standard prices return.
+<p id="early-desc" style="color:#ddd; max-width:680px; margin:0 auto;">
+  Be part of the first 1,000 photographs shaping The Human Mosaic from the beginning.
+  Once 1,000 photographs have been approved, standard prices return.
 </p>
-
 <div class="early-prices" id="early-prices">
   <div class="early-price-pill" id="price-identity">Identity → €5</div>
   <div class="early-price-pill" id="price-love">Love → €5</div>
@@ -1406,7 +1405,7 @@ Be the first to discover new features, donation milestones, immersive gallery up
 
       <div class="early-counter">
   <div class="early-counter-label">
-    <span id="early-claimed">0</span> / 1,000 Early Access spots claimed
+    <span id="early-claimed">0</span> / 1,000 approved photographs
   </div>
 
   <div class="early-counter-bar">
@@ -1414,7 +1413,7 @@ Be the first to discover new features, donation milestones, immersive gallery up
   </div>
 
   <div class="early-remaining" id="early-remaining">
-    1,000 early spots remaining
+    1,000 photographs remaining until standard pricing
   </div>
 </div>
 
@@ -1870,8 +1869,10 @@ const earlyClaimedEl = document.getElementById("early-claimed");
 const earlyRemainingEl = document.getElementById("early-remaining");
 const earlyFillEl = document.getElementById("early-counter-fill");
 
-if (earlyClaimedEl) earlyClaimedEl.textContent = earlyClaimed.toLocaleString();
-if (earlyRemainingEl) earlyRemainingEl.textContent = `${earlyRemaining.toLocaleString()} early spots remaining`;
+if (earlyClaimedEl) earlyClaimedEl.textContent = Math.min(earlyClaimed, earlyLimit).toLocaleString();
+if (earlyRemainingEl) earlyRemainingEl.textContent = earlyRemaining > 0
+  ? `${earlyRemaining.toLocaleString()} photographs remaining until standard pricing`
+  : "Early Access milestone completed";
 if (earlyFillEl) earlyFillEl.style.width = `${earlyPercent}%`;
 
       const isEarlyActive = earlyClaimed < earlyLimit;
@@ -1891,11 +1892,11 @@ if (!isEarlyActive) {
 
   if (earlyTitle)
     earlyTitle.textContent =
-      "Early Access completed. Join the Mosaic at standard participation fee.";
+      "Early Access completed. Join the Mosaic at standard entry fees.";
 
   if (earlyDesc)
     earlyDesc.textContent =
-      "The first 1,000 positions have been claimed. New participants can still join the artwork at the standard rate.";
+      "The first 1,000 photographs have been approved. You can still become part of the artwork at the standard entry fees.";
 
   if (priceIdentity) priceIdentity.textContent = "Identity → €15";
   if (priceLove) priceLove.textContent = "Love → €15";
