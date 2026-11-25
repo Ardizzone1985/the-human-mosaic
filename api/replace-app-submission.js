@@ -258,8 +258,15 @@ if (!result?.submission_id) {
 }
 
 /*
- * Solo dopo il successo del database eliminiamo
- * la vecchia immagine dallo Storage.
+ * SECURITY HARDENING:
+ * Never automatically delete the previous image
+ * after a successful replacement.
+ *
+ * The file may still be referenced by another
+ * submission or a concurrent request.
+ *
+ * Old images must be handled separately through
+ * a controlled Storage cleanup process.
  */
 const oldImageFileName =
   result.old_image_file_name;
@@ -268,17 +275,9 @@ if (
   oldImageFileName &&
   oldImageFileName !== safeImageFileName
 ) {
-  const { error: oldImageDeleteError } =
-    await supabaseAdmin.storage
-      .from("images")
-      .remove([oldImageFileName]);
-
-  if (oldImageDeleteError) {
-    console.error(
-      "Old replacement image deletion warning:",
-      oldImageDeleteError
-    );
-  }
+  console.info(
+    "Previous image retained for controlled storage cleanup."
+  );
 }
 
 return res.status(200).json({
