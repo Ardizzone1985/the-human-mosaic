@@ -204,22 +204,20 @@ if (error) {
     error
   );
 
-  /*
-   * Se il database rifiuta la sostituzione,
-   * eliminiamo la nuova immagine appena caricata.
-   */
-  const { error: cleanupError } =
-    await supabaseAdmin.storage
-      .from("images")
-      .remove([safeImageFileName]);
-
-  if (cleanupError) {
-    console.error(
-      "Replacement image rollback error:",
-      cleanupError
-    );
-  }
-
+ /*
+ * SECURITY HARDENING:
+ * Never automatically delete a replacement image
+ * after an RPC error.
+ *
+ * The file may already belong to an existing
+ * submission or a concurrent successful request.
+ *
+ * Unreferenced files must be handled separately
+ * through a controlled Storage cleanup process.
+ */
+console.warn(
+  "Automatic replacement image cleanup skipped for data integrity."
+);
   const message =
     error.message ||
     "The memory could not be replaced";
