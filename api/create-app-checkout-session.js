@@ -218,12 +218,23 @@ if (statsError || !mosaicStats) {
 }
 
 const rawTotal = mosaicStats.total_memories;
+
+const validRawTotal =
+  typeof rawTotal === "number" ||
+  (
+    typeof rawTotal === "string" &&
+    /^[0-9]+$/.test(rawTotal)
+  );
+
+if (!validRawTotal) {
+  throw new Error(
+    "Invalid approved photographs count"
+  );
+}
+
 const approvedPhotographs = Number(rawTotal);
 
 if (
-  rawTotal === null ||
-  rawTotal === undefined ||
-  rawTotal === "" ||
   !Number.isSafeInteger(approvedPhotographs) ||
   approvedPhotographs < 0
 ) {
