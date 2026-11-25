@@ -206,23 +206,34 @@ export default async function handler(req, res) {
       });
     }
 
-    const { count, error: countError } =
-      await supabaseAdmin
-        .from("slots")
-        .select("*", {
-          count: "exact",
-          head: true,
-        })
-        .eq("payment_confirmed", true);
+    const { data: mosaicStats, error: statsError } =
+  await supabaseAdmin
+    .rpc("get_public_mosaic_stats")
+    .single();
 
-    if (countError) {
-      throw new Error(
-        "Unable to verify Early Access availability"
-      );
-    }
+if (statsError || !mosaicStats) {
+  throw new Error(
+    "Unable to verify Early Access availability"
+  );
+}
 
-    const earlyAccessActive =
-      Number(count || 0) < EARLY_ACCESS_LIMIT;
+const rawTotal = mosaicStats.total_memories;
+const approvedPhotographs = Number(rawTotal);
+
+if (
+  rawTotal === null ||
+  rawTotal === undefined ||
+  rawTotal === "" ||
+  !Number.isSafeInteger(approvedPhotographs) ||
+  approvedPhotographs < 0
+) {
+  throw new Error(
+    "Invalid approved photographs count"
+  );
+}
+
+const earlyAccessActive =
+  approvedPhotographs < EARLY_ACCESS_LIMIT;
 
     let finalPrice;
     let formattedPrice;
