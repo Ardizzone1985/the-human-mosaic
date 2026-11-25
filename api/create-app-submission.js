@@ -280,17 +280,20 @@ if (!storageObject) {
         error
       );
 
-      const { error: cleanupError } =
-  await supabaseAdmin.storage
-    .from("images")
-    .remove([safeImageFileName]);
-
-if (cleanupError) {
-  console.error(
-    "Uploaded image rollback error:",
-    cleanupError
-  );
-}
+      /*
+ * SECURITY HARDENING:
+ * Never automatically delete an uploaded image
+ * after an RPC error.
+ *
+ * The file may already belong to an existing
+ * submission or a concurrent successful request.
+ *
+ * Unreferenced files must be handled separately
+ * through a controlled Storage cleanup process.
+ */
+console.warn(
+  "Automatic image cleanup skipped for data integrity."
+);
 
       const message =
         error.message ||
