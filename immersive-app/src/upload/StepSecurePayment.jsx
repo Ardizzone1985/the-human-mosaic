@@ -68,10 +68,10 @@ export default function StepSecurePayment({
           </h3>
 
           <p style={paymentText}>
-            Early Access pricing is applied automatically
-            while the first 1,000 paid positions remain
-            available.
-          </p>
+  Early Access pricing is applied automatically
+  until 1,000 photographs have been approved.
+  Standard participation fees apply thereafter.
+</p>
 
           <div style={priceGrid}>
             <PriceLine
@@ -99,10 +99,12 @@ export default function StepSecurePayment({
             />
           </div>
 
-          <div style={paymentSecurityNote}>
-            The exact current fee is verified by the server.
-            Payment is processed securely through Stripe.
-          </div>
+          <<div style={paymentSecurityNote}>
+  The final participation fee is determined securely
+  by the server based on the number of approved
+  photographs. Payment is processed securely
+  through Stripe.
+</div>
         </div>
       </div>
 
