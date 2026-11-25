@@ -99,7 +99,7 @@ export default function StepSecurePayment({
             />
           </div>
 
-          <<div style={paymentSecurityNote}>
+          <div style={paymentSecurityNote}>
   The final participation fee is determined securely
   by the server based on the number of approved
   photographs. Payment is processed securely
