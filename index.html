@@ -1944,11 +1944,7 @@ document.getElementById("label-creativity").textContent =
   async function loadLiveActivity() {
   try {
     const { data, error } = await supabaseClient
-      .from("submissions")
-      .select("room, country, approved_at, created_at, approval_status")
-      .eq("approval_status", "approved")
-      .order("approved_at", { ascending: false })
-      .limit(8);
+  .rpc("get_public_mosaic_live_activity");
 
     const liveActivityEl = document.getElementById("liveActivity");
     if (!liveActivityEl) return;
@@ -1961,7 +1957,7 @@ document.getElementById("label-creativity").textContent =
     const messages = data.map(item => {
       const room = item.room || "The project";
       const country = item.country || "a new participant";
-      return `${country} just joined the ${room} Room`;
+      return `A memory from ${country} is part of the ${room} Room`;
     });
 
     let index = 0;
