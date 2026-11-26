@@ -20,16 +20,18 @@ function closeDialog() {
   async function refreshSelectedPhoto(photoId) {
     if (!photoId) return;
 
-    const { data, error } = await supabase
-      .from("submissions")
-      .select("id, likes_count, views_count, comments_count")
-      .eq("id", photoId)
-      .single();
+        const { data, error } = await supabase
+      .rpc("get_public_photo_stats", {
+        p_photo_id: photoId,
+      })
+      .maybeSingle();
 
-    if (error) {
+        if (error) {
       console.error("Refresh photo error:", error);
       return;
     }
+
+    if (!data) return;
 
     setSelectedPhoto((current) => {
       if (!current || String(current.id) !== String(photoId)) return current;
