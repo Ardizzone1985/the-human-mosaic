@@ -882,32 +882,21 @@ async function loadNews() {
     loadNews();
     
     async function loadRoomCounts() {
-      const { data, error } = await supabase
-        .from("submissions")
-        .select("room, approval_status");
+  const { data, error } = await supabase
+    .rpc("get_public_mosaic_stats")
+    .single();
 
-      if (error) {
-        console.error("Lobby stats error:", error);
-        return;
-      }
+  if (error) {
+    console.error("Lobby stats error:", error);
+    return;
+  }
 
-      let counts = {
-        Identity: 0,
-        Love: 0,
-        Creativity: 0,
-      };
-
-      data.forEach((item) => {
-        if (item.approval_status !== "approved") return;
-
-        if (item.room === "Identity") counts.Identity++;
-        if (item.room === "Love") counts.Love++;
-        if (item.room === "Creativity") counts.Creativity++;
-      });
-
-      setRoomCounts(counts);
-    }
-
+  setRoomCounts({
+    Identity: Number(data.identity_memories ?? 0),
+    Love: Number(data.love_memories ?? 0),
+    Creativity: Number(data.creativity_memories ?? 0),
+  });
+}
     loadRoomCounts();
   }, []);
   const logoTexture = useTexture(logoImage);
