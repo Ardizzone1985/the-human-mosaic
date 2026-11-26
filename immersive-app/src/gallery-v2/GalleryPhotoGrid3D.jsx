@@ -55,16 +55,15 @@ useEffect(() => {
         ? "Right Wall"
         : wall;
 
-    const { data, error } = await supabase
-      .from("submissions")
-      .select(
-  "id, submission_id, room, wall, spot, slot_code, image_url, image_file_name, country, note, likes_count, views_count, comments_count, section_number, view_number, approval_status"
-)
-      .eq("room", room)
-      .eq("wall", wallName)
-      .eq("section_number", sectionNumber)
-      .eq("view_number", viewNumber)
-      .eq("approval_status", "approved");
+    const { data, error } = await supabase.rpc(
+  "get_gallery_view_photos",
+  {
+    p_room: room,
+    p_wall: wallName,
+    p_section_number: sectionNumber,
+    p_view_number: viewNumber,
+  }
+);
 
     if (error) {
       console.error("Gallery V2 submissions error:", error);
