@@ -20,12 +20,9 @@ const imageUrl = featuredPhoto?.image_file_name
   useEffect(() => {
     async function loadFeaturedPhoto() {
       const { data, error } = await supabase
-        .from("submissions")
-        .select("image_file_name, likes_count, views_count, comments_count")
-.eq("room", room)
-.eq("approval_status", "approved")
-.order("likes_count", { ascending: false })
-.limit(3);
+  .rpc("get_room_featured_photos", {
+    p_room: room
+  });
 
       if (error) {
         console.error("Featured photo error:", error);
