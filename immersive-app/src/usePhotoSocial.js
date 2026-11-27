@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "./supabaseClient.js";
 import { useAuth } from "./auth/AuthProvider.jsx";
 
@@ -8,6 +8,13 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
   const [photoComments, setPhotoComments] = useState([]);  
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
   const [dialog, setDialog] = useState(null);
+  const likeRequestInProgress = useRef(false);
+const activeLikeContext = useRef(null);
+
+activeLikeContext.current = {
+  photoId: selectedPhoto?.id,
+  userId: user?.id,
+};
 
   function showDialog(config) {
   setDialog(config);
@@ -204,69 +211,104 @@ useEffect(() => {
   loadComments();
 }, [selectedPhoto?.id]);
 
-  async function handleLike() {    
-    if (!selectedPhoto?.id) return;
+  async function handleLike() {
+  if (!selectedPhoto?.id) return;
 
-    if (!user) {
-  showDialog({
-    icon: "❤️",
-    title: "Join the Community",
-    message:
-      "Sign in to like this memory and become part of The Human Mosaic.",
-    confirmText: "Login",
-    cancelText: "Close",
-    action: "login",
-  });
-  return;
-}
+  if (!user) {
+    showDialog({
+      icon: "❤️",
+      title: "Join the Community",
+      message:
+        "Sign in to like this memory and become part of The Human Mosaic.",
+      confirmText: "Login",
+      cancelText: "Close",
+      action: "login",
+    });
+    return;
+  }
 
+  if (likeRequestInProgress.current) return;
+
+  likeRequestInProgress.current = true;
+
+  const photoId = selectedPhoto.id;
+  const userId = user.id;
+
+  const isCurrentContext = () =>
+    String(activeLikeContext.current?.photoId) === String(photoId) &&
+    activeLikeContext.current?.userId === userId;
+
+  try {
     const { data: existingLike, error: checkError } = await supabase
       .from("photo_likes")
       .select("id")
-      .eq("submission_id", selectedPhoto.id)
-      .eq("user_id", user.id)
+      .eq("submission_id", photoId)
+      .eq("user_id", userId)
       .maybeSingle();
 
-    if (checkError) {
-      console.error("Check like error:", checkError);
-      return;
-    }
+    if (checkError) throw checkError;
+
+    if (!isCurrentContext()) return;
+
+    let nextLikedState;
 
     if (existingLike) {
-  showDialog({
-    icon: "❤️",
-    title: "Already Part of This Memory",
-    message: "You have already liked this memory.",
-    confirmText: "Close",
-  });
-  return;
-}
+      // UNLIKE: remove only the current user's like.
 
-    const { error: insertError } = await supabase.from("photo_likes").insert({
-      submission_id: selectedPhoto.id,
-      user_id: user.id,
-    });
+      const { data: deletedLike, error: deleteError } = await supabase
+        .from("photo_likes")
+        .delete()
+        .eq("id", existingLike.id)
+        .eq("submission_id", photoId)
+        .eq("user_id", userId)
+        .select("id")
+        .maybeSingle();
 
-    if (insertError) {
-      console.error("Insert like error:", insertError);
-      return;
+      if (deleteError) throw deleteError;
+
+      if (!deletedLike) {
+        throw new Error("Like removal could not be confirmed");
+      }
+
+      nextLikedState = false;
+
+    } else {
+      // LIKE: insert only for the current user.
+
+      const { error: insertError } = await supabase
+        .from("photo_likes")
+        .insert({
+          submission_id: photoId,
+          user_id: userId,
+        });
+
+      if (insertError) throw insertError;
+
+      nextLikedState = true;
     }
 
-    setUserLikedPhoto(true);
+    if (isCurrentContext()) {
+      setUserLikedPhoto(nextLikedState);
+      await refreshSelectedPhoto(photoId);
+    }
 
-setSelectedPhoto((current) => {
-  if (!current) return current;
+  } catch (error) {
+    console.error("Like/Unlike error:", error);
 
-  return {
-    ...current,
-    likes_count: Number(current.likes_count || 0) + 1,
-  };
-});
+    if (isCurrentContext()) {
+      showDialog({
+        icon: "⚠️",
+        title: "Unable to Update Like",
+        message:
+          "We could not update your like. Please try again in a moment.",
+        confirmText: "Close",
+      });
+    }
 
-setTimeout(() => {
-  refreshSelectedPhoto(selectedPhoto.id);
-}, 1000);
+  } finally {
+    likeRequestInProgress.current = false;
   }
+}
 
   async function handleSendComment() {
   if (!user) {
