@@ -250,9 +250,11 @@ setIsLikeUpdating(true);
 
     if (checkError) throw checkError;
 
-    if (!isCurrentContext()) return;
+// Continue the operation for the original photo,
+// unless the authenticated user has changed.
+if (activeLikeContext.current?.userId !== userId) return;
 
-    let nextLikedState;
+let nextLikedState;
 
     if (existingLike) {
       // UNLIKE: remove only the current user's like.
