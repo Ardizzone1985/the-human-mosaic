@@ -126,9 +126,26 @@ export default function PhotoModal({
           {selectedPhoto?.note || selectedPhoto?.notes || selectedPhoto?.optional_note || "No note added."}
         </div>
 
-        <button onClick={handleLike} style={likeButton}>
-          {userLikedPhoto ? "❤️ You liked this memory" : "❤️ Like this memory"}
-        </button>
+        <button
+  type="button"
+  onClick={handleLike}
+  aria-pressed={Boolean(userLikedPhoto)}
+  style={{
+    ...likeButton,
+    background: userLikedPhoto
+      ? "rgba(215,181,109,0.10)"
+      : "#d7b56d",
+    color: userLikedPhoto ? "#f6d98a" : "#111",
+  }}
+>
+  <span style={{ fontSize: "20px" }}>
+    {userLikedPhoto ? "❤️" : "♡"}
+  </span>
+
+  {userLikedPhoto
+    ? "Unlike this memory"
+    : "Like this memory"}
+</button>
 
         <div style={commentsBox}>
           <Label>ADD A COMMENT</Label>
@@ -217,12 +234,19 @@ const likeButton = {
   marginTop: "18px",
   marginBottom: "12px",
   borderRadius: "14px",
-  border: "none",
+  border: "1px solid rgba(215,181,109,0.65)",
   background: "#d7b56d",
   color: "#111",
   fontWeight: 700,
   fontSize: "16px",
   cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "10px",
+  minHeight: "52px",
+  boxSizing: "border-box",
+  transition: "background 0.2s ease, color 0.2s ease",
 };
 
 const commentsBox = {
