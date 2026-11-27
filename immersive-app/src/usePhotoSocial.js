@@ -8,7 +8,8 @@ export default function usePhotoSocial(selectedPhoto, setSelectedPhoto) {
   const [photoComments, setPhotoComments] = useState([]);  
   const [userLikedPhoto, setUserLikedPhoto] = useState(false);
   const [dialog, setDialog] = useState(null);
-  const likeRequestInProgress = useRef(false);
+  const [isLikeUpdating, setIsLikeUpdating] = useState(false);
+const likeRequestInProgress = useRef(false);
 const activeLikeContext = useRef(null);
 
 activeLikeContext.current = {
@@ -230,6 +231,7 @@ useEffect(() => {
   if (likeRequestInProgress.current) return;
 
   likeRequestInProgress.current = true;
+setIsLikeUpdating(true);
 
   const photoId = selectedPhoto.id;
   const userId = user.id;
@@ -306,8 +308,9 @@ useEffect(() => {
     }
 
   } finally {
-    likeRequestInProgress.current = false;
-  }
+  likeRequestInProgress.current = false;
+  setIsLikeUpdating(false);
+}
 }
 
   async function handleSendComment() {
@@ -454,7 +457,8 @@ useEffect(() => {
     setPhotoComments,
     currentUser: user,
     userLikedPhoto,
-    setUserLikedPhoto,
+setUserLikedPhoto,
+isLikeUpdating,
     dialog,
 closeDialog,
     handleLike,
