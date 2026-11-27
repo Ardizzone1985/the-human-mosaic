@@ -506,7 +506,8 @@ const [avatarError, setAvatarError] = useState("");
   setPhotoComments,
   currentUser,
   userLikedPhoto,
-  setUserLikedPhoto,
+setUserLikedPhoto,
+isLikeUpdating,
     dialog,
 closeDialog,
     handleLike,
@@ -1304,7 +1305,8 @@ const isLobby = !currentRoom;
   newComment={newComment}
   setNewComment={setNewComment}
   userLikedPhoto={userLikedPhoto}
-  handleLike={handleLike}
+isLikeUpdating={isLikeUpdating}
+handleLike={handleLike}
   handleSendComment={handleSendComment}
   onParticipantClick={(participantId) => {
   setSelectedPhoto(null);
