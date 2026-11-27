@@ -7,6 +7,7 @@ export default function PhotoModal({
   newComment,
   setNewComment,
   userLikedPhoto,
+isLikeUpdating,
   handleLike,
   handleSendComment,
   onClose,
@@ -129,6 +130,8 @@ export default function PhotoModal({
         <button
   type="button"
   onClick={handleLike}
+  disabled={isLikeUpdating}
+  aria-busy={Boolean(isLikeUpdating)}
   aria-pressed={Boolean(userLikedPhoto)}
   style={{
     ...likeButton,
@@ -136,15 +139,23 @@ export default function PhotoModal({
       ? "rgba(215,181,109,0.10)"
       : "#d7b56d",
     color: userLikedPhoto ? "#f6d98a" : "#111",
+    opacity: isLikeUpdating ? 0.55 : 1,
+    cursor: isLikeUpdating ? "wait" : "pointer",
   }}
 >
   <span style={{ fontSize: "20px" }}>
-    {userLikedPhoto ? "❤️" : "♡"}
+    {isLikeUpdating
+      ? "⏳"
+      : userLikedPhoto
+        ? "❤️"
+        : "♡"}
   </span>
 
-  {userLikedPhoto
-    ? "Unlike this memory"
-    : "Like this memory"}
+  {isLikeUpdating
+    ? "Updating..."
+    : userLikedPhoto
+      ? "Unlike this memory"
+      : "Like this memory"}
 </button>
 
         <div style={commentsBox}>
