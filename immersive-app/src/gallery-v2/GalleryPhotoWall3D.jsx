@@ -10,6 +10,7 @@ export default function GalleryPhotoWall3D({
   viewNumber = 1,
   onEmptySlotClick,
   onPhotoSelect,
+  selectedSlot = null,
 }) {
 
   const plasterTexture = useTexture(
@@ -60,6 +61,7 @@ rotation={
   viewNumber={viewNumber}
   onEmptySlotClick={onEmptySlotClick}
   onPhotoSelect={onPhotoSelect}
+  selectedSlot={selectedSlot}
 />
 </group>
     </group>
