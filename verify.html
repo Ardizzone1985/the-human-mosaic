@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Verify Certificate – The Human Mosaic</title>
   <style>
@@ -168,33 +169,6 @@
       transform: translateY(-2px);
     }
 
-    .gallery-link-box {
-  grid-column: 1 / -1;
-  border: 1px solid #d6b35a;
-  border-radius: 20px;
-  padding: 22px;
-  background: #fffaf0;
-  text-align: center;
-}
-
-.gallery-link-box .label {
-  margin-bottom: 12px;
-}
-
-.gallery-link-btn {
-  display: inline-block;
-  padding: 14px 24px;
-  border-radius: 14px;
-  background: #111;
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.gallery-link-btn:hover {
-  background: #333;
-}
-
     .not-found-box {
       margin-top: 10px;
       padding: 22px;
@@ -252,7 +226,7 @@
       <div class="container">
         <h1>Verify Certificate</h1>
         <p>
-          This page confirms whether a certificate ID is officially recorded in The Human Mosaic.
+          This page verifies whether a certificate ID corresponds to an approved contribution in The Human Mosaic.
         </p>
       </div>
     </section>
@@ -260,14 +234,14 @@
     <section>
       <div class="container">
         <div class="verify-card">
-          <div id="statusBadge" class="status-badge status-loading">Checking certificate...</div>
+          <div id="statusBadge" role="status" aria-live="polite" class="status-badge status-loading">Checking certificate...</div>
 
           <h2 class="verify-title" id="verifyTitle">Loading verification...</h2>
           <p class="verify-subtitle" id="verifySubtitle">
             Please wait while we validate this certificate.
           </p>
 
-          <div id="resultArea"></div>
+          <div id="resultArea" aria-live="polite"></div>
 
           <div class="actions">
             <a href="index.html" class="btn btn-secondary">Back to Home</a>
@@ -287,170 +261,110 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const { createClient } = supabase;
-
-    const supabaseClient = createClient(
-      "https://cqpujmwfiqbwdsmuwkmb.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY"
-    );
+    const SUPABASE_URL = "https://cqpujmwfiqbwdsmuwkmb.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxcHVqbXdmaXFid2RzbXV3a21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTMzODAsImV4cCI6MjA4OTg2OTM4MH0.lW9zvuBYYvrCvUoVApTCh0-ITuXwescPv3qJg1lNDDY";
 
     const statusBadge = document.getElementById('statusBadge');
     const verifyTitle = document.getElementById('verifyTitle');
     const verifySubtitle = document.getElementById('verifySubtitle');
     const resultArea = document.getElementById('resultArea');
+    const ids = new URLSearchParams(window.location.search).getAll('id');
+    const certificateId = ids.length === 1 ? ids[0].toLowerCase() : '';
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
-    const params = new URLSearchParams(window.location.search);
-    const certificateId = params.get('id');
-
-    function setStatus(type, text) {
-      statusBadge.className = 'status-badge';
-      if (type === 'valid') statusBadge.classList.add('status-valid');
-      if (type === 'invalid') statusBadge.classList.add('status-invalid');
-      if (type === 'loading') statusBadge.classList.add('status-loading');
-      statusBadge.textContent = text;
+    function setStatus(type, badge, title, subtitle) {
+      statusBadge.className = 'status-badge status-' + type;
+      statusBadge.textContent = badge;
+      verifyTitle.textContent = title;
+      verifySubtitle.textContent = subtitle;
+      resultArea.replaceChildren();
     }
 
-    function renderInfo(slotData, submissionData) {
-      const room = slotData?.room || '—';
-      const wall = slotData?.wall || '—';
-      const section = slotData?.section || '—';
-      const slotCode = slotData?.slot_code || '—';
-      const submissionId = slotData?.submission_id || certificateId || '—';
-      const status = slotData?.status || '—';
-
-      const participantName =
-        submissionData?.full_name ||
-        submissionData?.fullName ||
-        'Not publicly displayed';
-
-      const country =
-        submissionData?.country ||
-        'Not available';
-
-const galleryUrl = `gallery.html?id=${submissionId}`;
-      
-      resultArea.innerHTML = `
-        <div class="grid">
-          <div class="info-box">
-            <div class="label">Certificate ID</div>
-            <div class="value">${submissionId}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Verification Status</div>
-            <div class="value">Valid</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Participant</div>
-            <div class="value">${participantName}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Country</div>
-            <div class="value">${country}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Room</div>
-            <div class="value">${room}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Wall</div>
-            <div class="value">${wall}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Section</div>
-            <div class="value">${section}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Spot</div>
-            <div class="value">${slotCode}</div>
-          </div>
-
-          <div class="info-box">
-            <div class="label">Slot Status</div>
-            <div class="value">${status}</div>
-          </div>
-
-          <div class="gallery-link-box">
-  <div class="label">View in Gallery</div>
-  <a href="${galleryUrl}" target="_blank" class="gallery-link-btn">
-    Open this contribution in the live gallery
-  </a>
-</div>
-        </div>
-      `;
+    function renderInfo(record) {
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      const fields = [
+        ['Certificate ID', record.certificate_id],
+        ['Verification Status', 'Valid'],
+        ['Room', record.room],
+        ['Wall', record.wall],
+        ['Section', record.section_number],
+        ['View', record.view_number],
+        ['Row', record.row_number],
+        ['Column', record.col_number],
+        ['Slot Code', record.slot_code]
+      ];
+      for (const [label, value] of fields) {
+        const box = document.createElement('div');
+        box.className = 'info-box';
+        const labelNode = document.createElement('div');
+        labelNode.className = 'label';
+        labelNode.textContent = label;
+        const valueNode = document.createElement('div');
+        valueNode.className = 'value';
+        valueNode.textContent = String(value);
+        box.append(labelNode, valueNode);
+        grid.append(box);
+      }
+      resultArea.append(grid);
     }
 
-    function renderNotFound(message) {
-      resultArea.innerHTML = `
-        <div class="not-found-box">
-          <strong>Certificate not found.</strong><br>
-          <span class="muted">${message}</span>
-        </div>
-      `;
+    function validRecord(record) {
+      return record && record.certificate_id === certificateId
+        && record.verification_status === 'valid'
+        && ['Identity', 'Love', 'Creativity'].includes(record.room)
+        && ['Front Wall', 'Left Wall', 'Right Wall'].includes(record.wall)
+        && ['section_number', 'view_number', 'row_number', 'col_number']
+          .every(key => Number.isInteger(record[key]) && record[key] > 0)
+        && record.col_number <= 10
+        && typeof record.slot_code === 'string' && record.slot_code.length > 0;
     }
 
     async function verifyCertificate() {
-      if (!certificateId) {
-        setStatus('invalid', 'Invalid request');
-        verifyTitle.textContent = 'No certificate ID provided';
-        verifySubtitle.textContent = 'This verification link is incomplete.';
-        renderNotFound('The URL does not contain a valid certificate ID.');
+      if (certificateId.length !== 36 || !uuidPattern.test(certificateId)) {
+        setStatus('invalid', 'Invalid request', 'Invalid certificate ID',
+          'Please use a complete certificate verification link.');
         return;
       }
-
-      setStatus('loading', 'Checking certificate...');
-      verifyTitle.textContent = 'Checking certificate record...';
-      verifySubtitle.textContent = `Certificate ID: ${certificateId}`;
-
-      // 1. Cerca lo slot
-      const { data: slotData, error: slotError } = await supabaseClient
-        .from('slots')
-        .select('*')
-        .eq('submission_id', certificateId)
-        .maybeSingle();
-
-      if (slotError) {
-        console.error('Slot verification error:', slotError);
-        setStatus('invalid', 'Verification failed');
-        verifyTitle.textContent = 'Unable to verify certificate';
-        verifySubtitle.textContent = 'A temporary error occurred while checking the record.';
-        renderNotFound('Please try again later or contact support if the issue continues.');
-        return;
+      setStatus('loading', 'Checking certificate...', 'Checking certificate record...',
+        'Please wait while we validate this certificate.');
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(SUPABASE_URL + '/rest/v1/rpc/verify_public_certificate', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ p_certificate_id: certificateId }),
+          signal: controller.signal,
+          cache: 'no-store',
+          credentials: 'omit',
+          redirect: 'error'
+        });
+        if (!response.ok) throw new Error('Verification request failed');
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error('Unexpected response');
+        if (data.length === 0) {
+          setStatus('invalid', 'Certificate not verified', 'Certificate not verified',
+            'No valid approved contribution was found for this certificate ID.');
+          return;
+        }
+        if (data.length !== 1 || !validRecord(data[0])) {
+          throw new Error('Unexpected certificate record');
+        }
+        setStatus('valid', 'Certificate verified', 'Certificate verified successfully',
+          'This certificate ID corresponds to an approved contribution. The current museum location is shown below.');
+        renderInfo(data[0]);
+      } catch {
+        setStatus('loading', 'Verification unavailable', 'Unable to verify certificate',
+          'A temporary error occurred. Please try again later or contact support.');
+      } finally {
+        clearTimeout(timeout);
       }
-
-      if (!slotData) {
-        setStatus('invalid', 'Certificate not found');
-        verifyTitle.textContent = 'Certificate not found';
-        verifySubtitle.textContent = `We could not find any record for ID: ${certificateId}`;
-        renderNotFound('This ID is not currently registered in the verification system.');
-        return;
-      }
-
-      // 2. Cerca anche la submission
-      let submissionData = null;
-
-      const { data: submissionRow, error: submissionError } = await supabaseClient
-        .from('submissions')
-        .select('*')
-        .eq('submission_id', certificateId)
-        .maybeSingle();
-
-      if (!submissionError && submissionRow) {
-        submissionData = submissionRow;
-      }
-
-      setStatus('valid', 'Certificate verified');
-      verifyTitle.textContent = 'Certificate verified successfully';
-      verifySubtitle.textContent = 'This certificate ID is officially recorded in The Human Mosaic.';
-      renderInfo(slotData, submissionData);
     }
 
     verifyCertificate();
