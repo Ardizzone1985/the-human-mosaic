@@ -25,6 +25,7 @@ export default function GalleryPhotoGrid3D({
   viewNumber,
   onEmptySlotClick,
   onPhotoSelect,
+  selectedSlot = null,
 }) {
   
   const SLOTS_PER_VIEW = 120;
@@ -34,7 +35,6 @@ export default function GalleryPhotoGrid3D({
   const scope = `${room}|${wall}|${sectionNumber}|${viewNumber}`;
   const [submissionResult, setSubmissionResult] = useState({ scope: null, data: [] });
   const [slotResult, setSlotResult] = useState({ scope: null, data: [], error: null });
-  const [selectedSlot, setSelectedSlot] = useState(null);
   const submissions = submissionResult.scope === scope ? submissionResult.data : [];
   const slots = slotResult.scope === scope ? slotResult.data : [];
   const slotsLoaded = slotResult.scope === scope;
@@ -272,7 +272,6 @@ const slotData = {
   slotCode: expectedSlotCode,
 };
 
-setSelectedSlot(slotData);
 onEmptySlotClick?.(slotData);
     
 console.log("Gallery V2 empty slot selected:", slotData);
