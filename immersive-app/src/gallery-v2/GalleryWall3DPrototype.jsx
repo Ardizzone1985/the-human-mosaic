@@ -571,6 +571,7 @@ export default function GalleryWall3DPrototype({
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [reservationCreated, setReservationCreated] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
   const frontLightTarget = useRef(new THREE.Object3D()).current;
   const leftLightTarget = useRef(new THREE.Object3D()).current;
 const rightLightTarget = useRef(new THREE.Object3D()).current;
@@ -968,7 +969,7 @@ penumbra={1}
 ${selectedSlot?.wall ?? ""} Wall · Section ${selectedSlot?.sectionNumber ?? ""} · View ${selectedSlot?.viewNumber ?? ""}
 Position ${selectedSlot?.slotNumber ?? ""}
 
-Would you like to reserve this position?`
+${checkoutError || "Would you like to reserve this position?"}`
     : "Sign in to reserve this position and become part of The Human Mosaic."
 }
   confirmText={
@@ -978,9 +979,12 @@ Would you like to reserve this position?`
       : "Continue"
     : "Login"
 }
-  confirmDisabled={user && checkoutLoading}
+  confirmDisabled={
+  !!user && (checkoutLoading || reservationCreated)
+}
   cancelText="Close"
   onCancel={async () => {
+    if (checkoutLoading) return;
   if (user && reservationCreated && selectedSlot?.slotCode) {
     const { error } = await supabase.rpc("release_my_app_slot", {
       p_slot_code: selectedSlot.slotCode,
@@ -993,86 +997,109 @@ Would you like to reserve this position?`
   }
 
     setReservationCreated(false);
-  setSelectedSlot(null);
+setCheckoutError("");
+setSelectedSlot(null);
 }}
   onConfirm={async () => {
-  if (checkoutLoading) return;
+  if (checkoutLoading || reservationCreated) return;
 
-  if (user) {
-    setCheckoutLoading(true);
+  if (!user) {
+    setSelectedSlot(null);
+    onLoginRequest?.();
+    return;
+  }
 
+  setCheckoutLoading(true);
+  setCheckoutError("");
+
+  let redirecting = false;
+
+  try {
     const slotCode = selectedSlot?.slotCode;
     const checkoutWall = `${selectedSlot?.wall} Wall`;
-const checkoutSection = `S${selectedSlot?.sectionNumber}`;
-const checkoutSpot = String(selectedSlot?.slotNumber);
+    const checkoutSection = `S${selectedSlot?.sectionNumber}`;
+    const checkoutSpot = String(selectedSlot?.slotNumber);
 
     if (!slotCode) {
-      console.error("Gallery V2: missing slotCode");
-      return;
+      throw new Error("Missing slotCode");
     }
 
-    const { data, error } = await supabase.rpc("reserve_app_slot", {
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    const accessToken = session?.access_token;
+
+    if (sessionError || !accessToken) {
+      throw new Error("Missing access token");
+    }
+
+    const { error } = await supabase.rpc("reserve_app_slot", {
       p_slot_code: slotCode,
     });
 
     if (error) {
-      console.error("Gallery V2 reservation error:", error);
-      return;
+      throw error;
     }
 
     setReservationCreated(true);
 
-const {
-  data: { session },
-} = await supabase.auth.getSession();
+    const response = await fetch(
+      "/api/create-app-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          room,
+          wall: checkoutWall,
+          section: checkoutSection,
+          spot: checkoutSpot,
+          slotCode,
+        }),
+      }
+    );
 
-const accessToken = session?.access_token;
+    if (!response.ok) {
+      throw new Error(`Checkout HTTP ${response.status}`);
+    }
 
-if (!accessToken) {
-  console.error("Gallery V2 checkout: missing access token");
-  return;
-}
+    const checkoutData = await response.json();
 
-const response = await fetch("/api/create-app-checkout-session", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
-  },
-  body: JSON.stringify({
-    room,
-    wall: checkoutWall,
-    section: checkoutSection,
-    spot: checkoutSpot,
-    slotCode,
-  }),
-});
+    if (!checkoutData?.url) {
+      throw new Error("Missing checkout URL");
+    }
 
-const checkoutData = await response.json();
+    sessionStorage.setItem(
+      "thm_app_checkout",
+      JSON.stringify({
+        room,
+        wall: checkoutWall,
+        section: checkoutSection,
+        spot: checkoutSpot,
+        slotCode,
+        sessionId: checkoutData.sessionId || "",
+      })
+    );
 
-if (!response.ok || !checkoutData?.url) {
-  console.error("Gallery V2 checkout error:", checkoutData);
-  return;
-}
+    window.location.href = checkoutData.url;
+    redirecting = true;
 
-sessionStorage.setItem(
-  "thm_app_checkout",
-  JSON.stringify({
-    room,
-    wall: checkoutWall,
-    section: checkoutSection,
-    spot: checkoutSpot,
-    slotCode,
-    sessionId: checkoutData.sessionId || "",
-  })
-);
+  } catch (error) {
+    console.error("Gallery V2 checkout error:", error);
 
-window.location.href = checkoutData.url;
-return;
+    setCheckoutError(
+      "Unable to open secure checkout. Please close this window and try again later."
+    );
+
+  } finally {
+    if (!redirecting) {
+      setCheckoutLoading(false);
+    }
   }
-
-  setSelectedSlot(null);
-  onLoginRequest?.();
 }}
 />
 
