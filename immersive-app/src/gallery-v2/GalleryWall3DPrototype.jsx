@@ -683,6 +683,7 @@ penumbra={1}
   setViewNumber={setViewNumber}
   onEmptySlotClick={setSelectedSlot}
   onPhotoSelect={onPhotoSelect}
+  selectedSlot={selectedSlot}
 />
 
         {/* PREMIUM MUSEUM BASEBOARD */}
